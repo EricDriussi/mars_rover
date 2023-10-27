@@ -1,0 +1,109 @@
+package position_test
+
+import (
+	"mars_rover/internal/domain/position"
+	relativePosition "mars_rover/internal/domain/relative_position"
+	"mars_rover/internal/domain/size"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+func TestAddsARelativePositionWithoutWrapping(t *testing.T) {
+	testSize, _ := size.From(3, 3)
+	testCases := []struct {
+		name             string
+		relativePosition *relativePosition.RelativePosition
+		expectedX        int
+		expectedY        int
+	}{
+		{
+			name:             "increase X",
+			relativePosition: relativePosition.New(1, 0),
+			expectedX:        2,
+			expectedY:        1,
+		},
+		{
+			name:             "increase Y",
+			relativePosition: relativePosition.New(0, 1),
+			expectedX:        1,
+			expectedY:        2,
+		},
+	}
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			pos, _ := position.From(1, 1)
+
+			pos.AddOrWrap(*testCase.relativePosition, *testSize)
+
+			expectedPosition, _ := position.From(testCase.expectedX, testCase.expectedY)
+			assert.True(t, pos.Equals(*expectedPosition))
+		})
+	}
+}
+
+func TestWrapsOn_Y(t *testing.T) {
+	testSize, _ := size.From(3, 3)
+	testCases := []struct {
+		name             string
+		relativePosition *relativePosition.RelativePosition
+		startingY        int
+		expectedY        int
+	}{
+		{
+			name:             "Y over size",
+			relativePosition: relativePosition.New(0, 1),
+			startingY:        3,
+			expectedY:        0,
+		},
+		{
+			name:             "Y under size",
+			relativePosition: relativePosition.New(0, -1),
+			startingY:        0,
+			expectedY:        3,
+		},
+	}
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			pos, _ := position.From(1, testCase.startingY)
+
+			pos.AddOrWrap(*testCase.relativePosition, *testSize)
+
+			expectedPosition, _ := position.From(1, testCase.expectedY)
+			assert.True(t, pos.Equals(*expectedPosition))
+		})
+	}
+}
+
+func TestWrapsOn_X(t *testing.T) {
+	testSize, _ := size.From(3, 3)
+	testCases := []struct {
+		name             string
+		relativePosition *relativePosition.RelativePosition
+		startingX        int
+		expectedX        int
+	}{
+		{
+			name:             "Y over size",
+			relativePosition: relativePosition.New(1, 0),
+			startingX:        3,
+			expectedX:        0,
+		},
+		{
+			name:             "Y under size",
+			relativePosition: relativePosition.New(-1, 0),
+			startingX:        0,
+			expectedX:        3,
+		},
+	}
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			pos, _ := position.From(testCase.startingX, 1)
+
+			pos.AddOrWrap(*testCase.relativePosition, *testSize)
+
+			expectedPosition, _ := position.From(testCase.expectedX, 1)
+			assert.True(t, pos.Equals(*expectedPosition))
+		})
+	}
+}
