@@ -36,12 +36,12 @@ func (this *Rover) MoveForward() {
 }
 
 func (this *Rover) MoveBackward() {
-	ahead := this.location.WillBeAt(this.orientation.RelativePositionBehind(), this.planetMap.Size())
-	if this.willHitSomething(ahead) {
+	behind := this.location.WillBeAt(this.orientation.RelativePositionBehind(), this.planetMap.Size())
+	if this.willHitSomething(behind) {
 		// TODO: how do I "report the obstacle"?
 		return
 	}
-	this.updateLocation(ahead)
+	this.updateLocation(behind)
 }
 
 func (this *Rover) TurnLeft() {
