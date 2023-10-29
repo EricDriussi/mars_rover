@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAddsARelativePositionWithoutWrapping(t *testing.T) {
+func TestReportsFuturePositionWhenSizeLimitIsNotInvolved(t *testing.T) {
 	testSize, _ := size.From(3, 3)
 	testCases := []struct {
 		name             string
@@ -32,12 +32,12 @@ func TestAddsARelativePositionWithoutWrapping(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testLocation, _ := location.From(1, 1)
+			givenLocation, _ := location.From(1, 1)
 
-			testLocation.AddOrWrap(*testCase.relativePosition, *testSize)
+			futureLocation := givenLocation.WillBeAt(*testCase.relativePosition, *testSize)
 
 			expectedLocation, _ := location.From(testCase.expectedX, testCase.expectedY)
-			assert.True(t, testLocation.Equals(*expectedLocation))
+			assert.True(t, futureLocation.Equals(*expectedLocation))
 		})
 	}
 }
@@ -65,12 +65,12 @@ func TestWrapsOn_Y(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testLocation, _ := location.From(1, testCase.startingY)
+			givenLocation, _ := location.From(1, testCase.startingY)
 
-			testLocation.AddOrWrap(*testCase.relativePosition, *testSize)
+			futureLocation := givenLocation.WillBeAt(*testCase.relativePosition, *testSize)
 
 			expectedLocation, _ := location.From(1, testCase.expectedY)
-			assert.True(t, testLocation.Equals(*expectedLocation))
+			assert.True(t, futureLocation.Equals(*expectedLocation))
 		})
 	}
 }
@@ -98,12 +98,12 @@ func TestWrapsOn_X(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testLocation, _ := location.From(testCase.startingX, 1)
+			givenLocation, _ := location.From(testCase.startingX, 1)
 
-			testLocation.AddOrWrap(*testCase.relativePosition, *testSize)
+			futureLocation := givenLocation.WillBeAt(*testCase.relativePosition, *testSize)
 
 			expectedLocation, _ := location.From(testCase.expectedX, 1)
-			assert.True(t, testLocation.Equals(*expectedLocation))
+			assert.True(t, futureLocation.Equals(*expectedLocation))
 		})
 	}
 }
