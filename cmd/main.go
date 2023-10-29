@@ -66,10 +66,10 @@ func Sample() {
 			curiosity.TurnRight()
 		}
 
-		if curiosity.CheckObstacle() {
-			fmt.Println("Obstacle detected!")
-			break
-		}
+		// if curiosity.CheckObstacle() {
+		// 	fmt.Println("Obstacle detected!")
+		// 	break
+		// }
 		fmt.Println("Rover completed command ", cmd)
 	}
 

@@ -26,6 +26,24 @@ func (this Location) IsWithin(limit size.Size) bool {
 	return this.coordinate.X < limit.Width && this.coordinate.Y < limit.Height
 }
 
+func (this *Location) WillBeAt(relativePosition relativePosition.RelativePosition, size size.Size) Location {
+	x := this.coordinate.X + relativePosition.X()
+	y := this.coordinate.Y + relativePosition.Y()
+	tmp := &coordinate.Coordinate{X: x, Y: y}
+	if tmp.X >= size.Width {
+		tmp.X = 0
+	} else if tmp.X < 0 {
+		tmp.X = size.Width
+	}
+
+	if tmp.Y >= size.Height {
+		tmp.Y = 0
+	} else if tmp.Y < 0 {
+		tmp.Y = size.Height
+	}
+	return Location{*tmp}
+}
+
 func (this *Location) AddOrWrap(relativePosition relativePosition.RelativePosition, size size.Size) {
 	this.add(relativePosition)
 	this.wrapIfOutOfBounds(size)
