@@ -23,7 +23,7 @@ func (this Location) Equals(other Location) bool {
 }
 
 func (this Location) IsWithin(limit size.Size) bool {
-	return this.coordinate.X < limit.Width && this.coordinate.Y < limit.Height
+	return this.coordinate.X <= limit.Width && this.coordinate.Y <= limit.Height
 }
 
 func (this *Location) WillBeAt(relativePosition relativePosition.RelativePosition, size size.Size) Location {

@@ -83,10 +83,14 @@ func TestNotEqualsBasedOnValues(t *testing.T) {
 
 func TestIsWithinAGivenSize(t *testing.T) {
 	sizeLimit, _ := size.From(2, 2)
-	validLocation, err := location.From(1, 1)
-	assert.Nil(t, err)
+	for x := 0; x <= sizeLimit.Width; x++ {
+		for y := 0; y <= sizeLimit.Height; y++ {
+			validLocation, err := location.From(x, y)
+			assert.Nil(t, err)
 
-	assert.True(t, validLocation.IsWithin(*sizeLimit))
+			assert.True(t, validLocation.IsWithin(*sizeLimit))
+		}
+	}
 }
 
 func TestIsNotWithinAGivenSize(t *testing.T) {
