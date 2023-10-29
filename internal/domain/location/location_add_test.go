@@ -32,12 +32,12 @@ func TestAddsARelativePositionWithoutWrapping(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			pos, _ := location.From(1, 1)
+			testLocation, _ := location.From(1, 1)
 
-			pos.AddOrWrap(*testCase.relativePosition, *testSize)
+			testLocation.AddOrWrap(*testCase.relativePosition, *testSize)
 
-			expectedPosition, _ := location.From(testCase.expectedX, testCase.expectedY)
-			assert.True(t, pos.Equals(*expectedPosition))
+			expectedLocation, _ := location.From(testCase.expectedX, testCase.expectedY)
+			assert.True(t, testLocation.Equals(*expectedLocation))
 		})
 	}
 }
@@ -65,12 +65,12 @@ func TestWrapsOn_Y(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			pos, _ := location.From(1, testCase.startingY)
+			testLocation, _ := location.From(1, testCase.startingY)
 
-			pos.AddOrWrap(*testCase.relativePosition, *testSize)
+			testLocation.AddOrWrap(*testCase.relativePosition, *testSize)
 
-			expectedPosition, _ := location.From(1, testCase.expectedY)
-			assert.True(t, pos.Equals(*expectedPosition))
+			expectedLocation, _ := location.From(1, testCase.expectedY)
+			assert.True(t, testLocation.Equals(*expectedLocation))
 		})
 	}
 }
@@ -98,12 +98,12 @@ func TestWrapsOn_X(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			pos, _ := location.From(testCase.startingX, 1)
+			testLocation, _ := location.From(testCase.startingX, 1)
 
-			pos.AddOrWrap(*testCase.relativePosition, *testSize)
+			testLocation.AddOrWrap(*testCase.relativePosition, *testSize)
 
-			expectedPosition, _ := location.From(testCase.expectedX, 1)
-			assert.True(t, pos.Equals(*expectedPosition))
+			expectedLocation, _ := location.From(testCase.expectedX, 1)
+			assert.True(t, testLocation.Equals(*expectedLocation))
 		})
 	}
 }

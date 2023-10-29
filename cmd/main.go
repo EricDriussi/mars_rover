@@ -11,8 +11,6 @@ import (
 	"mars_rover/internal/service"
 )
 
-// TODO: make sure tests are clear (limit of size is 0 not 1)
-// TODO: review tests naming
 // TODO: LIST OF THINGS!
 // Collision detection
 // Persistency

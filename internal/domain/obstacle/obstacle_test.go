@@ -10,8 +10,8 @@ import (
 )
 
 func TestIsWithinLimit(t *testing.T) {
-	testPosition, _ := location.From(1, 2)
-	testObstacle := obstacle.In(testPosition)
+	testLocation, _ := location.From(1, 2)
+	testObstacle := obstacle.In(testLocation)
 	sizeLimit, _ := size.From(5, 5)
 
 	assert.True(t, testObstacle.IsWithinLimit(*sizeLimit))
@@ -42,8 +42,8 @@ func TestIsNotWithinLimit(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			outOfBoundsPosition, _ := location.From(testCase.x, testCase.y)
-			outOfBoundsObstacle := obstacle.In(outOfBoundsPosition)
+			outOfBoundsLocation, _ := location.From(testCase.x, testCase.y)
+			outOfBoundsObstacle := obstacle.In(outOfBoundsLocation)
 
 			assert.False(t, outOfBoundsObstacle.IsWithinLimit(*sizeLimit))
 		})

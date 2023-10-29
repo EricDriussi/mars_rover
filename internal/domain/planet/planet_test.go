@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCanCreateNoObstacleIsOutOfBounds(t *testing.T) {
+func TestCanCreateIfNoObstacleIsOutOfBounds(t *testing.T) {
 	sizeLimit, _ := size.From(5, 5)
 	obstaclesWithinBounds := generateThreeRandomObstaclesWithin(*sizeLimit)
 	_, err := planet.Create(*sizeLimit, obstaclesWithinBounds)
@@ -55,14 +55,14 @@ func generateRandomObstacleWithin(size size.Size) obstacle.Obstacle {
 	randomX := rand.Intn(size.Width)
 	randomY := rand.Intn(size.Height)
 
-	randomPosition, _ := location.From(randomX, randomY)
-	return *obstacle.In(randomPosition)
+	randomLocation, _ := location.From(randomX, randomY)
+	return *obstacle.In(randomLocation)
 }
 
 func randomObstacleOutOf(size size.Size) obstacle.Obstacle {
 	randomX := rand.Intn(99-size.Width+1) + size.Width
 	randomY := rand.Intn(99-size.Height+1) + size.Height
 
-	randomPosition, _ := location.From(randomX, randomY)
-	return *obstacle.In(randomPosition)
+	randomLocation, _ := location.From(randomX, randomY)
+	return *obstacle.In(randomLocation)
 }

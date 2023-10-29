@@ -51,11 +51,11 @@ func TestDoesNotAllowZeroValues(t *testing.T) {
 		{
 			name:   "width cannot be zero",
 			width:  0,
-			height: 0,
+			height: 1,
 		},
 		{
 			name:   "height cannot be zero",
-			width:  0,
+			width:  1,
 			height: 0,
 		},
 	}

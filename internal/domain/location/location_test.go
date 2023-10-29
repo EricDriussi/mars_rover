@@ -39,17 +39,17 @@ func TestDoesNotAllowNegativeValues(t *testing.T) {
 }
 
 func TestEqualsBasedOnValues(t *testing.T) {
-	aPosition, err := location.From(1, 1)
+	aLocation, err := location.From(1, 1)
 	assert.Nil(t, err)
-	anEqualPosition, err := location.From(1, 1)
+	anEqualLocation, err := location.From(1, 1)
 	assert.Nil(t, err)
 
-	areTheSame := aPosition.Equals(*anEqualPosition)
+	areTheSame := aLocation.Equals(*anEqualLocation)
 	assert.True(t, areTheSame)
 }
 
 func TestNotEqualsBasedOnValues(t *testing.T) {
-	referencePosition, err := location.From(1, 1)
+	aLocation, err := location.From(1, 1)
 	assert.Nil(t, err)
 	testCases := []struct {
 		name string
@@ -74,8 +74,8 @@ func TestNotEqualsBasedOnValues(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testPosition, _ := location.From(testCase.x, testCase.y)
-			areTheSame := referencePosition.Equals(*testPosition)
+			aDifferentLocation, _ := location.From(testCase.x, testCase.y)
+			areTheSame := aLocation.Equals(*aDifferentLocation)
 			assert.False(t, areTheSame)
 		})
 	}
@@ -83,10 +83,10 @@ func TestNotEqualsBasedOnValues(t *testing.T) {
 
 func TestIsWithinAGivenSize(t *testing.T) {
 	sizeLimit, _ := size.From(2, 2)
-	validPosition, err := location.From(1, 1)
+	validLocation, err := location.From(1, 1)
 	assert.Nil(t, err)
 
-	assert.True(t, validPosition.IsWithin(*sizeLimit))
+	assert.True(t, validLocation.IsWithin(*sizeLimit))
 }
 
 func TestIsNotWithinAGivenSize(t *testing.T) {
@@ -114,10 +114,10 @@ func TestIsNotWithinAGivenSize(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			outOfBoundsPosition, err := location.From(testCase.x, testCase.y)
+			outOfBoundsLocation, err := location.From(testCase.x, testCase.y)
 			assert.Nil(t, err)
 
-			assert.False(t, outOfBoundsPosition.IsWithin(*sizeLimit))
+			assert.False(t, outOfBoundsLocation.IsWithin(*sizeLimit))
 		})
 	}
 }

@@ -15,51 +15,51 @@ import (
 func TestWrapsLookingNorthMovingBackward(t *testing.T) {
 	planetSize, _ := size.From(3, 3)
 	testPlanetWithoutObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{})
-	landingPosition, _ := location.From(2, 0)
+	landingLocation, _ := location.From(2, 0)
 
-	testRover := rover.Land(*landingPosition, &direction.North{}, *testPlanetWithoutObstacles)
+	testRover := rover.Land(*landingLocation, &direction.North{}, *testPlanetWithoutObstacles)
 
 	testRover.MoveBackward()
 
-	expectedPosition, _ := location.From(2, 3)
-	assert.True(t, expectedPosition.Equals(testRover.Location()))
+	expectedLocation, _ := location.From(2, 3)
+	assert.True(t, expectedLocation.Equals(testRover.Location()))
 }
 
 func TestWrapsLookingEastMovingBackward(t *testing.T) {
 	planetSize, _ := size.From(3, 3)
 	testPlanetWithoutObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{})
-	landingPosition, _ := location.From(0, 2)
+	landingLocation, _ := location.From(0, 2)
 
-	testRover := rover.Land(*landingPosition, &direction.East{}, *testPlanetWithoutObstacles)
+	testRover := rover.Land(*landingLocation, &direction.East{}, *testPlanetWithoutObstacles)
 
 	testRover.MoveBackward()
 
-	expectedPosition, _ := location.From(3, 2)
-	assert.True(t, expectedPosition.Equals(testRover.Location()))
+	expectedLocation, _ := location.From(3, 2)
+	assert.True(t, expectedLocation.Equals(testRover.Location()))
 }
 
 func TestWrapsLookingSouthMovingBackward(t *testing.T) {
 	planetSize, _ := size.From(3, 3)
 	testPlanetWithoutObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{})
-	landingPosition, _ := location.From(2, 3)
+	landingLocation, _ := location.From(2, 3)
 
-	testRover := rover.Land(*landingPosition, &direction.South{}, *testPlanetWithoutObstacles)
+	testRover := rover.Land(*landingLocation, &direction.South{}, *testPlanetWithoutObstacles)
 
 	testRover.MoveBackward()
 
-	expectedPosition, _ := location.From(2, 0)
-	assert.True(t, expectedPosition.Equals(testRover.Location()))
+	expectedLocation, _ := location.From(2, 0)
+	assert.True(t, expectedLocation.Equals(testRover.Location()))
 }
 
 func TestWrapsLookingWestMovingBackward(t *testing.T) {
 	planetSize, _ := size.From(3, 3)
 	testPlanetWithoutObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{})
-	landingPosition, _ := location.From(3, 2)
+	landingLocation, _ := location.From(3, 2)
 
-	testRover := rover.Land(*landingPosition, &direction.West{}, *testPlanetWithoutObstacles)
+	testRover := rover.Land(*landingLocation, &direction.West{}, *testPlanetWithoutObstacles)
 
 	testRover.MoveBackward()
 
-	expectedPosition, _ := location.From(0, 2)
-	assert.True(t, expectedPosition.Equals(testRover.Location()))
+	expectedLocation, _ := location.From(0, 2)
+	assert.True(t, expectedLocation.Equals(testRover.Location()))
 }
