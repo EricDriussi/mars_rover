@@ -1,8 +1,8 @@
 package rover_test
 
 import (
-	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/direction"
+	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/planet"
 	"mars_rover/internal/domain/rover"
@@ -12,10 +12,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func beforeEach() (*planet.Planet, *coordinate.Coordinate) {
+func beforeEach() (*planet.Planet, *location.Location) {
 	planetSize, _ := size.From(10, 10)
 	testPlanetWithoutObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{})
-	landingPosition, _ := coordinate.From(5, 5)
+	landingPosition, _ := location.From(5, 5)
 
 	return testPlanetWithoutObstacles, landingPosition
 }
@@ -61,8 +61,8 @@ func TestMovesForward(t *testing.T) {
 
 			testRover.MoveForward()
 
-			expectedPosition, _ := coordinate.From(testCase.expectedX, testCase.expectedY)
-			assert.True(t, expectedPosition.Equals(testRover.Position()))
+			expectedPosition, _ := location.From(testCase.expectedX, testCase.expectedY)
+			assert.True(t, expectedPosition.Equals(testRover.Location()))
 		})
 	}
 }
@@ -108,8 +108,8 @@ func TestMovesBackward(t *testing.T) {
 
 			testRover.MoveBackward()
 
-			expectedPosition, _ := coordinate.From(testCase.expectedX, testCase.expectedY)
-			assert.True(t, expectedPosition.Equals(testRover.Position()))
+			expectedPosition, _ := location.From(testCase.expectedX, testCase.expectedY)
+			assert.True(t, expectedPosition.Equals(testRover.Location()))
 		})
 	}
 }

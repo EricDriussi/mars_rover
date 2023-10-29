@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/direction"
+	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/planet"
 	"mars_rover/internal/domain/rover"
@@ -11,7 +11,6 @@ import (
 	"mars_rover/internal/service"
 )
 
-// TODO: check for var names left behind after the renames
 // TODO: make sure tests are clear (limit of size is 0 not 1)
 // TODO: review tests naming
 // TODO: LIST OF THINGS!
@@ -20,15 +19,15 @@ import (
 // API
 // GUI
 func Sample() {
-	locationOfFirstObstacle, err := coordinate.From(3, 3)
+	locationOfFirstObstacle, err := location.From(3, 3)
 	if err != nil {
-		fmt.Println("Error creating coordinate:", err)
+		fmt.Println("Error creating location:", err)
 		return
 	}
 
-	locationOfSecondObstacle, err := coordinate.From(7, 7)
+	locationOfSecondObstacle, err := location.From(7, 7)
 	if err != nil {
-		fmt.Println("Error creating coordinate:", err)
+		fmt.Println("Error creating location:", err)
 		return
 	}
 
@@ -44,9 +43,9 @@ func Sample() {
 		return
 	}
 
-	landinglocation, err := coordinate.From(0, 0)
+	landinglocation, err := location.From(0, 0)
 	if err != nil {
-		fmt.Println("Error creating coordinate:", err)
+		fmt.Println("Error creating location:", err)
 		return
 	}
 

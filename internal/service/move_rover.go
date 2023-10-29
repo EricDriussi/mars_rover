@@ -17,6 +17,7 @@ func For(rover *rover.Rover) *MoveService {
 }
 
 func (this *MoveService) MoveSequence(commands []string) {
+	// TODO: should this skip invalid commands? stop if an invalid command is found?
 	for _, cmd := range commands {
 		this.mapCommandToMovement(cmd)
 	}
@@ -31,7 +32,7 @@ func (this *MoveService) mapCommandToMovement(command string) error {
 	}
 
 	// TODO.LM: is this more readable than ⬇️ ?
-	// if action := commandMapper[cmd]; action != nil {
+	// if action := commandActions[command]; action != nil {}
 	if action, ok := commandActions[command]; ok {
 		action()
 		return nil

@@ -1,27 +1,27 @@
 package rover
 
 import (
-	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/direction"
+	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/planet"
 	planetMap "mars_rover/internal/domain/planet_map"
 )
 
 type Rover struct {
-	location    coordinate.Coordinate
+	location    location.Location
 	orientation direction.Direction
 	planetMap   planetMap.Map
 }
 
-func Land(position coordinate.Coordinate, direction direction.Direction, planet planet.Planet) *Rover {
-	return &Rover{location: position, orientation: direction, planetMap: *planetMap.Of(planet)}
+func Land(location location.Location, direction direction.Direction, planet planet.Planet) *Rover {
+	return &Rover{location: location, orientation: direction, planetMap: *planetMap.Of(planet)}
 }
 
 func (this Rover) Direction() direction.Direction {
 	return this.orientation
 }
 
-func (this Rover) Position() coordinate.Coordinate {
+func (this Rover) Location() location.Location {
 	return this.location
 }
 

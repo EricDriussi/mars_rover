@@ -1,18 +1,18 @@
 package obstacle
 
 import (
-	"mars_rover/internal/domain/coordinate"
+	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/size"
 )
 
 type Obstacle struct {
-	Position *coordinate.Coordinate
+	Location *location.Location
 }
 
-func In(position *coordinate.Coordinate) *Obstacle {
-	return &Obstacle{position}
+func In(location *location.Location) *Obstacle {
+	return &Obstacle{location}
 }
 
 func (this Obstacle) IsWithinLimit(size size.Size) bool {
-	return this.Position.IsWithin(size)
+	return this.Location.IsWithin(size)
 }

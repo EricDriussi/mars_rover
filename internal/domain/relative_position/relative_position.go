@@ -1,17 +1,19 @@
 package relativePosition
 
+import "mars_rover/internal/domain/coordinate"
+
 type RelativePosition struct {
-	x, y int
+	coordinate coordinate.Coordinate
 }
 
 func New(x, y int) *RelativePosition {
-	return &RelativePosition{x, y}
+	return &RelativePosition{coordinate.Coordinate{X: x, Y: y}}
 }
 
 func (this RelativePosition) X() int {
-	return this.x
+	return this.coordinate.X
 }
 
 func (this RelativePosition) Y() int {
-	return this.y
+	return this.coordinate.Y
 }
