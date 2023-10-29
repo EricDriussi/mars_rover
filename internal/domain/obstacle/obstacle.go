@@ -1,15 +1,15 @@
 package obstacle
 
 import (
-	"mars_rover/internal/domain/position"
+	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/size"
 )
 
 type Obstacle struct {
-	Position *position.Position
+	Position *coordinate.Coordinate
 }
 
-func In(position *position.Position) *Obstacle {
+func In(position *coordinate.Coordinate) *Obstacle {
 	return &Obstacle{position}
 }
 

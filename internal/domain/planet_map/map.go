@@ -1,32 +1,32 @@
 package planetMap
 
 import (
+	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/planet"
-	"mars_rover/internal/domain/position"
 	"mars_rover/internal/domain/size"
 )
 
-type PlanetMap struct {
-	planetSize      size.Size
-	planetObstacles []obstacle.Obstacle
+type Map struct {
+	size      size.Size
+	obstacles []obstacle.Obstacle
 }
 
-func Of(planet planet.Planet) *PlanetMap {
-	return &PlanetMap{planet.Size, planet.Obstacles}
+func Of(planet planet.Planet) *Map {
+	return &Map{planet.Size, planet.Obstacles}
 }
 
-func (this PlanetMap) CheckCollision(position position.Position) bool {
-	for _, obstacle := range this.planetObstacles {
-		return position.Equals(*obstacle.Position)
+func (this Map) CheckCollision(coordinates coordinate.Coordinate) bool {
+	for _, obstacle := range this.obstacles {
+		return coordinates.Equals(*obstacle.Position)
 	}
 	return false
 }
 
-func (this PlanetMap) WouldGoOutOfBounds(position position.Position) bool {
-	return !position.IsWithin(this.planetSize)
+func (this Map) WouldGoOutOfBounds(coordinates coordinate.Coordinate) bool {
+	return !coordinates.IsWithin(this.size)
 }
 
-func (this PlanetMap) Size() size.Size {
-	return this.planetSize
+func (this Map) Size() size.Size {
+	return this.size
 }

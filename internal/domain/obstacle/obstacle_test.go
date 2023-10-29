@@ -1,8 +1,8 @@
 package obstacle_test
 
 import (
+	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/obstacle"
-	"mars_rover/internal/domain/position"
 	"mars_rover/internal/domain/size"
 	"testing"
 
@@ -10,7 +10,7 @@ import (
 )
 
 func TestIsWithinLimit(t *testing.T) {
-	testPosition, _ := position.From(1, 2)
+	testPosition, _ := coordinate.From(1, 2)
 	testObstacle := obstacle.In(testPosition)
 	sizeLimit, _ := size.From(5, 5)
 
@@ -42,7 +42,7 @@ func TestIsNotWithinLimit(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			outOfBoundsPosition, _ := position.From(testCase.x, testCase.y)
+			outOfBoundsPosition, _ := coordinate.From(testCase.x, testCase.y)
 			outOfBoundsObstacle := obstacle.In(outOfBoundsPosition)
 
 			assert.False(t, outOfBoundsObstacle.IsWithinLimit(*sizeLimit))

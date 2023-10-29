@@ -1,7 +1,7 @@
-package position_test
+package coordinate_test
 
 import (
-	"mars_rover/internal/domain/position"
+	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/size"
 	"testing"
 
@@ -32,16 +32,16 @@ func TestDoesNotAllowNegativeValues(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			_, err := position.From(testCase.x, testCase.y)
+			_, err := coordinate.From(testCase.x, testCase.y)
 			assert.Error(t, err)
 		})
 	}
 }
 
 func TestEqualsBasedOnValues(t *testing.T) {
-	aPosition, err := position.From(1, 1)
+	aPosition, err := coordinate.From(1, 1)
 	assert.Nil(t, err)
-	anEqualPosition, err := position.From(1, 1)
+	anEqualPosition, err := coordinate.From(1, 1)
 	assert.Nil(t, err)
 
 	areTheSame := aPosition.Equals(*anEqualPosition)
@@ -49,7 +49,7 @@ func TestEqualsBasedOnValues(t *testing.T) {
 }
 
 func TestNotEqualsBasedOnValues(t *testing.T) {
-	referencePosition, err := position.From(1, 1)
+	referencePosition, err := coordinate.From(1, 1)
 	assert.Nil(t, err)
 	testCases := []struct {
 		name string
@@ -74,7 +74,7 @@ func TestNotEqualsBasedOnValues(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testPosition, _ := position.From(testCase.x, testCase.y)
+			testPosition, _ := coordinate.From(testCase.x, testCase.y)
 			areTheSame := referencePosition.Equals(*testPosition)
 			assert.False(t, areTheSame)
 		})
@@ -83,7 +83,7 @@ func TestNotEqualsBasedOnValues(t *testing.T) {
 
 func TestIsWithinAGivenSize(t *testing.T) {
 	sizeLimit, _ := size.From(2, 2)
-	validPosition, err := position.From(1, 1)
+	validPosition, err := coordinate.From(1, 1)
 	assert.Nil(t, err)
 
 	assert.True(t, validPosition.IsWithin(*sizeLimit))
@@ -114,7 +114,7 @@ func TestIsNotWithinAGivenSize(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			outOfBoundsPosition, err := position.From(testCase.x, testCase.y)
+			outOfBoundsPosition, err := coordinate.From(testCase.x, testCase.y)
 			assert.Nil(t, err)
 
 			assert.False(t, outOfBoundsPosition.IsWithin(*sizeLimit))

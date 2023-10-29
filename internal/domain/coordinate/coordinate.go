@@ -1,4 +1,4 @@
-package position
+package coordinate
 
 import (
 	"errors"
@@ -6,36 +6,36 @@ import (
 	"mars_rover/internal/domain/size"
 )
 
-type Position struct {
+type Coordinate struct {
 	x, y int
 }
 
-func From(x, y int) (*Position, error) {
+func From(x, y int) (*Coordinate, error) {
 	if x < 0 || y < 0 {
 		return nil, errors.New("no negative positions!")
 	}
-	return &Position{x, y}, nil
+	return &Coordinate{x, y}, nil
 }
 
-func (this Position) Equals(other Position) bool {
+func (this Coordinate) Equals(other Coordinate) bool {
 	return this.x == other.x && this.y == other.y
 }
 
-func (this Position) IsWithin(limit size.Size) bool {
+func (this Coordinate) IsWithin(limit size.Size) bool {
 	return this.x < limit.Width && this.y < limit.Height
 }
 
-func (this *Position) AddOrWrap(relativePosition relativePosition.RelativePosition, size size.Size) {
+func (this *Coordinate) AddOrWrap(relativePosition relativePosition.RelativePosition, size size.Size) {
 	this.add(relativePosition)
 	this.wrapIfOutOfSize(relativePosition, size)
 }
 
-func (this *Position) add(relativePosition relativePosition.RelativePosition) {
+func (this *Coordinate) add(relativePosition relativePosition.RelativePosition) {
 	this.x += relativePosition.X()
 	this.y += relativePosition.Y()
 }
 
-func (this *Position) wrapIfOutOfSize(relativePosition relativePosition.RelativePosition, size size.Size) {
+func (this *Coordinate) wrapIfOutOfSize(relativePosition relativePosition.RelativePosition, size size.Size) {
 	if this.x >= size.Width {
 		this.x = 0
 	} else if this.x < 0 {

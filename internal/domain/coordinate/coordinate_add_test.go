@@ -1,7 +1,7 @@
-package position_test
+package coordinate_test
 
 import (
-	"mars_rover/internal/domain/position"
+	"mars_rover/internal/domain/coordinate"
 	relativePosition "mars_rover/internal/domain/relative_position"
 	"mars_rover/internal/domain/size"
 	"testing"
@@ -32,11 +32,11 @@ func TestAddsARelativePositionWithoutWrapping(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			pos, _ := position.From(1, 1)
+			pos, _ := coordinate.From(1, 1)
 
 			pos.AddOrWrap(*testCase.relativePosition, *testSize)
 
-			expectedPosition, _ := position.From(testCase.expectedX, testCase.expectedY)
+			expectedPosition, _ := coordinate.From(testCase.expectedX, testCase.expectedY)
 			assert.True(t, pos.Equals(*expectedPosition))
 		})
 	}
@@ -65,11 +65,11 @@ func TestWrapsOn_Y(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			pos, _ := position.From(1, testCase.startingY)
+			pos, _ := coordinate.From(1, testCase.startingY)
 
 			pos.AddOrWrap(*testCase.relativePosition, *testSize)
 
-			expectedPosition, _ := position.From(1, testCase.expectedY)
+			expectedPosition, _ := coordinate.From(1, testCase.expectedY)
 			assert.True(t, pos.Equals(*expectedPosition))
 		})
 	}
@@ -98,11 +98,11 @@ func TestWrapsOn_X(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			pos, _ := position.From(testCase.startingX, 1)
+			pos, _ := coordinate.From(testCase.startingX, 1)
 
 			pos.AddOrWrap(*testCase.relativePosition, *testSize)
 
-			expectedPosition, _ := position.From(testCase.expectedX, 1)
+			expectedPosition, _ := coordinate.From(testCase.expectedX, 1)
 			assert.True(t, pos.Equals(*expectedPosition))
 		})
 	}

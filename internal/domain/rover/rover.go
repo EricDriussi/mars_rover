@@ -1,46 +1,46 @@
 package rover
 
 import (
+	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/direction"
 	"mars_rover/internal/domain/planet"
 	planetMap "mars_rover/internal/domain/planet_map"
-	"mars_rover/internal/domain/position"
 )
 
 type Rover struct {
-	position  position.Position
-	direction direction.Direction
-	planetMap planetMap.PlanetMap
+	location    coordinate.Coordinate
+	orientation direction.Direction
+	planetMap   planetMap.Map
 }
 
-func Land(position position.Position, direction direction.Direction, planet planet.Planet) *Rover {
-	return &Rover{position: position, direction: direction, planetMap: *planetMap.Of(planet)}
+func Land(position coordinate.Coordinate, direction direction.Direction, planet planet.Planet) *Rover {
+	return &Rover{location: position, orientation: direction, planetMap: *planetMap.Of(planet)}
 }
 
 func (this Rover) Direction() direction.Direction {
-	return this.direction
+	return this.orientation
 }
 
-func (this Rover) Position() position.Position {
-	return this.position
+func (this Rover) Position() coordinate.Coordinate {
+	return this.location
 }
 
 func (this *Rover) MoveForward() {
-	this.position.AddOrWrap(this.direction.RelativePositionAhead(), this.planetMap.Size())
+	this.location.AddOrWrap(this.orientation.RelativePositionAhead(), this.planetMap.Size())
 }
 
 func (this *Rover) MoveBackward() {
-	this.position.AddOrWrap(this.direction.RelativePositionBehind(), this.planetMap.Size())
+	this.location.AddOrWrap(this.orientation.RelativePositionBehind(), this.planetMap.Size())
 }
 
 func (this *Rover) TurnLeft() {
-	this.direction = this.direction.DirectionOnTheLeft()
+	this.orientation = this.orientation.DirectionOnTheLeft()
 }
 
 func (this *Rover) TurnRight() {
-	this.direction = this.direction.DirectionOnTheRight()
+	this.orientation = this.orientation.DirectionOnTheRight()
 }
 
 func (this Rover) CheckObstacle() bool {
-	return this.planetMap.CheckCollision(this.position)
+	return this.planetMap.CheckCollision(this.location)
 }
