@@ -27,7 +27,10 @@ func (this Location) IsWithin(limit size.Size) bool {
 }
 
 func (this *Location) WillBeAt(relativePosition relativePosition.RelativePosition, size size.Size) Location {
-	futureCoordinate := &coordinate.Coordinate{X: this.coordinate.X + relativePosition.X(), Y: this.coordinate.Y + relativePosition.Y()}
+	futureCoordinate := &coordinate.Coordinate{
+		X: this.coordinate.X + relativePosition.X(),
+		Y: this.coordinate.Y + relativePosition.Y(),
+	}
 	futureCoordinate.WrapXIfOutOf(size.Width)
 	futureCoordinate.WrapYIfOutOf(size.Height)
 	return Location{*futureCoordinate}
