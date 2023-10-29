@@ -42,7 +42,7 @@ func TestReportsFuturePositionWhenSizeLimitIsNotInvolved(t *testing.T) {
 	}
 }
 
-func TestWrapsOn_Y(t *testing.T) {
+func TestReportsFuturePositionWhenWrappingOn_Y(t *testing.T) {
 	testSize, _ := size.From(3, 3)
 	testCases := []struct {
 		name             string
@@ -75,7 +75,7 @@ func TestWrapsOn_Y(t *testing.T) {
 	}
 }
 
-func TestWrapsOn_X(t *testing.T) {
+func TestReportsFuturePositionWhenWrappingOn_X(t *testing.T) {
 	testSize, _ := size.From(3, 3)
 	testCases := []struct {
 		name             string
@@ -84,13 +84,13 @@ func TestWrapsOn_X(t *testing.T) {
 		expectedX        int
 	}{
 		{
-			name:             "Y over size",
+			name:             "X over size",
 			relativePosition: relativePosition.New(1, 0),
 			startingX:        3,
 			expectedX:        0,
 		},
 		{
-			name:             "Y under size",
+			name:             "X under size",
 			relativePosition: relativePosition.New(-1, 0),
 			startingX:        0,
 			expectedX:        3,

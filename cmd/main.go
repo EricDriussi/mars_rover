@@ -12,7 +12,7 @@ import (
 )
 
 // TODO: LIST OF THINGS!
-// Collision detection
+// Collision detection - DONE, but reporting collision is missing
 // Persistency
 // API
 // GUI
