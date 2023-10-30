@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/direction"
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/obstacle"
@@ -17,31 +18,19 @@ import (
 // API
 // GUI
 func Sample() {
-	locationOfFirstObstacle, err := location.From(3, 3)
-	if err != nil {
-		fmt.Println("Error creating location:", err)
-		return
-	}
-
-	locationOfSecondObstacle, err := location.From(7, 7)
-	if err != nil {
-		fmt.Println("Error creating location:", err)
-		return
-	}
-
 	marsSize, err := size.From(10, 10)
 	if err != nil {
 		fmt.Println("Error creating size:", err)
 		return
 	}
 
-	mars, err := planet.Create(*marsSize, []obstacle.Obstacle{*obstacle.In(locationOfFirstObstacle), *obstacle.In(locationOfSecondObstacle)})
+	mars, err := planet.Create(*marsSize, []obstacle.Obstacle{*obstacle.In(coordinate.New(3, 3)), *obstacle.In(coordinate.New(7, 7))})
 	if err != nil {
 		fmt.Println("Error creating planet:", err)
 		return
 	}
 
-	landinglocation, err := location.From(0, 0)
+	landinglocation, err := location.From(*coordinate.New(0, 0))
 	if err != nil {
 		fmt.Println("Error creating location:", err)
 		return

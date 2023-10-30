@@ -1,7 +1,7 @@
 package planetMap
 
 import (
-	"mars_rover/internal/domain/location"
+	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/planet"
 	"mars_rover/internal/domain/size"
@@ -20,9 +20,9 @@ func (this *Map) Size() size.Size {
 	return this.size
 }
 
-func (this *Map) CheckCollision(coordinates location.Location) bool {
+func (this *Map) CheckCollision(coord coordinate.Coordinate) bool {
 	for _, obstacle := range this.obstacles {
-		return coordinates.Equals(*obstacle.Location)
+		return coord.Equals(*obstacle.Coordinate)
 	}
 	return false
 }

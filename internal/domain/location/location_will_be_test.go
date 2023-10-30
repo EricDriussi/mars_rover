@@ -1,6 +1,7 @@
 package location_test
 
 import (
+	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/location"
 	relativePosition "mars_rover/internal/domain/relative_position"
 	"mars_rover/internal/domain/size"
@@ -9,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestReportsFuturePositionWhenSizeLimitIsNotInvolved(t *testing.T) {
+func TestReportsFutureCoordinatesWhenSizeLimitIsNotInvolved(t *testing.T) {
 	testSize, _ := size.From(3, 3)
 	testCases := []struct {
 		name             string
@@ -32,17 +33,17 @@ func TestReportsFuturePositionWhenSizeLimitIsNotInvolved(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			givenLocation, _ := location.From(1, 1)
+			givenLocation, _ := location.From(*coordinate.New(1, 1))
 
-			futureLocation := givenLocation.WillBeAt(*testCase.relativePosition, *testSize)
+			futureCoordinate := givenLocation.WillBeAt(*testCase.relativePosition, *testSize)
 
-			expectedLocation, _ := location.From(testCase.expectedX, testCase.expectedY)
-			assert.True(t, futureLocation.Equals(*expectedLocation))
+			expectedCoordinate := *coordinate.New(testCase.expectedX, testCase.expectedY)
+			assert.True(t, futureCoordinate.Equals(expectedCoordinate))
 		})
 	}
 }
 
-func TestReportsFuturePositionWhenWrappingOn_Y(t *testing.T) {
+func TestReportsFutureCoordinatesWhenWrappingOn_Y(t *testing.T) {
 	testSize, _ := size.From(3, 3)
 	testCases := []struct {
 		name             string
@@ -65,17 +66,17 @@ func TestReportsFuturePositionWhenWrappingOn_Y(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			givenLocation, _ := location.From(1, testCase.startingY)
+			givenLocation, _ := location.From(*coordinate.New(1, testCase.startingY))
 
-			futureLocation := givenLocation.WillBeAt(*testCase.relativePosition, *testSize)
+			futureCoordinate := givenLocation.WillBeAt(*testCase.relativePosition, *testSize)
 
-			expectedLocation, _ := location.From(1, testCase.expectedY)
-			assert.True(t, futureLocation.Equals(*expectedLocation))
+			expectedCoordinate := coordinate.New(1, testCase.expectedY)
+			assert.True(t, futureCoordinate.Equals(*expectedCoordinate))
 		})
 	}
 }
 
-func TestReportsFuturePositionWhenWrappingOn_X(t *testing.T) {
+func TestReportsFutureCoordinatesWhenWrappingOn_X(t *testing.T) {
 	testSize, _ := size.From(3, 3)
 	testCases := []struct {
 		name             string
@@ -98,12 +99,12 @@ func TestReportsFuturePositionWhenWrappingOn_X(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			givenLocation, _ := location.From(testCase.startingX, 1)
+			givenLocation, _ := location.From(*coordinate.New(testCase.startingX, 1))
 
-			futureLocation := givenLocation.WillBeAt(*testCase.relativePosition, *testSize)
+			futureCoordinate := givenLocation.WillBeAt(*testCase.relativePosition, *testSize)
 
-			expectedLocation, _ := location.From(testCase.expectedX, 1)
-			assert.True(t, futureLocation.Equals(*expectedLocation))
+			expectedCoordinate := coordinate.New(testCase.expectedX, 1)
+			assert.True(t, futureCoordinate.Equals(*expectedCoordinate))
 		})
 	}
 }

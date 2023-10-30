@@ -1,6 +1,7 @@
 package rover
 
 import (
+	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/direction"
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/planet"
@@ -32,7 +33,7 @@ func (this *Rover) MoveForward() {
 		// TODO: how do I "report the obstacle"?
 		return
 	}
-	this.updateLocation(ahead)
+	this.location.UpdateCoordinate(ahead)
 }
 
 func (this *Rover) MoveBackward() {
@@ -41,7 +42,7 @@ func (this *Rover) MoveBackward() {
 		// TODO: how do I "report the obstacle"?
 		return
 	}
-	this.updateLocation(behind)
+	this.location.UpdateCoordinate(behind)
 }
 
 func (this *Rover) TurnLeft() {
@@ -52,10 +53,6 @@ func (this *Rover) TurnRight() {
 	this.orientation = this.orientation.DirectionOnTheRight()
 }
 
-func (this Rover) willHitSomething(ahead location.Location) bool {
-	return this.planetMap.CheckCollision(ahead)
-}
-
-func (this *Rover) updateLocation(location location.Location) {
-	this.location = location
+func (this Rover) willHitSomething(futureCoord coordinate.Coordinate) bool {
+	return this.planetMap.CheckCollision(futureCoord)
 }

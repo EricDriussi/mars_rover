@@ -1,6 +1,7 @@
 package rover_test
 
 import (
+	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/direction"
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/obstacle"
@@ -14,23 +15,22 @@ import (
 
 func TestAvoidsCollisionMovingForward(t *testing.T) {
 	planetSize, _ := size.From(10, 10)
-	landingLocation, _ := location.From(5, 5)
-	obstacleLocation, _ := location.From(5, 6)
-	obstacleInfront := obstacle.In(obstacleLocation)
+	landingLocation, _ := location.From(*coordinate.New(5, 5))
+	obstacleInfront := obstacle.In(coordinate.New(5, 6))
 	testPlanetWithObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{*obstacleInfront})
 
 	testRover := rover.Land(*landingLocation, &direction.North{}, *testPlanetWithObstacles)
 
 	testRover.MoveForward()
 
-	expectedLocation, _ := location.From(5, 5)
+	expectedLocation, _ := location.From(*coordinate.New(5, 5))
 	assert.True(t, expectedLocation.Equals(testRover.Location()))
 }
 
 func TestAvoidsCollisionWrappingForward(t *testing.T) {
 	planetSize, _ := size.From(5, 5)
-	landingLocation, _ := location.From(3, 5)
-	obstacleLocation, _ := location.From(3, 0)
+	landingLocation, _ := location.From(*coordinate.New(3, 5))
+	obstacleLocation := coordinate.New(3, 0)
 	obstacleInfront := obstacle.In(obstacleLocation)
 	testPlanetWithObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{*obstacleInfront})
 
@@ -38,14 +38,14 @@ func TestAvoidsCollisionWrappingForward(t *testing.T) {
 
 	testRover.MoveForward()
 
-	expectedLocation, _ := location.From(3, 5)
+	expectedLocation, _ := location.From(*coordinate.New(3, 5))
 	assert.True(t, expectedLocation.Equals(testRover.Location()))
 }
 
 func TestAvoidsCollisionMovingBackwards(t *testing.T) {
 	planetSize, _ := size.From(10, 10)
-	landingLocation, _ := location.From(5, 5)
-	obstacleLocation, _ := location.From(5, 4)
+	landingLocation, _ := location.From(*coordinate.New(5, 5))
+	obstacleLocation := coordinate.New(5, 4)
 	obstacleBehind := obstacle.In(obstacleLocation)
 	testPlanetWithObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{*obstacleBehind})
 
@@ -53,14 +53,14 @@ func TestAvoidsCollisionMovingBackwards(t *testing.T) {
 
 	testRover.MoveBackward()
 
-	expectedLocation, _ := location.From(5, 5)
+	expectedLocation, _ := location.From(*coordinate.New(5, 5))
 	assert.True(t, expectedLocation.Equals(testRover.Location()))
 }
 
 func TestAvoidsCollisionWrappingBackwards(t *testing.T) {
 	planetSize, _ := size.From(5, 5)
-	landingLocation, _ := location.From(3, 0)
-	obstacleLocation, _ := location.From(3, 5)
+	landingLocation, _ := location.From(*coordinate.New(3, 0))
+	obstacleLocation := coordinate.New(3, 5)
 	obstacleBehind := obstacle.In(obstacleLocation)
 	testPlanetWithObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{*obstacleBehind})
 
@@ -68,6 +68,6 @@ func TestAvoidsCollisionWrappingBackwards(t *testing.T) {
 
 	testRover.MoveBackward()
 
-	expectedLocation, _ := location.From(3, 0)
+	expectedLocation, _ := location.From(*coordinate.New(3, 0))
 	assert.True(t, expectedLocation.Equals(testRover.Location()))
 }

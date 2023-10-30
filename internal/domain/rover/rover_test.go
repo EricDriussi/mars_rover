@@ -1,6 +1,7 @@
 package rover_test
 
 import (
+	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/direction"
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/obstacle"
@@ -15,7 +16,7 @@ import (
 func beforeEach() (*planet.Planet, *location.Location) {
 	planetSize, _ := size.From(10, 10)
 	testPlanetWithoutObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{})
-	landingLocation, _ := location.From(5, 5)
+	landingLocation, _ := location.From(*coordinate.New(5, 5))
 
 	return testPlanetWithoutObstacles, landingLocation
 }
@@ -24,34 +25,29 @@ func TestMovesForward(t *testing.T) {
 	testPlanetWithoutObstacles, landingLocation := beforeEach()
 
 	testCases := []struct {
-		name             string
-		initialDirection direction.Direction
-		expectedX        int
-		expectedY        int
+		name               string
+		initialDirection   direction.Direction
+		expectedCoordinate coordinate.Coordinate
 	}{
 		{
-			name:             "facing north",
-			initialDirection: &direction.North{},
-			expectedX:        5,
-			expectedY:        6,
+			name:               "facing north",
+			initialDirection:   &direction.North{},
+			expectedCoordinate: *coordinate.New(5, 6),
 		},
 		{
-			name:             "facing east",
-			initialDirection: &direction.East{},
-			expectedX:        6,
-			expectedY:        5,
+			name:               "facing east",
+			initialDirection:   &direction.East{},
+			expectedCoordinate: *coordinate.New(6, 5),
 		},
 		{
-			name:             "facing south",
-			initialDirection: &direction.South{},
-			expectedX:        5,
-			expectedY:        4,
+			name:               "facing south",
+			initialDirection:   &direction.South{},
+			expectedCoordinate: *coordinate.New(5, 4),
 		},
 		{
-			name:             "facing west",
-			initialDirection: &direction.West{},
-			expectedX:        4,
-			expectedY:        5,
+			name:               "facing west",
+			initialDirection:   &direction.West{},
+			expectedCoordinate: *coordinate.New(4, 5),
 		},
 	}
 
@@ -61,7 +57,7 @@ func TestMovesForward(t *testing.T) {
 
 			testRover.MoveForward()
 
-			expectedLocation, _ := location.From(testCase.expectedX, testCase.expectedY)
+			expectedLocation, _ := location.From(testCase.expectedCoordinate)
 			assert.True(t, expectedLocation.Equals(testRover.Location()))
 		})
 	}
@@ -71,34 +67,29 @@ func TestMovesBackward(t *testing.T) {
 	testPlanetWithoutObstacles, landingLocation := beforeEach()
 
 	testCases := []struct {
-		name             string
-		initialDirection direction.Direction
-		expectedX        int
-		expectedY        int
+		name               string
+		initialDirection   direction.Direction
+		expectedCoordinate coordinate.Coordinate
 	}{
 		{
-			name:             "facing north",
-			initialDirection: &direction.North{},
-			expectedX:        5,
-			expectedY:        4,
+			name:               "facing north",
+			initialDirection:   &direction.North{},
+			expectedCoordinate: *coordinate.New(5, 4),
 		},
 		{
-			name:             "facing east",
-			initialDirection: &direction.East{},
-			expectedX:        4,
-			expectedY:        5,
+			name:               "facing east",
+			initialDirection:   &direction.East{},
+			expectedCoordinate: *coordinate.New(4, 5),
 		},
 		{
-			name:             "facing south",
-			initialDirection: &direction.South{},
-			expectedX:        5,
-			expectedY:        6,
+			name:               "facing south",
+			initialDirection:   &direction.South{},
+			expectedCoordinate: *coordinate.New(5, 6),
 		},
 		{
-			name:             "facing west",
-			initialDirection: &direction.West{},
-			expectedX:        6,
-			expectedY:        5,
+			name:               "facing west",
+			initialDirection:   &direction.West{},
+			expectedCoordinate: *coordinate.New(6, 5),
 		},
 	}
 
@@ -108,7 +99,7 @@ func TestMovesBackward(t *testing.T) {
 
 			testRover.MoveBackward()
 
-			expectedLocation, _ := location.From(testCase.expectedX, testCase.expectedY)
+			expectedLocation, _ := location.From(testCase.expectedCoordinate)
 			assert.True(t, expectedLocation.Equals(testRover.Location()))
 		})
 	}

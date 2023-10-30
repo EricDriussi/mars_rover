@@ -1,7 +1,7 @@
 package planet_test
 
 import (
-	"mars_rover/internal/domain/location"
+	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/planet"
 	"mars_rover/internal/domain/size"
@@ -55,7 +55,7 @@ func generateRandomObstacleWithin(size size.Size) obstacle.Obstacle {
 	randomX := rand.Intn(size.Width)
 	randomY := rand.Intn(size.Height)
 
-	randomLocation, _ := location.From(randomX, randomY)
+	randomLocation := coordinate.New(randomX, randomY)
 	return *obstacle.In(randomLocation)
 }
 
@@ -63,6 +63,6 @@ func randomObstacleOutOf(size size.Size) obstacle.Obstacle {
 	randomX := rand.Intn(99-size.Width+1) + size.Width
 	randomY := rand.Intn(99-size.Height+1) + size.Height
 
-	randomLocation, _ := location.From(randomX, randomY)
+	randomLocation := coordinate.New(randomX, randomY)
 	return *obstacle.In(randomLocation)
 }

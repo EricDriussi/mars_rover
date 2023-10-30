@@ -1,21 +1,44 @@
 package coordinate
 
+import "mars_rover/internal/domain/size"
+
+// TODO: add tests
 type Coordinate struct {
-	X, Y int
+	x, y int
+}
+
+func New(x, y int) *Coordinate {
+	return &Coordinate{x, y}
+}
+
+func (this *Coordinate) Equals(other Coordinate) bool {
+	return this.x == other.x && this.y == other.y
+}
+
+func (this *Coordinate) IsWithin(limit size.Size) bool {
+	return this.x <= limit.Width && this.y <= limit.Height
 }
 
 func (this *Coordinate) WrapXIfOutOf(width int) {
-	if this.X > width {
-		this.X = 0
-	} else if this.X < 0 {
-		this.X = width
+	if this.x > width {
+		this.x = 0
+	} else if this.x < 0 {
+		this.x = width
 	}
 }
 
 func (this *Coordinate) WrapYIfOutOf(height int) {
-	if this.Y > height {
-		this.Y = 0
-	} else if this.Y < 0 {
-		this.Y = height
+	if this.y > height {
+		this.y = 0
+	} else if this.y < 0 {
+		this.y = height
 	}
+}
+
+func (this Coordinate) X() int {
+	return this.x
+}
+
+func (this Coordinate) Y() int {
+	return this.y
 }
