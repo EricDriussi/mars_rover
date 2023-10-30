@@ -3,19 +3,32 @@ package location
 import (
 	"errors"
 	coord "mars_rover/internal/domain/coordinate"
-	relativePosition "mars_rover/internal/domain/relative_position"
+	"mars_rover/internal/domain/direction"
 	"mars_rover/internal/domain/size"
 )
 
 type Location struct {
-	coordinate coord.Coordinate
+	coordinate  coord.Coordinate
+	orientation direction.Direction
 }
 
-func From(coordinate coord.Coordinate) (*Location, error) {
+func From(coordinate coord.Coordinate, direction direction.Direction) (*Location, error) {
 	if coordinate.X() < 0 || coordinate.Y() < 0 {
 		return nil, errors.New("no negative coordinates!")
 	}
-	return &Location{coordinate}, nil
+	return &Location{coordinate, direction}, nil
+}
+
+func (this *Location) Orientation() string {
+	return this.orientation.CardinalPoint()
+}
+
+func (this *Location) UpdateWithDirectionOnTheLeft() {
+	this.orientation = this.orientation.DirectionOnTheLeft()
+}
+
+func (this *Location) UpdateWithDirectionOnTheRight() {
+	this.orientation = this.orientation.DirectionOnTheRight()
 }
 
 func (this *Location) Equals(other Location) bool {
@@ -26,12 +39,20 @@ func (this *Location) UpdateCoordinate(coordinate coord.Coordinate) {
 	this.coordinate = coordinate
 }
 
-func (this *Location) WillBeAt(relativePosition relativePosition.RelativePosition, size size.Size) coord.Coordinate {
+func (this *Location) AheadWillBeAt(size size.Size) coord.Coordinate {
 	futureCoordinate := coord.New(
-		this.coordinate.X()+relativePosition.X(),
-		this.coordinate.Y()+relativePosition.Y(),
+		this.coordinate.X()+this.orientation.RelativePositionAhead().X(),
+		this.coordinate.Y()+this.orientation.RelativePositionAhead().Y(),
 	)
-	futureCoordinate.WrapXIfOutOf(size.Width)
-	futureCoordinate.WrapYIfOutOf(size.Height)
+	futureCoordinate.WrapIfOutOf(size)
+	return *futureCoordinate
+}
+
+func (this *Location) BehindWillBeAt(size size.Size) coord.Coordinate {
+	futureCoordinate := coord.New(
+		this.coordinate.X()+this.orientation.RelativePositionBehind().X(),
+		this.coordinate.Y()+this.orientation.RelativePositionBehind().Y(),
+	)
+	futureCoordinate.WrapIfOutOf(size)
 	return *futureCoordinate
 }

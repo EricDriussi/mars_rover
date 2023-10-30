@@ -2,33 +2,27 @@ package rover
 
 import (
 	"mars_rover/internal/domain/coordinate"
-	"mars_rover/internal/domain/direction"
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/planet"
 	planetMap "mars_rover/internal/domain/planet_map"
 )
 
 type Rover struct {
-	location    location.Location
-	orientation direction.Direction
-	planetMap   planetMap.Map
+	location  location.Location
+	planetMap planetMap.Map
 }
 
 // TODO: should this error if landing on obstacle?
-func Land(location location.Location, direction direction.Direction, planet planet.Planet) *Rover {
-	return &Rover{location: location, orientation: direction, planetMap: *planetMap.Of(planet)}
+func Land(location location.Location, planet planet.Planet) *Rover {
+	return &Rover{location: location, planetMap: *planetMap.Of(planet)}
 }
 
-func (this Rover) Direction() direction.Direction {
-	return this.orientation
-}
-
-func (this Rover) Location() location.Location {
-	return this.location
+func (this Rover) Location() *location.Location {
+	return &this.location
 }
 
 func (this *Rover) MoveForward() {
-	ahead := this.location.WillBeAt(this.orientation.RelativePositionAhead(), this.planetMap.Size())
+	ahead := this.location.AheadWillBeAt(this.planetMap.Size())
 	if this.willHitSomething(ahead) {
 		// TODO: how do I "report the obstacle"?
 		return
@@ -37,7 +31,7 @@ func (this *Rover) MoveForward() {
 }
 
 func (this *Rover) MoveBackward() {
-	behind := this.location.WillBeAt(this.orientation.RelativePositionBehind(), this.planetMap.Size())
+	behind := this.location.BehindWillBeAt(this.planetMap.Size())
 	if this.willHitSomething(behind) {
 		// TODO: how do I "report the obstacle"?
 		return
@@ -46,11 +40,11 @@ func (this *Rover) MoveBackward() {
 }
 
 func (this *Rover) TurnLeft() {
-	this.orientation = this.orientation.DirectionOnTheLeft()
+	this.location.UpdateWithDirectionOnTheLeft()
 }
 
 func (this *Rover) TurnRight() {
-	this.orientation = this.orientation.DirectionOnTheRight()
+	this.location.UpdateWithDirectionOnTheRight()
 }
 
 func (this Rover) willHitSomething(futureCoord coordinate.Coordinate) bool {

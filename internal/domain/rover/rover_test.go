@@ -13,16 +13,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func beforeEach() (*planet.Planet, *location.Location) {
+func TestMovesForward(t *testing.T) {
 	planetSize, _ := size.From(10, 10)
 	testPlanetWithoutObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{})
-	landingLocation, _ := location.From(*coordinate.New(5, 5))
-
-	return testPlanetWithoutObstacles, landingLocation
-}
-
-func TestMovesForward(t *testing.T) {
-	testPlanetWithoutObstacles, landingLocation := beforeEach()
 
 	testCases := []struct {
 		name               string
@@ -53,18 +46,20 @@ func TestMovesForward(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover := rover.Land(*landingLocation, testCase.initialDirection, *testPlanetWithoutObstacles)
+			landingLocation, _ := location.From(*coordinate.New(5, 5), testCase.initialDirection)
+			testRover := rover.Land(*landingLocation, *testPlanetWithoutObstacles)
 
 			testRover.MoveForward()
 
-			expectedLocation, _ := location.From(testCase.expectedCoordinate)
-			assert.True(t, expectedLocation.Equals(testRover.Location()))
+			expectedLocation, _ := location.From(testCase.expectedCoordinate, testCase.initialDirection)
+			assert.True(t, expectedLocation.Equals(*testRover.Location()))
 		})
 	}
 }
 
 func TestMovesBackward(t *testing.T) {
-	testPlanetWithoutObstacles, landingLocation := beforeEach()
+	planetSize, _ := size.From(10, 10)
+	testPlanetWithoutObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{})
 
 	testCases := []struct {
 		name               string
@@ -95,18 +90,20 @@ func TestMovesBackward(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover := rover.Land(*landingLocation, testCase.initialDirection, *testPlanetWithoutObstacles)
+			landingLocation, _ := location.From(*coordinate.New(5, 5), testCase.initialDirection)
+			testRover := rover.Land(*landingLocation, *testPlanetWithoutObstacles)
 
 			testRover.MoveBackward()
 
-			expectedLocation, _ := location.From(testCase.expectedCoordinate)
-			assert.True(t, expectedLocation.Equals(testRover.Location()))
+			expectedLocation, _ := location.From(testCase.expectedCoordinate, testCase.initialDirection)
+			assert.True(t, expectedLocation.Equals(*testRover.Location()))
 		})
 	}
 }
 
 func TestTurnsRight(t *testing.T) {
-	testPlanetWithoutObstacles, landingLocation := beforeEach()
+	planetSize, _ := size.From(10, 10)
+	testPlanetWithoutObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{})
 
 	testCases := []struct {
 		name             string
@@ -137,17 +134,19 @@ func TestTurnsRight(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover := rover.Land(*landingLocation, testCase.initialDirection, *testPlanetWithoutObstacles)
+			landingLocation, _ := location.From(*coordinate.New(5, 5), testCase.initialDirection)
+			testRover := rover.Land(*landingLocation, *testPlanetWithoutObstacles)
 
 			testRover.TurnRight()
 
-			assert.Equal(t, testCase.expectedFacing, testRover.Direction().CardinalPoint())
+			assert.Equal(t, testCase.expectedFacing, testRover.Location().Orientation())
 		})
 	}
 }
 
 func TestTurnsLeft(t *testing.T) {
-	testPlanetWithoutObstacles, landingLocation := beforeEach()
+	planetSize, _ := size.From(10, 10)
+	testPlanetWithoutObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{})
 
 	testCases := []struct {
 		name             string
@@ -178,11 +177,12 @@ func TestTurnsLeft(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover := rover.Land(*landingLocation, testCase.initialDirection, *testPlanetWithoutObstacles)
+			landingLocation, _ := location.From(*coordinate.New(5, 5), testCase.initialDirection)
+			testRover := rover.Land(*landingLocation, *testPlanetWithoutObstacles)
 
 			testRover.TurnLeft()
 
-			assert.Equal(t, testCase.expectedFacing, testRover.Direction().CardinalPoint())
+			assert.Equal(t, testCase.expectedFacing, testRover.Location().Orientation())
 		})
 	}
 }

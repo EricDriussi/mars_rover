@@ -19,6 +19,7 @@ func (this *Coordinate) IsWithin(limit size.Size) bool {
 	return this.x <= limit.Width && this.y <= limit.Height
 }
 
+// TODO: should be private
 func (this *Coordinate) WrapXIfOutOf(width int) {
 	if this.x > width {
 		this.x = 0
@@ -27,12 +28,18 @@ func (this *Coordinate) WrapXIfOutOf(width int) {
 	}
 }
 
+// TODO: should be private
 func (this *Coordinate) WrapYIfOutOf(height int) {
 	if this.y > height {
 		this.y = 0
 	} else if this.y < 0 {
 		this.y = height
 	}
+}
+
+func (this *Coordinate) WrapIfOutOf(limit size.Size) {
+	this.WrapXIfOutOf(limit.Width)
+	this.WrapYIfOutOf(limit.Height)
 }
 
 func (this Coordinate) X() int {

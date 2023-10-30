@@ -14,6 +14,10 @@ import (
 
 // TODO: LIST OF THINGS!
 // Collision detection - DONE, but reporting collision is missing
+// review tests - add interfaces and mocks?
+// move direction domain inside location?
+// add domain assertions
+// consider property based testing
 // Persistency
 // API
 // GUI
@@ -30,14 +34,14 @@ func Sample() {
 		return
 	}
 
-	landinglocation, err := location.From(*coordinate.New(0, 0))
+	facingNorth := direction.North{}
+	landinglocation, err := location.From(*coordinate.New(0, 0), facingNorth)
 	if err != nil {
 		fmt.Println("Error creating location:", err)
 		return
 	}
 
-	facingNorth := direction.North{}
-	curiosity := rover.Land(*landinglocation, facingNorth, *mars)
+	curiosity := rover.Land(*landinglocation, *mars)
 
 	commands := []string{"f", "f", "r", "f", "b", "l", "f"}
 
