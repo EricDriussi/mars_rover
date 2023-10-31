@@ -1,6 +1,6 @@
 package direction
 
-import relativePosition "mars_rover/internal/domain/relative_position"
+import relativePosition "mars_rover/internal/domain/location/relative_position"
 
 type North struct{}
 

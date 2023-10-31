@@ -7,6 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// TODO: should test WrapIfOutOf instead
+
 func TestDoesNotWrapXIfWithinLimit(t *testing.T) {
 	coord := coordinate.New(1, 1)
 	coord.WrapXIfOutOf(2)

@@ -1,7 +1,7 @@
 package direction
 
 import (
-	relativePosition "mars_rover/internal/domain/relative_position"
+	relativePosition "mars_rover/internal/domain/location/relative_position"
 )
 
 type Direction interface {

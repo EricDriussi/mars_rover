@@ -4,7 +4,7 @@ package location_test
 // import (
 // 	"mars_rover/internal/domain/coordinate"
 // 	"mars_rover/internal/domain/location"
-// 	relativePosition "mars_rover/internal/domain/relative_position"
+// 	relativePosition "mars_rover/internal/domain/location/relative_position"
 // 	"mars_rover/internal/domain/size"
 // 	"testing"
 

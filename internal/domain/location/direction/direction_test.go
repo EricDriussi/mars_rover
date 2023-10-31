@@ -1,8 +1,8 @@
 package direction_test
 
 import (
-	"mars_rover/internal/domain/direction"
-	relativePosition "mars_rover/internal/domain/relative_position"
+	"mars_rover/internal/domain/location/direction"
+	relativePosition "mars_rover/internal/domain/location/relative_position"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

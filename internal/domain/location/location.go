@@ -3,7 +3,7 @@ package location
 import (
 	"errors"
 	coord "mars_rover/internal/domain/coordinate"
-	"mars_rover/internal/domain/direction"
+	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/size"
 )
 
@@ -12,6 +12,9 @@ type Location struct {
 	orientation direction.Direction
 }
 
+// TODO.LM: Should "direction" be exposed? Should "From" take (coord, "N")?
+// Should "From" take a "directionDTO" enum and create the corresponding direction with a factory?
+// Should direction be inside location directory?
 func From(coordinate coord.Coordinate, direction direction.Direction) (*Location, error) {
 	if coordinate.X() < 0 || coordinate.Y() < 0 {
 		return nil, errors.New("no negative coordinates!")
@@ -32,6 +35,7 @@ func (this *Location) UpdateWithDirectionOnTheRight() {
 }
 
 func (this *Location) Equals(other Location) bool {
+	// TODO: return this.coordinate.Equals(other.coordinate) && this.orientation == other.orientation
 	return this.coordinate.Equals(other.coordinate)
 }
 

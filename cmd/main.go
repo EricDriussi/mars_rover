@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 	"mars_rover/internal/domain/coordinate"
-	"mars_rover/internal/domain/direction"
 	"mars_rover/internal/domain/location"
+	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/planet"
 	"mars_rover/internal/domain/rover"
@@ -15,7 +15,6 @@ import (
 // TODO: LIST OF THINGS!
 // Collision detection - DONE, but reporting collision is missing
 // review tests - add interfaces and mocks?
-// move direction domain inside location?
 // add domain assertions
 // consider property based testing
 // Persistency
