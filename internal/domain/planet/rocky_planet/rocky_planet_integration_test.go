@@ -1,9 +1,10 @@
-package planet_test
+package rocky_planet_test
 
 import (
-	"mars_rover/internal/domain/coordinate"
+	coordinate2d "mars_rover/internal/domain/coordinate/coordinate2D"
 	"mars_rover/internal/domain/obstacle"
-	"mars_rover/internal/domain/planet"
+	"mars_rover/internal/domain/obstacle/rock"
+	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
 	"mars_rover/internal/domain/size"
 	"math/rand"
 	"testing"
@@ -14,7 +15,7 @@ import (
 func TestCanCreateIfNoObstacleIsOutOfBounds(t *testing.T) {
 	sizeLimit, _ := size.From(5, 5)
 	obstaclesWithinBounds := generateThreeRandomObstaclesWithin(*sizeLimit)
-	_, err := planet.Create(*sizeLimit, obstaclesWithinBounds)
+	_, err := rockyPlanet.Create(*sizeLimit, obstaclesWithinBounds)
 
 	assert.Nil(t, err)
 }
@@ -24,7 +25,7 @@ func TestCannotCreateIfOneObstacleIsOutOfBounds(t *testing.T) {
 	obstaclesWithinBounds := generateThreeRandomObstaclesWithin(*sizeLimit)
 
 	oneObstacleOutOfBounds := append(obstaclesWithinBounds, randomObstacleOutOf(*sizeLimit))
-	_, err := planet.Create(*sizeLimit, oneObstacleOutOfBounds)
+	_, err := rockyPlanet.Create(*sizeLimit, oneObstacleOutOfBounds)
 
 	assert.Error(t, err)
 }
@@ -35,7 +36,7 @@ func TestCannotCreateIfMoreThanOneObstacleIsOutOfBounds(t *testing.T) {
 
 	oneObstacleOutOfBounds := append(obstaclesWithinBounds, randomObstacleOutOf(*sizeLimit))
 	twoObstacleOutOfBounds := append(oneObstacleOutOfBounds, randomObstacleOutOf(*sizeLimit))
-	_, err := planet.Create(*sizeLimit, twoObstacleOutOfBounds)
+	_, err := rockyPlanet.Create(*sizeLimit, twoObstacleOutOfBounds)
 
 	assert.Error(t, err)
 }
@@ -55,14 +56,14 @@ func generateRandomObstacleWithin(size size.Size) obstacle.Obstacle {
 	randomX := rand.Intn(size.Width)
 	randomY := rand.Intn(size.Height)
 
-	randomLocation := coordinate.New(randomX, randomY)
-	return obstacle.In(randomLocation)
+	randomLocation := coordinate2d.New(randomX, randomY)
+	return rock.In(randomLocation)
 }
 
 func randomObstacleOutOf(size size.Size) obstacle.Obstacle {
 	randomX := rand.Intn(99-size.Width+1) + size.Width
 	randomY := rand.Intn(99-size.Height+1) + size.Height
 
-	randomLocation := coordinate.New(randomX, randomY)
-	return obstacle.In(randomLocation)
+	randomLocation := coordinate2d.New(randomX, randomY)
+	return rock.In(randomLocation)
 }

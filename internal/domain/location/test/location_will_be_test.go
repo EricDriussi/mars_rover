@@ -21,13 +21,13 @@ package location_test
 // 	}{
 // 		{
 // 			name:             "increase X",
-// 			relativePosition: relativePosition.New(1, 0),
+// 			relativePosition: relativePosition.New(coordinate2d.New(1, 0),
 // 			expectedX:        2,
 // 			expectedY:        1,
 // 		},
 // 		{
 // 			name:             "increase Y",
-// 			relativePosition: relativePosition.New(0, 1),
+// 			relativePosition: relativePosition.New(coordinate2d.New(0, 1),
 // 			expectedX:        1,
 // 			expectedY:        2,
 // 		},
@@ -54,13 +54,13 @@ package location_test
 // 	}{
 // 		{
 // 			name:             "Y over size",
-// 			relativePosition: relativePosition.New(0, 1),
+// 			relativePosition: relativePosition.New(coordinate2d.New(0, 1),
 // 			startingY:        3,
 // 			expectedY:        0,
 // 		},
 // 		{
 // 			name:             "Y under size",
-// 			relativePosition: relativePosition.New(0, -1),
+// 			relativePosition: relativePosition.New(coordinate2d.New(0, -1),
 // 			startingY:        0,
 // 			expectedY:        3,
 // 		},
@@ -87,13 +87,13 @@ package location_test
 // 	}{
 // 		{
 // 			name:             "X over size",
-// 			relativePosition: relativePosition.New(1, 0),
+// 			relativePosition: relativePosition.New(coordinate2d.New(1, 0),
 // 			startingX:        3,
 // 			expectedX:        0,
 // 		},
 // 		{
 // 			name:             "X under size",
-// 			relativePosition: relativePosition.New(-1, 0),
+// 			relativePosition: relativePosition.New(coordinate2d.New(-1, 0),
 // 			startingX:        0,
 // 			expectedX:        3,
 // 		},

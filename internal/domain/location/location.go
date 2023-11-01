@@ -3,6 +3,7 @@ package location
 import (
 	"errors"
 	coord "mars_rover/internal/domain/coordinate"
+	coordinate2d "mars_rover/internal/domain/coordinate/coordinate2D"
 	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/size"
 )
@@ -48,7 +49,7 @@ func (this *Location) UpdateCoordinate(coordinate coord.Coordinate) {
 }
 
 func (this *Location) AheadWillBeAt(size size.Size) coord.Coordinate {
-	futureCoordinate := coord.New(
+	futureCoordinate := coordinate2d.New(
 		this.coordinate.X()+this.orientation.RelativePositionAhead().X(),
 		this.coordinate.Y()+this.orientation.RelativePositionAhead().Y(),
 	)
@@ -57,7 +58,7 @@ func (this *Location) AheadWillBeAt(size size.Size) coord.Coordinate {
 }
 
 func (this *Location) BehindWillBeAt(size size.Size) coord.Coordinate {
-	futureCoordinate := coord.New(
+	futureCoordinate := coordinate2d.New(
 		this.coordinate.X()+this.orientation.RelativePositionBehind().X(),
 		this.coordinate.Y()+this.orientation.RelativePositionBehind().Y(),
 	)

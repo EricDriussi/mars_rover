@@ -1,8 +1,8 @@
-package obstacle_test
+package rock_test
 
 import (
 	"mars_rover/internal/domain/coordinate"
-	"mars_rover/internal/domain/obstacle"
+	"mars_rover/internal/domain/obstacle/rock"
 	"mars_rover/internal/domain/size"
 	"testing"
 
@@ -14,7 +14,7 @@ func TestIsWithinLimit(t *testing.T) {
 	sizeLimit := &size.Size{Width: 5, Height: 5}
 	mockCoordinate := new(MockCoordinate)
 	mockCoordinate.On("IsOutsideOf", mock.Anything).Return(false)
-	testObstacle := obstacle.In(mockCoordinate)
+	testObstacle := rock.In(mockCoordinate)
 
 	assert.False(t, testObstacle.IsBeyond(*sizeLimit))
 	mockCoordinate.AssertCalled(t, "IsOutsideOf", *sizeLimit)
@@ -24,7 +24,7 @@ func TestIsBeyondLimit(t *testing.T) {
 	sizeLimit := &size.Size{Width: 5, Height: 5}
 	mockCoordinate := new(MockCoordinate)
 	mockCoordinate.On("IsOutsideOf", mock.Anything).Return(true)
-	testObstacle := obstacle.In(mockCoordinate)
+	testObstacle := rock.In(mockCoordinate)
 
 	assert.True(t, testObstacle.IsBeyond(*sizeLimit))
 	mockCoordinate.AssertCalled(t, "IsOutsideOf", *sizeLimit)

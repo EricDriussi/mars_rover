@@ -3,11 +3,11 @@ package relativePosition
 import "mars_rover/internal/domain/coordinate"
 
 type RelativePosition struct {
-	coordinate *coordinate.Coordinate2D
+	coordinate coordinate.Coordinate
 }
 
-func New(x, y int) *RelativePosition {
-	return &RelativePosition{coordinate.New(x, y)}
+func New(coord coordinate.Coordinate) *RelativePosition {
+	return &RelativePosition{coord}
 }
 
 func (this RelativePosition) X() int {

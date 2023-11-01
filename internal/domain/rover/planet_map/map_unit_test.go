@@ -4,7 +4,7 @@ package planetMap_test
 // 	"fmt"
 // 	"mars_rover/internal/domain/coordinate"
 // 	"mars_rover/internal/domain/obstacle"
-// 	"mars_rover/internal/domain/planet"
+// 	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
 // 	"mars_rover/internal/domain/rover/planet_map"
 // 	"mars_rover/internal/domain/size"
 // 	"math/rand"

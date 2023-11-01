@@ -1,11 +1,12 @@
 package rover_test
 
 import (
-	"mars_rover/internal/domain/coordinate"
+	coordinate2d "mars_rover/internal/domain/coordinate/coordinate2D"
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/obstacle"
-	"mars_rover/internal/domain/planet"
+	"mars_rover/internal/domain/obstacle/rock"
+	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
 	"mars_rover/internal/domain/rover"
 	"mars_rover/internal/domain/size"
 	"testing"
@@ -15,9 +16,9 @@ import (
 
 func TestAvoidsCollisionMovingForward(t *testing.T) {
 	planetSize, _ := size.From(10, 10)
-	landingLocation, _ := location.From(coordinate.New(5, 5), &direction.North{})
-	obstacleInfront := obstacle.In(coordinate.New(5, 6))
-	testPlanetWithObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{obstacleInfront})
+	landingLocation, _ := location.From(coordinate2d.New(5, 5), &direction.North{})
+	obstacleInfront := rock.In(coordinate2d.New(5, 6))
+	testPlanetWithObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{obstacleInfront})
 
 	testRover := rover.Land(*landingLocation, testPlanetWithObstacles)
 
@@ -28,10 +29,10 @@ func TestAvoidsCollisionMovingForward(t *testing.T) {
 
 func TestAvoidsCollisionWrappingForward(t *testing.T) {
 	planetSize, _ := size.From(5, 5)
-	landingLocation, _ := location.From(coordinate.New(3, 5), &direction.North{})
-	obstacleLocation := coordinate.New(3, 0)
-	obstacleInfront := obstacle.In(obstacleLocation)
-	testPlanetWithObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{obstacleInfront})
+	landingLocation, _ := location.From(coordinate2d.New(3, 5), &direction.North{})
+	obstacleLocation := coordinate2d.New(3, 0)
+	obstacleInfront := rock.In(obstacleLocation)
+	testPlanetWithObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{obstacleInfront})
 
 	testRover := rover.Land(*landingLocation, testPlanetWithObstacles)
 
@@ -42,10 +43,10 @@ func TestAvoidsCollisionWrappingForward(t *testing.T) {
 
 func TestAvoidsCollisionMovingBackwards(t *testing.T) {
 	planetSize, _ := size.From(10, 10)
-	landingLocation, _ := location.From(coordinate.New(5, 5), &direction.North{})
-	obstacleLocation := coordinate.New(5, 4)
-	obstacleBehind := obstacle.In(obstacleLocation)
-	testPlanetWithObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{obstacleBehind})
+	landingLocation, _ := location.From(coordinate2d.New(5, 5), &direction.North{})
+	obstacleLocation := coordinate2d.New(5, 4)
+	obstacleBehind := rock.In(obstacleLocation)
+	testPlanetWithObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{obstacleBehind})
 
 	testRover := rover.Land(*landingLocation, testPlanetWithObstacles)
 
@@ -56,10 +57,10 @@ func TestAvoidsCollisionMovingBackwards(t *testing.T) {
 
 func TestAvoidsCollisionWrappingBackwards(t *testing.T) {
 	planetSize, _ := size.From(5, 5)
-	landingLocation, _ := location.From(coordinate.New(3, 0), &direction.North{})
-	obstacleLocation := coordinate.New(3, 5)
-	obstacleBehind := obstacle.In(obstacleLocation)
-	testPlanetWithObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{obstacleBehind})
+	landingLocation, _ := location.From(coordinate2d.New(3, 0), &direction.North{})
+	obstacleLocation := coordinate2d.New(3, 5)
+	obstacleBehind := rock.In(obstacleLocation)
+	testPlanetWithObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{obstacleBehind})
 
 	testRover := rover.Land(*landingLocation, testPlanetWithObstacles)
 

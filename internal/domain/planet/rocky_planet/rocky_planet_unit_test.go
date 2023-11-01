@@ -1,9 +1,9 @@
-package planet_test
+package rocky_planet_test
 
 import (
 	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/obstacle"
-	"mars_rover/internal/domain/planet"
+	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
 	"mars_rover/internal/domain/size"
 	"testing"
 
@@ -15,7 +15,7 @@ func TestCanCreateIfNoMockObstacleIsOutOfBounds(t *testing.T) {
 	sizeLimit, _ := size.From(5, 5)
 	obstacleOne, obstacleTwo := twoMockObstaclesWithinLimit(*sizeLimit)
 	obstaclesWithinBounds := []obstacle.Obstacle{obstacleOne, obstacleTwo}
-	_, err := planet.Create(*sizeLimit, obstaclesWithinBounds)
+	_, err := rockyPlanet.Create(*sizeLimit, obstaclesWithinBounds)
 
 	obstacleOne.AssertCalled(t, "IsBeyond", *sizeLimit)
 	obstacleTwo.AssertCalled(t, "IsBeyond", *sizeLimit)
@@ -26,7 +26,7 @@ func TestCannotCreateIfOneMockObstacleIsOutOfBounds(t *testing.T) {
 	sizeLimit, _ := size.From(5, 5)
 	obstacleOne, obstacleTwo := twoMockObstaclesOneBeyondLimit(*sizeLimit)
 	obstaclesWithinBounds := []obstacle.Obstacle{obstacleOne, obstacleTwo}
-	_, err := planet.Create(*sizeLimit, obstaclesWithinBounds)
+	_, err := rockyPlanet.Create(*sizeLimit, obstaclesWithinBounds)
 
 	// asserting calls would depend on order of obstacle iteration
 	assert.Error(t, err)
