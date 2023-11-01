@@ -14,33 +14,33 @@ func TestIsWithinAGivenSize(t *testing.T) {
 		for y := 0; y <= sizeLimit.Height; y++ {
 			validCoordinate := coordinate.New(x, y)
 
-			assert.True(t, validCoordinate.IsWithin(*sizeLimit))
+			assert.False(t, validCoordinate.IsOutsideOf(*sizeLimit))
 		}
 	}
 }
 
-func TestIsNotWithinAGivenSize(t *testing.T) {
+func TestIsOutsideOfAGivenSize(t *testing.T) {
 	sizeLimit, _ := size.From(3, 3)
 	testCases := []struct {
-		name  string
-		coord *coordinate.Coordinate
+		name              string
+		invalidCoordinate *coordinate.Coordinate2D
 	}{
 		{
-			name:  "Both out of bounds",
-			coord: coordinate.New(4, 4),
+			name:              "both out of bounds",
+			invalidCoordinate: coordinate.New(4, 4),
 		},
 		{
-			name:  "X out of bounds",
-			coord: coordinate.New(4, 3),
+			name:              "X out of bounds",
+			invalidCoordinate: coordinate.New(4, 3),
 		},
 		{
-			name:  "Y out of bounds",
-			coord: coordinate.New(3, 4),
+			name:              "Y out of bounds",
+			invalidCoordinate: coordinate.New(3, 4),
 		},
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			assert.False(t, testCase.coord.IsWithin(*sizeLimit))
+			assert.True(t, testCase.invalidCoordinate.IsOutsideOf(*sizeLimit))
 		})
 	}
 }

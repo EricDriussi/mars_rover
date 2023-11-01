@@ -66,8 +66,8 @@ func TestWrapIfOutOf(t *testing.T) {
 	limit := size.Size{Width: 2, Height: 2}
 	tests := []struct {
 		name     string
-		starting *coordinate.Coordinate
-		want     *coordinate.Coordinate
+		starting *coordinate.Coordinate2D
+		want     *coordinate.Coordinate2D
 	}{
 		{
 			name:     "Does not wrap X if within limit",
@@ -104,7 +104,7 @@ func TestWrapIfOutOf(t *testing.T) {
 	for _, testCase := range tests {
 		t.Run(testCase.name, func(t *testing.T) {
 			testCase.starting.WrapIfOutOf(limit)
-			assert.True(t, testCase.starting.Equals(*testCase.want))
+			assert.True(t, testCase.starting.Equals(testCase.want))
 		})
 	}
 }

@@ -20,7 +20,7 @@ func TestMovesForward(t *testing.T) {
 	testCases := []struct {
 		name               string
 		initialDirection   direction.Direction
-		expectedCoordinate coordinate.Coordinate
+		expectedCoordinate coordinate.Coordinate2D
 	}{
 		{
 			name:               "facing north",
@@ -46,12 +46,12 @@ func TestMovesForward(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			landingLocation, _ := location.From(*coordinate.New(5, 5), testCase.initialDirection)
+			landingLocation, _ := location.From(coordinate.New(5, 5), testCase.initialDirection)
 			testRover := rover.Land(*landingLocation, *testPlanetWithoutObstacles)
 
 			testRover.MoveForward()
 
-			expectedLocation, _ := location.From(testCase.expectedCoordinate, testCase.initialDirection)
+			expectedLocation, _ := location.From(&testCase.expectedCoordinate, testCase.initialDirection)
 			assert.True(t, expectedLocation.Equals(*testRover.Location()))
 		})
 	}
@@ -64,7 +64,7 @@ func TestMovesBackward(t *testing.T) {
 	testCases := []struct {
 		name               string
 		initialDirection   direction.Direction
-		expectedCoordinate coordinate.Coordinate
+		expectedCoordinate coordinate.Coordinate2D
 	}{
 		{
 			name:               "facing north",
@@ -90,12 +90,12 @@ func TestMovesBackward(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			landingLocation, _ := location.From(*coordinate.New(5, 5), testCase.initialDirection)
+			landingLocation, _ := location.From(coordinate.New(5, 5), testCase.initialDirection)
 			testRover := rover.Land(*landingLocation, *testPlanetWithoutObstacles)
 
 			testRover.MoveBackward()
 
-			expectedLocation, _ := location.From(testCase.expectedCoordinate, testCase.initialDirection)
+			expectedLocation, _ := location.From(&testCase.expectedCoordinate, testCase.initialDirection)
 			assert.True(t, expectedLocation.Equals(*testRover.Location()))
 		})
 	}
@@ -134,7 +134,7 @@ func TestTurnsRight(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			landingLocation, _ := location.From(*coordinate.New(5, 5), testCase.initialDirection)
+			landingLocation, _ := location.From(coordinate.New(5, 5), testCase.initialDirection)
 			testRover := rover.Land(*landingLocation, *testPlanetWithoutObstacles)
 
 			testRover.TurnRight()
@@ -177,7 +177,7 @@ func TestTurnsLeft(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			landingLocation, _ := location.From(*coordinate.New(5, 5), testCase.initialDirection)
+			landingLocation, _ := location.From(coordinate.New(5, 5), testCase.initialDirection)
 			testRover := rover.Land(*landingLocation, *testPlanetWithoutObstacles)
 
 			testRover.TurnLeft()

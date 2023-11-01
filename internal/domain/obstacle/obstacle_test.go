@@ -7,40 +7,51 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestIsWithinLimit(t *testing.T) {
-	testCoordinate := coordinate.New(1, 2)
-	testObstacle := obstacle.In(testCoordinate)
-	sizeLimit, _ := size.From(5, 5)
+	sizeLimit := &size.Size{Width: 5, Height: 5}
+	mockCoordinate := new(MockCoordinate)
+	mockCoordinate.On("IsOutsideOf", mock.Anything).Return(false)
+	testObstacle := obstacle.In(mockCoordinate)
 
-	assert.True(t, testObstacle.IsWithinLimit(*sizeLimit))
+	assert.False(t, testObstacle.IsBeyond(*sizeLimit))
+	mockCoordinate.AssertCalled(t, "IsOutsideOf", *sizeLimit)
 }
 
-func TestIsNotWithinLimit(t *testing.T) {
-	sizeLimit, _ := size.From(3, 3)
-	testCases := []struct {
-		name       string
-		coordinate *coordinate.Coordinate
-	}{
-		{
-			name:       "Both out of bounds",
-			coordinate: coordinate.New(4, 4),
-		},
-		{
-			name:       "X out of bounds",
-			coordinate: coordinate.New(4, 3),
-		},
-		{
-			name:       "Y out of bounds",
-			coordinate: coordinate.New(3, 4),
-		},
-	}
-	for _, testCase := range testCases {
-		t.Run(testCase.name, func(t *testing.T) {
-			outOfBoundsObstacle := obstacle.In(testCase.coordinate)
+func TestIsBeyondLimit(t *testing.T) {
+	sizeLimit := &size.Size{Width: 5, Height: 5}
+	mockCoordinate := new(MockCoordinate)
+	mockCoordinate.On("IsOutsideOf", mock.Anything).Return(true)
+	testObstacle := obstacle.In(mockCoordinate)
 
-			assert.False(t, outOfBoundsObstacle.IsWithinLimit(*sizeLimit))
-		})
-	}
+	assert.True(t, testObstacle.IsBeyond(*sizeLimit))
+	mockCoordinate.AssertCalled(t, "IsOutsideOf", *sizeLimit)
+}
+
+type MockCoordinate struct {
+	mock.Mock
+	x, y int
+}
+
+func (c *MockCoordinate) WrapIfOutOf(limit size.Size) {
+}
+
+func (c *MockCoordinate) IsOutsideOf(limit size.Size) bool {
+	args := c.Called(limit)
+	return args.Bool(0)
+}
+
+func (c *MockCoordinate) Equals(other coordinate.Coordinate) bool {
+	args := c.Called(other)
+	return args.Bool(0)
+}
+
+func (c *MockCoordinate) X() int {
+	return c.x
+}
+
+func (c *MockCoordinate) Y() int {
+	return c.y
 }

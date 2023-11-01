@@ -15,7 +15,6 @@ import (
 // TODO: LIST OF THINGS!
 // Collision detection - DONE, but reporting collision is missing
 // review tests - add interfaces and mocks?
-// add domain assertions
 // consider property based testing
 // Persistency
 // API
@@ -34,7 +33,7 @@ func Sample() {
 	}
 
 	facingNorth := direction.North{}
-	landinglocation, err := location.From(*coordinate.New(0, 0), facingNorth)
+	landinglocation, err := location.From(coordinate.New(0, 0), facingNorth)
 	if err != nil {
 		fmt.Println("Error creating location:", err)
 		return

@@ -2,36 +2,48 @@ package coordinate
 
 import "mars_rover/internal/domain/size"
 
-type Coordinate struct {
+type Coordinate interface {
+	WrapIfOutOf(size.Size)
+	IsOutsideOf(size.Size) bool
+	Equals(other Coordinate) bool
+	X() int
+	Y() int
+}
+
+type Coordinate2D struct {
 	x, y int
 }
 
-func New(x, y int) *Coordinate {
-	return &Coordinate{x, y}
+func New(x, y int) *Coordinate2D {
+	return &Coordinate2D{x, y}
 }
 
-func (this *Coordinate) WrapIfOutOf(limit size.Size) {
+func (this *Coordinate2D) WrapIfOutOf(limit size.Size) {
 	this.wrapXIfOutOf(limit.Width)
 	this.wrapYIfOutOf(limit.Height)
 }
 
-func (this *Coordinate) IsWithin(limit size.Size) bool {
+func (this *Coordinate2D) IsOutsideOf(limit size.Size) bool {
+	return !this.isWithin(limit)
+}
+
+func (this *Coordinate2D) isWithin(limit size.Size) bool {
 	return this.x <= limit.Width && this.y <= limit.Height
 }
 
-func (this *Coordinate) Equals(other Coordinate) bool {
-	return this.x == other.x && this.y == other.y
+func (this *Coordinate2D) Equals(other Coordinate) bool {
+	return this.x == other.X() && this.y == other.Y()
 }
 
-func (this Coordinate) X() int {
+func (this Coordinate2D) X() int {
 	return this.x
 }
 
-func (this Coordinate) Y() int {
+func (this Coordinate2D) Y() int {
 	return this.y
 }
 
-func (this *Coordinate) wrapXIfOutOf(width int) {
+func (this *Coordinate2D) wrapXIfOutOf(width int) {
 	if this.x > width {
 		this.x = 0
 	} else if this.x < 0 {
@@ -39,7 +51,7 @@ func (this *Coordinate) wrapXIfOutOf(width int) {
 	}
 }
 
-func (this *Coordinate) wrapYIfOutOf(height int) {
+func (this *Coordinate2D) wrapYIfOutOf(height int) {
 	if this.y > height {
 		this.y = 0
 	} else if this.y < 0 {

@@ -20,7 +20,7 @@ func TestReportsCollision(t *testing.T) {
 	planetMap := planetMap.Of(*planet)
 	obstacleCoordinate := coordinate.New(x, y)
 
-	didCollide := planetMap.CheckCollision(*obstacleCoordinate)
+	didCollide := planetMap.CheckCollision(obstacleCoordinate)
 
 	assert.True(t, didCollide)
 }
@@ -37,7 +37,7 @@ func TestReportsNOCollision(t *testing.T) {
 				testPlanet := createPlanetWithRandomObstaclesNotIn(*planetSize, *testCoordinate)
 
 				planetMap := planetMap.Of(*testPlanet)
-				didCollide := planetMap.CheckCollision(*testCoordinate)
+				didCollide := planetMap.CheckCollision(testCoordinate)
 
 				assert.False(t, didCollide)
 			})
@@ -53,7 +53,7 @@ func createPlanetWithObstacleIn(x, y int) *planet.Planet {
 	return planet
 }
 
-func createPlanetWithRandomObstaclesNotIn(planetSize size.Size, exclude coordinate.Coordinate) *planet.Planet {
+func createPlanetWithRandomObstaclesNotIn(planetSize size.Size, exclude coordinate.Coordinate2D) *planet.Planet {
 	maxNumOfObstacles := (planetSize.Height * planetSize.Width) - 1
 	numObstacles := max(rand.Intn(maxNumOfObstacles), 1)
 
@@ -68,11 +68,11 @@ func createPlanetWithRandomObstaclesNotIn(planetSize size.Size, exclude coordina
 	return planet
 }
 
-func getRandomCoordinateExcluding(planetSize size.Size, exclude coordinate.Coordinate) *coordinate.Coordinate {
+func getRandomCoordinateExcluding(planetSize size.Size, exclude coordinate.Coordinate2D) *coordinate.Coordinate2D {
 	for {
 		randomCoordinate := coordinate.New(rand.Intn(planetSize.Width), rand.Intn(planetSize.Height))
 
-		coordinateIsNotExcluded := !randomCoordinate.Equals(exclude)
+		coordinateIsNotExcluded := !randomCoordinate.Equals(&exclude)
 		if coordinateIsNotExcluded {
 			return randomCoordinate
 		}

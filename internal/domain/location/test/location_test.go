@@ -13,7 +13,7 @@ import (
 func TestDoesNotAllowNegativeValues(t *testing.T) {
 	testCases := []struct {
 		name       string
-		coordinate coordinate.Coordinate
+		coordinate coordinate.Coordinate2D
 	}{
 		{
 			name:       "neither X nor Y can be negative",
@@ -30,23 +30,23 @@ func TestDoesNotAllowNegativeValues(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			_, err := location.From(testCase.coordinate, mockDirection{})
+			_, err := location.From(&testCase.coordinate, mockDirection{})
 			assert.Error(t, err)
 		})
 	}
 }
 
 func TestEqualsBasedOnCoordinates(t *testing.T) {
-	aLocation, _ := location.From(*coordinate.New(1, 1), mockDirection{})
-	anEqualLocation, _ := location.From(*coordinate.New(1, 1), mockDirection{})
+	aLocation, _ := location.From(coordinate.New(1, 1), mockDirection{})
+	anEqualLocation, _ := location.From(coordinate.New(1, 1), mockDirection{})
 
 	areTheSame := aLocation.Equals(*anEqualLocation)
 	assert.True(t, areTheSame)
 }
 
 func TestNotEqualsBasedOnCoordinates(t *testing.T) {
-	aLocation, _ := location.From(*coordinate.New(1, 2), mockDirection{})
-	anEqualLocation, _ := location.From(*coordinate.New(2, 1), mockDirection{})
+	aLocation, _ := location.From(coordinate.New(1, 2), mockDirection{})
+	anEqualLocation, _ := location.From(coordinate.New(2, 1), mockDirection{})
 
 	areTheSame := aLocation.Equals(*anEqualLocation)
 	assert.False(t, areTheSame)

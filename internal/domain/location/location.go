@@ -49,7 +49,7 @@ func (this *Location) AheadWillBeAt(size size.Size) coord.Coordinate {
 		this.coordinate.Y()+this.orientation.RelativePositionAhead().Y(),
 	)
 	futureCoordinate.WrapIfOutOf(size)
-	return *futureCoordinate
+	return futureCoordinate
 }
 
 func (this *Location) BehindWillBeAt(size size.Size) coord.Coordinate {
@@ -58,5 +58,5 @@ func (this *Location) BehindWillBeAt(size size.Size) coord.Coordinate {
 		this.coordinate.Y()+this.orientation.RelativePositionBehind().Y(),
 	)
 	futureCoordinate.WrapIfOutOf(size)
-	return *futureCoordinate
+	return futureCoordinate
 }

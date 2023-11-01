@@ -13,7 +13,7 @@ type Planet struct {
 
 func Create(size size.Size, obstacles []obstacle.Obstacle) (*Planet, error) {
 	for _, obs := range obstacles {
-		if !obs.IsWithinLimit(size) {
+		if obs.IsBeyond(size) {
 			return nil, errors.New("an obstacle was set outside of the planet :c")
 		}
 	}
