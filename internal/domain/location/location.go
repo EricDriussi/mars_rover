@@ -26,6 +26,10 @@ func (this *Location) Orientation() string {
 	return this.orientation.CardinalPoint()
 }
 
+func (this *Location) Position() coord.Coordinate {
+	return this.coordinate
+}
+
 func (this *Location) UpdateWithDirectionOnTheLeft() {
 	this.orientation = this.orientation.DirectionOnTheLeft()
 }
@@ -34,8 +38,8 @@ func (this *Location) UpdateWithDirectionOnTheRight() {
 	this.orientation = this.orientation.DirectionOnTheRight()
 }
 
+// TODO: should not exist
 func (this *Location) Equals(other Location) bool {
-	// TODO: return this.coordinate.Equals(other.coordinate) && this.orientation == other.orientation
 	return this.coordinate.Equals(other.coordinate)
 }
 

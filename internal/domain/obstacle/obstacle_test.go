@@ -35,23 +35,23 @@ type MockCoordinate struct {
 	x, y int
 }
 
-func (c *MockCoordinate) WrapIfOutOf(limit size.Size) {
+func (this *MockCoordinate) WrapIfOutOf(limit size.Size) {
 }
 
-func (c *MockCoordinate) IsOutsideOf(limit size.Size) bool {
-	args := c.Called(limit)
+func (this *MockCoordinate) IsOutsideOf(limit size.Size) bool {
+	args := this.Called(limit)
 	return args.Bool(0)
 }
 
-func (c *MockCoordinate) Equals(other coordinate.Coordinate) bool {
-	args := c.Called(other)
+func (this *MockCoordinate) Equals(other coordinate.Coordinate) bool {
+	args := this.Called(other)
 	return args.Bool(0)
 }
 
-func (c *MockCoordinate) X() int {
-	return c.x
+func (this *MockCoordinate) X() int {
+	return this.x
 }
 
-func (c *MockCoordinate) Y() int {
-	return c.y
+func (this *MockCoordinate) Y() int {
+	return this.y
 }
