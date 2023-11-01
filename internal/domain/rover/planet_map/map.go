@@ -13,7 +13,7 @@ type Map struct {
 }
 
 func Of(planet planet.Planet) *Map {
-	return &Map{planet.Size, planet.Obstacles}
+	return &Map{planet.Size(), planet.Obstacles()}
 }
 
 func (this *Map) Size() size.Size {

@@ -39,7 +39,7 @@ func Sample() {
 		return
 	}
 
-	curiosity := rover.Land(*landinglocation, *mars)
+	curiosity := rover.Land(*landinglocation, mars)
 
 	commands := []string{"f", "f", "r", "f", "b", "l", "f"}
 

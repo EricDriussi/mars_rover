@@ -53,11 +53,11 @@ type MockObstacle struct {
 	coord coordinate.Coordinate
 }
 
-func (c *MockObstacle) IsBeyond(limit size.Size) bool {
-	args := c.Called(limit)
+func (this *MockObstacle) IsBeyond(limit size.Size) bool {
+	args := this.Called(limit)
 	return args.Bool(0)
 }
 
-func (c *MockObstacle) Coordinate() coordinate.Coordinate {
-	return c.coord
+func (this *MockObstacle) Coordinate() coordinate.Coordinate {
+	return this.coord
 }
