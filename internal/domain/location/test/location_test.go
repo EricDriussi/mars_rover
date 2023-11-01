@@ -69,9 +69,9 @@ func (this mockDirection) DirectionOnTheRight() direction.Direction {
 }
 
 func (this mockDirection) RelativePositionAhead() relativePosition.RelativePosition {
-	return *relativePosition.New(coordinate2d.New(0, 0))
+	return *relativePosition.New(0, 0)
 }
 
 func (this mockDirection) RelativePositionBehind() relativePosition.RelativePosition {
-	return *relativePosition.New(coordinate2d.New(0, 0))
+	return *relativePosition.New(0, 0)
 }

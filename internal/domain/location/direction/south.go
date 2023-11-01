@@ -1,7 +1,6 @@
 package direction
 
 import (
-	coordinate2d "mars_rover/internal/domain/coordinate/coordinate2D"
 	relativePosition "mars_rover/internal/domain/location/relative_position"
 )
 
@@ -20,9 +19,9 @@ func (this South) DirectionOnTheRight() Direction {
 }
 
 func (this South) RelativePositionAhead() relativePosition.RelativePosition {
-	return *relativePosition.New(coordinate2d.New(0, -1))
+	return *relativePosition.New(0, -1)
 }
 
 func (this South) RelativePositionBehind() relativePosition.RelativePosition {
-	return *relativePosition.New(coordinate2d.New(0, 1))
+	return *relativePosition.New(0, 1)
 }
