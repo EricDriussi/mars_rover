@@ -28,21 +28,6 @@ func TestDoesNotAllowNegativeValues(t *testing.T) {
 			width:  10,
 			height: -10,
 		},
-	}
-	for _, testCase := range testCases {
-		t.Run(testCase.name, func(t *testing.T) {
-			_, err := size.From(testCase.width, testCase.height)
-			assert.Error(t, err)
-		})
-	}
-}
-
-func TestDoesNotAllowZeroValues(t *testing.T) {
-	testCases := []struct {
-		name   string
-		width  int
-		height int
-	}{
 		{
 			name:   "neither width nor height can be zero",
 			width:  0,
