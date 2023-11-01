@@ -49,7 +49,7 @@ func createPlanetWithObstacleIn(x, y int) *planet.Planet {
 	planetSize, _ := size.From(x+2, y+2)
 	obstacleCoordinate := coordinate.New(x, y)
 	planetObstacle := obstacle.In(obstacleCoordinate)
-	planet, _ := planet.Create(*planetSize, []obstacle.Obstacle{*planetObstacle})
+	planet, _ := planet.Create(*planetSize, []obstacle.Obstacle{planetObstacle})
 	return planet
 }
 
@@ -61,7 +61,7 @@ func createPlanetWithRandomObstaclesNotIn(planetSize size.Size, exclude coordina
 
 	for i := 0; i < numObstacles; i++ {
 		randomCoordinate := getRandomCoordinateExcluding(planetSize, exclude)
-		obstacles = append(obstacles, *obstacle.In(randomCoordinate))
+		obstacles = append(obstacles, obstacle.In(randomCoordinate))
 	}
 
 	planet, _ := planet.Create(planetSize, obstacles)

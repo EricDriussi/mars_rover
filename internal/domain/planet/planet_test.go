@@ -56,7 +56,7 @@ func generateRandomObstacleWithin(size size.Size) obstacle.Obstacle {
 	randomY := rand.Intn(size.Height)
 
 	randomLocation := coordinate.New(randomX, randomY)
-	return *obstacle.In(randomLocation)
+	return obstacle.In(randomLocation)
 }
 
 func randomObstacleOutOf(size size.Size) obstacle.Obstacle {
@@ -64,5 +64,5 @@ func randomObstacleOutOf(size size.Size) obstacle.Obstacle {
 	randomY := rand.Intn(99-size.Height+1) + size.Height
 
 	randomLocation := coordinate.New(randomX, randomY)
-	return *obstacle.In(randomLocation)
+	return obstacle.In(randomLocation)
 }

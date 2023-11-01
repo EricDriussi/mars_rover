@@ -17,7 +17,7 @@ func TestAvoidsCollisionMovingForward(t *testing.T) {
 	planetSize, _ := size.From(10, 10)
 	landingLocation, _ := location.From(coordinate.New(5, 5), &direction.North{})
 	obstacleInfront := obstacle.In(coordinate.New(5, 6))
-	testPlanetWithObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{*obstacleInfront})
+	testPlanetWithObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{obstacleInfront})
 
 	testRover := rover.Land(*landingLocation, *testPlanetWithObstacles)
 
@@ -31,7 +31,7 @@ func TestAvoidsCollisionWrappingForward(t *testing.T) {
 	landingLocation, _ := location.From(coordinate.New(3, 5), &direction.North{})
 	obstacleLocation := coordinate.New(3, 0)
 	obstacleInfront := obstacle.In(obstacleLocation)
-	testPlanetWithObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{*obstacleInfront})
+	testPlanetWithObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{obstacleInfront})
 
 	testRover := rover.Land(*landingLocation, *testPlanetWithObstacles)
 
@@ -45,7 +45,7 @@ func TestAvoidsCollisionMovingBackwards(t *testing.T) {
 	landingLocation, _ := location.From(coordinate.New(5, 5), &direction.North{})
 	obstacleLocation := coordinate.New(5, 4)
 	obstacleBehind := obstacle.In(obstacleLocation)
-	testPlanetWithObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{*obstacleBehind})
+	testPlanetWithObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{obstacleBehind})
 
 	testRover := rover.Land(*landingLocation, *testPlanetWithObstacles)
 
@@ -59,7 +59,7 @@ func TestAvoidsCollisionWrappingBackwards(t *testing.T) {
 	landingLocation, _ := location.From(coordinate.New(3, 0), &direction.North{})
 	obstacleLocation := coordinate.New(3, 5)
 	obstacleBehind := obstacle.In(obstacleLocation)
-	testPlanetWithObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{*obstacleBehind})
+	testPlanetWithObstacles, _ := planet.Create(*planetSize, []obstacle.Obstacle{obstacleBehind})
 
 	testRover := rover.Land(*landingLocation, *testPlanetWithObstacles)
 

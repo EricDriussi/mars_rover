@@ -26,7 +26,7 @@ func Sample() {
 		return
 	}
 
-	mars, err := planet.Create(*marsSize, []obstacle.Obstacle{*obstacle.In(coordinate.New(3, 3)), *obstacle.In(coordinate.New(7, 7))})
+	mars, err := planet.Create(*marsSize, []obstacle.Obstacle{obstacle.In(coordinate.New(3, 3)), obstacle.In(coordinate.New(7, 7))})
 	if err != nil {
 		fmt.Println("Error creating planet:", err)
 		return
