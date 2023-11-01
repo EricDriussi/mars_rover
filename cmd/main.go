@@ -15,7 +15,7 @@ import (
 
 // TODO: LIST OF THINGS!
 // Collision detection - DONE, but reporting collision is missing
-// review tests - add interfaces and mocks?
+// review tests - add interfaces and mocks? - Pending location and rover
 // consider property based testing
 // Persistency
 // API

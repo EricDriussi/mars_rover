@@ -1,7 +1,7 @@
 package rock_test
 
 import (
-	"mars_rover/internal/domain/coordinate"
+	"mars_rover/internal/domain/coordinate/test"
 	"mars_rover/internal/domain/obstacle/rock"
 	"mars_rover/internal/domain/size"
 	"testing"
@@ -12,7 +12,7 @@ import (
 
 func TestIsWithinLimit(t *testing.T) {
 	sizeLimit := &size.Size{Width: 5, Height: 5}
-	mockCoordinate := new(MockCoordinate)
+	mockCoordinate := new(test.MockCoordinate)
 	mockCoordinate.On("IsOutsideOf", mock.Anything).Return(false)
 	testObstacle := rock.In(mockCoordinate)
 
@@ -22,36 +22,10 @@ func TestIsWithinLimit(t *testing.T) {
 
 func TestIsBeyondLimit(t *testing.T) {
 	sizeLimit := &size.Size{Width: 5, Height: 5}
-	mockCoordinate := new(MockCoordinate)
+	mockCoordinate := new(test.MockCoordinate)
 	mockCoordinate.On("IsOutsideOf", mock.Anything).Return(true)
 	testObstacle := rock.In(mockCoordinate)
 
 	assert.True(t, testObstacle.IsBeyond(*sizeLimit))
 	mockCoordinate.AssertCalled(t, "IsOutsideOf", *sizeLimit)
-}
-
-type MockCoordinate struct {
-	mock.Mock
-	x, y int
-}
-
-func (this *MockCoordinate) WrapIfOutOf(limit size.Size) {
-}
-
-func (this *MockCoordinate) IsOutsideOf(limit size.Size) bool {
-	args := this.Called(limit)
-	return args.Bool(0)
-}
-
-func (this *MockCoordinate) Equals(other coordinate.Coordinate) bool {
-	args := this.Called(other)
-	return args.Bool(0)
-}
-
-func (this *MockCoordinate) X() int {
-	return this.x
-}
-
-func (this *MockCoordinate) Y() int {
-	return this.y
 }

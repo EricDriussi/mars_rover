@@ -1,8 +1,8 @@
 package rocky_planet_test
 
 import (
-	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/obstacle"
+	"mars_rover/internal/domain/obstacle/test"
 	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
 	"mars_rover/internal/domain/size"
 	"testing"
@@ -32,32 +32,18 @@ func TestCannotCreateIfOneMockObstacleIsOutOfBounds(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func twoMockObstaclesWithinLimit(limit size.Size) (*MockObstacle, *MockObstacle) {
-	obstacleOne := new(MockObstacle)
-	obstacleTwo := new(MockObstacle)
+func twoMockObstaclesWithinLimit(limit size.Size) (*test.MockObstacle, *test.MockObstacle) {
+	obstacleOne := new(test.MockObstacle)
+	obstacleTwo := new(test.MockObstacle)
 	obstacleOne.On("IsBeyond", mock.Anything).Return(false)
 	obstacleTwo.On("IsBeyond", mock.Anything).Return(false)
 	return obstacleOne, obstacleTwo
 }
 
-func twoMockObstaclesOneBeyondLimit(limit size.Size) (*MockObstacle, *MockObstacle) {
-	obstacleOne := new(MockObstacle)
-	obstacleTwo := new(MockObstacle)
+func twoMockObstaclesOneBeyondLimit(limit size.Size) (*test.MockObstacle, *test.MockObstacle) {
+	obstacleOne := new(test.MockObstacle)
+	obstacleTwo := new(test.MockObstacle)
 	obstacleOne.On("IsBeyond", mock.Anything).Return(true)
 	obstacleTwo.On("IsBeyond", mock.Anything).Return(false)
 	return obstacleOne, obstacleTwo
-}
-
-type MockObstacle struct {
-	mock.Mock
-	coord coordinate.Coordinate
-}
-
-func (this *MockObstacle) IsBeyond(limit size.Size) bool {
-	args := this.Called(limit)
-	return args.Bool(0)
-}
-
-func (this *MockObstacle) Coordinate() coordinate.Coordinate {
-	return this.coord
 }
