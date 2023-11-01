@@ -22,31 +22,25 @@ func TestIsWithinAGivenSize(t *testing.T) {
 func TestIsNotWithinAGivenSize(t *testing.T) {
 	sizeLimit, _ := size.From(3, 3)
 	testCases := []struct {
-		name string
-		x    int
-		y    int
+		name  string
+		coord *coordinate.Coordinate
 	}{
 		{
-			name: "Both out of bounds",
-			x:    4,
-			y:    4,
+			name:  "Both out of bounds",
+			coord: coordinate.New(4, 4),
 		},
 		{
-			name: "X out of bounds",
-			x:    4,
-			y:    3,
+			name:  "X out of bounds",
+			coord: coordinate.New(4, 3),
 		},
 		{
-			name: "Y out of bounds",
-			x:    3,
-			y:    4,
+			name:  "Y out of bounds",
+			coord: coordinate.New(3, 4),
 		},
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			outOfBoundsCoordinate := coordinate.New(testCase.x, testCase.y)
-
-			assert.False(t, outOfBoundsCoordinate.IsWithin(*sizeLimit))
+			assert.False(t, testCase.coord.IsWithin(*sizeLimit))
 		})
 	}
 }
