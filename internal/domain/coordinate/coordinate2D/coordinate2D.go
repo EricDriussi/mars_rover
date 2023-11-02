@@ -18,10 +18,6 @@ func (this *Coordinate2D) WrapIfOutOf(limit size.Size) {
 	this.wrapYIfOutOf(limit.Height)
 }
 
-func (this *Coordinate2D) IsOutsideOf(limit size.Size) bool {
-	return !this.isWithin(limit)
-}
-
 func (this *Coordinate2D) isWithin(limit size.Size) bool {
 	return this.x <= limit.Width && this.y <= limit.Height
 }

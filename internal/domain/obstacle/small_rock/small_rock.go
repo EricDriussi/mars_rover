@@ -19,5 +19,5 @@ func (this SmallRock) Occupies(coordinate coord.Coordinate) bool {
 }
 
 func (this SmallRock) IsBeyond(size size.Size) bool {
-	return this.coordinate.IsOutsideOf(size)
+	return this.coordinate.X() > size.Width || this.coordinate.Y() > size.Height
 }
