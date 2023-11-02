@@ -1,4 +1,4 @@
-package rock
+package small_rock
 
 import (
 	coord "mars_rover/internal/domain/coordinate"
@@ -6,18 +6,18 @@ import (
 	"mars_rover/internal/domain/size"
 )
 
-type Rock struct {
+type SmallRock struct {
 	coordinate coord.Coordinate
 }
 
 func In(coordinate coord.Coordinate) obstacle.Obstacle {
-	return &Rock{coordinate}
+	return &SmallRock{coordinate}
 }
 
-func (this Rock) Coordinate() coord.Coordinate {
-	return this.coordinate
+func (this SmallRock) Occupies(coordinate coord.Coordinate) bool {
+	return this.coordinate.Equals(coordinate)
 }
 
-func (this Rock) IsBeyond(size size.Size) bool {
+func (this SmallRock) IsBeyond(size size.Size) bool {
 	return this.coordinate.IsOutsideOf(size)
 }

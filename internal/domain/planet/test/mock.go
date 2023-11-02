@@ -3,7 +3,6 @@ package test
 import (
 	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/obstacle"
-	"mars_rover/internal/domain/obstacle/test"
 	"mars_rover/internal/domain/size"
 
 	"github.com/stretchr/testify/mock"
@@ -11,7 +10,8 @@ import (
 
 type MockPlanet struct {
 	mock.Mock
-	coord coordinate.Coordinate
+	coord     coordinate.Coordinate
+	obstacles []obstacle.Obstacle
 }
 
 func (this *MockPlanet) Size() size.Size {
@@ -19,5 +19,9 @@ func (this *MockPlanet) Size() size.Size {
 }
 
 func (this *MockPlanet) Obstacles() []obstacle.Obstacle {
-	return []obstacle.Obstacle{new(test.MockObstacle)}
+	return this.obstacles
+}
+
+func (this *MockPlanet) SetObstacles(obstacles []obstacle.Obstacle) {
+	this.obstacles = obstacles
 }

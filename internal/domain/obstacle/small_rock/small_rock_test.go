@@ -1,8 +1,8 @@
-package rock_test
+package small_rock_test
 
 import (
 	"mars_rover/internal/domain/coordinate/test"
-	"mars_rover/internal/domain/obstacle/rock"
+	rock "mars_rover/internal/domain/obstacle/small_rock"
 	"mars_rover/internal/domain/size"
 	"testing"
 

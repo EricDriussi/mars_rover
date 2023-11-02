@@ -3,7 +3,7 @@ package rocky_planet_test
 import (
 	coordinate2d "mars_rover/internal/domain/coordinate/coordinate2D"
 	"mars_rover/internal/domain/obstacle"
-	"mars_rover/internal/domain/obstacle/rock"
+	rock "mars_rover/internal/domain/obstacle/small_rock"
 	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
 	"mars_rover/internal/domain/size"
 	"math/rand"

@@ -5,7 +5,7 @@ import (
 	"mars_rover/internal/domain/coordinate"
 	coordinate2d "mars_rover/internal/domain/coordinate/coordinate2D"
 	"mars_rover/internal/domain/obstacle"
-	"mars_rover/internal/domain/obstacle/rock"
+	rock "mars_rover/internal/domain/obstacle/small_rock"
 	"mars_rover/internal/domain/planet"
 	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
 	"mars_rover/internal/domain/rover/planet_map"

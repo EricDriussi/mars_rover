@@ -9,7 +9,6 @@ import (
 
 type MockObstacle struct {
 	mock.Mock
-	coord coordinate.Coordinate
 }
 
 func (this *MockObstacle) IsBeyond(limit size.Size) bool {
@@ -17,6 +16,7 @@ func (this *MockObstacle) IsBeyond(limit size.Size) bool {
 	return args.Bool(0)
 }
 
-func (this *MockObstacle) Coordinate() coordinate.Coordinate {
-	return this.coord
+func (this *MockObstacle) Occupies(coord coordinate.Coordinate) bool {
+	args := this.Called(coord)
+	return args.Bool(0)
 }
