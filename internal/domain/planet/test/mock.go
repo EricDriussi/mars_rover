@@ -15,13 +15,11 @@ type MockPlanet struct {
 }
 
 func (this *MockPlanet) Size() size.Size {
-	return size.Size{Width: 1, Height: 1}
+	args := this.Called()
+	return args.Get(0).(size.Size)
 }
 
 func (this *MockPlanet) Obstacles() []obstacle.Obstacle {
-	return this.obstacles
-}
-
-func (this *MockPlanet) SetObstacles(obstacles []obstacle.Obstacle) {
-	this.obstacles = obstacles
+	args := this.Called()
+	return args.Get(0).([]obstacle.Obstacle)
 }

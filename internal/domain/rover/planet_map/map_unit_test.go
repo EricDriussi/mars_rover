@@ -6,19 +6,22 @@ import (
 	obstacleTest "mars_rover/internal/domain/obstacle/test"
 	planetTest "mars_rover/internal/domain/planet/test"
 	planetMap "mars_rover/internal/domain/rover/planet_map"
+	"mars_rover/internal/domain/size"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestReportsCollisionWithMock(t *testing.T) {
-	mockCoordinate := new(coordTest.MockCoordinate)
 	mockObstacle := new(obstacleTest.MockObstacle)
-	mockObstacle.On("Occupies", mockCoordinate).Return(true)
-	mockplanet := new(planetTest.MockPlanet)
-	mockplanet.SetObstacles([]obstacle.Obstacle{mockObstacle})
+	mockPlanet := new(planetTest.MockPlanet)
+	mockPlanet.On("Obstacles").Return([]obstacle.Obstacle{mockObstacle})
+	mockPlanet.On("Size").Return(size.Size{})
+	planetMap := planetMap.Of(mockPlanet)
 
-	planetMap := planetMap.Of(mockplanet)
+	mockCoordinate := new(coordTest.MockCoordinate)
+	mockObstacle.On("Occupies", mockCoordinate).Return(true)
+
 	didCollide := planetMap.CheckCollision(mockCoordinate)
 
 	mockObstacle.AssertCalled(t, "Occupies", mockCoordinate)
@@ -26,13 +29,15 @@ func TestReportsCollisionWithMock(t *testing.T) {
 }
 
 func TestReportsNoCollisionWithMock(t *testing.T) {
-	mockCoordinate := new(coordTest.MockCoordinate)
 	mockObstacle := new(obstacleTest.MockObstacle)
-	mockObstacle.On("Occupies", mockCoordinate).Return(false)
-	mockplanet := new(planetTest.MockPlanet)
-	mockplanet.SetObstacles([]obstacle.Obstacle{mockObstacle})
+	mockPlanet := new(planetTest.MockPlanet)
+	mockPlanet.On("Obstacles").Return([]obstacle.Obstacle{mockObstacle})
+	mockPlanet.On("Size").Return(size.Size{})
+	planetMap := planetMap.Of(mockPlanet)
 
-	planetMap := planetMap.Of(mockplanet)
+	mockCoordinate := new(coordTest.MockCoordinate)
+	mockObstacle.On("Occupies", mockCoordinate).Return(false)
+
 	didCollide := planetMap.CheckCollision(mockCoordinate)
 
 	mockObstacle.AssertCalled(t, "Occupies", mockCoordinate)
