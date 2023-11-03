@@ -4,7 +4,6 @@ import (
 	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/location/direction"
-	relativePosition "mars_rover/internal/domain/location/relative_position"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -13,19 +12,19 @@ import (
 func TestDoesNotAllowNegativeValues(t *testing.T) {
 	testCases := []struct {
 		name       string
-		coordinate *coordinate.Coordinate
+		coordinate *coordinate.AbsoluteCoordinate
 	}{
 		{
 			name:       "neither X nor Y can be negative",
-			coordinate: coordinate.New(-1, -1),
+			coordinate: coordinate.NewAbsolute(-1, -1),
 		},
 		{
 			name:       "x cannot be negative",
-			coordinate: coordinate.New(-1, 1),
+			coordinate: coordinate.NewAbsolute(-1, 1),
 		},
 		{
 			name:       "y cannot be negative",
-			coordinate: coordinate.New(1, -1),
+			coordinate: coordinate.NewAbsolute(1, -1),
 		},
 	}
 	for _, testCase := range testCases {
@@ -37,16 +36,16 @@ func TestDoesNotAllowNegativeValues(t *testing.T) {
 }
 
 func TestEqualsBasedOnCoordinates(t *testing.T) {
-	aLocation, _ := location.From(*coordinate.New(1, 1), mockDirection{})
-	anEqualLocation, _ := location.From(*coordinate.New(1, 1), mockDirection{})
+	aLocation, _ := location.From(*coordinate.NewAbsolute(1, 1), mockDirection{})
+	anEqualLocation, _ := location.From(*coordinate.NewAbsolute(1, 1), mockDirection{})
 
 	areTheSame := aLocation.Equals(*anEqualLocation)
 	assert.True(t, areTheSame)
 }
 
 func TestNotEqualsBasedOnCoordinates(t *testing.T) {
-	aLocation, _ := location.From(*coordinate.New(1, 2), mockDirection{})
-	anEqualLocation, _ := location.From(*coordinate.New(2, 1), mockDirection{})
+	aLocation, _ := location.From(*coordinate.NewAbsolute(1, 2), mockDirection{})
+	anEqualLocation, _ := location.From(*coordinate.NewAbsolute(2, 1), mockDirection{})
 
 	areTheSame := aLocation.Equals(*anEqualLocation)
 	assert.False(t, areTheSame)
@@ -67,10 +66,10 @@ func (this mockDirection) DirectionOnTheRight() direction.Direction {
 	return this
 }
 
-func (this mockDirection) RelativePositionAhead() relativePosition.RelativePosition {
-	return *relativePosition.New(0, 0)
+func (this mockDirection) RelativePositionAhead() coordinate.RelativeCoordinate {
+	return *coordinate.RelativeFrom(0, 0)
 }
 
-func (this mockDirection) RelativePositionBehind() relativePosition.RelativePosition {
-	return *relativePosition.New(0, 0)
+func (this mockDirection) RelativePositionBehind() coordinate.RelativeCoordinate {
+	return *coordinate.RelativeFrom(0, 0)
 }

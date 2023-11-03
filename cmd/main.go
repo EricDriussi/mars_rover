@@ -27,14 +27,14 @@ func Sample() {
 		return
 	}
 
-	mars, err := rockyPlanet.Create(*marsSize, []obstacle.Obstacle{rock.In(*coordinate.New(3, 3)), rock.In(*coordinate.New(7, 7))})
+	mars, err := rockyPlanet.Create(*marsSize, []obstacle.Obstacle{rock.In(*coordinate.NewAbsolute(3, 3)), rock.In(*coordinate.NewAbsolute(7, 7))})
 	if err != nil {
 		fmt.Println("Error creating planet:", err)
 		return
 	}
 
 	facingNorth := direction.North{}
-	landinglocation, err := location.From(*coordinate.New(0, 0), facingNorth)
+	landinglocation, err := location.From(*coordinate.NewAbsolute(0, 0), facingNorth)
 	if err != nil {
 		fmt.Println("Error creating location:", err)
 		return

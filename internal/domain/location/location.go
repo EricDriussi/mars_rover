@@ -8,14 +8,14 @@ import (
 )
 
 type Location struct {
-	coordinate  coord.Coordinate
+	coordinate  coord.AbsoluteCoordinate
 	orientation direction.Direction
 }
 
 // TODO.LM: Should "direction" be exposed? Should "From" take (coord, "N")?
 // Should "From" take a "directionDTO" enum and create the corresponding direction with a factory?
 // Should direction be inside location directory?
-func From(coordinate coord.Coordinate, direction direction.Direction) (*Location, error) {
+func From(coordinate coord.AbsoluteCoordinate, direction direction.Direction) (*Location, error) {
 	if coordinate.X() < 0 || coordinate.Y() < 0 {
 		return nil, errors.New("no negative coordinates!")
 	}
@@ -26,7 +26,7 @@ func (this *Location) Orientation() string {
 	return this.orientation.CardinalPoint()
 }
 
-func (this *Location) Position() coord.Coordinate {
+func (this *Location) Position() coord.AbsoluteCoordinate {
 	return this.coordinate
 }
 
@@ -43,24 +43,18 @@ func (this *Location) Equals(other Location) bool {
 	return this.coordinate.Equals(&other.coordinate)
 }
 
-func (this *Location) UpdateCoordinate(coordinate coord.Coordinate) {
+func (this *Location) UpdateCoordinate(coordinate coord.AbsoluteCoordinate) {
 	this.coordinate = coordinate
 }
 
-func (this *Location) AheadWillBeAt(size size.Size) coord.Coordinate {
-	futureCoordinate := *coord.New(
-		this.coordinate.X()+this.orientation.RelativePositionAhead().X(),
-		this.coordinate.Y()+this.orientation.RelativePositionAhead().Y(),
-	)
+func (this *Location) AheadWillBeAt(size size.Size) coord.AbsoluteCoordinate {
+	futureCoordinate := *coord.SumOf(this.coordinate, this.orientation.RelativePositionAhead())
 	futureCoordinate.WrapIfOutOf(size)
 	return futureCoordinate
 }
 
-func (this *Location) BehindWillBeAt(size size.Size) coord.Coordinate {
-	futureCoordinate := *coord.New(
-		this.coordinate.X()+this.orientation.RelativePositionBehind().X(),
-		this.coordinate.Y()+this.orientation.RelativePositionBehind().Y(),
-	)
+func (this *Location) BehindWillBeAt(size size.Size) coord.AbsoluteCoordinate {
+	futureCoordinate := *coord.SumOf(this.coordinate, this.orientation.RelativePositionBehind())
 	futureCoordinate.WrapIfOutOf(size)
 	return futureCoordinate
 }

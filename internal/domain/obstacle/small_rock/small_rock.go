@@ -7,14 +7,14 @@ import (
 )
 
 type SmallRock struct {
-	coordinate coord.Coordinate
+	coordinate coord.AbsoluteCoordinate
 }
 
-func In(coordinate coord.Coordinate) obstacle.Obstacle {
+func In(coordinate coord.AbsoluteCoordinate) obstacle.Obstacle {
 	return &SmallRock{coordinate}
 }
 
-func (this SmallRock) Occupies(coordinate coord.Coordinate) bool {
+func (this SmallRock) Occupies(coordinate coord.AbsoluteCoordinate) bool {
 	return this.coordinate.Equals(&coordinate)
 }
 

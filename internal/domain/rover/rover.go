@@ -47,6 +47,6 @@ func (this *Rover) TurnRight() {
 	this.location.UpdateWithDirectionOnTheRight()
 }
 
-func (this Rover) willHitSomething(futureCoord coordinate.Coordinate) bool {
+func (this Rover) willHitSomething(futureCoord coordinate.AbsoluteCoordinate) bool {
 	return this.planetMap.CheckCollision(futureCoord)
 }

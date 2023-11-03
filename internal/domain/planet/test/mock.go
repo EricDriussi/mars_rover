@@ -1,7 +1,6 @@
 package test
 
 import (
-	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/size"
 
@@ -10,8 +9,6 @@ import (
 
 type MockPlanet struct {
 	mock.Mock
-	coord     coordinate.Coordinate
-	obstacles []obstacle.Obstacle
 }
 
 func (this *MockPlanet) Size() size.Size {

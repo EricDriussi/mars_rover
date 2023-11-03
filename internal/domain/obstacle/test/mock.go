@@ -16,7 +16,7 @@ func (this *MockObstacle) IsBeyond(limit size.Size) bool {
 	return args.Bool(0)
 }
 
-func (this *MockObstacle) Occupies(coord coordinate.Coordinate) bool {
+func (this *MockObstacle) Occupies(coord coordinate.AbsoluteCoordinate) bool {
 	args := this.Called(coord)
 	return args.Bool(0)
 }

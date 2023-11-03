@@ -20,7 +20,7 @@ func TestReportsCollision(t *testing.T) {
 	y := 3
 	planet := createPlanetWithObstacleIn(x, y)
 	planetMap := planetMap.Of(planet)
-	obstacleCoordinate := coordinate.New(x, y)
+	obstacleCoordinate := coordinate.NewAbsolute(x, y)
 
 	didCollide := planetMap.CheckCollision(*obstacleCoordinate)
 
@@ -35,7 +35,7 @@ func TestReportsNOCollision(t *testing.T) {
 			name := fmt.Sprintf("no collision in %d, %d", x, y)
 
 			t.Run(name, func(t *testing.T) {
-				testCoordinate := coordinate.New(x, y)
+				testCoordinate := coordinate.NewAbsolute(x, y)
 				testPlanet := createPlanetWithRandomObstaclesNotIn(*planetSize, *testCoordinate)
 
 				planetMap := planetMap.Of(testPlanet)
@@ -49,13 +49,13 @@ func TestReportsNOCollision(t *testing.T) {
 
 func createPlanetWithObstacleIn(x, y int) planet.Planet {
 	planetSize, _ := size.From(x+2, y+2)
-	obstacleCoordinate := coordinate.New(x, y)
+	obstacleCoordinate := coordinate.NewAbsolute(x, y)
 	planetObstacle := rock.In(*obstacleCoordinate)
 	planet, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{planetObstacle})
 	return planet
 }
 
-func createPlanetWithRandomObstaclesNotIn(planetSize size.Size, exclude coordinate.Coordinate) planet.Planet {
+func createPlanetWithRandomObstaclesNotIn(planetSize size.Size, exclude coordinate.AbsoluteCoordinate) planet.Planet {
 	maxNumOfObstacles := (planetSize.Height * planetSize.Width) - 1
 	numObstacles := max(rand.Intn(maxNumOfObstacles), 1)
 
@@ -70,9 +70,9 @@ func createPlanetWithRandomObstaclesNotIn(planetSize size.Size, exclude coordina
 	return planet
 }
 
-func getRandomCoordinateExcluding(planetSize size.Size, exclude coordinate.Coordinate) coordinate.Coordinate {
+func getRandomCoordinateExcluding(planetSize size.Size, exclude coordinate.AbsoluteCoordinate) coordinate.AbsoluteCoordinate {
 	for {
-		randomCoordinate := coordinate.New(rand.Intn(planetSize.Width), rand.Intn(planetSize.Height))
+		randomCoordinate := coordinate.NewAbsolute(rand.Intn(planetSize.Width), rand.Intn(planetSize.Height))
 
 		coordinateIsNotExcluded := !randomCoordinate.Equals(&exclude)
 		if coordinateIsNotExcluded {

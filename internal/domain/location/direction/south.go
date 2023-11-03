@@ -1,7 +1,7 @@
 package direction
 
 import (
-	relativePosition "mars_rover/internal/domain/location/relative_position"
+	"mars_rover/internal/domain/coordinate"
 )
 
 type South struct{}
@@ -18,10 +18,10 @@ func (this South) DirectionOnTheRight() Direction {
 	return &West{}
 }
 
-func (this South) RelativePositionAhead() relativePosition.RelativePosition {
-	return *relativePosition.New(0, -1)
+func (this South) RelativePositionAhead() coordinate.RelativeCoordinate {
+	return *coordinate.RelativeFrom(0, -1)
 }
 
-func (this South) RelativePositionBehind() relativePosition.RelativePosition {
-	return *relativePosition.New(0, 1)
+func (this South) RelativePositionBehind() coordinate.RelativeCoordinate {
+	return *coordinate.RelativeFrom(0, 1)
 }

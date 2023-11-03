@@ -9,7 +9,7 @@ import (
 )
 
 func TestDoesNotWrapXIfWithinLimit(t *testing.T) {
-	coord := coordinate.New(1, 1)
+	coord := coordinate.NewAbsolute(1, 1)
 	limit, _ := size.From(2, 2)
 
 	coord.WrapIfOutOf(*limit)
@@ -18,7 +18,7 @@ func TestDoesNotWrapXIfWithinLimit(t *testing.T) {
 }
 
 func TestWrapsXIfTooLarge(t *testing.T) {
-	coord := coordinate.New(3, 1)
+	coord := coordinate.NewAbsolute(3, 1)
 	limit, _ := size.From(2, 2)
 
 	coord.WrapIfOutOf(*limit)
@@ -27,7 +27,7 @@ func TestWrapsXIfTooLarge(t *testing.T) {
 }
 
 func TestWrapsXIfTooSmall(t *testing.T) {
-	coord := coordinate.New(-1, 1)
+	coord := coordinate.NewAbsolute(-1, 1)
 	limit, _ := size.From(2, 2)
 
 	coord.WrapIfOutOf(*limit)
@@ -36,7 +36,7 @@ func TestWrapsXIfTooSmall(t *testing.T) {
 }
 
 func TestDoesNotWrapYIfWithinLimit(t *testing.T) {
-	coord := coordinate.New(1, 1)
+	coord := coordinate.NewAbsolute(1, 1)
 	limit, _ := size.From(2, 2)
 
 	coord.WrapIfOutOf(*limit)
@@ -45,7 +45,7 @@ func TestDoesNotWrapYIfWithinLimit(t *testing.T) {
 }
 
 func TestWrapsYIfTooLarge(t *testing.T) {
-	coord := coordinate.New(1, 3)
+	coord := coordinate.NewAbsolute(1, 3)
 	limit, _ := size.From(2, 2)
 
 	coord.WrapIfOutOf(*limit)
@@ -54,7 +54,7 @@ func TestWrapsYIfTooLarge(t *testing.T) {
 }
 
 func TestWrapsYIfTooSmall(t *testing.T) {
-	coord := coordinate.New(1, -1)
+	coord := coordinate.NewAbsolute(1, -1)
 	limit, _ := size.From(2, 2)
 
 	coord.WrapIfOutOf(*limit)
@@ -66,38 +66,38 @@ func TestWrapIfOutOf(t *testing.T) {
 	limit := size.Size{Width: 2, Height: 2}
 	tests := []struct {
 		name     string
-		starting *coordinate.Coordinate
-		want     *coordinate.Coordinate
+		starting *coordinate.AbsoluteCoordinate
+		want     *coordinate.AbsoluteCoordinate
 	}{
 		{
 			name:     "Does not wrap X if within limit",
-			starting: coordinate.New(1, 1),
-			want:     coordinate.New(1, 1),
+			starting: coordinate.NewAbsolute(1, 1),
+			want:     coordinate.NewAbsolute(1, 1),
 		},
 		{
 			name:     "Wraps X if too large",
-			starting: coordinate.New(3, 1),
-			want:     coordinate.New(0, 1),
+			starting: coordinate.NewAbsolute(3, 1),
+			want:     coordinate.NewAbsolute(0, 1),
 		},
 		{
 			name:     "Wraps X if too small",
-			starting: coordinate.New(-1, 1),
-			want:     coordinate.New(2, 1),
+			starting: coordinate.NewAbsolute(-1, 1),
+			want:     coordinate.NewAbsolute(2, 1),
 		},
 		{
 			name:     "Does not wrap Y if within limit",
-			starting: coordinate.New(1, 1),
-			want:     coordinate.New(1, 1),
+			starting: coordinate.NewAbsolute(1, 1),
+			want:     coordinate.NewAbsolute(1, 1),
 		},
 		{
 			name:     "Wraps Y if too large",
-			starting: coordinate.New(1, 3),
-			want:     coordinate.New(1, 0),
+			starting: coordinate.NewAbsolute(1, 3),
+			want:     coordinate.NewAbsolute(1, 0),
 		},
 		{
 			name:     "Wraps Y if too small",
-			starting: coordinate.New(1, -1),
-			want:     coordinate.New(1, 2),
+			starting: coordinate.NewAbsolute(1, -1),
+			want:     coordinate.NewAbsolute(1, 2),
 		},
 	}
 

@@ -8,30 +8,30 @@ import (
 )
 
 func TestEqualsBasedOnValues(t *testing.T) {
-	aCoordinate := coordinate.New(1, 1)
-	anEqualCoordinate := coordinate.New(1, 1)
+	aCoordinate := coordinate.NewAbsolute(1, 1)
+	anEqualCoordinate := coordinate.NewAbsolute(1, 1)
 
 	areTheSame := aCoordinate.Equals(anEqualCoordinate)
 	assert.True(t, areTheSame)
 }
 
 func TestNotEqualsBasedOnValues(t *testing.T) {
-	aCoordinate := coordinate.New(1, 1)
+	aCoordinate := coordinate.NewAbsolute(1, 1)
 	testCases := []struct {
 		name                string
-		differentCoordinate *coordinate.Coordinate
+		differentCoordinate *coordinate.AbsoluteCoordinate
 	}{
 		{
 			name:                "neither X nor Y can differ",
-			differentCoordinate: coordinate.New(2, 2),
+			differentCoordinate: coordinate.NewAbsolute(2, 2),
 		},
 		{
 			name:                "X cannot differ",
-			differentCoordinate: coordinate.New(2, 1),
+			differentCoordinate: coordinate.NewAbsolute(2, 1),
 		},
 		{
 			name:                "Y cannot differ",
-			differentCoordinate: coordinate.New(1, 2),
+			differentCoordinate: coordinate.NewAbsolute(1, 2),
 		},
 	}
 	for _, testCase := range testCases {

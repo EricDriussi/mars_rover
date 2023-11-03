@@ -22,7 +22,7 @@ func TestReportsCollisionWithMock(t *testing.T) {
 
 	mockObstacle.On("Occupies", mock.Anything).Return(true)
 
-	didCollide := planetMap.CheckCollision(coordinate.Coordinate{})
+	didCollide := planetMap.CheckCollision(coordinate.AbsoluteCoordinate{})
 
 	mockObstacle.AssertCalled(t, "Occupies", mock.Anything)
 	assert.True(t, didCollide)
@@ -37,7 +37,7 @@ func TestReportsNoCollisionWithMock(t *testing.T) {
 
 	mockObstacle.On("Occupies", mock.Anything).Return(false)
 
-	didCollide := planetMap.CheckCollision(coordinate.Coordinate{})
+	didCollide := planetMap.CheckCollision(coordinate.AbsoluteCoordinate{})
 
 	mockObstacle.AssertCalled(t, "Occupies", mock.Anything)
 	assert.False(t, didCollide)

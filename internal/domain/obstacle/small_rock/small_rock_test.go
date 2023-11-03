@@ -14,7 +14,7 @@ func TestIsWithinLimit(t *testing.T) {
 
 	for x := 0; x <= sizeLimit.Width; x++ {
 		for y := 0; y <= sizeLimit.Height; y++ {
-			testCoordinate := coordinate.New(x, y)
+			testCoordinate := coordinate.NewAbsolute(x, y)
 			rock := smallRock.In(*testCoordinate)
 
 			assert.False(t, rock.IsBeyond(*sizeLimit))
@@ -26,19 +26,19 @@ func TestIsBeyondLimit(t *testing.T) {
 	sizeLimit := &size.Size{Width: 3, Height: 3}
 	testCases := []struct {
 		name       string
-		coordinate *coordinate.Coordinate
+		coordinate *coordinate.AbsoluteCoordinate
 	}{
 		{
 			name:       "both out of bounds",
-			coordinate: coordinate.New(4, 4),
+			coordinate: coordinate.NewAbsolute(4, 4),
 		},
 		{
 			name:       "X out of bounds",
-			coordinate: coordinate.New(4, 3),
+			coordinate: coordinate.NewAbsolute(4, 3),
 		},
 		{
 			name:       "Y out of bounds",
-			coordinate: coordinate.New(3, 4),
+			coordinate: coordinate.NewAbsolute(3, 4),
 		},
 	}
 	for _, testCase := range testCases {

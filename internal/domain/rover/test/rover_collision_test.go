@@ -16,8 +16,8 @@ import (
 
 func TestAvoidsCollisionMovingForward(t *testing.T) {
 	planetSize, _ := size.From(10, 10)
-	landingLocation, _ := location.From(*coordinate.New(5, 5), &direction.North{})
-	obstacleInfront := rock.In(*coordinate.New(5, 6))
+	landingLocation, _ := location.From(*coordinate.NewAbsolute(5, 5), &direction.North{})
+	obstacleInfront := rock.In(*coordinate.NewAbsolute(5, 6))
 	testPlanetWithObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{obstacleInfront})
 
 	testRover := rover.Land(*landingLocation, testPlanetWithObstacles)
@@ -29,8 +29,8 @@ func TestAvoidsCollisionMovingForward(t *testing.T) {
 
 func TestAvoidsCollisionWrappingForward(t *testing.T) {
 	planetSize, _ := size.From(5, 5)
-	landingLocation, _ := location.From(*coordinate.New(3, 5), &direction.North{})
-	obstacleLocation := *coordinate.New(3, 0)
+	landingLocation, _ := location.From(*coordinate.NewAbsolute(3, 5), &direction.North{})
+	obstacleLocation := *coordinate.NewAbsolute(3, 0)
 	obstacleInfront := rock.In(obstacleLocation)
 	testPlanetWithObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{obstacleInfront})
 
@@ -43,8 +43,8 @@ func TestAvoidsCollisionWrappingForward(t *testing.T) {
 
 func TestAvoidsCollisionMovingBackwards(t *testing.T) {
 	planetSize, _ := size.From(10, 10)
-	landingLocation, _ := location.From(*coordinate.New(5, 5), &direction.North{})
-	obstacleLocation := *coordinate.New(5, 4)
+	landingLocation, _ := location.From(*coordinate.NewAbsolute(5, 5), &direction.North{})
+	obstacleLocation := *coordinate.NewAbsolute(5, 4)
 	obstacleBehind := rock.In(obstacleLocation)
 	testPlanetWithObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{obstacleBehind})
 
@@ -57,8 +57,8 @@ func TestAvoidsCollisionMovingBackwards(t *testing.T) {
 
 func TestAvoidsCollisionWrappingBackwards(t *testing.T) {
 	planetSize, _ := size.From(5, 5)
-	landingLocation, _ := location.From(*coordinate.New(3, 0), &direction.North{})
-	obstacleLocation := *coordinate.New(3, 5)
+	landingLocation, _ := location.From(*coordinate.NewAbsolute(3, 0), &direction.North{})
+	obstacleLocation := *coordinate.NewAbsolute(3, 5)
 	obstacleBehind := rock.In(obstacleLocation)
 	testPlanetWithObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{obstacleBehind})
 

@@ -7,5 +7,5 @@ import (
 
 type Obstacle interface {
 	IsBeyond(size.Size) bool
-	Occupies(coord.Coordinate) bool
+	Occupies(coord.AbsoluteCoordinate) bool
 }
