@@ -1,7 +1,7 @@
 package rocky_planet_test
 
 import (
-	coordinate2d "mars_rover/internal/domain/coordinate/coordinate2D"
+	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/small_rock"
 	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
@@ -56,14 +56,14 @@ func generateRandomObstacleWithin(size size.Size) obstacle.Obstacle {
 	randomX := rand.Intn(size.Width)
 	randomY := rand.Intn(size.Height)
 
-	randomLocation := coordinate2d.New(randomX, randomY)
-	return rock.In(randomLocation)
+	randomLocation := coordinate.New(randomX, randomY)
+	return rock.In(*randomLocation)
 }
 
 func randomObstacleOutOf(size size.Size) obstacle.Obstacle {
 	randomX := rand.Intn(99-size.Width+1) + size.Width
 	randomY := rand.Intn(99-size.Height+1) + size.Height
 
-	randomLocation := coordinate2d.New(randomX, randomY)
-	return rock.In(randomLocation)
+	randomLocation := coordinate.New(randomX, randomY)
+	return rock.In(*randomLocation)
 }

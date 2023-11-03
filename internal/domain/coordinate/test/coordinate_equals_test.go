@@ -1,37 +1,37 @@
-package coordinate2d_test
+package coordinate_test
 
 import (
-	coordinate2d "mars_rover/internal/domain/coordinate/coordinate2D"
+	"mars_rover/internal/domain/coordinate"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestEqualsBasedOnValues(t *testing.T) {
-	aCoordinate := coordinate2d.New(1, 1)
-	anEqualCoordinate := coordinate2d.New(1, 1)
+	aCoordinate := coordinate.New(1, 1)
+	anEqualCoordinate := coordinate.New(1, 1)
 
 	areTheSame := aCoordinate.Equals(anEqualCoordinate)
 	assert.True(t, areTheSame)
 }
 
 func TestNotEqualsBasedOnValues(t *testing.T) {
-	aCoordinate := coordinate2d.New(1, 1)
+	aCoordinate := coordinate.New(1, 1)
 	testCases := []struct {
 		name                string
-		differentCoordinate *coordinate2d.Coordinate2D
+		differentCoordinate *coordinate.Coordinate
 	}{
 		{
 			name:                "neither X nor Y can differ",
-			differentCoordinate: coordinate2d.New(2, 2),
+			differentCoordinate: coordinate.New(2, 2),
 		},
 		{
 			name:                "X cannot differ",
-			differentCoordinate: coordinate2d.New(2, 1),
+			differentCoordinate: coordinate.New(2, 1),
 		},
 		{
 			name:                "Y cannot differ",
-			differentCoordinate: coordinate2d.New(1, 2),
+			differentCoordinate: coordinate.New(1, 2),
 		},
 	}
 	for _, testCase := range testCases {

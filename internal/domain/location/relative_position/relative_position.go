@@ -2,7 +2,6 @@ package relativePosition
 
 import (
 	"mars_rover/internal/domain/coordinate"
-	coordinate2d "mars_rover/internal/domain/coordinate/coordinate2D"
 )
 
 // rename and extract
@@ -20,7 +19,7 @@ type RelativePosition struct {
 // should have tests to back up the name, only combinations of 0, 1 and -1 are allowed
 // is this a From?
 func New(x, y int) *RelativePosition {
-	return &RelativePosition{coordinate2d.New(x, y)}
+	return &RelativePosition{*coordinate.New(x, y)}
 }
 
 func (this RelativePosition) X() int {

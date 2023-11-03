@@ -15,7 +15,7 @@ func In(coordinate coord.Coordinate) obstacle.Obstacle {
 }
 
 func (this SmallRock) Occupies(coordinate coord.Coordinate) bool {
-	return this.coordinate.Equals(coordinate)
+	return this.coordinate.Equals(&coordinate)
 }
 
 func (this SmallRock) IsBeyond(size size.Size) bool {

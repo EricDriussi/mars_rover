@@ -3,7 +3,6 @@ package planetMap_test
 import (
 	"fmt"
 	"mars_rover/internal/domain/coordinate"
-	coordinate2d "mars_rover/internal/domain/coordinate/coordinate2D"
 	"mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/small_rock"
 	"mars_rover/internal/domain/planet"
@@ -21,9 +20,9 @@ func TestReportsCollision(t *testing.T) {
 	y := 3
 	planet := createPlanetWithObstacleIn(x, y)
 	planetMap := planetMap.Of(planet)
-	obstacleCoordinate := coordinate2d.New(x, y)
+	obstacleCoordinate := coordinate.New(x, y)
 
-	didCollide := planetMap.CheckCollision(obstacleCoordinate)
+	didCollide := planetMap.CheckCollision(*obstacleCoordinate)
 
 	assert.True(t, didCollide)
 }
@@ -36,11 +35,11 @@ func TestReportsNOCollision(t *testing.T) {
 			name := fmt.Sprintf("no collision in %d, %d", x, y)
 
 			t.Run(name, func(t *testing.T) {
-				testCoordinate := coordinate2d.New(x, y)
-				testPlanet := createPlanetWithRandomObstaclesNotIn(*planetSize, testCoordinate)
+				testCoordinate := coordinate.New(x, y)
+				testPlanet := createPlanetWithRandomObstaclesNotIn(*planetSize, *testCoordinate)
 
 				planetMap := planetMap.Of(testPlanet)
-				didCollide := planetMap.CheckCollision(testCoordinate)
+				didCollide := planetMap.CheckCollision(*testCoordinate)
 
 				assert.False(t, didCollide)
 			})
@@ -50,8 +49,8 @@ func TestReportsNOCollision(t *testing.T) {
 
 func createPlanetWithObstacleIn(x, y int) planet.Planet {
 	planetSize, _ := size.From(x+2, y+2)
-	obstacleCoordinate := coordinate2d.New(x, y)
-	planetObstacle := rock.In(obstacleCoordinate)
+	obstacleCoordinate := coordinate.New(x, y)
+	planetObstacle := rock.In(*obstacleCoordinate)
 	planet, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{planetObstacle})
 	return planet
 }
@@ -73,11 +72,11 @@ func createPlanetWithRandomObstaclesNotIn(planetSize size.Size, exclude coordina
 
 func getRandomCoordinateExcluding(planetSize size.Size, exclude coordinate.Coordinate) coordinate.Coordinate {
 	for {
-		randomCoordinate := coordinate2d.New(rand.Intn(planetSize.Width), rand.Intn(planetSize.Height))
+		randomCoordinate := coordinate.New(rand.Intn(planetSize.Width), rand.Intn(planetSize.Height))
 
-		coordinateIsNotExcluded := !randomCoordinate.Equals(exclude)
+		coordinateIsNotExcluded := !randomCoordinate.Equals(&exclude)
 		if coordinateIsNotExcluded {
-			return randomCoordinate
+			return *randomCoordinate
 		}
 	}
 }
