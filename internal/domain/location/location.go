@@ -57,11 +57,11 @@ func (this *Location) FaceRight() {
 	this.direction = this.direction.DirectionOnTheRight()
 }
 
-func (this *Location) StartMovementAhead() {
+func (this *Location) StartMovingAhead() {
 	this.futureCoordinate = *coord.SumOf(this.coordinate, this.direction.RelativePositionAhead())
 }
 
-func (this *Location) StartMovementBehind() {
+func (this *Location) StartMovingBehind() {
 	this.futureCoordinate = *coord.SumOf(this.coordinate, this.direction.RelativePositionBehind())
 }
 

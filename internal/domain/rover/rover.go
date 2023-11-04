@@ -30,7 +30,7 @@ func (this *Rover) TurnRight() {
 
 // TODO: add tests with mocks
 func (this *Rover) MoveForward() {
-	this.location.StartMovementAhead()
+	this.location.StartMovingAhead()
 	if this.willBeOutOfBounds() {
 		this.location.WrapAround(this.planetMap.Size())
 	}
@@ -44,7 +44,7 @@ func (this *Rover) MoveForward() {
 
 // TODO: add tests with mocks
 func (this *Rover) MoveBackward() {
-	this.location.StartMovementBehind()
+	this.location.StartMovingBehind()
 	if this.willBeOutOfBounds() {
 		this.location.WrapAround(this.planetMap.Size())
 	}
