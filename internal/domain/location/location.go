@@ -68,25 +68,16 @@ func (this *Location) StartMovementBehind() {
 // TODO: add tests with mocks
 func (this *Location) WrapAround(limit size.Size) {
 	this.futureCoordinate = *coord.NewAbsolute(
-		this.wrapX(limit.Width),
-		this.wrapY(limit.Height),
+		this.wrap(this.futureCoordinate.X(), limit.Width),
+		this.wrap(this.futureCoordinate.Y(), limit.Height),
 	)
 }
 
-func (this *Location) wrapX(width int) int {
-	if this.futureCoordinate.X() > width {
+func (this *Location) wrap(point, limit int) int {
+	if point > limit {
 		return 0
-	} else if this.futureCoordinate.X() < 0 {
-		return width
+	} else if point < 0 {
+		return limit
 	}
-	return this.futureCoordinate.X()
-}
-
-func (this *Location) wrapY(height int) int {
-	if this.futureCoordinate.Y() > height {
-		return 0
-	} else if this.futureCoordinate.Y() < 0 {
-		return height
-	}
-	return this.futureCoordinate.Y()
+	return point
 }
