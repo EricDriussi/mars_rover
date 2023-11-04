@@ -36,7 +36,8 @@ func TestNotEqualsBasedOnValues(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			assert.False(t, aCoordinate.Equals(testCase.differentCoordinate))
+			areTheSame := aCoordinate.Equals(testCase.differentCoordinate)
+			assert.False(t, areTheSame)
 		})
 	}
 }

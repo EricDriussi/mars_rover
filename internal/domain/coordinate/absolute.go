@@ -8,11 +8,6 @@ func NewAbsolute(x, y int) *AbsoluteCoordinate {
 	return &AbsoluteCoordinate{x, y}
 }
 
-// TODO: add tests
-func SumOf(coordinateOne, coordinateTwo Coordinate) *AbsoluteCoordinate {
-	return &AbsoluteCoordinate{coordinateOne.X() + coordinateTwo.X(), coordinateOne.Y() + coordinateTwo.Y()}
-}
-
 func (this *AbsoluteCoordinate) Equals(other *AbsoluteCoordinate) bool {
 	return this.x == other.X() && this.y == other.Y()
 }

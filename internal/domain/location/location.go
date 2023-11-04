@@ -65,7 +65,6 @@ func (this *Location) StartMovingBehind() {
 	this.futureCoordinate = *coord.SumOf(this.coordinate, this.direction.RelativePositionBehind())
 }
 
-// TODO: add tests with mocks
 func (this *Location) WrapAround(limit size.Size) {
 	this.futureCoordinate = *coord.NewAbsolute(
 		this.wrap(this.futureCoordinate.X(), limit.Width),

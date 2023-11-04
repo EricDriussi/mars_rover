@@ -4,7 +4,6 @@ type RelativeCoordinate struct {
 	x, y int
 }
 
-// TODO: add tests
 func RelativeFrom(x, y int) *RelativeCoordinate {
 	step := 1
 	if isOrthogonal(x, y) {
