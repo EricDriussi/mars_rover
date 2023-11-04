@@ -61,5 +61,5 @@ func (this Rover) willBeOutOfBounds() bool {
 }
 
 func (this Rover) willHitSomething() bool {
-	return this.planetMap.CheckCollision(this.location.WillBeAt())
+	return this.planetMap.CollidesWithObstacle(this.location.WillBeAt())
 }

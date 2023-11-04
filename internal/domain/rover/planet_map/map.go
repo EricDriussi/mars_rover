@@ -20,7 +20,7 @@ func (this *Map) Size() size.Size {
 	return this.size
 }
 
-func (this *Map) CheckCollision(coord coordinate.AbsoluteCoordinate) bool {
+func (this *Map) CollidesWithObstacle(coord coordinate.AbsoluteCoordinate) bool {
 	for _, obstacle := range this.obstacles {
 		return obstacle.Occupies(coord)
 	}
