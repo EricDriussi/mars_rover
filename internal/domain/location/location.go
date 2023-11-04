@@ -8,8 +8,9 @@ import (
 )
 
 type Location struct {
-	coordinate  coord.AbsoluteCoordinate
-	orientation direction.Direction
+	coordinate       coord.AbsoluteCoordinate
+	futureCoordinate coord.AbsoluteCoordinate
+	direction        direction.Direction
 }
 
 // TODO.LM: Should "direction" be exposed? Should "From" take (coord, "N")?
@@ -19,23 +20,12 @@ func From(coordinate coord.AbsoluteCoordinate, direction direction.Direction) (*
 	if coordinate.X() < 0 || coordinate.Y() < 0 {
 		return nil, errors.New("no negative coordinates!")
 	}
-	return &Location{coordinate, direction}, nil
+	return &Location{coordinate, coordinate, direction}, nil
 }
 
-func (this *Location) Orientation() string {
-	return this.orientation.CardinalPoint()
-}
-
-func (this *Location) Position() coord.AbsoluteCoordinate {
-	return this.coordinate
-}
-
-func (this *Location) UpdateWithDirectionOnTheLeft() {
-	this.orientation = this.orientation.DirectionOnTheLeft()
-}
-
-func (this *Location) UpdateWithDirectionOnTheRight() {
-	this.orientation = this.orientation.DirectionOnTheRight()
+// TODO: is this needed?
+func (this *Location) Direction() string {
+	return this.direction.CardinalPoint()
 }
 
 // TODO: should not exist
@@ -43,18 +33,60 @@ func (this *Location) Equals(other Location) bool {
 	return this.coordinate.Equals(&other.coordinate)
 }
 
-func (this *Location) UpdateCoordinate(coordinate coord.AbsoluteCoordinate) {
-	this.coordinate = coordinate
+func (this *Location) WillBeAt() coord.AbsoluteCoordinate {
+	return this.futureCoordinate
 }
 
-func (this *Location) AheadWillBeAt(size size.Size) coord.AbsoluteCoordinate {
-	futureCoordinate := *coord.SumOf(this.coordinate, this.orientation.RelativePositionAhead())
-	futureCoordinate.WrapIfOutOf(size)
-	return futureCoordinate
+func (this *Location) CommitMovement() {
+	this.coordinate = this.futureCoordinate
 }
 
-func (this *Location) BehindWillBeAt(size size.Size) coord.AbsoluteCoordinate {
-	futureCoordinate := *coord.SumOf(this.coordinate, this.orientation.RelativePositionBehind())
-	futureCoordinate.WrapIfOutOf(size)
-	return futureCoordinate
+func (this *Location) RollbackMovement() {
+	this.futureCoordinate = this.coordinate
+}
+
+func (this *Location) Position() coord.AbsoluteCoordinate {
+	return this.coordinate
+}
+
+func (this *Location) FaceLeft() {
+	this.direction = this.direction.DirectionOnTheLeft()
+}
+
+func (this *Location) FaceRight() {
+	this.direction = this.direction.DirectionOnTheRight()
+}
+
+func (this *Location) StartMovementAhead() {
+	this.futureCoordinate = *coord.SumOf(this.coordinate, this.direction.RelativePositionAhead())
+}
+
+func (this *Location) StartMovementBehind() {
+	this.futureCoordinate = *coord.SumOf(this.coordinate, this.direction.RelativePositionBehind())
+}
+
+// TODO: add tests with mocks
+func (this *Location) WrapAround(limit size.Size) {
+	this.futureCoordinate = *coord.NewAbsolute(
+		this.wrapX(limit.Width),
+		this.wrapY(limit.Height),
+	)
+}
+
+func (this *Location) wrapX(width int) int {
+	if this.futureCoordinate.X() > width {
+		return 0
+	} else if this.futureCoordinate.X() < 0 {
+		return width
+	}
+	return this.futureCoordinate.X()
+}
+
+func (this *Location) wrapY(height int) int {
+	if this.futureCoordinate.Y() > height {
+		return 0
+	} else if this.futureCoordinate.Y() < 0 {
+		return height
+	}
+	return this.futureCoordinate.Y()
 }

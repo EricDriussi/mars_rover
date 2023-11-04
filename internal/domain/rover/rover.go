@@ -1,7 +1,6 @@
 package rover
 
 import (
-	"mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/planet"
 	planetMap "mars_rover/internal/domain/rover/planet_map"
@@ -21,32 +20,46 @@ func (this Rover) Location() *location.Location {
 	return &this.location
 }
 
-func (this *Rover) MoveForward() {
-	ahead := this.location.AheadWillBeAt(this.planetMap.Size())
-	if this.willHitSomething(ahead) {
-		// TODO: how do I "report the obstacle"?
-		return
-	}
-	this.location.UpdateCoordinate(ahead)
-}
-
-func (this *Rover) MoveBackward() {
-	behind := this.location.BehindWillBeAt(this.planetMap.Size())
-	if this.willHitSomething(behind) {
-		// TODO: how do I "report the obstacle"?
-		return
-	}
-	this.location.UpdateCoordinate(behind)
-}
-
 func (this *Rover) TurnLeft() {
-	this.location.UpdateWithDirectionOnTheLeft()
+	this.location.FaceLeft()
 }
 
 func (this *Rover) TurnRight() {
-	this.location.UpdateWithDirectionOnTheRight()
+	this.location.FaceRight()
 }
 
-func (this Rover) willHitSomething(futureCoord coordinate.AbsoluteCoordinate) bool {
-	return this.planetMap.CheckCollision(futureCoord)
+// TODO: add tests with mocks
+func (this *Rover) MoveForward() {
+	this.location.StartMovementAhead()
+	if this.willBeOutOfBounds() {
+		this.location.WrapAround(this.planetMap.Size())
+	}
+	if this.willHitSomething() {
+		// TODO: how do I "report the obstacle"?
+		this.location.RollbackMovement()
+		return
+	}
+	this.location.CommitMovement()
+}
+
+// TODO: add tests with mocks
+func (this *Rover) MoveBackward() {
+	this.location.StartMovementBehind()
+	if this.willBeOutOfBounds() {
+		this.location.WrapAround(this.planetMap.Size())
+	}
+	if this.willHitSomething() {
+		// TODO: how do I "report the obstacle"?
+		this.location.RollbackMovement()
+		return
+	}
+	this.location.CommitMovement()
+}
+
+func (this Rover) willBeOutOfBounds() bool {
+	return this.planetMap.IsOutOfBounds(this.location.WillBeAt())
+}
+
+func (this Rover) willHitSomething() bool {
+	return this.planetMap.CheckCollision(this.location.WillBeAt())
 }

@@ -26,3 +26,7 @@ func (this *Map) CheckCollision(coord coordinate.AbsoluteCoordinate) bool {
 	}
 	return false
 }
+
+func (this *Map) IsOutOfBounds(coord coordinate.AbsoluteCoordinate) bool {
+	return coord.X() > this.size.Width || coord.Y() > this.size.Height || coord.X() < 0 || coord.Y() < 0
+}

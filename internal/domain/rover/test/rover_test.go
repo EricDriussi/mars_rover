@@ -139,7 +139,7 @@ func TestTurnsRight(t *testing.T) {
 
 			testRover.TurnRight()
 
-			assert.Equal(t, testCase.expectedFacing, testRover.Location().Orientation())
+			assert.Equal(t, testCase.expectedFacing, testRover.Location().Direction())
 		})
 	}
 }
@@ -182,7 +182,7 @@ func TestTurnsLeft(t *testing.T) {
 
 			testRover.TurnLeft()
 
-			assert.Equal(t, testCase.expectedFacing, testRover.Location().Orientation())
+			assert.Equal(t, testCase.expectedFacing, testRover.Location().Direction())
 		})
 	}
 }

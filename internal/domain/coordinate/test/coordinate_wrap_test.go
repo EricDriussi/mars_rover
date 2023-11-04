@@ -1,110 +1,111 @@
 package coordinate_test
 
-import (
-	"mars_rover/internal/domain/coordinate"
-	"mars_rover/internal/domain/size"
-	"testing"
+// TODO: these tests are now the concern of location
+// import (
+// 	"mars_rover/internal/domain/coordinate"
+// 	"mars_rover/internal/domain/size"
+// 	"testing"
 
-	"github.com/stretchr/testify/assert"
-)
+// 	"github.com/stretchr/testify/assert"
+// )
 
-func TestDoesNotWrapXIfWithinLimit(t *testing.T) {
-	coord := coordinate.NewAbsolute(1, 1)
-	limit, _ := size.From(2, 2)
+// func TestDoesNotWrapXIfWithinLimit(t *testing.T) {
+// 	coord := coordinate.NewAbsolute(1, 1)
+// 	limit, _ := size.From(2, 2)
 
-	coord.WrapIfOutOf(*limit)
+// 	coord.WrapIfOutOf(*limit)
 
-	assert.Equal(t, coord.X(), 1)
-}
+// 	assert.Equal(t, coord.X(), 1)
+// }
 
-func TestWrapsXIfTooLarge(t *testing.T) {
-	coord := coordinate.NewAbsolute(3, 1)
-	limit, _ := size.From(2, 2)
+// func TestWrapsXIfTooLarge(t *testing.T) {
+// 	coord := coordinate.NewAbsolute(3, 1)
+// 	limit, _ := size.From(2, 2)
 
-	coord.WrapIfOutOf(*limit)
+// 	coord.WrapIfOutOf(*limit)
 
-	assert.Equal(t, coord.X(), 0)
-}
+// 	assert.Equal(t, coord.X(), 0)
+// }
 
-func TestWrapsXIfTooSmall(t *testing.T) {
-	coord := coordinate.NewAbsolute(-1, 1)
-	limit, _ := size.From(2, 2)
+// func TestWrapsXIfTooSmall(t *testing.T) {
+// 	coord := coordinate.NewAbsolute(-1, 1)
+// 	limit, _ := size.From(2, 2)
 
-	coord.WrapIfOutOf(*limit)
+// 	coord.WrapIfOutOf(*limit)
 
-	assert.Equal(t, coord.X(), 2)
-}
+// 	assert.Equal(t, coord.X(), 2)
+// }
 
-func TestDoesNotWrapYIfWithinLimit(t *testing.T) {
-	coord := coordinate.NewAbsolute(1, 1)
-	limit, _ := size.From(2, 2)
+// func TestDoesNotWrapYIfWithinLimit(t *testing.T) {
+// 	coord := coordinate.NewAbsolute(1, 1)
+// 	limit, _ := size.From(2, 2)
 
-	coord.WrapIfOutOf(*limit)
+// 	coord.WrapIfOutOf(*limit)
 
-	assert.Equal(t, coord.Y(), 1)
-}
+// 	assert.Equal(t, coord.Y(), 1)
+// }
 
-func TestWrapsYIfTooLarge(t *testing.T) {
-	coord := coordinate.NewAbsolute(1, 3)
-	limit, _ := size.From(2, 2)
+// func TestWrapsYIfTooLarge(t *testing.T) {
+// 	coord := coordinate.NewAbsolute(1, 3)
+// 	limit, _ := size.From(2, 2)
 
-	coord.WrapIfOutOf(*limit)
+// 	coord.WrapIfOutOf(*limit)
 
-	assert.Equal(t, coord.Y(), 0)
-}
+// 	assert.Equal(t, coord.Y(), 0)
+// }
 
-func TestWrapsYIfTooSmall(t *testing.T) {
-	coord := coordinate.NewAbsolute(1, -1)
-	limit, _ := size.From(2, 2)
+// func TestWrapsYIfTooSmall(t *testing.T) {
+// 	coord := coordinate.NewAbsolute(1, -1)
+// 	limit, _ := size.From(2, 2)
 
-	coord.WrapIfOutOf(*limit)
+// 	coord.WrapIfOutOf(*limit)
 
-	assert.Equal(t, coord.Y(), 2)
-}
+// 	assert.Equal(t, coord.Y(), 2)
+// }
 
-func TestWrapIfOutOf(t *testing.T) {
-	limit := size.Size{Width: 2, Height: 2}
-	tests := []struct {
-		name     string
-		starting *coordinate.AbsoluteCoordinate
-		want     *coordinate.AbsoluteCoordinate
-	}{
-		{
-			name:     "Does not wrap X if within limit",
-			starting: coordinate.NewAbsolute(1, 1),
-			want:     coordinate.NewAbsolute(1, 1),
-		},
-		{
-			name:     "Wraps X if too large",
-			starting: coordinate.NewAbsolute(3, 1),
-			want:     coordinate.NewAbsolute(0, 1),
-		},
-		{
-			name:     "Wraps X if too small",
-			starting: coordinate.NewAbsolute(-1, 1),
-			want:     coordinate.NewAbsolute(2, 1),
-		},
-		{
-			name:     "Does not wrap Y if within limit",
-			starting: coordinate.NewAbsolute(1, 1),
-			want:     coordinate.NewAbsolute(1, 1),
-		},
-		{
-			name:     "Wraps Y if too large",
-			starting: coordinate.NewAbsolute(1, 3),
-			want:     coordinate.NewAbsolute(1, 0),
-		},
-		{
-			name:     "Wraps Y if too small",
-			starting: coordinate.NewAbsolute(1, -1),
-			want:     coordinate.NewAbsolute(1, 2),
-		},
-	}
+// func TestWrapIfOutOf(t *testing.T) {
+// 	limit := size.Size{Width: 2, Height: 2}
+// 	tests := []struct {
+// 		name     string
+// 		starting *coordinate.AbsoluteCoordinate
+// 		want     *coordinate.AbsoluteCoordinate
+// 	}{
+// 		{
+// 			name:     "Does not wrap X if within limit",
+// 			starting: coordinate.NewAbsolute(1, 1),
+// 			want:     coordinate.NewAbsolute(1, 1),
+// 		},
+// 		{
+// 			name:     "Wraps X if too large",
+// 			starting: coordinate.NewAbsolute(3, 1),
+// 			want:     coordinate.NewAbsolute(0, 1),
+// 		},
+// 		{
+// 			name:     "Wraps X if too small",
+// 			starting: coordinate.NewAbsolute(-1, 1),
+// 			want:     coordinate.NewAbsolute(2, 1),
+// 		},
+// 		{
+// 			name:     "Does not wrap Y if within limit",
+// 			starting: coordinate.NewAbsolute(1, 1),
+// 			want:     coordinate.NewAbsolute(1, 1),
+// 		},
+// 		{
+// 			name:     "Wraps Y if too large",
+// 			starting: coordinate.NewAbsolute(1, 3),
+// 			want:     coordinate.NewAbsolute(1, 0),
+// 		},
+// 		{
+// 			name:     "Wraps Y if too small",
+// 			starting: coordinate.NewAbsolute(1, -1),
+// 			want:     coordinate.NewAbsolute(1, 2),
+// 		},
+// 	}
 
-	for _, testCase := range tests {
-		t.Run(testCase.name, func(t *testing.T) {
-			testCase.starting.WrapIfOutOf(limit)
-			assert.True(t, testCase.starting.Equals(testCase.want))
-		})
-	}
-}
+// 	for _, testCase := range tests {
+// 		t.Run(testCase.name, func(t *testing.T) {
+// 			testCase.starting.WrapIfOutOf(limit)
+// 			assert.True(t, testCase.starting.Equals(testCase.want))
+// 		})
+// 	}
+// }
