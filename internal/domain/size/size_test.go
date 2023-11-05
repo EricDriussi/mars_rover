@@ -2,6 +2,7 @@ package size_test
 
 import (
 	"mars_rover/internal/domain/size"
+	"math/rand"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -50,4 +51,10 @@ func TestDoesNotAllowNegativeValues(t *testing.T) {
 			assert.Error(t, err)
 		})
 	}
+}
+
+func TestAllowsRandomPositiveValues(t *testing.T) {
+	testSize, err := size.From(rand.Int(), rand.Int())
+	assert.Nil(t, err)
+	assert.NotNil(t, testSize)
 }

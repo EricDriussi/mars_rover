@@ -4,6 +4,7 @@ import (
 	"mars_rover/internal/domain/coordinate"
 	smallRock "mars_rover/internal/domain/obstacle/small_rock"
 	"mars_rover/internal/domain/size"
+	"math/rand"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -47,4 +48,18 @@ func TestIsBeyondLimit(t *testing.T) {
 			assert.True(t, rock.IsBeyond(*sizeLimit))
 		})
 	}
+}
+
+func TestOccupiesAGivenRandomCoordinate(t *testing.T) {
+	testCoordinate := coordinate.NewAbsolute(rand.Int(), rand.Int())
+	rock := smallRock.In(*testCoordinate)
+
+	assert.True(t, rock.Occupies(*testCoordinate))
+}
+
+func TestDoesNotOccupyADifferentCoordinate(t *testing.T) {
+	testCoordinate := coordinate.NewAbsolute(1, 1)
+	rock := smallRock.In(*testCoordinate)
+
+	assert.False(t, rock.Occupies(*coordinate.NewAbsolute(1, 2)))
 }
