@@ -72,10 +72,11 @@ func TestMovesForward(t *testing.T) {
 			landingLocation, _ := location.From(*coordinate.NewAbsolute(5, 5), testCase.initialDirection)
 			testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
-			testRover.MoveForward()
+			err := testRover.MoveForward()
 
 			expectedLocation, _ := location.From(*testCase.expectedCoordinate, testCase.initialDirection)
 			assert.Equal(t, expectedLocation, testRover.Location())
+			assert.Nil(t, err)
 		})
 	}
 }
@@ -116,10 +117,11 @@ func TestMovesBackward(t *testing.T) {
 			landingLocation, _ := location.From(*coordinate.NewAbsolute(5, 5), testCase.initialDirection)
 			testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
-			testRover.MoveBackward()
+			err := testRover.MoveBackward()
 
 			expectedLocation, _ := location.From(*testCase.expectedCoordinate, testCase.initialDirection)
 			assert.Equal(t, expectedLocation, testRover.Location())
+			assert.Nil(t, err)
 		})
 	}
 }

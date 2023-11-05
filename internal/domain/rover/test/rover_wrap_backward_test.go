@@ -20,10 +20,11 @@ func TestWrapsLookingNorthMovingBackward(t *testing.T) {
 
 	testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
-	testRover.MoveBackward()
+	err := testRover.MoveBackward()
 
 	expectedLocation, _ := location.From(*coordinate.NewAbsolute(2, 3), &direction.North{})
 	assert.Equal(t, expectedLocation, testRover.Location())
+	assert.Nil(t, err)
 }
 
 func TestWrapsLookingEastMovingBackward(t *testing.T) {
@@ -33,10 +34,11 @@ func TestWrapsLookingEastMovingBackward(t *testing.T) {
 
 	testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
-	testRover.MoveBackward()
+	err := testRover.MoveBackward()
 
 	expectedLocation, _ := location.From(*coordinate.NewAbsolute(3, 2), &direction.East{})
 	assert.Equal(t, expectedLocation, testRover.Location())
+	assert.Nil(t, err)
 }
 
 func TestWrapsLookingSouthMovingBackward(t *testing.T) {
@@ -46,10 +48,11 @@ func TestWrapsLookingSouthMovingBackward(t *testing.T) {
 
 	testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
-	testRover.MoveBackward()
+	err := testRover.MoveBackward()
 
 	expectedLocation, _ := location.From(*coordinate.NewAbsolute(2, 0), &direction.South{})
 	assert.Equal(t, expectedLocation, testRover.Location())
+	assert.Nil(t, err)
 }
 
 func TestWrapsLookingWestMovingBackward(t *testing.T) {
@@ -59,8 +62,9 @@ func TestWrapsLookingWestMovingBackward(t *testing.T) {
 
 	testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
-	testRover.MoveBackward()
+	err := testRover.MoveBackward()
 
 	expectedLocation, _ := location.From(*coordinate.NewAbsolute(0, 2), &direction.West{})
 	assert.Equal(t, expectedLocation, testRover.Location())
+	assert.Nil(t, err)
 }

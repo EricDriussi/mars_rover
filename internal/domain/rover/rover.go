@@ -32,30 +32,30 @@ func (this *Rover) TurnRight() {
 	this.location.FaceRight()
 }
 
-func (this *Rover) MoveForward() {
+func (this *Rover) MoveForward() error {
 	this.location.CalculatePositionAhead()
 	if this.willBeOutOfBounds() {
 		this.location.WrapAround(this.planetMap.Size())
 	}
 	if this.willHitSomething() {
-		// TODO: how do I "report the obstacle"?
 		this.location.Reset()
-		return
+		return errors.New("cannot move forward, something is in the way")
 	}
 	this.location.UpdatePosition()
+	return nil
 }
 
-func (this *Rover) MoveBackward() {
+func (this *Rover) MoveBackward() error {
 	this.location.CalculatePositionBehind()
 	if this.willBeOutOfBounds() {
 		this.location.WrapAround(this.planetMap.Size())
 	}
 	if this.willHitSomething() {
-		// TODO: how do I "report the obstacle"?
 		this.location.Reset()
-		return
+		return errors.New("cannot move backward, something is in the way")
 	}
 	this.location.UpdatePosition()
+	return nil
 }
 
 func (this Rover) willBeOutOfBounds() bool {

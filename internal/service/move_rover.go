@@ -23,19 +23,31 @@ func (this *MoveService) MoveSequence(commands []string) {
 	}
 }
 
-func (this *MoveService) mapCommandToMovement(command string) error {
-	commandActions := map[string]func(){
-		"f": this.rover.MoveForward,
-		"b": this.rover.MoveBackward,
-		"l": this.rover.TurnLeft,
-		"r": this.rover.TurnRight,
-	}
+type (
+	Movement func() error
+	Rotation func()
+)
 
-	// TODO.LM: is this more readable than ⬇️ ?
-	// if action := commandActions[command]; action != nil {}
+func (this *MoveService) mapCommandToMovement(command string) error {
+	commandActions := map[string]interface{}{
+		"f": Movement(this.rover.MoveForward),
+		"b": Movement(this.rover.MoveBackward),
+		"l": Rotation(this.rover.TurnLeft),
+		"r": Rotation(this.rover.TurnRight),
+	}
 	if action, ok := commandActions[command]; ok {
-		action()
-		return nil
+		// TODO.LM: is this more readable than ⬇️ ?
+		// if action := commandActions[command]; action != nil {}
+		switch action := action.(type) {
+		case Movement:
+			err := action()
+			if err != nil {
+				return err
+			}
+		case Rotation:
+			action()
+			return nil
+		}
 	}
 	return errors.New(fmt.Sprintf("invalid command, don't know what to do with %v", command))
 }
