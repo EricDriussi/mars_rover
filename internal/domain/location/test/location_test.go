@@ -35,27 +35,10 @@ func TestDoesNotAllowNegativeValues(t *testing.T) {
 	}
 }
 
-func TestEqualsBasedOnCoordinates(t *testing.T) {
-	aLocation, _ := location.From(*coordinate.NewAbsolute(1, 1), mockDirection{})
-	anEqualLocation, _ := location.From(*coordinate.NewAbsolute(1, 1), mockDirection{})
-
-	areTheSame := aLocation.Equals(*anEqualLocation)
-	assert.True(t, areTheSame)
-}
-
-func TestNotEqualsBasedOnCoordinates(t *testing.T) {
-	aLocation, _ := location.From(*coordinate.NewAbsolute(1, 2), mockDirection{})
-	anEqualLocation, _ := location.From(*coordinate.NewAbsolute(2, 1), mockDirection{})
-
-	areTheSame := aLocation.Equals(*anEqualLocation)
-	assert.False(t, areTheSame)
-}
-
-// TODO: this should not be mocked, equality should also depend on equal direction
 type mockDirection struct{}
 
-func (this mockDirection) CardinalPoint() string {
-	return "hi"
+func (this mockDirection) Degree() int {
+	return 420
 }
 
 func (this mockDirection) DirectionOnTheLeft() direction.Direction {

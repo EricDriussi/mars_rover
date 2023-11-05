@@ -6,8 +6,8 @@ import (
 
 type South struct{}
 
-func (this South) CardinalPoint() string {
-	return "S"
+func (this South) Degree() int {
+	return 270
 }
 
 func (this South) DirectionOnTheLeft() Direction {

@@ -23,16 +23,6 @@ func From(coordinate coord.AbsoluteCoordinate, direction direction.Direction) (*
 	return &Location{coordinate, coordinate, direction}, nil
 }
 
-// TODO: is this needed?
-func (this *Location) Direction() string {
-	return this.direction.CardinalPoint()
-}
-
-// TODO: should not exist
-func (this *Location) Equals(other Location) bool {
-	return this.coordinate.Equals(&other.coordinate)
-}
-
 func (this *Location) WillBeAt() coord.AbsoluteCoordinate {
 	return this.futureCoordinate
 }

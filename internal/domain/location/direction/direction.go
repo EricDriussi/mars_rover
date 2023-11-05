@@ -4,9 +4,9 @@ import (
 	"mars_rover/internal/domain/coordinate"
 )
 
+// TODO.LM: should this be a factory?
 type Direction interface {
-	// TODO: should be renamed to Degree and return a 0-360 int
-	CardinalPoint() string
+	Degree() int
 	DirectionOnTheLeft() Direction
 	DirectionOnTheRight() Direction
 	RelativePositionAhead() coordinate.RelativeCoordinate

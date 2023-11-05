@@ -52,7 +52,7 @@ func TestMovesForward(t *testing.T) {
 			testRover.MoveForward()
 
 			expectedLocation, _ := location.From(*testCase.expectedCoordinate, testCase.initialDirection)
-			assert.True(t, expectedLocation.Equals(*testRover.Location()))
+			assert.Equal(t, expectedLocation, testRover.Location())
 		})
 	}
 }
@@ -96,7 +96,7 @@ func TestMovesBackward(t *testing.T) {
 			testRover.MoveBackward()
 
 			expectedLocation, _ := location.From(*testCase.expectedCoordinate, testCase.initialDirection)
-			assert.True(t, expectedLocation.Equals(*testRover.Location()))
+			assert.Equal(t, expectedLocation, testRover.Location())
 		})
 	}
 }
@@ -104,42 +104,44 @@ func TestMovesBackward(t *testing.T) {
 func TestTurnsRight(t *testing.T) {
 	planetSize, _ := size.From(10, 10)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
+	coord := *coordinate.NewAbsolute(5, 5)
 
 	testCases := []struct {
-		name             string
-		initialDirection direction.Direction
-		expectedFacing   string
+		name              string
+		initialDirection  direction.Direction
+		expectedDirection direction.Direction
 	}{
 		{
-			name:             "facing north",
-			initialDirection: &direction.North{},
-			expectedFacing:   "E",
+			name:              "facing north",
+			initialDirection:  &direction.North{},
+			expectedDirection: &direction.East{},
 		},
 		{
-			name:             "facing east",
-			initialDirection: &direction.East{},
-			expectedFacing:   "S",
+			name:              "facing east",
+			initialDirection:  &direction.East{},
+			expectedDirection: &direction.South{},
 		},
 		{
-			name:             "facing south",
-			initialDirection: &direction.South{},
-			expectedFacing:   "W",
+			name:              "facing south",
+			initialDirection:  &direction.South{},
+			expectedDirection: &direction.West{},
 		},
 		{
-			name:             "facing west",
-			initialDirection: &direction.West{},
-			expectedFacing:   "N",
+			name:              "facing west",
+			initialDirection:  &direction.West{},
+			expectedDirection: &direction.North{},
 		},
 	}
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			landingLocation, _ := location.From(*coordinate.NewAbsolute(5, 5), testCase.initialDirection)
+			landingLocation, _ := location.From(coord, testCase.initialDirection)
 			testRover := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
 			testRover.TurnRight()
 
-			assert.Equal(t, testCase.expectedFacing, testRover.Location().Direction())
+			expectedLocation, _ := location.From(coord, testCase.expectedDirection)
+			assert.Equal(t, expectedLocation, testRover.Location())
 		})
 	}
 }
@@ -147,31 +149,32 @@ func TestTurnsRight(t *testing.T) {
 func TestTurnsLeft(t *testing.T) {
 	planetSize, _ := size.From(10, 10)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
+	coord := *coordinate.NewAbsolute(5, 5)
 
 	testCases := []struct {
-		name             string
-		initialDirection direction.Direction
-		expectedFacing   string
+		name              string
+		initialDirection  direction.Direction
+		expectedDirection direction.Direction
 	}{
 		{
-			name:             "facing north",
-			initialDirection: &direction.North{},
-			expectedFacing:   "W",
+			name:              "facing north",
+			initialDirection:  &direction.North{},
+			expectedDirection: &direction.West{},
 		},
 		{
-			name:             "facing east",
-			initialDirection: &direction.East{},
-			expectedFacing:   "N",
+			name:              "facing east",
+			initialDirection:  &direction.East{},
+			expectedDirection: &direction.North{},
 		},
 		{
-			name:             "facing south",
-			initialDirection: &direction.South{},
-			expectedFacing:   "E",
+			name:              "facing south",
+			initialDirection:  &direction.South{},
+			expectedDirection: &direction.East{},
 		},
 		{
-			name:             "facing west",
-			initialDirection: &direction.West{},
-			expectedFacing:   "S",
+			name:              "facing west",
+			initialDirection:  &direction.West{},
+			expectedDirection: &direction.South{},
 		},
 	}
 
@@ -182,7 +185,8 @@ func TestTurnsLeft(t *testing.T) {
 
 			testRover.TurnLeft()
 
-			assert.Equal(t, testCase.expectedFacing, testRover.Location().Direction())
+			expectedLocation, _ := location.From(coord, testCase.expectedDirection)
+			assert.Equal(t, expectedLocation, testRover.Location())
 		})
 	}
 }

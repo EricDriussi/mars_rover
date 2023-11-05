@@ -24,7 +24,7 @@ func TestAvoidsCollisionMovingForward(t *testing.T) {
 
 	testRover.MoveForward()
 
-	assert.True(t, landingLocation.Equals(*testRover.Location()))
+	assert.Equal(t, landingLocation, testRover.Location())
 }
 
 func TestAvoidsCollisionWrappingForward(t *testing.T) {
@@ -38,7 +38,7 @@ func TestAvoidsCollisionWrappingForward(t *testing.T) {
 
 	testRover.MoveForward()
 
-	assert.True(t, landingLocation.Equals(*testRover.Location()))
+	assert.Equal(t, landingLocation, testRover.Location())
 }
 
 func TestAvoidsCollisionMovingBackwards(t *testing.T) {
@@ -52,7 +52,7 @@ func TestAvoidsCollisionMovingBackwards(t *testing.T) {
 
 	testRover.MoveBackward()
 
-	assert.True(t, landingLocation.Equals(*testRover.Location()))
+	assert.Equal(t, landingLocation, testRover.Location())
 }
 
 func TestAvoidsCollisionWrappingBackwards(t *testing.T) {
@@ -66,5 +66,5 @@ func TestAvoidsCollisionWrappingBackwards(t *testing.T) {
 
 	testRover.MoveBackward()
 
-	assert.True(t, landingLocation.Equals(*testRover.Location()))
+	assert.Equal(t, landingLocation, testRover.Location())
 }
