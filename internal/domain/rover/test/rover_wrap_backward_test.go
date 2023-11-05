@@ -18,7 +18,7 @@ func TestWrapsLookingNorthMovingBackward(t *testing.T) {
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
 	landingLocation, _ := location.From(*coordinate.NewAbsolute(2, 0), &direction.North{})
 
-	testRover := rover.Land(*landingLocation, testPlanetWithoutObstacles)
+	testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
 	testRover.MoveBackward()
 
@@ -31,7 +31,7 @@ func TestWrapsLookingEastMovingBackward(t *testing.T) {
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
 	landingLocation, _ := location.From(*coordinate.NewAbsolute(0, 2), &direction.East{})
 
-	testRover := rover.Land(*landingLocation, testPlanetWithoutObstacles)
+	testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
 	testRover.MoveBackward()
 
@@ -44,7 +44,7 @@ func TestWrapsLookingSouthMovingBackward(t *testing.T) {
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
 	landingLocation, _ := location.From(*coordinate.NewAbsolute(2, 3), &direction.South{})
 
-	testRover := rover.Land(*landingLocation, testPlanetWithoutObstacles)
+	testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
 	testRover.MoveBackward()
 
@@ -57,7 +57,7 @@ func TestWrapsLookingWestMovingBackward(t *testing.T) {
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
 	landingLocation, _ := location.From(*coordinate.NewAbsolute(3, 2), &direction.West{})
 
-	testRover := rover.Land(*landingLocation, testPlanetWithoutObstacles)
+	testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
 	testRover.MoveBackward()
 

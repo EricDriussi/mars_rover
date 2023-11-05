@@ -5,6 +5,7 @@ import (
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/obstacle"
+	smallRock "mars_rover/internal/domain/obstacle/small_rock"
 	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
 	"mars_rover/internal/domain/rover"
 	"mars_rover/internal/domain/size"
@@ -12,6 +13,28 @@ import (
 
 	"github.com/stretchr/testify/assert"
 )
+
+func TestLandsOnFreeLocation(t *testing.T) {
+	planetSize, _ := size.From(2, 2)
+	testPlanet, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{smallRock.In(*coordinate.NewAbsolute(1, 2))})
+	landingLocation, _ := location.From(*coordinate.NewAbsolute(1, 1), &direction.North{})
+
+	testRover, err := rover.Land(*landingLocation, testPlanet)
+
+	assert.Nil(t, err)
+	assert.Equal(t, landingLocation, testRover.Location())
+}
+
+func TestCannotLandOnObstacle(t *testing.T) {
+	planetSize, _ := size.From(2, 2)
+	testPlanet, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{smallRock.In(*coordinate.NewAbsolute(1, 1))})
+	landingLocation, _ := location.From(*coordinate.NewAbsolute(1, 1), &direction.North{})
+
+	testRover, err := rover.Land(*landingLocation, testPlanet)
+
+	assert.Error(t, err)
+	assert.Nil(t, testRover)
+}
 
 func TestMovesForward(t *testing.T) {
 	planetSize, _ := size.From(10, 10)
@@ -47,7 +70,7 @@ func TestMovesForward(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			landingLocation, _ := location.From(*coordinate.NewAbsolute(5, 5), testCase.initialDirection)
-			testRover := rover.Land(*landingLocation, testPlanetWithoutObstacles)
+			testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
 			testRover.MoveForward()
 
@@ -91,7 +114,7 @@ func TestMovesBackward(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			landingLocation, _ := location.From(*coordinate.NewAbsolute(5, 5), testCase.initialDirection)
-			testRover := rover.Land(*landingLocation, testPlanetWithoutObstacles)
+			testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
 			testRover.MoveBackward()
 
@@ -136,7 +159,7 @@ func TestTurnsRight(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			landingLocation, _ := location.From(coord, testCase.initialDirection)
-			testRover := rover.Land(*landingLocation, testPlanetWithoutObstacles)
+			testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
 			testRover.TurnRight()
 
@@ -181,7 +204,7 @@ func TestTurnsLeft(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			landingLocation, _ := location.From(*coordinate.NewAbsolute(5, 5), testCase.initialDirection)
-			testRover := rover.Land(*landingLocation, testPlanetWithoutObstacles)
+			testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
 			testRover.TurnLeft()
 

@@ -1,6 +1,7 @@
 package rover
 
 import (
+	"errors"
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/planet"
 	planetMap "mars_rover/internal/domain/rover/planet_map"
@@ -11,9 +12,12 @@ type Rover struct {
 	planetMap planetMap.Map
 }
 
-// TODO: should this error if landing on obstacle?
-func Land(location location.Location, planet planet.Planet) *Rover {
-	return &Rover{location: location, planetMap: *planetMap.Of(planet)}
+func Land(location location.Location, planet planet.Planet) (*Rover, error) {
+	mapOfPlanet := planetMap.Of(planet)
+	if mapOfPlanet.CollidesWithObstacle(location.Position()) {
+		return nil, errors.New("cannot land on obstacle")
+	}
+	return &Rover{location: location, planetMap: *mapOfPlanet}, nil
 }
 
 func (this Rover) Location() *location.Location {
@@ -28,7 +32,6 @@ func (this *Rover) TurnRight() {
 	this.location.FaceRight()
 }
 
-// TODO: add tests with mocks
 func (this *Rover) MoveForward() {
 	this.location.CalculatePositionAhead()
 	if this.willBeOutOfBounds() {
@@ -42,7 +45,6 @@ func (this *Rover) MoveForward() {
 	this.location.UpdatePosition()
 }
 
-// TODO: add tests with mocks
 func (this *Rover) MoveBackward() {
 	this.location.CalculatePositionBehind()
 	if this.willBeOutOfBounds() {

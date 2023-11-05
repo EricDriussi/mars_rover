@@ -40,7 +40,11 @@ func Sample() {
 		return
 	}
 
-	curiosity := rover.Land(*landinglocation, mars)
+	curiosity, err := rover.Land(*landinglocation, mars)
+	if err != nil {
+		fmt.Println("Could not land on selected location:", err)
+		return
+	}
 
 	commands := []string{"f", "f", "r", "f", "b", "l", "f"}
 
