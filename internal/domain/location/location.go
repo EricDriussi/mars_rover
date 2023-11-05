@@ -15,7 +15,6 @@ type Location struct {
 
 // TODO.LM: Should "direction" be exposed? Should "From" take (coord, "N")?
 // Should "From" take a "directionDTO" enum and create the corresponding direction with a factory?
-// Should direction be inside location directory?
 func From(coordinate coord.AbsoluteCoordinate, direction direction.Direction) (*Location, error) {
 	if coordinate.X() < 0 || coordinate.Y() < 0 {
 		return nil, errors.New("no negative coordinates!")
@@ -27,11 +26,11 @@ func (this *Location) WillBeAt() coord.AbsoluteCoordinate {
 	return this.futureCoordinate
 }
 
-func (this *Location) CommitMovement() {
+func (this *Location) UpdatePosition() {
 	this.coordinate = this.futureCoordinate
 }
 
-func (this *Location) RollbackMovement() {
+func (this *Location) Reset() {
 	this.futureCoordinate = this.coordinate
 }
 
@@ -47,11 +46,11 @@ func (this *Location) FaceRight() {
 	this.direction = this.direction.DirectionOnTheRight()
 }
 
-func (this *Location) StartMovingAhead() {
+func (this *Location) CalculatePositionAhead() {
 	this.futureCoordinate = *coord.SumOf(this.coordinate, this.direction.RelativePositionAhead())
 }
 
-func (this *Location) StartMovingBehind() {
+func (this *Location) CalculatePositionBehind() {
 	this.futureCoordinate = *coord.SumOf(this.coordinate, this.direction.RelativePositionBehind())
 }
 

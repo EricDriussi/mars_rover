@@ -30,30 +30,30 @@ func (this *Rover) TurnRight() {
 
 // TODO: add tests with mocks
 func (this *Rover) MoveForward() {
-	this.location.StartMovingAhead()
+	this.location.CalculatePositionAhead()
 	if this.willBeOutOfBounds() {
 		this.location.WrapAround(this.planetMap.Size())
 	}
 	if this.willHitSomething() {
 		// TODO: how do I "report the obstacle"?
-		this.location.RollbackMovement()
+		this.location.Reset()
 		return
 	}
-	this.location.CommitMovement()
+	this.location.UpdatePosition()
 }
 
 // TODO: add tests with mocks
 func (this *Rover) MoveBackward() {
-	this.location.StartMovingBehind()
+	this.location.CalculatePositionBehind()
 	if this.willBeOutOfBounds() {
 		this.location.WrapAround(this.planetMap.Size())
 	}
 	if this.willHitSomething() {
 		// TODO: how do I "report the obstacle"?
-		this.location.RollbackMovement()
+		this.location.Reset()
 		return
 	}
-	this.location.CommitMovement()
+	this.location.UpdatePosition()
 }
 
 func (this Rover) willBeOutOfBounds() bool {

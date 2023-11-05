@@ -50,7 +50,7 @@ func TestWrapsAroundIfOutOfBounds(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			loc, _ := location.From(*testCase.starting, testCase.direction)
-			loc.StartMovingAhead()
+			loc.CalculatePositionAhead()
 			loc.WrapAround(sizeLimit)
 			assert.Equal(t, *testCase.expected, loc.WillBeAt())
 		})
