@@ -46,28 +46,12 @@ func Sample() {
 		return
 	}
 
-	commands := []string{"f", "f", "r", "f", "b", "l", "f"}
-
 	moveService := service.For(curiosity)
-	moveService.MoveSequence(commands)
+	movementErrors := moveService.MoveSequence("ffrfblf")
 
-	for _, cmd := range commands {
-		if cmd == "f" {
-			curiosity.MoveForward()
-		} else if cmd == "b" {
-			curiosity.MoveBackward()
-		} else if cmd == "l" {
-			curiosity.TurnLeft()
-		} else if cmd == "r" {
-			curiosity.TurnRight()
-		}
-
-		// if curiosity.CheckObstacle() {
-		// 	fmt.Println("Obstacle detected!")
-		// 	break
-		// }
-		fmt.Println("Rover completed command ", cmd)
+	for _, err := range movementErrors {
+		fmt.Println(err)
 	}
 
-	fmt.Println("Rover completed all commands without issues!")
+	fmt.Println("Rover finished moving")
 }

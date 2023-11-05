@@ -4,23 +4,31 @@ import (
 	"errors"
 	"fmt"
 	"mars_rover/internal/domain/rover"
+	"strings"
 )
 
 type MoveService struct {
-	rover *rover.Rover
+	rover rover.IRover
 }
 
-func For(rover *rover.Rover) *MoveService {
+func For(rover rover.IRover) *MoveService {
 	return &MoveService{
 		rover: rover,
 	}
 }
 
-func (this *MoveService) MoveSequence(commands []string) {
-	// TODO: should this skip invalid commands? stop if an invalid command is found?
-	for _, cmd := range commands {
-		this.mapCommandToMovement(cmd)
+func (this *MoveService) MoveSequence(commands string) []error {
+	var errs []error
+	for _, cmd := range strings.ToLower(commands) {
+		err := this.mapCommandToMovement(string(cmd))
+		if err != nil {
+			errs = append(errs, errors.New(fmt.Sprintf("%v, skipping command %v", err, cmd)))
+		}
 	}
+	if len(errs) > 0 {
+		return errs
+	}
+	return nil
 }
 
 type (
@@ -40,14 +48,11 @@ func (this *MoveService) mapCommandToMovement(command string) error {
 		// if action := commandActions[command]; action != nil {}
 		switch action := action.(type) {
 		case Movement:
-			err := action()
-			if err != nil {
-				return err
-			}
+			return action()
 		case Rotation:
 			action()
 			return nil
 		}
 	}
-	return errors.New(fmt.Sprintf("invalid command, don't know what to do with %v", command))
+	return errors.New("invalid command")
 }

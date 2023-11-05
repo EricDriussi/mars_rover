@@ -7,6 +7,13 @@ import (
 	planetMap "mars_rover/internal/domain/rover/planet_map"
 )
 
+type IRover interface {
+	TurnLeft()
+	TurnRight()
+	MoveForward() error
+	MoveBackward() error
+}
+
 type Rover struct {
 	location  location.Location
 	planetMap planetMap.Map
