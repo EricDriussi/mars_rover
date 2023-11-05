@@ -12,26 +12,26 @@ import (
 
 func TestGetsPosition(t *testing.T) {
 	coord := *coordinate.NewAbsolute(1, 1)
-	loc, _ := location.From(coord, &direction.North{})
-	assert.Equal(t, coord, loc.Position())
+	testLocation, _ := location.From(coord, &direction.North{})
+	assert.Equal(t, coord, testLocation.Position())
 }
 
 func TestUpdatesPosition(t *testing.T) {
-	loc, _ := location.From(*coordinate.NewAbsolute(1, 1), &direction.North{})
-	loc.CalculatePositionAhead()
-	loc.UpdatePosition()
-	assert.Equal(t, *coordinate.NewAbsolute(1, 2), loc.Position())
-	loc.CalculatePositionBehind()
-	loc.UpdatePosition()
-	assert.Equal(t, *coordinate.NewAbsolute(1, 1), loc.Position())
+	testLocation, _ := location.From(*coordinate.NewAbsolute(1, 1), &direction.North{})
+	testLocation.CalculatePositionAhead()
+	testLocation.UpdatePosition()
+	assert.Equal(t, *coordinate.NewAbsolute(1, 2), testLocation.Position())
+	testLocation.CalculatePositionBehind()
+	testLocation.UpdatePosition()
+	assert.Equal(t, *coordinate.NewAbsolute(1, 1), testLocation.Position())
 }
 
 func TestResetsPosition(t *testing.T) {
 	coord := *coordinate.NewAbsolute(1, 1)
-	loc, _ := location.From(coord, &direction.North{})
-	loc.CalculatePositionAhead()
-	loc.Reset()
-	assert.Equal(t, coord, loc.Position())
+	testLocation, _ := location.From(coord, &direction.North{})
+	testLocation.CalculatePositionAhead()
+	testLocation.Reset()
+	assert.Equal(t, coord, testLocation.Position())
 }
 
 func TestFacesLeft(t *testing.T) {
