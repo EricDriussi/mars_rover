@@ -61,8 +61,8 @@ func generateRandomObstacleWithin(size size.Size) obstacle.Obstacle {
 }
 
 func randomObstacleOutOf(size size.Size) obstacle.Obstacle {
-	randomX := rand.Intn(99-size.Width+1) + size.Width
-	randomY := rand.Intn(99-size.Height+1) + size.Height
+	randomX := rand.Intn(99-size.Width) + size.Width + 1
+	randomY := rand.Intn(99-size.Height) + size.Height + 1
 
 	randomLocation := coordinate.NewAbsolute(randomX, randomY)
 	return rock.In(*randomLocation)

@@ -2,7 +2,7 @@ package service_test
 
 import (
 	"errors"
-	"mars_rover/internal/service"
+	"mars_rover/internal/service/move"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

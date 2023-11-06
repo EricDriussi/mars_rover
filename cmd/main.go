@@ -10,7 +10,7 @@ import (
 	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
 	"mars_rover/internal/domain/rover"
 	"mars_rover/internal/domain/size"
-	"mars_rover/internal/service"
+	"mars_rover/internal/service/move"
 )
 
 // TODO: LIST OF THINGS!

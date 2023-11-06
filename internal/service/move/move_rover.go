@@ -21,6 +21,7 @@ func (this *MoveService) MoveSequence(commands string) []error {
 	var errs []error
 	for _, cmd := range strings.ToLower(commands) {
 		err := this.mapCommandToMovement(string(cmd))
+		// TODO: Persist rover state (location? rover?)
 		if err != nil {
 			errs = append(errs, errors.New(fmt.Sprintf("%v, skipping command %v", err, cmd)))
 		}
