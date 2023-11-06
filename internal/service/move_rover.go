@@ -8,10 +8,10 @@ import (
 )
 
 type MoveService struct {
-	rover rover.IRover
+	rover rover.Rover
 }
 
-func For(rover rover.IRover) *MoveService {
+func For(rover rover.Rover) *MoveService {
 	return &MoveService{
 		rover: rover,
 	}

@@ -7,39 +7,39 @@ import (
 	planetMap "mars_rover/internal/domain/rover/planet_map"
 )
 
-type IRover interface {
+type Rover interface {
 	TurnLeft()
 	TurnRight()
 	MoveForward() error
 	MoveBackward() error
 }
 
-type Rover struct {
+type WrappingCollidingRover struct {
 	location  location.Location
 	planetMap planetMap.Map
 }
 
-func Land(location location.Location, planet planet.Planet) (*Rover, error) {
+func Land(location location.Location, planet planet.Planet) (*WrappingCollidingRover, error) {
 	mapOfPlanet := planetMap.Of(planet)
 	if mapOfPlanet.CollidesWithObstacle(location.Position()) {
 		return nil, errors.New("cannot land on obstacle")
 	}
-	return &Rover{location: location, planetMap: *mapOfPlanet}, nil
+	return &WrappingCollidingRover{location: location, planetMap: *mapOfPlanet}, nil
 }
 
-func (this Rover) Location() *location.Location {
+func (this WrappingCollidingRover) Location() *location.Location {
 	return &this.location
 }
 
-func (this *Rover) TurnLeft() {
+func (this *WrappingCollidingRover) TurnLeft() {
 	this.location.FaceLeft()
 }
 
-func (this *Rover) TurnRight() {
+func (this *WrappingCollidingRover) TurnRight() {
 	this.location.FaceRight()
 }
 
-func (this *Rover) MoveForward() error {
+func (this *WrappingCollidingRover) MoveForward() error {
 	this.location.CalculatePositionAhead()
 	if this.willBeOutOfBounds() {
 		this.location.WrapAround(this.planetMap.Size())
@@ -52,7 +52,7 @@ func (this *Rover) MoveForward() error {
 	return nil
 }
 
-func (this *Rover) MoveBackward() error {
+func (this *WrappingCollidingRover) MoveBackward() error {
 	this.location.CalculatePositionBehind()
 	if this.willBeOutOfBounds() {
 		this.location.WrapAround(this.planetMap.Size())
@@ -65,10 +65,10 @@ func (this *Rover) MoveBackward() error {
 	return nil
 }
 
-func (this Rover) willBeOutOfBounds() bool {
+func (this WrappingCollidingRover) willBeOutOfBounds() bool {
 	return this.planetMap.IsOutOfBounds(this.location.WillBeAt())
 }
 
-func (this Rover) willHitSomething() bool {
+func (this WrappingCollidingRover) willHitSomething() bool {
 	return this.planetMap.CollidesWithObstacle(this.location.WillBeAt())
 }
