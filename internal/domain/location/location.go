@@ -38,6 +38,10 @@ func (this *Location) Position() coord.AbsoluteCoordinate {
 	return this.coordinate
 }
 
+func (this *Location) Direction() direction.Direction {
+	return this.direction
+}
+
 func (this *Location) FaceLeft() {
 	this.direction = this.direction.DirectionOnTheLeft()
 }

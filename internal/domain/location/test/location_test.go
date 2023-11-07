@@ -16,6 +16,12 @@ func TestGetsPosition(t *testing.T) {
 	assert.Equal(t, coord, testLocation.Position())
 }
 
+func TestGetsDirection(t *testing.T) {
+	direction := &direction.North{}
+	testLocation, _ := location.From(*coordinate.NewAbsolute(1, 1), direction)
+	assert.Equal(t, direction, testLocation.Direction())
+}
+
 func TestUpdatesPosition(t *testing.T) {
 	testLocation, _ := location.From(*coordinate.NewAbsolute(1, 1), &direction.North{})
 	testLocation.CalculatePositionAhead()

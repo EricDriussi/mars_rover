@@ -12,6 +12,7 @@ type Rover interface {
 	TurnRight()
 	MoveForward() error
 	MoveBackward() error
+	Location() *location.Location
 }
 
 type WrappingCollidingRover struct {
