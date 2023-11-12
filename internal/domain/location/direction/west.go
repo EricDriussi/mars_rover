@@ -6,8 +6,8 @@ import (
 
 type West struct{}
 
-func (this West) Degree() int {
-	return 0
+func (this West) CardinalPoint() string {
+	return "W"
 }
 
 func (this West) DirectionOnTheLeft() Direction {

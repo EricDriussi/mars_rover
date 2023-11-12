@@ -6,8 +6,8 @@ import (
 
 type North struct{}
 
-func (this North) Degree() int {
-	return 90
+func (this North) CardinalPoint() string {
+	return "N"
 }
 
 func (this North) DirectionOnTheLeft() Direction {

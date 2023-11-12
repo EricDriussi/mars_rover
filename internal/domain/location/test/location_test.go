@@ -94,9 +94,9 @@ type mockDirection struct {
 	mock.Mock
 }
 
-func (this *mockDirection) Degree() int {
+func (this *mockDirection) CardinalPoint() string {
 	args := this.Called()
-	return args.Int(0)
+	return args.String(0)
 }
 
 func (this *mockDirection) DirectionOnTheLeft() direction.Direction {

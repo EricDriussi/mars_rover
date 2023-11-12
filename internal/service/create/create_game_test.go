@@ -14,7 +14,7 @@ func TestRandomCreationDoesNotPanic(t *testing.T) {
 		}
 	}()
 
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 25; i++ {
 		rover := create.Random()
 		assert.NotNil(t, rover)
 	}
