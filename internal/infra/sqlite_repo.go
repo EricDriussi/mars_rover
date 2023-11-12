@@ -3,6 +3,7 @@ package infra
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"log"
 	"mars_rover/internal/domain/coordinate"
 	coord "mars_rover/internal/domain/coordinate"
@@ -91,8 +92,7 @@ func (r *SQLiteRepository) mapRover(rover rover.Rover) RoverPersistenceEntity {
 				X: rover.Location().WillBeAt().X(),
 				Y: rover.Location().WillBeAt().Y(),
 			},
-			// TODO: This is a hack. There should probably be a factory or something
-			Direction: "North",
+			Direction: rover.Location().Direction().CardinalPoint(),
 		},
 		PlanetMap: PlanetMapPersistenceEntity{
 			Size: size.Size{
@@ -104,39 +104,38 @@ func (r *SQLiteRepository) mapRover(rover rover.Rover) RoverPersistenceEntity {
 	}
 }
 
-func directionFromString(dirStr string) direction.Direction {
+func directionFromString(dirStr string) (direction.Direction, error) {
 	switch dirStr {
-	case "North":
-		return &direction.North{}
-	case "South":
-		return &direction.South{}
-	case "East":
-		return &direction.East{}
-	case "West":
-		return &direction.West{}
-	default:
-		// Handle the default case or return an error
-		// For now, let's return North as default
-		return &direction.North{}
+	case "N":
+		return &direction.North{}, nil
+	case "S":
+		return &direction.South{}, nil
+	case "E":
+		return &direction.East{}, nil
+	case "W":
+		return &direction.West{}, nil
 	}
+	return nil, errors.New("Invalid direction")
 }
 
 func ConvertToRover(roverData RoverPersistenceEntity) (rover.Rover, error) {
-	// Create a location based on the persisted data
+	dir, err := directionFromString(roverData.Location.Direction)
+	if err != nil {
+		return nil, err
+	}
+
 	loc, err := location.From(
 		*coordinate.NewAbsolute(roverData.Location.CurrentCoord.X, roverData.Location.CurrentCoord.Y),
-		directionFromString(roverData.Location.Direction),
+		dir,
 	)
 	if err != nil {
 		return nil, err
 	}
 
-	// Create a planet (for now, assume an empty planet)
 	planet := new(planetTest.MockPlanet)
 	planet.On("Size").Return(size.Size{})
 	planet.On("Obstacles").Return([]obstacle.Obstacle{})
 
-	// Land the rover on the planet
 	roverInstance, err := rover.Land(*loc, planet)
 	if err != nil {
 		return nil, err
