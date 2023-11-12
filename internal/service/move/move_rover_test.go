@@ -2,7 +2,9 @@ package service_test
 
 import (
 	"errors"
-	"mars_rover/internal/service/move"
+	"mars_rover/internal/domain/location"
+	planetMap "mars_rover/internal/domain/rover/planet_map"
+	service "mars_rover/internal/service/move"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -123,4 +125,14 @@ func (this *MockRover) MoveForward() error {
 func (this *MockRover) MoveBackward() error {
 	args := this.Called()
 	return args.Error(0)
+}
+
+func (this *MockRover) Location() *location.Location {
+	args := this.Called()
+	return args.Get(0).(*location.Location)
+}
+
+func (this *MockRover) Map() *planetMap.Map {
+	args := this.Called()
+	return args.Get(0).(*planetMap.Map)
 }

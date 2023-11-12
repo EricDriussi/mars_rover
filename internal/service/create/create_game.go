@@ -12,6 +12,7 @@ import (
 	"math/rand"
 )
 
+// TODO.LM: Return error instead of panic?
 func Random() rover.Rover {
 	randNum := rand.Intn(99) + 2
 	randSize, err := size.From(randNum, randNum)

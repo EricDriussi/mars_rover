@@ -7,12 +7,14 @@ import (
 	planetMap "mars_rover/internal/domain/rover/planet_map"
 )
 
+// TODO: extract
 type Rover interface {
 	TurnLeft()
 	TurnRight()
 	MoveForward() error
 	MoveBackward() error
 	Location() *location.Location
+	Map() *planetMap.Map
 }
 
 type WrappingCollidingRover struct {
@@ -30,6 +32,10 @@ func Land(location location.Location, planet planet.Planet) (*WrappingCollidingR
 
 func (this WrappingCollidingRover) Location() *location.Location {
 	return &this.location
+}
+
+func (this WrappingCollidingRover) Map() *planetMap.Map {
+	return &this.planetMap
 }
 
 func (this *WrappingCollidingRover) TurnLeft() {
