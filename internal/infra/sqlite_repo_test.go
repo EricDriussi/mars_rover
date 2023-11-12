@@ -6,7 +6,8 @@ import (
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/obstacle"
-	planetTest "mars_rover/internal/domain/planet/test"
+	"mars_rover/internal/domain/obstacle/small_rock"
+	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
 	"mars_rover/internal/domain/rover"
 	"mars_rover/internal/domain/size"
 	"mars_rover/internal/infra"
@@ -21,9 +22,7 @@ func TestSaveRover(t *testing.T) {
 
 	repo := infra.NewSQLite(db)
 	loc, _ := location.From(*coordinate.NewAbsolute(0, 0), &direction.North{})
-	planet := new(planetTest.MockPlanet)
-	planet.On("Size").Return(size.Size{})
-	planet.On("Obstacles").Return([]obstacle.Obstacle{})
+	planet, _ := rockyPlanet.Create(size.Size{Width: 5, Height: 5}, []obstacle.Obstacle{small_rock.In(*coordinate.NewAbsolute(1, 1))})
 	testRover, _ := rover.Land(*loc, planet)
 
 	err := repo.SaveRover(testRover)
@@ -44,7 +43,7 @@ func TestSaveRover(t *testing.T) {
 	err = json.Unmarshal([]byte(savedRover), &roverData)
 	assert.Nil(t, err)
 	var rover rover.Rover
-	rover, err = infra.ConvertToRover(roverData)
+	rover, err = infra.ConvertToRover(roverData, planet)
 	assert.Nil(t, err)
 	assert.Equal(t, testRover, rover)
 }

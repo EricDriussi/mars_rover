@@ -6,11 +6,9 @@ import (
 	"errors"
 	"log"
 	"mars_rover/internal/domain/coordinate"
-	coord "mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/location/direction"
-	"mars_rover/internal/domain/obstacle"
-	planetTest "mars_rover/internal/domain/planet/test"
+	"mars_rover/internal/domain/planet"
 	"mars_rover/internal/domain/rover"
 	"mars_rover/internal/domain/size"
 
@@ -54,8 +52,8 @@ type RoverPersistenceEntity struct {
 }
 
 type PlanetMapPersistenceEntity struct {
-	Size      size.Size           `json:"size"`
-	Obstacles []obstacle.Obstacle `json:"obstacles"`
+	Size      size.Size                   `json:"size"`
+	Obstacles []ObstaclePersistenceEntity `json:"obstacles"`
 }
 
 type ObstaclePersistenceEntity struct {
@@ -73,15 +71,17 @@ type LocationPersistenceEntity struct {
 	Direction    string                      `json:"direction"`
 }
 
-func (this ObstaclePersistenceEntity) Occupies(coordinate coord.AbsoluteCoordinate) bool {
-	return true
-}
-
-func (this ObstaclePersistenceEntity) IsBeyond(size size.Size) bool {
-	return true
-}
-
 func (r *SQLiteRepository) mapRover(rover rover.Rover) RoverPersistenceEntity {
+	obs := make([]ObstaclePersistenceEntity, len(rover.Map().Obstacles()))
+	for i, o := range rover.Map().Obstacles() {
+		obs[i] = ObstaclePersistenceEntity{
+			Coordinate: CoordinatePersistenceEntity{
+				X: o.Coordinates().X(),
+				Y: o.Coordinates().Y(),
+			},
+		}
+	}
+
 	return RoverPersistenceEntity{
 		Location: LocationPersistenceEntity{
 			CurrentCoord: CoordinatePersistenceEntity{
@@ -99,7 +99,7 @@ func (r *SQLiteRepository) mapRover(rover rover.Rover) RoverPersistenceEntity {
 				Width:  rover.Map().Size().Width,
 				Height: rover.Map().Size().Height,
 			},
-			Obstacles: rover.Map().Obstacles(),
+			Obstacles: obs,
 		},
 	}
 }
@@ -118,7 +118,7 @@ func directionFromString(dirStr string) (direction.Direction, error) {
 	return nil, errors.New("Invalid direction")
 }
 
-func ConvertToRover(roverData RoverPersistenceEntity) (rover.Rover, error) {
+func ConvertToRover(roverData RoverPersistenceEntity, planet planet.Planet) (rover.Rover, error) {
 	dir, err := directionFromString(roverData.Location.Direction)
 	if err != nil {
 		return nil, err
@@ -131,10 +131,6 @@ func ConvertToRover(roverData RoverPersistenceEntity) (rover.Rover, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	planet := new(planetTest.MockPlanet)
-	planet.On("Size").Return(size.Size{})
-	planet.On("Obstacles").Return([]obstacle.Obstacle{})
 
 	roverInstance, err := rover.Land(*loc, planet)
 	if err != nil {
