@@ -20,6 +20,10 @@ func (this *Map) Size() size.Size {
 	return this.size
 }
 
+func (this *Map) Obstacles() []obstacle.Obstacle {
+	return this.obstacles
+}
+
 func (this *Map) CollidesWithObstacle(coord coordinate.AbsoluteCoordinate) bool {
 	for _, obstacle := range this.obstacles {
 		return obstacle.Occupies(coord)
