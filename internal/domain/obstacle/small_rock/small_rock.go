@@ -21,3 +21,7 @@ func (this SmallRock) Occupies(coordinate coord.AbsoluteCoordinate) bool {
 func (this SmallRock) IsBeyond(size size.Size) bool {
 	return this.coordinate.X() > size.Width || this.coordinate.Y() > size.Height
 }
+
+func (this SmallRock) Coordinates() coord.AbsoluteCoordinate {
+	return this.coordinate
+}

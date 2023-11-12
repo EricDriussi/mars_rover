@@ -8,4 +8,5 @@ import (
 type Obstacle interface {
 	IsBeyond(size.Size) bool
 	Occupies(coord.AbsoluteCoordinate) bool
+	Coordinates() coord.AbsoluteCoordinate
 }

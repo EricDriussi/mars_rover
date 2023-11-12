@@ -20,3 +20,8 @@ func (this *MockObstacle) Occupies(coord coordinate.AbsoluteCoordinate) bool {
 	args := this.Called(coord)
 	return args.Bool(0)
 }
+
+func (this *MockObstacle) Coordinates() coordinate.AbsoluteCoordinate {
+	args := this.Called()
+	return args.Get(0).(coordinate.AbsoluteCoordinate)
+}
