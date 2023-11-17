@@ -7,7 +7,7 @@ import (
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/obstacle"
-	"mars_rover/internal/domain/obstacle/small_rock"
+	"mars_rover/internal/domain/obstacle/smallRock"
 	"mars_rover/internal/domain/planet"
 	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
 	"mars_rover/internal/domain/rover"
@@ -73,6 +73,6 @@ func aTestRover(planet planet.Planet) rover.Rover {
 
 func aTestPlanet() planet.Planet {
 	s, _ := size.Square(5)
-	planet, _ := rockyPlanet.Create(*s, []obstacle.Obstacle{small_rock.In(*absoluteCoordinate.From(1, 1))})
+	planet, _ := rockyPlanet.Create(*s, []obstacle.Obstacle{smallRock.In(*absoluteCoordinate.From(1, 1))})
 	return planet
 }

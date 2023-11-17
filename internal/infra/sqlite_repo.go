@@ -35,7 +35,7 @@ func NewSQLite(db *sql.DB) *SQLiteRepository {
 }
 
 func (r *SQLiteRepository) SaveRover(rover rover.Rover) error {
-	roverAsBytes, err := json.Marshal(r.mapToPersistenceEntity(rover))
+	roverAsBytes, err := json.Marshal(r.mapToPersistenceRover(rover))
 	if err != nil {
 		return err
 	}

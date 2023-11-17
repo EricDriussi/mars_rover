@@ -1,6 +1,8 @@
 package infra
 
 import (
+	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
+	"mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/rover"
 )
 
@@ -15,7 +17,7 @@ type PlanetMapPersistenceEntity struct {
 }
 
 type ObstaclePersistenceEntity struct {
-	Coordinate CoordinatePersistenceEntity `json:"coordinate"`
+	Coordinates []CoordinatePersistenceEntity `json:"coordinates"`
 }
 
 type CoordinatePersistenceEntity struct {
@@ -34,18 +36,7 @@ type SizePersistenceEntity struct {
 	Height int `json:"height"`
 }
 
-func (r *SQLiteRepository) mapToPersistenceEntity(rover rover.Rover) RoverPersistenceEntity {
-	obs := make([]ObstaclePersistenceEntity, len(rover.Map().Obstacles()))
-	for i, o := range rover.Map().Obstacles() {
-		coordinates := o.Coordinates()
-		obs[i] = ObstaclePersistenceEntity{
-			Coordinate: CoordinatePersistenceEntity{
-				X: coordinates.X(),
-				Y: coordinates.Y(),
-			},
-		}
-	}
-
+func (r *SQLiteRepository) mapToPersistenceRover(rover rover.Rover) RoverPersistenceEntity {
 	currPosition := rover.Location().Position()
 	futurePosition := rover.Location().WillBeAt()
 	size := rover.Map().Size()
@@ -66,7 +57,29 @@ func (r *SQLiteRepository) mapToPersistenceEntity(rover rover.Rover) RoverPersis
 				Width:  size.Width(),
 				Height: size.Height(),
 			},
-			Obstacles: obs,
+			Obstacles: mapToPersistenceObstacles(rover.Map().Obstacles()),
 		},
 	}
+}
+
+func mapToPersistenceCoordinates(coordinates []absoluteCoordinate.AbsoluteCoordinate) []CoordinatePersistenceEntity {
+	coords := make([]CoordinatePersistenceEntity, len(coordinates))
+	for i, c := range coordinates {
+		coords[i] = CoordinatePersistenceEntity{
+			X: c.X(),
+			Y: c.Y(),
+		}
+	}
+	return coords
+}
+
+func mapToPersistenceObstacles(obstacles []obstacle.Obstacle) []ObstaclePersistenceEntity {
+	obs := make([]ObstaclePersistenceEntity, len(obstacles))
+	for i, o := range obstacles {
+		coordinates := o.Coordinates()
+		obs[i] = ObstaclePersistenceEntity{
+			Coordinates: mapToPersistenceCoordinates(coordinates),
+		}
+	}
+	return obs
 }

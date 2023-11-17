@@ -5,7 +5,7 @@ import (
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/obstacle"
-	smallRock "mars_rover/internal/domain/obstacle/small_rock"
+	smallRock "mars_rover/internal/domain/obstacle/smallRock"
 	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
 	"mars_rover/internal/domain/rover"
 	"mars_rover/internal/domain/size"

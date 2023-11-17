@@ -21,7 +21,7 @@ func (this *MockObstacle) Occupies(coord absoluteCoordinate.AbsoluteCoordinate) 
 	return args.Bool(0)
 }
 
-func (this *MockObstacle) Coordinates() absoluteCoordinate.AbsoluteCoordinate {
+func (this *MockObstacle) Coordinates() []absoluteCoordinate.AbsoluteCoordinate {
 	args := this.Called()
-	return args.Get(0).(absoluteCoordinate.AbsoluteCoordinate)
+	return args.Get(0).([]absoluteCoordinate.AbsoluteCoordinate)
 }

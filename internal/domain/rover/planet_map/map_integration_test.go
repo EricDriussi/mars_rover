@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"mars_rover/internal/domain/obstacle"
-	rock "mars_rover/internal/domain/obstacle/small_rock"
+	rock "mars_rover/internal/domain/obstacle/smallRock"
 	"mars_rover/internal/domain/planet"
 	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
 	"mars_rover/internal/domain/rover/planet_map"

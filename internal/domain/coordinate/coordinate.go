@@ -5,6 +5,7 @@ import (
 	"mars_rover/internal/domain/coordinate/relativeCoordinate"
 )
 
+// TODO: add coordinateS
 type Coordinate interface {
 	X() int
 	Y() int

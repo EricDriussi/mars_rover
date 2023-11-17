@@ -5,8 +5,9 @@ import (
 	"mars_rover/internal/domain/size"
 )
 
+// TODO: add obstacleS
 type Obstacle interface {
 	IsBeyond(size.Size) bool
 	Occupies(coord.AbsoluteCoordinate) bool
-	Coordinates() coord.AbsoluteCoordinate
+	Coordinates() []coord.AbsoluteCoordinate
 }

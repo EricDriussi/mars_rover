@@ -1,4 +1,4 @@
-package small_rock
+package smallRock
 
 import (
 	coord "mars_rover/internal/domain/coordinate/absoluteCoordinate"
@@ -22,6 +22,6 @@ func (this *SmallRock) IsBeyond(size size.Size) bool {
 	return this.coordinate.X() > size.Width() || this.coordinate.Y() > size.Height()
 }
 
-func (this *SmallRock) Coordinates() coord.AbsoluteCoordinate {
-	return this.coordinate
+func (this *SmallRock) Coordinates() []coord.AbsoluteCoordinate {
+	return []coord.AbsoluteCoordinate{this.coordinate}
 }
