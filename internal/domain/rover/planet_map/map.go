@@ -32,5 +32,5 @@ func (this *Map) CollidesWithObstacle(coord absoluteCoordinate.AbsoluteCoordinat
 }
 
 func (this *Map) IsOutOfBounds(coord absoluteCoordinate.AbsoluteCoordinate) bool {
-	return coord.X() > this.size.Width || coord.Y() > this.size.Height || coord.X() < 0 || coord.Y() < 0
+	return coord.X() > this.size.Width() || coord.Y() > this.size.Height() || coord.X() < 0 || coord.Y() < 0
 }

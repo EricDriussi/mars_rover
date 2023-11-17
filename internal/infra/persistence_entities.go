@@ -2,7 +2,6 @@ package infra
 
 import (
 	"mars_rover/internal/domain/rover"
-	"mars_rover/internal/domain/size"
 )
 
 type RoverPersistenceEntity struct {
@@ -11,7 +10,7 @@ type RoverPersistenceEntity struct {
 }
 
 type PlanetMapPersistenceEntity struct {
-	Size      size.Size                   `json:"size"`
+	Size      SizePersistenceEntity       `json:"size"`
 	Obstacles []ObstaclePersistenceEntity `json:"obstacles"`
 }
 
@@ -30,6 +29,11 @@ type LocationPersistenceEntity struct {
 	Direction    string                      `json:"direction"`
 }
 
+type SizePersistenceEntity struct {
+	Width  int `json:"width"`
+	Height int `json:"height"`
+}
+
 func (r *SQLiteRepository) mapToPersistenceEntity(rover rover.Rover) RoverPersistenceEntity {
 	obs := make([]ObstaclePersistenceEntity, len(rover.Map().Obstacles()))
 	for i, o := range rover.Map().Obstacles() {
@@ -44,6 +48,7 @@ func (r *SQLiteRepository) mapToPersistenceEntity(rover rover.Rover) RoverPersis
 
 	currPosition := rover.Location().Position()
 	futurePosition := rover.Location().WillBeAt()
+	size := rover.Map().Size()
 	return RoverPersistenceEntity{
 		Location: LocationPersistenceEntity{
 			CurrentCoord: CoordinatePersistenceEntity{
@@ -57,9 +62,9 @@ func (r *SQLiteRepository) mapToPersistenceEntity(rover rover.Rover) RoverPersis
 			Direction: rover.Location().Direction().CardinalPoint(),
 		},
 		PlanetMap: PlanetMapPersistenceEntity{
-			Size: size.Size{
-				Width:  rover.Map().Size().Width,
-				Height: rover.Map().Size().Height,
+			Size: SizePersistenceEntity{
+				Width:  size.Width(),
+				Height: size.Height(),
 			},
 			Obstacles: obs,
 		},

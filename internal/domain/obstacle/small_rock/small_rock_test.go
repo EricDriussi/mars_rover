@@ -11,10 +11,10 @@ import (
 )
 
 func TestIsWithinLimit(t *testing.T) {
-	sizeLimit := &size.Size{Width: 2, Height: 2}
+	sizeLimit, _ := size.Square(2)
 
-	for x := 0; x <= sizeLimit.Width; x++ {
-		for y := 0; y <= sizeLimit.Height; y++ {
+	for x := 0; x <= sizeLimit.Width(); x++ {
+		for y := 0; y <= sizeLimit.Height(); y++ {
 			testCoordinate := absoluteCoordinate.From(x, y)
 			rock := smallRock.In(*testCoordinate)
 
@@ -24,7 +24,7 @@ func TestIsWithinLimit(t *testing.T) {
 }
 
 func TestIsBeyondLimit(t *testing.T) {
-	sizeLimit := &size.Size{Width: 3, Height: 3}
+	sizeLimit, _ := size.Square(3)
 	testCases := []struct {
 		name       string
 		coordinate *absoluteCoordinate.AbsoluteCoordinate

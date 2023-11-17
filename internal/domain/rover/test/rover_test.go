@@ -15,7 +15,7 @@ import (
 )
 
 func TestLandsOnFreeLocation(t *testing.T) {
-	planetSize, _ := size.From(2, 2)
+	planetSize, _ := size.Square(2)
 	testPlanet, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{smallRock.In(*absoluteCoordinate.From(1, 2))})
 	landingLocation, _ := location.From(*absoluteCoordinate.From(1, 1), &direction.North{})
 
@@ -26,7 +26,7 @@ func TestLandsOnFreeLocation(t *testing.T) {
 }
 
 func TestCannotLandOnObstacle(t *testing.T) {
-	planetSize, _ := size.From(2, 2)
+	planetSize, _ := size.Square(2)
 	testPlanet, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{smallRock.In(*absoluteCoordinate.From(1, 1))})
 	landingLocation, _ := location.From(*absoluteCoordinate.From(1, 1), &direction.North{})
 
@@ -37,7 +37,7 @@ func TestCannotLandOnObstacle(t *testing.T) {
 }
 
 func TestMovesForward(t *testing.T) {
-	planetSize, _ := size.From(10, 10)
+	planetSize, _ := size.Square(10)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
 
 	testCases := []struct {
@@ -82,7 +82,7 @@ func TestMovesForward(t *testing.T) {
 }
 
 func TestMovesBackward(t *testing.T) {
-	planetSize, _ := size.From(10, 10)
+	planetSize, _ := size.Square(10)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
 
 	testCases := []struct {
@@ -127,7 +127,7 @@ func TestMovesBackward(t *testing.T) {
 }
 
 func TestTurnsRight(t *testing.T) {
-	planetSize, _ := size.From(10, 10)
+	planetSize, _ := size.Square(10)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
 	coord := *absoluteCoordinate.From(5, 5)
 
@@ -172,7 +172,7 @@ func TestTurnsRight(t *testing.T) {
 }
 
 func TestTurnsLeft(t *testing.T) {
-	planetSize, _ := size.From(10, 10)
+	planetSize, _ := size.Square(10)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
 	coord := *absoluteCoordinate.From(5, 5)
 

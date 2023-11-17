@@ -61,8 +61,8 @@ func (this *Location) CalculatePositionBehind() {
 
 func (this *Location) WrapAround(limit size.Size) {
 	this.futureCoordinate = *absoluteCoordinate.From(
-		this.wrap(this.futureCoordinate.X(), limit.Width),
-		this.wrap(this.futureCoordinate.Y(), limit.Height),
+		this.wrap(this.futureCoordinate.X(), limit.Width()),
+		this.wrap(this.futureCoordinate.Y(), limit.Height()),
 	)
 }
 

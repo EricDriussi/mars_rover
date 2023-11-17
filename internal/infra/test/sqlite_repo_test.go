@@ -72,6 +72,7 @@ func aTestRover(planet planet.Planet) rover.Rover {
 }
 
 func aTestPlanet() planet.Planet {
-	planet, _ := rockyPlanet.Create(size.Size{Width: 5, Height: 5}, []obstacle.Obstacle{small_rock.In(*absoluteCoordinate.From(1, 1))})
+	s, _ := size.Square(5)
+	planet, _ := rockyPlanet.Create(*s, []obstacle.Obstacle{small_rock.In(*absoluteCoordinate.From(1, 1))})
 	return planet
 }

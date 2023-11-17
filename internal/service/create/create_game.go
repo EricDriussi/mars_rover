@@ -15,7 +15,7 @@ import (
 // TODO.LM: Return error instead of panic?
 func Random() rover.Rover {
 	randNum := rand.Intn(99) + 2
-	randSize, err := size.From(randNum, randNum)
+	randSize, err := size.Square(randNum)
 	if err != nil {
 		panic("Something went wrong :(")
 	}
@@ -44,7 +44,7 @@ func Random() rover.Rover {
 
 func randomObstaclesWithin(size size.Size) []obstacle.Obstacle {
 	var obstacles []obstacle.Obstacle
-	halfTheArea := size.Width * size.Height / 2
+	halfTheArea := size.Width() * size.Height() / 2
 	betweenZeroAndHalfTheArea := rand.Intn(halfTheArea)
 	for i := 0; i < betweenZeroAndHalfTheArea; i++ {
 		obstacles = append(obstacles, rock.In(randomCoordinateWithin(size)))
@@ -57,7 +57,7 @@ func randomLocationWithin(size size.Size) (*location.Location, error) {
 }
 
 func randomCoordinateWithin(size size.Size) absoluteCoordinate.AbsoluteCoordinate {
-	return *absoluteCoordinate.From(rand.Intn(size.Width), rand.Intn(size.Height))
+	return *absoluteCoordinate.From(rand.Intn(size.Width()), rand.Intn(size.Height()))
 }
 
 func randomDirection() direction.Direction {

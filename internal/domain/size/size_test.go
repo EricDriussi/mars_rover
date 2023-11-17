@@ -8,53 +8,30 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDoesNotAllowNegativeValues(t *testing.T) {
+func TestSquareDoesNotAllowNegativeValues(t *testing.T) {
 	testCases := []struct {
-		name   string
-		width  int
-		height int
+		name string
+		side int
 	}{
 		{
-			name:   "neither width nor height can be negative",
-			width:  10,
-			height: -10,
+			name: "side cannot be negative",
+			side: -10,
 		},
 		{
-			name:   "width cannot be negative",
-			width:  -10,
-			height: 10,
-		},
-		{
-			name:   "height cannot be negative",
-			width:  10,
-			height: -10,
-		},
-		{
-			name:   "neither width nor height can be zero",
-			width:  0,
-			height: 0,
-		},
-		{
-			name:   "width cannot be zero",
-			width:  0,
-			height: 1,
-		},
-		{
-			name:   "height cannot be zero",
-			width:  1,
-			height: 0,
+			name: "side cannot be zero",
+			side: 0,
 		},
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			_, err := size.From(testCase.width, testCase.height)
+			_, err := size.Square(testCase.side)
 			assert.Error(t, err)
 		})
 	}
 }
 
-func TestAllowsRandomPositiveValues(t *testing.T) {
-	testSize, err := size.From(rand.Int(), rand.Int())
+func TestSquareAllowsRandomPositiveValues(t *testing.T) {
+	testSize, err := size.Square(rand.Int())
 	assert.Nil(t, err)
 	assert.NotNil(t, testSize)
 }

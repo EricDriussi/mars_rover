@@ -14,7 +14,7 @@ import (
 )
 
 func TestWrapsLookingNorthMovingForward(t *testing.T) {
-	planetSize, _ := size.From(3, 3)
+	planetSize, _ := size.Square(3)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
 	landingLocation, _ := location.From(*absoluteCoordinate.From(2, 3), &direction.North{})
 
@@ -28,7 +28,7 @@ func TestWrapsLookingNorthMovingForward(t *testing.T) {
 }
 
 func TestWrapsLookingEastMovingForward(t *testing.T) {
-	planetSize, _ := size.From(3, 3)
+	planetSize, _ := size.Square(3)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
 	landingLocation, _ := location.From(*absoluteCoordinate.From(3, 2), &direction.East{})
 
@@ -42,7 +42,7 @@ func TestWrapsLookingEastMovingForward(t *testing.T) {
 }
 
 func TestWrapsLookingSouthMovingForward(t *testing.T) {
-	planetSize, _ := size.From(3, 3)
+	planetSize, _ := size.Square(3)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
 	landingLocation, _ := location.From(*absoluteCoordinate.From(2, 0), &direction.South{})
 
@@ -56,7 +56,7 @@ func TestWrapsLookingSouthMovingForward(t *testing.T) {
 }
 
 func TestWrapsLookingWestMovingForward(t *testing.T) {
-	planetSize, _ := size.From(3, 3)
+	planetSize, _ := size.Square(3)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
 	landingLocation, _ := location.From(*absoluteCoordinate.From(0, 2), &direction.West{})
 

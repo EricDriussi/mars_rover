@@ -12,13 +12,13 @@ import (
 )
 
 func TestGetsSize(t *testing.T) {
-	sizeLimit, _ := size.From(5, 5)
+	sizeLimit, _ := size.Square(5)
 	planet, _ := rockyPlanet.Create(*sizeLimit, []obstacle.Obstacle{})
 	assert.Equal(t, *sizeLimit, planet.Size())
 }
 
 func TestGetsObstacles(t *testing.T) {
-	sizeLimit, _ := size.From(5, 5)
+	sizeLimit, _ := size.Square(5)
 	obstacleOne := new(test.MockObstacle)
 	obstacleTwo := new(test.MockObstacle)
 	obstacles := []obstacle.Obstacle{obstacleOne, obstacleTwo}

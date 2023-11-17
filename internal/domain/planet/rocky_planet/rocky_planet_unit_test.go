@@ -12,7 +12,7 @@ import (
 )
 
 func TestCanCreateIfNoMockObstacleIsOutOfBounds(t *testing.T) {
-	sizeLimit, _ := size.From(5, 5)
+	sizeLimit, _ := size.Square(5)
 	obstacleOne, obstacleTwo := twoMockObstaclesWithinLimit(*sizeLimit)
 	obstaclesWithinBounds := []obstacle.Obstacle{obstacleOne, obstacleTwo}
 	_, err := rockyPlanet.Create(*sizeLimit, obstaclesWithinBounds)
@@ -23,7 +23,7 @@ func TestCanCreateIfNoMockObstacleIsOutOfBounds(t *testing.T) {
 }
 
 func TestCannotCreateIfOneMockObstacleIsOutOfBounds(t *testing.T) {
-	sizeLimit, _ := size.From(5, 5)
+	sizeLimit, _ := size.Square(5)
 	obstacleOne, obstacleTwo := twoMockObstaclesOneBeyondLimit(*sizeLimit)
 	obstaclesWithinBounds := []obstacle.Obstacle{obstacleOne, obstacleTwo}
 	_, err := rockyPlanet.Create(*sizeLimit, obstaclesWithinBounds)

@@ -13,7 +13,7 @@ import (
 func TestWrapsAheadIfOutOfBounds(t *testing.T) {
 	maxValue := 2
 	minValue := 0
-	sizeLimit := size.Size{Width: maxValue, Height: maxValue}
+	sizeLimit, _ := size.Square(maxValue)
 	testCases := []struct {
 		name      string
 		starting  *absoluteCoordinate.AbsoluteCoordinate
@@ -50,7 +50,7 @@ func TestWrapsAheadIfOutOfBounds(t *testing.T) {
 		t.Run(testCase.name, func(t *testing.T) {
 			loc, _ := location.From(*testCase.starting, testCase.direction)
 			loc.CalculatePositionAhead()
-			loc.WrapAround(sizeLimit)
+			loc.WrapAround(*sizeLimit)
 			assert.Equal(t, *testCase.expected, loc.WillBeAt())
 		})
 	}
@@ -59,14 +59,15 @@ func TestWrapsAheadIfOutOfBounds(t *testing.T) {
 func TestDoesNotWrapAheadIfWithinBounds(t *testing.T) {
 	loc, _ := location.From(*absoluteCoordinate.From(1, 1), &direction.North{})
 	loc.CalculatePositionAhead()
-	loc.WrapAround(size.Size{Width: 2, Height: 2})
+	s, _ := size.Square(2)
+	loc.WrapAround(*s)
 	assert.Equal(t, *absoluteCoordinate.From(1, 2), loc.WillBeAt())
 }
 
 func TestWrapsBehindIfOutOfBounds(t *testing.T) {
 	maxValue := 2
 	minValue := 0
-	sizeLimit := size.Size{Width: maxValue, Height: maxValue}
+	sizeLimit, _ := size.Square(maxValue)
 	testCases := []struct {
 		name      string
 		starting  *absoluteCoordinate.AbsoluteCoordinate
@@ -103,7 +104,7 @@ func TestWrapsBehindIfOutOfBounds(t *testing.T) {
 		t.Run(testCase.name, func(t *testing.T) {
 			loc, _ := location.From(*testCase.starting, testCase.direction)
 			loc.CalculatePositionBehind()
-			loc.WrapAround(sizeLimit)
+			loc.WrapAround(*sizeLimit)
 			assert.Equal(t, *testCase.expected, loc.WillBeAt())
 		})
 	}
@@ -112,6 +113,7 @@ func TestWrapsBehindIfOutOfBounds(t *testing.T) {
 func TestDoesNotWrapBehindIfWithinBounds(t *testing.T) {
 	loc, _ := location.From(*absoluteCoordinate.From(1, 1), &direction.North{})
 	loc.CalculatePositionBehind()
-	loc.WrapAround(size.Size{Width: 2, Height: 2})
+	s, _ := size.Square(2)
+	loc.WrapAround(*s)
 	assert.Equal(t, *absoluteCoordinate.From(1, 0), loc.WillBeAt())
 }

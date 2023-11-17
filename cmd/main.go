@@ -18,7 +18,7 @@ import (
 // API
 // GUI
 func Sample() {
-	marsSize, err := size.From(10, 10)
+	marsSize, err := size.Square(10)
 	if err != nil {
 		fmt.Println("Error creating size:", err)
 		return

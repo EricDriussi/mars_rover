@@ -3,13 +3,21 @@ package size
 import "errors"
 
 type Size struct {
-	Width, Height int
+	width, height int
 }
 
-// TODO: should only recieve one int
-func From(width, height int) (*Size, error) {
-	if width <= 0 || height <= 0 {
+func Square(side int) (*Size, error) {
+	if side <= 0 {
 		return nil, errors.New("invalid size!")
 	}
-	return &Size{width, height}, nil
+	return &Size{side, side}, nil
+}
+
+func (this *Size) Width() int {
+	return this.width
+}
+
+func (this *Size) Height() int {
+	return this.height
+
 }

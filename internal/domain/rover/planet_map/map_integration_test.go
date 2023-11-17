@@ -28,10 +28,10 @@ func TestReportsCollision(t *testing.T) {
 }
 
 func TestReportsNOCollision(t *testing.T) {
-	planetSize, _ := size.From(5, 5)
+	planetSize, _ := size.Square(5)
 
-	for x := 0; x <= planetSize.Width; x++ {
-		for y := 0; y <= planetSize.Height; y++ {
+	for x := 0; x <= planetSize.Width(); x++ {
+		for y := 0; y <= planetSize.Height(); y++ {
 			name := fmt.Sprintf("no collision in %d, %d", x, y)
 
 			t.Run(name, func(t *testing.T) {
@@ -48,7 +48,7 @@ func TestReportsNOCollision(t *testing.T) {
 }
 
 func createPlanetWithObstacleIn(x, y int) planet.Planet {
-	planetSize, _ := size.From(x+2, y+2)
+	planetSize, _ := size.Square(y + 2)
 	obstacleCoordinate := absoluteCoordinate.From(x, y)
 	planetObstacle := rock.In(*obstacleCoordinate)
 	planet, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{planetObstacle})
@@ -56,7 +56,7 @@ func createPlanetWithObstacleIn(x, y int) planet.Planet {
 }
 
 func createPlanetWithRandomObstaclesNotIn(planetSize size.Size, exclude absoluteCoordinate.AbsoluteCoordinate) planet.Planet {
-	maxNumOfObstacles := (planetSize.Height * planetSize.Width) - 1
+	maxNumOfObstacles := (planetSize.Height() * planetSize.Width()) - 1
 	numObstacles := max(rand.Intn(maxNumOfObstacles), 1)
 
 	var obstacles []obstacle.Obstacle
@@ -72,7 +72,7 @@ func createPlanetWithRandomObstaclesNotIn(planetSize size.Size, exclude absolute
 
 func getRandomCoordinateExcluding(planetSize size.Size, exclude absoluteCoordinate.AbsoluteCoordinate) absoluteCoordinate.AbsoluteCoordinate {
 	for {
-		randomCoordinate := absoluteCoordinate.From(rand.Intn(planetSize.Width), rand.Intn(planetSize.Height))
+		randomCoordinate := absoluteCoordinate.From(rand.Intn(planetSize.Width()), rand.Intn(planetSize.Height()))
 
 		coordinateIsNotExcluded := !randomCoordinate.Equals(&exclude)
 		if coordinateIsNotExcluded {

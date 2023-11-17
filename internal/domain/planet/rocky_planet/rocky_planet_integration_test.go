@@ -13,7 +13,7 @@ import (
 )
 
 func TestCanCreateIfNoObstacleIsOutOfBounds(t *testing.T) {
-	sizeLimit, _ := size.From(5, 5)
+	sizeLimit, _ := size.Square(5)
 	obstaclesWithinBounds := generateThreeRandomObstaclesWithin(*sizeLimit)
 	_, err := rockyPlanet.Create(*sizeLimit, obstaclesWithinBounds)
 
@@ -21,7 +21,7 @@ func TestCanCreateIfNoObstacleIsOutOfBounds(t *testing.T) {
 }
 
 func TestCannotCreateIfOneObstacleIsOutOfBounds(t *testing.T) {
-	sizeLimit, _ := size.From(5, 5)
+	sizeLimit, _ := size.Square(5)
 	obstaclesWithinBounds := generateThreeRandomObstaclesWithin(*sizeLimit)
 
 	oneObstacleOutOfBounds := append(obstaclesWithinBounds, randomObstacleOutOf(*sizeLimit))
@@ -31,7 +31,7 @@ func TestCannotCreateIfOneObstacleIsOutOfBounds(t *testing.T) {
 }
 
 func TestCannotCreateIfMoreThanOneObstacleIsOutOfBounds(t *testing.T) {
-	sizeLimit, _ := size.From(5, 5)
+	sizeLimit, _ := size.Square(5)
 	obstaclesWithinBounds := generateThreeRandomObstaclesWithin(*sizeLimit)
 
 	oneObstacleOutOfBounds := append(obstaclesWithinBounds, randomObstacleOutOf(*sizeLimit))
@@ -53,16 +53,16 @@ func generateThreeRandomObstaclesWithin(size size.Size) []obstacle.Obstacle {
 }
 
 func generateRandomObstacleWithin(size size.Size) obstacle.Obstacle {
-	randomX := rand.Intn(size.Width)
-	randomY := rand.Intn(size.Height)
+	randomX := rand.Intn(size.Width())
+	randomY := rand.Intn(size.Height())
 
 	randomLocation := absoluteCoordinate.From(randomX, randomY)
 	return rock.In(*randomLocation)
 }
 
 func randomObstacleOutOf(size size.Size) obstacle.Obstacle {
-	randomX := rand.Intn(99-size.Width) + size.Width + 1
-	randomY := rand.Intn(99-size.Height) + size.Height + 1
+	randomX := rand.Intn(99-size.Width()) + size.Width() + 1
+	randomY := rand.Intn(99-size.Height()) + size.Height() + 1
 
 	randomLocation := absoluteCoordinate.From(randomX, randomY)
 	return rock.In(*randomLocation)
