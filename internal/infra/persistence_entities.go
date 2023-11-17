@@ -33,23 +33,26 @@ type LocationPersistenceEntity struct {
 func (r *SQLiteRepository) mapToPersistenceEntity(rover rover.Rover) RoverPersistenceEntity {
 	obs := make([]ObstaclePersistenceEntity, len(rover.Map().Obstacles()))
 	for i, o := range rover.Map().Obstacles() {
+		coordinates := o.Coordinates()
 		obs[i] = ObstaclePersistenceEntity{
 			Coordinate: CoordinatePersistenceEntity{
-				X: o.Coordinates().X(),
-				Y: o.Coordinates().Y(),
+				X: coordinates.X(),
+				Y: coordinates.Y(),
 			},
 		}
 	}
 
+	currPosition := rover.Location().Position()
+	futurePosition := rover.Location().WillBeAt()
 	return RoverPersistenceEntity{
 		Location: LocationPersistenceEntity{
 			CurrentCoord: CoordinatePersistenceEntity{
-				X: rover.Location().Position().X(),
-				Y: rover.Location().Position().Y(),
+				X: currPosition.X(),
+				Y: currPosition.Y(),
 			},
 			FutureCoord: CoordinatePersistenceEntity{
-				X: rover.Location().WillBeAt().X(),
-				Y: rover.Location().WillBeAt().Y(),
+				X: futurePosition.X(),
+				Y: futurePosition.Y(),
 			},
 			Direction: rover.Location().Direction().CardinalPoint(),
 		},

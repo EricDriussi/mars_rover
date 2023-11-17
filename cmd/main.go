@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"mars_rover/internal/domain/coordinate"
+	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/obstacle"
@@ -24,14 +24,14 @@ func Sample() {
 		return
 	}
 
-	mars, err := rockyPlanet.Create(*marsSize, []obstacle.Obstacle{rock.In(*coordinate.NewAbsolute(3, 3)), rock.In(*coordinate.NewAbsolute(7, 7))})
+	mars, err := rockyPlanet.Create(*marsSize, []obstacle.Obstacle{rock.In(*absoluteCoordinate.From(3, 3)), rock.In(*absoluteCoordinate.From(7, 7))})
 	if err != nil {
 		fmt.Println("Error creating planet:", err)
 		return
 	}
 
 	facingNorth := direction.North{}
-	landinglocation, err := location.From(*coordinate.NewAbsolute(0, 0), facingNorth)
+	landinglocation, err := location.From(*absoluteCoordinate.From(0, 0), facingNorth)
 	if err != nil {
 		fmt.Println("Error creating location:", err)
 		return

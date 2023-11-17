@@ -1,14 +1,14 @@
-package coordinate_test
+package relativeCoordinate_test
 
 import (
-	"mars_rover/internal/domain/coordinate"
+	"mars_rover/internal/domain/coordinate/relativeCoordinate"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestRelativeFromOrthogonal(t *testing.T) {
-	notRelative := coordinate.RelativeFrom(0, 0)
+	notRelative := relativeCoordinate.From(0, 0)
 	testCases := []struct {
 		name string
 		x, y int
@@ -36,7 +36,7 @@ func TestRelativeFromOrthogonal(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			coord := coordinate.RelativeFrom(testCase.x, testCase.y)
+			coord := relativeCoordinate.From(testCase.x, testCase.y)
 			areTheSame := coord.X() == notRelative.X() && coord.Y() == notRelative.Y()
 			assert.False(t, areTheSame)
 		})
@@ -44,7 +44,7 @@ func TestRelativeFromOrthogonal(t *testing.T) {
 }
 
 func TestRelativeFromNonOrthogonal(t *testing.T) {
-	notRelative := coordinate.RelativeFrom(0, 0)
+	notRelative := relativeCoordinate.From(0, 0)
 	testCases := []struct {
 		name string
 		x, y int
@@ -72,7 +72,7 @@ func TestRelativeFromNonOrthogonal(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			coord := coordinate.RelativeFrom(testCase.x, testCase.y)
+			coord := relativeCoordinate.From(testCase.x, testCase.y)
 			areTheSame := coord.X() == notRelative.X() && coord.Y() == notRelative.Y()
 			assert.True(t, areTheSame)
 		})

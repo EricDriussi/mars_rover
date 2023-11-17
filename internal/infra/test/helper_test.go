@@ -2,7 +2,7 @@ package infra_test
 
 import (
 	"errors"
-	"mars_rover/internal/domain/coordinate"
+	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/planet"
@@ -17,7 +17,7 @@ func mapToDomainRover(roverData infra.RoverPersistenceEntity, planet planet.Plan
 	}
 
 	loc, err := location.From(
-		*coordinate.NewAbsolute(roverData.Location.CurrentCoord.X, roverData.Location.CurrentCoord.Y),
+		*absoluteCoordinate.From(roverData.Location.CurrentCoord.X, roverData.Location.CurrentCoord.Y),
 		dir,
 	)
 	if err != nil {

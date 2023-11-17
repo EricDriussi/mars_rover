@@ -1,10 +1,10 @@
-package coordinate
+package relativeCoordinate
 
 type RelativeCoordinate struct {
 	x, y int
 }
 
-func RelativeFrom(x, y int) *RelativeCoordinate {
+func From(x, y int) *RelativeCoordinate {
 	step := 1
 	if isOrthogonal(x, y) {
 		return &RelativeCoordinate{x * step, y * step}
@@ -13,11 +13,11 @@ func RelativeFrom(x, y int) *RelativeCoordinate {
 	return &RelativeCoordinate{0, 0}
 }
 
-func (this RelativeCoordinate) X() int {
+func (this *RelativeCoordinate) X() int {
 	return this.x
 }
 
-func (this RelativeCoordinate) Y() int {
+func (this *RelativeCoordinate) Y() int {
 	return this.y
 }
 

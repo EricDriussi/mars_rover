@@ -1,7 +1,7 @@
 package rover_test
 
 import (
-	"mars_rover/internal/domain/coordinate"
+	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/obstacle"
@@ -16,13 +16,13 @@ import (
 func TestWrapsLookingNorthMovingForward(t *testing.T) {
 	planetSize, _ := size.From(3, 3)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
-	landingLocation, _ := location.From(*coordinate.NewAbsolute(2, 3), &direction.North{})
+	landingLocation, _ := location.From(*absoluteCoordinate.From(2, 3), &direction.North{})
 
 	testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
 	err := testRover.MoveForward()
 
-	expectedLocation, _ := location.From(*coordinate.NewAbsolute(2, 0), &direction.North{})
+	expectedLocation, _ := location.From(*absoluteCoordinate.From(2, 0), &direction.North{})
 	assert.Nil(t, err)
 	assert.Equal(t, expectedLocation, testRover.Location())
 }
@@ -30,13 +30,13 @@ func TestWrapsLookingNorthMovingForward(t *testing.T) {
 func TestWrapsLookingEastMovingForward(t *testing.T) {
 	planetSize, _ := size.From(3, 3)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
-	landingLocation, _ := location.From(*coordinate.NewAbsolute(3, 2), &direction.East{})
+	landingLocation, _ := location.From(*absoluteCoordinate.From(3, 2), &direction.East{})
 
 	testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
 	err := testRover.MoveForward()
 
-	expectedLocation, _ := location.From(*coordinate.NewAbsolute(0, 2), &direction.East{})
+	expectedLocation, _ := location.From(*absoluteCoordinate.From(0, 2), &direction.East{})
 	assert.Nil(t, err)
 	assert.Equal(t, expectedLocation, testRover.Location())
 }
@@ -44,13 +44,13 @@ func TestWrapsLookingEastMovingForward(t *testing.T) {
 func TestWrapsLookingSouthMovingForward(t *testing.T) {
 	planetSize, _ := size.From(3, 3)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
-	landingLocation, _ := location.From(*coordinate.NewAbsolute(2, 0), &direction.South{})
+	landingLocation, _ := location.From(*absoluteCoordinate.From(2, 0), &direction.South{})
 
 	testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
 	err := testRover.MoveForward()
 
-	expectedLocation, _ := location.From(*coordinate.NewAbsolute(2, 3), &direction.South{})
+	expectedLocation, _ := location.From(*absoluteCoordinate.From(2, 3), &direction.South{})
 	assert.Nil(t, err)
 	assert.Equal(t, expectedLocation, testRover.Location())
 }
@@ -58,13 +58,13 @@ func TestWrapsLookingSouthMovingForward(t *testing.T) {
 func TestWrapsLookingWestMovingForward(t *testing.T) {
 	planetSize, _ := size.From(3, 3)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
-	landingLocation, _ := location.From(*coordinate.NewAbsolute(0, 2), &direction.West{})
+	landingLocation, _ := location.From(*absoluteCoordinate.From(0, 2), &direction.West{})
 
 	testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
 	err := testRover.MoveForward()
 
-	expectedLocation, _ := location.From(*coordinate.NewAbsolute(3, 2), &direction.West{})
+	expectedLocation, _ := location.From(*absoluteCoordinate.From(3, 2), &direction.West{})
 	assert.Nil(t, err)
 	assert.Equal(t, expectedLocation, testRover.Location())
 }

@@ -1,13 +1,13 @@
 package direction
 
 import (
-	"mars_rover/internal/domain/coordinate"
+	"mars_rover/internal/domain/coordinate/relativeCoordinate"
 )
 
 type Direction interface {
 	CardinalPoint() string
 	DirectionOnTheLeft() Direction
 	DirectionOnTheRight() Direction
-	RelativePositionAhead() coordinate.RelativeCoordinate
-	RelativePositionBehind() coordinate.RelativeCoordinate
+	RelativePositionAhead() relativeCoordinate.RelativeCoordinate
+	RelativePositionBehind() relativeCoordinate.RelativeCoordinate
 }

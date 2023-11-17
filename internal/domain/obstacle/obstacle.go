@@ -1,7 +1,7 @@
 package obstacle
 
 import (
-	coord "mars_rover/internal/domain/coordinate"
+	coord "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"mars_rover/internal/domain/size"
 )
 

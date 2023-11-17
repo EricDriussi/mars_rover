@@ -1,7 +1,7 @@
 package planetMap
 
 import (
-	"mars_rover/internal/domain/coordinate"
+	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/planet"
 	"mars_rover/internal/domain/size"
@@ -24,13 +24,13 @@ func (this *Map) Obstacles() []obstacle.Obstacle {
 	return this.obstacles
 }
 
-func (this *Map) CollidesWithObstacle(coord coordinate.AbsoluteCoordinate) bool {
+func (this *Map) CollidesWithObstacle(coord absoluteCoordinate.AbsoluteCoordinate) bool {
 	for _, obstacle := range this.obstacles {
 		return obstacle.Occupies(coord)
 	}
 	return false
 }
 
-func (this *Map) IsOutOfBounds(coord coordinate.AbsoluteCoordinate) bool {
+func (this *Map) IsOutOfBounds(coord absoluteCoordinate.AbsoluteCoordinate) bool {
 	return coord.X() > this.size.Width || coord.Y() > this.size.Height || coord.X() < 0 || coord.Y() < 0
 }

@@ -1,7 +1,7 @@
 package create
 
 import (
-	"mars_rover/internal/domain/coordinate"
+	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/obstacle"
@@ -56,8 +56,8 @@ func randomLocationWithin(size size.Size) (*location.Location, error) {
 	return location.From(randomCoordinateWithin(size), randomDirection())
 }
 
-func randomCoordinateWithin(size size.Size) coordinate.AbsoluteCoordinate {
-	return *coordinate.NewAbsolute(rand.Intn(size.Width), rand.Intn(size.Height))
+func randomCoordinateWithin(size size.Size) absoluteCoordinate.AbsoluteCoordinate {
+	return *absoluteCoordinate.From(rand.Intn(size.Width), rand.Intn(size.Height))
 }
 
 func randomDirection() direction.Direction {

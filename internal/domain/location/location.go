@@ -3,26 +3,27 @@ package location
 import (
 	"errors"
 	coord "mars_rover/internal/domain/coordinate"
+	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/size"
 )
 
 type Location struct {
-	coordinate       coord.AbsoluteCoordinate
-	futureCoordinate coord.AbsoluteCoordinate
+	coordinate       absoluteCoordinate.AbsoluteCoordinate
+	futureCoordinate absoluteCoordinate.AbsoluteCoordinate
 	direction        direction.Direction
 }
 
 // TODO.LM: Should "direction" be exposed? Should "From" take (coord, "N")?
 // Should "From" take a "directionDTO" enum and create the corresponding direction with a factory?
-func From(coordinate coord.AbsoluteCoordinate, direction direction.Direction) (*Location, error) {
+func From(coordinate absoluteCoordinate.AbsoluteCoordinate, direction direction.Direction) (*Location, error) {
 	if coordinate.X() < 0 || coordinate.Y() < 0 {
 		return nil, errors.New("no negative coordinates!")
 	}
 	return &Location{coordinate, coordinate, direction}, nil
 }
 
-func (this *Location) WillBeAt() coord.AbsoluteCoordinate {
+func (this *Location) WillBeAt() absoluteCoordinate.AbsoluteCoordinate {
 	return this.futureCoordinate
 }
 
@@ -34,7 +35,7 @@ func (this *Location) Reset() {
 	this.futureCoordinate = this.coordinate
 }
 
-func (this *Location) Position() coord.AbsoluteCoordinate {
+func (this *Location) Position() absoluteCoordinate.AbsoluteCoordinate {
 	return this.coordinate
 }
 
@@ -59,7 +60,7 @@ func (this *Location) CalculatePositionBehind() {
 }
 
 func (this *Location) WrapAround(limit size.Size) {
-	this.futureCoordinate = *coord.NewAbsolute(
+	this.futureCoordinate = *absoluteCoordinate.From(
 		this.wrap(this.futureCoordinate.X(), limit.Width),
 		this.wrap(this.futureCoordinate.Y(), limit.Height),
 	)

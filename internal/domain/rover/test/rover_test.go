@@ -1,7 +1,7 @@
 package rover_test
 
 import (
-	"mars_rover/internal/domain/coordinate"
+	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/obstacle"
@@ -16,8 +16,8 @@ import (
 
 func TestLandsOnFreeLocation(t *testing.T) {
 	planetSize, _ := size.From(2, 2)
-	testPlanet, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{smallRock.In(*coordinate.NewAbsolute(1, 2))})
-	landingLocation, _ := location.From(*coordinate.NewAbsolute(1, 1), &direction.North{})
+	testPlanet, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{smallRock.In(*absoluteCoordinate.From(1, 2))})
+	landingLocation, _ := location.From(*absoluteCoordinate.From(1, 1), &direction.North{})
 
 	testRover, err := rover.Land(*landingLocation, testPlanet)
 
@@ -27,8 +27,8 @@ func TestLandsOnFreeLocation(t *testing.T) {
 
 func TestCannotLandOnObstacle(t *testing.T) {
 	planetSize, _ := size.From(2, 2)
-	testPlanet, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{smallRock.In(*coordinate.NewAbsolute(1, 1))})
-	landingLocation, _ := location.From(*coordinate.NewAbsolute(1, 1), &direction.North{})
+	testPlanet, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{smallRock.In(*absoluteCoordinate.From(1, 1))})
+	landingLocation, _ := location.From(*absoluteCoordinate.From(1, 1), &direction.North{})
 
 	testRover, err := rover.Land(*landingLocation, testPlanet)
 
@@ -43,33 +43,33 @@ func TestMovesForward(t *testing.T) {
 	testCases := []struct {
 		name               string
 		initialDirection   direction.Direction
-		expectedCoordinate *coordinate.AbsoluteCoordinate
+		expectedCoordinate *absoluteCoordinate.AbsoluteCoordinate
 	}{
 		{
 			name:               "facing north",
 			initialDirection:   &direction.North{},
-			expectedCoordinate: coordinate.NewAbsolute(5, 6),
+			expectedCoordinate: absoluteCoordinate.From(5, 6),
 		},
 		{
 			name:               "facing east",
 			initialDirection:   &direction.East{},
-			expectedCoordinate: coordinate.NewAbsolute(6, 5),
+			expectedCoordinate: absoluteCoordinate.From(6, 5),
 		},
 		{
 			name:               "facing south",
 			initialDirection:   &direction.South{},
-			expectedCoordinate: coordinate.NewAbsolute(5, 4),
+			expectedCoordinate: absoluteCoordinate.From(5, 4),
 		},
 		{
 			name:               "facing west",
 			initialDirection:   &direction.West{},
-			expectedCoordinate: coordinate.NewAbsolute(4, 5),
+			expectedCoordinate: absoluteCoordinate.From(4, 5),
 		},
 	}
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			landingLocation, _ := location.From(*coordinate.NewAbsolute(5, 5), testCase.initialDirection)
+			landingLocation, _ := location.From(*absoluteCoordinate.From(5, 5), testCase.initialDirection)
 			testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
 			err := testRover.MoveForward()
@@ -88,33 +88,33 @@ func TestMovesBackward(t *testing.T) {
 	testCases := []struct {
 		name               string
 		initialDirection   direction.Direction
-		expectedCoordinate *coordinate.AbsoluteCoordinate
+		expectedCoordinate *absoluteCoordinate.AbsoluteCoordinate
 	}{
 		{
 			name:               "facing north",
 			initialDirection:   &direction.North{},
-			expectedCoordinate: coordinate.NewAbsolute(5, 4),
+			expectedCoordinate: absoluteCoordinate.From(5, 4),
 		},
 		{
 			name:               "facing east",
 			initialDirection:   &direction.East{},
-			expectedCoordinate: coordinate.NewAbsolute(4, 5),
+			expectedCoordinate: absoluteCoordinate.From(4, 5),
 		},
 		{
 			name:               "facing south",
 			initialDirection:   &direction.South{},
-			expectedCoordinate: coordinate.NewAbsolute(5, 6),
+			expectedCoordinate: absoluteCoordinate.From(5, 6),
 		},
 		{
 			name:               "facing west",
 			initialDirection:   &direction.West{},
-			expectedCoordinate: coordinate.NewAbsolute(6, 5),
+			expectedCoordinate: absoluteCoordinate.From(6, 5),
 		},
 	}
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			landingLocation, _ := location.From(*coordinate.NewAbsolute(5, 5), testCase.initialDirection)
+			landingLocation, _ := location.From(*absoluteCoordinate.From(5, 5), testCase.initialDirection)
 			testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
 			err := testRover.MoveBackward()
@@ -129,7 +129,7 @@ func TestMovesBackward(t *testing.T) {
 func TestTurnsRight(t *testing.T) {
 	planetSize, _ := size.From(10, 10)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
-	coord := *coordinate.NewAbsolute(5, 5)
+	coord := *absoluteCoordinate.From(5, 5)
 
 	testCases := []struct {
 		name              string
@@ -174,7 +174,7 @@ func TestTurnsRight(t *testing.T) {
 func TestTurnsLeft(t *testing.T) {
 	planetSize, _ := size.From(10, 10)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
-	coord := *coordinate.NewAbsolute(5, 5)
+	coord := *absoluteCoordinate.From(5, 5)
 
 	testCases := []struct {
 		name              string
@@ -205,7 +205,7 @@ func TestTurnsLeft(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			landingLocation, _ := location.From(*coordinate.NewAbsolute(5, 5), testCase.initialDirection)
+			landingLocation, _ := location.From(*absoluteCoordinate.From(5, 5), testCase.initialDirection)
 			testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
 
 			testRover.TurnLeft()

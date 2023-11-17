@@ -3,7 +3,7 @@ package infra_test
 import (
 	"database/sql"
 	"encoding/json"
-	"mars_rover/internal/domain/coordinate"
+	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/obstacle"
@@ -66,12 +66,12 @@ func getAllPersistenceRovers(t *testing.T, db *sql.DB) []infra.RoverPersistenceE
 }
 
 func aTestRover(planet planet.Planet) rover.Rover {
-	loc, _ := location.From(*coordinate.NewAbsolute(0, 0), &direction.North{})
+	loc, _ := location.From(*absoluteCoordinate.From(0, 0), &direction.North{})
 	testRover, _ := rover.Land(*loc, planet)
 	return testRover
 }
 
 func aTestPlanet() planet.Planet {
-	planet, _ := rockyPlanet.Create(size.Size{Width: 5, Height: 5}, []obstacle.Obstacle{small_rock.In(*coordinate.NewAbsolute(1, 1))})
+	planet, _ := rockyPlanet.Create(size.Size{Width: 5, Height: 5}, []obstacle.Obstacle{small_rock.In(*absoluteCoordinate.From(1, 1))})
 	return planet
 }

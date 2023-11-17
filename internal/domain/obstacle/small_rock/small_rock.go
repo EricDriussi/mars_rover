@@ -1,7 +1,7 @@
 package small_rock
 
 import (
-	coord "mars_rover/internal/domain/coordinate"
+	coord "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/size"
 )
