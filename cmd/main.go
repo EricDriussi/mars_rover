@@ -32,7 +32,7 @@ func Sample() {
 
 	curiosity, err := wrappingCollidingRover.Land(*coordinate, mars)
 	if err != nil {
-		fmt.Println("Could not land on selected location:", err)
+		fmt.Println("Could not land on selected spot:", err)
 		return
 	}
 

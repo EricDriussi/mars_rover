@@ -2,13 +2,12 @@ package wrappingCollidingRover
 
 import (
 	"errors"
-	"mars_rover/internal/domain/coordinate"
-	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/direction"
 	. "mars_rover/internal/domain/planet"
 	"mars_rover/internal/domain/rover/planetMap"
 	. "mars_rover/internal/domain/rover/planetMap"
+	"mars_rover/internal/domain/rover/wrappingCollidingRover/positionCalculator"
 )
 
 type WrappingCollidingRover struct {
@@ -41,20 +40,8 @@ func LandFacing(direction Direction, coordinate AbsoluteCoordinate, planet Plane
 	}, nil
 }
 
-func (this *WrappingCollidingRover) TurnLeft() {
-	this.direction = this.direction.DirectionOnTheLeft()
-}
-
-func (this *WrappingCollidingRover) TurnRight() {
-	this.direction = this.direction.DirectionOnTheRight()
-}
-
 func (this *WrappingCollidingRover) MoveForward() error {
-	futureCoordinate := *coordinate.SumOf(this.coordinate, this.direction.RelativePositionAhead())
-	isOutOfBounds := this.planetMap.IsOutOfBounds(futureCoordinate)
-	if isOutOfBounds {
-		futureCoordinate = this.wrapAround(futureCoordinate)
-	}
+	futureCoordinate := positionCalculator.Forward(this.direction, this.coordinate, this.planetMap)
 	willHitSomething := this.planetMap.CollidesWithObstacle(futureCoordinate)
 	if willHitSomething {
 		return errors.New("cannot move forward, something is in the way")
@@ -64,11 +51,7 @@ func (this *WrappingCollidingRover) MoveForward() error {
 }
 
 func (this *WrappingCollidingRover) MoveBackward() error {
-	futureCoordinate := *coordinate.SumOf(this.coordinate, this.direction.RelativePositionBehind())
-	isOutOfBounds := this.planetMap.IsOutOfBounds(futureCoordinate)
-	if isOutOfBounds {
-		futureCoordinate = this.wrapAround(futureCoordinate)
-	}
+	futureCoordinate := positionCalculator.Backward(this.direction, this.coordinate, this.planetMap)
 	willHitSomething := this.planetMap.CollidesWithObstacle(futureCoordinate)
 	if willHitSomething {
 		return errors.New("cannot move backward, something is in the way")
@@ -77,7 +60,15 @@ func (this *WrappingCollidingRover) MoveBackward() error {
 	return nil
 }
 
-func (this *WrappingCollidingRover) Position() AbsoluteCoordinate {
+func (this *WrappingCollidingRover) TurnLeft() {
+	this.direction = this.direction.DirectionOnTheLeft()
+}
+
+func (this *WrappingCollidingRover) TurnRight() {
+	this.direction = this.direction.DirectionOnTheRight()
+}
+
+func (this *WrappingCollidingRover) Coordinate() AbsoluteCoordinate {
 	return this.coordinate
 }
 
@@ -87,20 +78,4 @@ func (this *WrappingCollidingRover) Direction() Direction {
 
 func (this *WrappingCollidingRover) Map() Map {
 	return this.planetMap
-}
-
-func (this *WrappingCollidingRover) wrapAround(coordinate AbsoluteCoordinate) AbsoluteCoordinate {
-	return *absoluteCoordinate.From(
-		wrap(coordinate.X(), this.planetMap.Width()),
-		wrap(coordinate.Y(), this.planetMap.Height()),
-	)
-}
-
-func wrap(point, limit int) int {
-	if point > limit {
-		return 0
-	} else if point < 0 {
-		return limit
-	}
-	return point
 }

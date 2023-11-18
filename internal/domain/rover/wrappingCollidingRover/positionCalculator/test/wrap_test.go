@@ -1,4 +1,4 @@
-package wrappingCollidingRover_test
+package positionCalculator_test
 
 import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
@@ -6,7 +6,8 @@ import (
 	. "mars_rover/internal/domain/direction"
 	. "mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/planet/rockyPlanet"
-	"mars_rover/internal/domain/rover/wrappingCollidingRover"
+	"mars_rover/internal/domain/rover/planetMap"
+	"mars_rover/internal/domain/rover/wrappingCollidingRover/positionCalculator"
 	"mars_rover/internal/domain/size"
 	"testing"
 
@@ -16,6 +17,8 @@ import (
 func TestWrapsMovingForward(t *testing.T) {
 	planetSize, _ := size.Square(3)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{})
+	testMap := planetMap.Of(testPlanetWithoutObstacles)
+
 	testCases := []struct {
 		name               string
 		direction          Direction
@@ -50,16 +53,8 @@ func TestWrapsMovingForward(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := wrappingCollidingRover.LandFacing(
-				testCase.direction,
-				*testCase.initialCoordinate,
-				testPlanetWithoutObstacles,
-			)
-
-			err := testRover.MoveForward()
-
-			assert.Nil(t, err)
-			assert.Equal(t, *testCase.expectedCoordinate, testRover.Coordinate())
+			futurePosition := positionCalculator.Forward(testCase.direction, *testCase.initialCoordinate, *testMap)
+			assert.Equal(t, *testCase.expectedCoordinate, futurePosition)
 		})
 	}
 }
@@ -67,6 +62,8 @@ func TestWrapsMovingForward(t *testing.T) {
 func TestWrapsMovingBackwards(t *testing.T) {
 	planetSize, _ := size.Square(3)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{})
+	testMap := planetMap.Of(testPlanetWithoutObstacles)
+
 	testCases := []struct {
 		name               string
 		direction          Direction
@@ -101,16 +98,8 @@ func TestWrapsMovingBackwards(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := wrappingCollidingRover.LandFacing(
-				testCase.direction,
-				*testCase.initialCoordinate,
-				testPlanetWithoutObstacles,
-			)
-
-			err := testRover.MoveBackward()
-
-			assert.Nil(t, err)
-			assert.Equal(t, *testCase.expectedCoordinate, testRover.Coordinate())
+			futurePosition := positionCalculator.Backward(testCase.direction, *testCase.initialCoordinate, *testMap)
+			assert.Equal(t, *testCase.expectedCoordinate, futurePosition)
 		})
 	}
 }

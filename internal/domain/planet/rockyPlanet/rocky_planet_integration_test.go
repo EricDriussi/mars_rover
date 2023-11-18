@@ -44,27 +44,21 @@ func TestCannotCreateIfMoreThanOneObstacleIsOutOfBounds(t *testing.T) {
 
 func generateThreeRandomObstaclesWithin(size Size) []Obstacle {
 	var obstacles []Obstacle
-
 	for i := 0; i < 3; i++ {
 		randomObstacle := generateRandomObstacleWithin(size)
 		obstacles = append(obstacles, randomObstacle)
 	}
-
 	return obstacles
 }
 
 func generateRandomObstacleWithin(size Size) Obstacle {
 	randomX := rand.Intn(size.Width())
 	randomY := rand.Intn(size.Height())
-
-	randomLocation := absoluteCoordinate.From(randomX, randomY)
-	return rock.In(*randomLocation)
+	return rock.In(*absoluteCoordinate.From(randomX, randomY))
 }
 
 func randomObstacleOutOf(size Size) Obstacle {
 	randomX := rand.Intn(99-size.Width()) + size.Width() + 1
 	randomY := rand.Intn(99-size.Height()) + size.Height() + 1
-
-	randomLocation := absoluteCoordinate.From(randomX, randomY)
-	return rock.In(*randomLocation)
+	return rock.In(*absoluteCoordinate.From(randomX, randomY))
 }

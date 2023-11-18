@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLandsOnFreeLocation(t *testing.T) {
+func TestLandsOnFreeSpot(t *testing.T) {
 	planetSize, _ := size.Square(2)
 	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{smallRock.In(*absoluteCoordinate.From(1, 2))})
 	coordinate := absoluteCoordinate.From(1, 1)
@@ -21,10 +21,10 @@ func TestLandsOnFreeLocation(t *testing.T) {
 	testRover, err := wrappingCollidingRover.Land(*coordinate, testPlanet)
 
 	assert.Nil(t, err)
-	assert.Equal(t, *coordinate, testRover.Position())
+	assert.Equal(t, *coordinate, testRover.Coordinate())
 }
 
-func TestLandsOnFreeLocationFacingGivenDirection(t *testing.T) {
+func TestLandsOnFreeSpotFacingGivenDirection(t *testing.T) {
 	planetSize, _ := size.Square(2)
 	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{smallRock.In(*absoluteCoordinate.From(1, 2))})
 	coordinate := absoluteCoordinate.From(1, 1)
@@ -33,7 +33,7 @@ func TestLandsOnFreeLocationFacingGivenDirection(t *testing.T) {
 	testRover, err := wrappingCollidingRover.LandFacing(direction, *coordinate, testPlanet)
 
 	assert.Nil(t, err)
-	assert.Equal(t, *coordinate, testRover.Position())
+	assert.Equal(t, *coordinate, testRover.Coordinate())
 	assert.Equal(t, direction, testRover.Direction())
 }
 

@@ -19,10 +19,10 @@ func (this West) DirectionOnTheRight() Direction {
 	return &North{}
 }
 
-func (this West) RelativePositionAhead() RelativeCoordinate {
+func (this West) RelativeCoordinateAhead() RelativeCoordinate {
 	return *relativeCoordinate.New(-1, 0)
 }
 
-func (this West) RelativePositionBehind() RelativeCoordinate {
+func (this West) RelativeCoordinateBehind() RelativeCoordinate {
 	return *relativeCoordinate.New(1, 0)
 }

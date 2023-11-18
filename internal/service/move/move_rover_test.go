@@ -128,7 +128,7 @@ func (this *MockRover) MoveBackward() error {
 	return args.Error(0)
 }
 
-func (this *MockRover) Position() AbsoluteCoordinate {
+func (this *MockRover) Coordinate() AbsoluteCoordinate {
 	args := this.Called()
 	return args.Get(0).(AbsoluteCoordinate)
 }

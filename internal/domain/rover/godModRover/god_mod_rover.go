@@ -40,16 +40,16 @@ func (this *GodModRover) TurnRight() {
 }
 
 func (this *GodModRover) MoveForward() error {
-	this.coordinate = *coordinate.SumOf(this.coordinate, this.direction.RelativePositionAhead())
+	this.coordinate = *coordinate.SumOf(this.coordinate, this.direction.RelativeCoordinateAhead())
 	return nil
 }
 
 func (this *GodModRover) MoveBackward() error {
-	this.coordinate = *coordinate.SumOf(this.coordinate, this.direction.RelativePositionBehind())
+	this.coordinate = *coordinate.SumOf(this.coordinate, this.direction.RelativeCoordinateBehind())
 	return nil
 }
 
-func (this *GodModRover) Position() AbsoluteCoordinate {
+func (this *GodModRover) Coordinate() AbsoluteCoordinate {
 	return this.coordinate
 }
 

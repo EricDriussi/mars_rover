@@ -32,12 +32,12 @@ type SizePersistenceEntity struct {
 }
 
 func (r *SQLiteRepository) mapToPersistenceRover(rover Rover) RoverPersistenceEntity {
-	currPosition := rover.Position()
+	coordinate := rover.Coordinate()
 	roverMap := rover.Map()
 	return RoverPersistenceEntity{
 		Coordinate: CoordinatePersistenceEntity{
-			X: currPosition.X(),
-			Y: currPosition.Y(),
+			X: coordinate.X(),
+			Y: coordinate.Y(),
 		},
 		Direction: rover.Direction().CardinalPoint(),
 		PlanetMap: PlanetMapPersistenceEntity{

@@ -8,6 +8,6 @@ type Direction interface {
 	CardinalPoint() string
 	DirectionOnTheLeft() Direction
 	DirectionOnTheRight() Direction
-	RelativePositionAhead() RelativeCoordinate
-	RelativePositionBehind() RelativeCoordinate
+	RelativeCoordinateAhead() RelativeCoordinate
+	RelativeCoordinateBehind() RelativeCoordinate
 }

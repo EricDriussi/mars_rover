@@ -51,7 +51,7 @@ func TestMovesForward(t *testing.T) {
 
 			err := testRover.MoveForward()
 
-			assert.Equal(t, *testCase.expectedCoordinate, testRover.Position())
+			assert.Equal(t, *testCase.expectedCoordinate, testRover.Coordinate())
 			assert.Nil(t, err)
 		})
 	}
@@ -95,7 +95,7 @@ func TestMovesBackward(t *testing.T) {
 
 			err := testRover.MoveBackward()
 
-			assert.Equal(t, *testCase.expectedCoordinate, testRover.Position())
+			assert.Equal(t, *testCase.expectedCoordinate, testRover.Coordinate())
 			assert.Nil(t, err)
 		})
 	}
@@ -139,7 +139,7 @@ func TestTurnsRight(t *testing.T) {
 
 			testRover.TurnRight()
 
-			assert.Equal(t, *coord, testRover.Position())
+			assert.Equal(t, *coord, testRover.Coordinate())
 			assert.Equal(t, testCase.expectedDirection, testRover.Direction())
 		})
 	}
@@ -183,7 +183,7 @@ func TestTurnsLeft(t *testing.T) {
 
 			testRover.TurnLeft()
 
-			assert.Equal(t, *coord, testRover.Position())
+			assert.Equal(t, *coord, testRover.Coordinate())
 			assert.Equal(t, testCase.expectedDirection, testRover.Direction())
 		})
 	}

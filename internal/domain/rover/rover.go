@@ -11,7 +11,7 @@ type Rover interface {
 	TurnRight()
 	MoveForward() error
 	MoveBackward() error
-	Position() AbsoluteCoordinate
+	Coordinate() AbsoluteCoordinate
 	Direction() Direction
 	Map() Map
 }
