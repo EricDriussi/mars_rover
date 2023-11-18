@@ -10,6 +10,7 @@ import (
 	"mars_rover/internal/domain/planet"
 	"mars_rover/internal/domain/planet/rockyPlanet"
 	"mars_rover/internal/domain/rover"
+	"mars_rover/internal/domain/rover/wrappingCollidingRover"
 	"mars_rover/internal/domain/size"
 	"mars_rover/internal/infra"
 	"testing"
@@ -67,7 +68,7 @@ func getAllPersistenceRovers(t *testing.T, db *sql.DB) []infra.RoverPersistenceE
 
 func aTestRover(planet planet.Planet) rover.Rover {
 	coordinate := absoluteCoordinate.From(0, 0)
-	testRover, _ := rover.LandFacing(North{}, *coordinate, planet)
+	testRover, _ := wrappingCollidingRover.LandFacing(North{}, *coordinate, planet)
 	return testRover
 }
 

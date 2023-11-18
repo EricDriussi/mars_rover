@@ -6,7 +6,7 @@ import (
 	. "mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/smallRock"
 	"mars_rover/internal/domain/planet/rockyPlanet"
-	"mars_rover/internal/domain/rover"
+	"mars_rover/internal/domain/rover/wrappingCollidingRover"
 	"mars_rover/internal/domain/size"
 	"testing"
 
@@ -19,7 +19,7 @@ func TestAvoidsCollisionMovingForward(t *testing.T) {
 	obstacleAhead := rock.In(*absoluteCoordinate.From(5, 6))
 	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{obstacleAhead})
 
-	testRover, _ := rover.LandFacing(North{}, *coordinate, testPlanetWithObstacles)
+	testRover, _ := wrappingCollidingRover.LandFacing(North{}, *coordinate, testPlanetWithObstacles)
 
 	err := testRover.MoveForward()
 
@@ -33,7 +33,7 @@ func TestAvoidsCollisionWrappingForward(t *testing.T) {
 	obstacleAhead := rock.In(*absoluteCoordinate.From(3, 0))
 	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{obstacleAhead})
 
-	testRover, _ := rover.LandFacing(North{}, *coordinate, testPlanetWithObstacles)
+	testRover, _ := wrappingCollidingRover.LandFacing(North{}, *coordinate, testPlanetWithObstacles)
 
 	err := testRover.MoveForward()
 
@@ -47,7 +47,7 @@ func TestAvoidsCollisionMovingBackwards(t *testing.T) {
 	obstacleBehind := rock.In(*absoluteCoordinate.From(5, 4))
 	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{obstacleBehind})
 
-	testRover, _ := rover.LandFacing(North{}, *coordinate, testPlanetWithObstacles)
+	testRover, _ := wrappingCollidingRover.LandFacing(North{}, *coordinate, testPlanetWithObstacles)
 
 	err := testRover.MoveBackward()
 
@@ -61,7 +61,7 @@ func TestAvoidsCollisionWrappingBackwards(t *testing.T) {
 	obstacleBehind := rock.In(*absoluteCoordinate.From(3, 5))
 	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{obstacleBehind})
 
-	testRover, _ := rover.LandFacing(North{}, *coordinate, testPlanetWithObstacles)
+	testRover, _ := wrappingCollidingRover.LandFacing(North{}, *coordinate, testPlanetWithObstacles)
 
 	err := testRover.MoveBackward()
 

@@ -7,8 +7,8 @@ import (
 	. "mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/smallRock"
 	"mars_rover/internal/domain/planet/rockyPlanet"
-	"mars_rover/internal/domain/rover"
 	. "mars_rover/internal/domain/rover"
+	"mars_rover/internal/domain/rover/wrappingCollidingRover"
 	"mars_rover/internal/domain/size"
 	. "mars_rover/internal/domain/size"
 	"math/rand"
@@ -31,7 +31,7 @@ func Random() Rover {
 	couldNotLand := true
 	for couldNotLand {
 
-		randRover, err = rover.LandFacing(randomDirection(), randomCoordinateWithin(*randSize), randPlanet)
+		randRover, err = wrappingCollidingRover.LandFacing(randomDirection(), randomCoordinateWithin(*randSize), randPlanet)
 		if err == nil {
 			couldNotLand = false
 		}

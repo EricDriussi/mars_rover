@@ -5,8 +5,8 @@ import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/direction"
 	. "mars_rover/internal/domain/planet"
-	"mars_rover/internal/domain/rover"
 	. "mars_rover/internal/domain/rover"
+	"mars_rover/internal/domain/rover/wrappingCollidingRover"
 	. "mars_rover/internal/infra"
 )
 
@@ -18,7 +18,7 @@ func mapToDomainRover(roverData RoverPersistenceEntity, planet Planet) (Rover, e
 
 	coordinate := absoluteCoordinate.From(roverData.Coordinate.X, roverData.Coordinate.Y)
 
-	roverInstance, err := rover.LandFacing(dir, *coordinate, planet)
+	roverInstance, err := wrappingCollidingRover.LandFacing(dir, *coordinate, planet)
 	if err != nil {
 		return nil, err
 	}

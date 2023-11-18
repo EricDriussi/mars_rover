@@ -6,13 +6,13 @@ import (
 	"mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/smallRock"
 	"mars_rover/internal/domain/planet/rockyPlanet"
-	"mars_rover/internal/domain/rover"
+	"mars_rover/internal/domain/rover/wrappingCollidingRover"
 	"mars_rover/internal/domain/size"
 	"mars_rover/internal/service/move"
 )
 
 // TODO: LIST OF THINGS!
-// Persistency
+// Persistency - WIP
 // API
 // GUI
 func Sample() {
@@ -30,7 +30,7 @@ func Sample() {
 
 	coordinate := absoluteCoordinate.From(0, 0)
 
-	curiosity, err := rover.Land(*coordinate, mars)
+	curiosity, err := wrappingCollidingRover.Land(*coordinate, mars)
 	if err != nil {
 		fmt.Println("Could not land on selected location:", err)
 		return

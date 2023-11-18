@@ -6,7 +6,7 @@ import (
 	. "mars_rover/internal/domain/direction"
 	. "mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/planet/rockyPlanet"
-	"mars_rover/internal/domain/rover"
+	"mars_rover/internal/domain/rover/wrappingCollidingRover"
 	"mars_rover/internal/domain/size"
 	"testing"
 
@@ -50,7 +50,7 @@ func TestWrapsMovingForward(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := rover.LandFacing(
+			testRover, _ := wrappingCollidingRover.LandFacing(
 				testCase.direction,
 				*testCase.initialCoordinate,
 				testPlanetWithoutObstacles,
@@ -101,7 +101,7 @@ func TestWrapsMovingBackwards(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := rover.LandFacing(
+			testRover, _ := wrappingCollidingRover.LandFacing(
 				testCase.direction,
 				*testCase.initialCoordinate,
 				testPlanetWithoutObstacles,

@@ -5,36 +5,13 @@ import (
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/direction"
 	. "mars_rover/internal/domain/obstacle"
-	"mars_rover/internal/domain/obstacle/smallRock"
 	"mars_rover/internal/domain/planet/rockyPlanet"
-	"mars_rover/internal/domain/rover"
+	"mars_rover/internal/domain/rover/wrappingCollidingRover"
 	"mars_rover/internal/domain/size"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
-
-func TestLandsOnFreeLocation(t *testing.T) {
-	planetSize, _ := size.Square(2)
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{smallRock.In(*absoluteCoordinate.From(1, 2))})
-	coordinate := absoluteCoordinate.From(1, 1)
-
-	testRover, err := rover.Land(*coordinate, testPlanet)
-
-	assert.Nil(t, err)
-	assert.Equal(t, *coordinate, testRover.Position())
-}
-
-func TestCannotLandOnObstacle(t *testing.T) {
-	planetSize, _ := size.Square(2)
-	coordinate := absoluteCoordinate.From(1, 1)
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{smallRock.In(*coordinate)})
-
-	testRover, err := rover.Land(*coordinate, testPlanet)
-
-	assert.Error(t, err)
-	assert.Nil(t, testRover)
-}
 
 func TestMovesForward(t *testing.T) {
 	planetSize, _ := size.Square(10)
@@ -70,7 +47,7 @@ func TestMovesForward(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			coordinate := absoluteCoordinate.From(5, 5)
-			testRover, _ := rover.LandFacing(testCase.initialDirection, *coordinate, testPlanetWithoutObstacles)
+			testRover, _ := wrappingCollidingRover.LandFacing(testCase.initialDirection, *coordinate, testPlanetWithoutObstacles)
 
 			err := testRover.MoveForward()
 
@@ -114,7 +91,7 @@ func TestMovesBackward(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			coordinate := absoluteCoordinate.From(5, 5)
-			testRover, _ := rover.LandFacing(testCase.initialDirection, *coordinate, testPlanetWithoutObstacles)
+			testRover, _ := wrappingCollidingRover.LandFacing(testCase.initialDirection, *coordinate, testPlanetWithoutObstacles)
 
 			err := testRover.MoveBackward()
 
@@ -158,7 +135,7 @@ func TestTurnsRight(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := rover.LandFacing(testCase.initialDirection, *coord, testPlanetWithoutObstacles)
+			testRover, _ := wrappingCollidingRover.LandFacing(testCase.initialDirection, *coord, testPlanetWithoutObstacles)
 
 			testRover.TurnRight()
 
@@ -202,7 +179,7 @@ func TestTurnsLeft(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := rover.LandFacing(testCase.initialDirection, *coord, testPlanetWithoutObstacles)
+			testRover, _ := wrappingCollidingRover.LandFacing(testCase.initialDirection, *coord, testPlanetWithoutObstacles)
 
 			testRover.TurnLeft()
 
