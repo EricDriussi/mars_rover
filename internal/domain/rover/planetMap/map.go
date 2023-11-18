@@ -2,14 +2,14 @@ package planetMap
 
 import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	obs "mars_rover/internal/domain/obstacle"
+	"mars_rover/internal/domain/obstacle/obstacles"
 	"mars_rover/internal/domain/planet"
 	"mars_rover/internal/domain/size"
 )
 
 type Map struct {
 	size      size.Size
-	obstacles []obs.Obstacle
+	obstacles obstacles.Obstacles
 }
 
 func Of(planet planet.Planet) *Map {
@@ -20,17 +20,12 @@ func (this *Map) Size() size.Size {
 	return this.size
 }
 
-func (this *Map) Obstacles() []obs.Obstacle {
+func (this *Map) Obstacles() obstacles.Obstacles {
 	return this.obstacles
 }
 
 func (this *Map) CollidesWithObstacle(coord absoluteCoordinate.AbsoluteCoordinate) bool {
-	for _, obstacle := range this.obstacles {
-		if obstacle.Occupies(coord) {
-			return true
-		}
-	}
-	return false
+	return this.obstacles.Occupy(coord)
 }
 
 func (this *Map) IsOutOfBounds(coord absoluteCoordinate.AbsoluteCoordinate) bool {

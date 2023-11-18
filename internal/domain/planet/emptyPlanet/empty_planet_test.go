@@ -1,7 +1,7 @@
 package emptyPlanet_test
 
 import (
-	"mars_rover/internal/domain/obstacle"
+	"mars_rover/internal/domain/obstacle/obstacles"
 	"mars_rover/internal/domain/planet/emptyPlanet"
 	"mars_rover/internal/domain/size"
 	"testing"
@@ -20,5 +20,5 @@ func TestGetsObstacles(t *testing.T) {
 	sizeLimit, _ := size.Square(5)
 	planet, _ := emptyPlanet.Create("testColor", *sizeLimit)
 
-	assert.Equal(t, []obstacle.Obstacle{}, planet.Obstacles())
+	assert.Equal(t, obstacles.Obstacles{}, planet.Obstacles())
 }

@@ -1,7 +1,7 @@
 package emptyPlanet
 
 import (
-	"mars_rover/internal/domain/obstacle"
+	"mars_rover/internal/domain/obstacle/obstacles"
 	"mars_rover/internal/domain/size"
 )
 
@@ -18,6 +18,6 @@ func (this *EmptyPlanet) Size() size.Size {
 	return this.size
 }
 
-func (this *EmptyPlanet) Obstacles() []obstacle.Obstacle {
-	return []obstacle.Obstacle{}
+func (this *EmptyPlanet) Obstacles() obstacles.Obstacles {
+	return obstacles.Obstacles{}
 }

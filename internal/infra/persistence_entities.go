@@ -2,7 +2,7 @@ package infra
 
 import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	"mars_rover/internal/domain/obstacle"
+	"mars_rover/internal/domain/obstacle/obstacles"
 	"mars_rover/internal/domain/rover"
 )
 
@@ -73,9 +73,9 @@ func mapToPersistenceCoordinates(coordinates []absoluteCoordinate.AbsoluteCoordi
 	return coords
 }
 
-func mapToPersistenceObstacles(obstacles []obstacle.Obstacle) []ObstaclePersistenceEntity {
-	obs := make([]ObstaclePersistenceEntity, len(obstacles))
-	for i, o := range obstacles {
+func mapToPersistenceObstacles(obstacles obstacles.Obstacles) []ObstaclePersistenceEntity {
+	obs := make([]ObstaclePersistenceEntity, len(obstacles.List()))
+	for i, o := range obstacles.List() {
 		coordinates := o.Coordinates()
 		obs[i] = ObstaclePersistenceEntity{
 			Coordinates: mapToPersistenceCoordinates(coordinates),

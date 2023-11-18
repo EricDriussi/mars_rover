@@ -2,6 +2,7 @@ package rockyPlanet_test
 
 import (
 	"mars_rover/internal/domain/obstacle"
+	obs "mars_rover/internal/domain/obstacle/obstacles"
 	"mars_rover/internal/domain/obstacle/test"
 	"mars_rover/internal/domain/planet/rockyPlanet"
 	"mars_rover/internal/domain/size"
@@ -27,5 +28,5 @@ func TestGetsObstacles(t *testing.T) {
 	obstacleTwo.On("IsBeyond", mock.Anything).Return(false)
 	planet, _ := rockyPlanet.Create("testColor", *sizeLimit, obstacles)
 
-	assert.Equal(t, obstacles, planet.Obstacles())
+	assert.Equal(t, *obs.New(obstacles), planet.Obstacles())
 }
