@@ -2,9 +2,10 @@ package rover
 
 import (
 	"errors"
-	"mars_rover/internal/domain/location"
-	"mars_rover/internal/domain/planet"
-	planetMap "mars_rover/internal/domain/rover/planetMap"
+	. "mars_rover/internal/domain/location"
+	. "mars_rover/internal/domain/planet"
+	"mars_rover/internal/domain/rover/planetMap"
+	. "mars_rover/internal/domain/rover/planetMap"
 )
 
 // TODO: extract
@@ -13,16 +14,16 @@ type Rover interface {
 	TurnRight()
 	MoveForward() error
 	MoveBackward() error
-	Location() *location.Location
-	Map() *planetMap.Map
+	Location() *Location
+	Map() *Map
 }
 
 type WrappingCollidingRover struct {
-	location  location.Location
-	planetMap planetMap.Map
+	location  Location
+	planetMap Map
 }
 
-func Land(location location.Location, planet planet.Planet) (*WrappingCollidingRover, error) {
+func Land(location Location, planet Planet) (*WrappingCollidingRover, error) {
 	mapOfPlanet := planetMap.Of(planet)
 	if mapOfPlanet.CollidesWithObstacle(location.Position()) {
 		return nil, errors.New("cannot land on obstacle")
@@ -30,11 +31,11 @@ func Land(location location.Location, planet planet.Planet) (*WrappingCollidingR
 	return &WrappingCollidingRover{location: location, planetMap: *mapOfPlanet}, nil
 }
 
-func (this WrappingCollidingRover) Location() *location.Location {
+func (this WrappingCollidingRover) Location() *Location {
 	return &this.location
 }
 
-func (this WrappingCollidingRover) Map() *planetMap.Map {
+func (this WrappingCollidingRover) Map() *Map {
 	return &this.planetMap
 }
 

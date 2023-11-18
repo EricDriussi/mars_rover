@@ -2,10 +2,11 @@ package rockyPlanet_test
 
 import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	"mars_rover/internal/domain/obstacle"
+	. "mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/smallRock"
 	"mars_rover/internal/domain/planet/rockyPlanet"
 	"mars_rover/internal/domain/size"
+	. "mars_rover/internal/domain/size"
 	"math/rand"
 	"testing"
 
@@ -41,8 +42,8 @@ func TestCannotCreateIfMoreThanOneObstacleIsOutOfBounds(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func generateThreeRandomObstaclesWithin(size size.Size) []obstacle.Obstacle {
-	var obstacles []obstacle.Obstacle
+func generateThreeRandomObstaclesWithin(size Size) []Obstacle {
+	var obstacles []Obstacle
 
 	for i := 0; i < 3; i++ {
 		randomObstacle := generateRandomObstacleWithin(size)
@@ -52,7 +53,7 @@ func generateThreeRandomObstaclesWithin(size size.Size) []obstacle.Obstacle {
 	return obstacles
 }
 
-func generateRandomObstacleWithin(size size.Size) obstacle.Obstacle {
+func generateRandomObstacleWithin(size Size) Obstacle {
 	randomX := rand.Intn(size.Width())
 	randomY := rand.Intn(size.Height())
 
@@ -60,7 +61,7 @@ func generateRandomObstacleWithin(size size.Size) obstacle.Obstacle {
 	return rock.In(*randomLocation)
 }
 
-func randomObstacleOutOf(size size.Size) obstacle.Obstacle {
+func randomObstacleOutOf(size Size) Obstacle {
 	randomX := rand.Intn(99-size.Width()) + size.Width() + 1
 	randomY := rand.Intn(99-size.Height()) + size.Height() + 1
 

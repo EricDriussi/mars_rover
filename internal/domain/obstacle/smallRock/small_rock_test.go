@@ -2,6 +2,7 @@ package smallRock_test
 
 import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"mars_rover/internal/domain/obstacle/smallRock"
 	"mars_rover/internal/domain/size"
 	"math/rand"
@@ -27,7 +28,7 @@ func TestIsBeyondLimit(t *testing.T) {
 	sizeLimit, _ := size.Square(3)
 	testCases := []struct {
 		name       string
-		coordinate *absoluteCoordinate.AbsoluteCoordinate
+		coordinate *AbsoluteCoordinate
 	}{
 		{
 			name:       "both out of bounds",

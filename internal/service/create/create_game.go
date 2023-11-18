@@ -2,18 +2,21 @@ package create
 
 import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"mars_rover/internal/domain/location"
-	"mars_rover/internal/domain/location/direction"
-	"mars_rover/internal/domain/obstacle"
+	. "mars_rover/internal/domain/location/direction"
+	. "mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/smallRock"
 	"mars_rover/internal/domain/planet/rockyPlanet"
 	"mars_rover/internal/domain/rover"
+	. "mars_rover/internal/domain/rover"
 	"mars_rover/internal/domain/size"
+	. "mars_rover/internal/domain/size"
 	"math/rand"
 )
 
 // TODO.LM: Return error instead of panic?
-func Random() rover.Rover {
+func Random() Rover {
 	randNum := rand.Intn(99) + 2
 	randSize, err := size.Square(randNum)
 	if err != nil {
@@ -25,7 +28,7 @@ func Random() rover.Rover {
 		panic("Something went wrong :(")
 	}
 
-	var randRover rover.Rover
+	var randRover Rover
 	couldNotLand := true
 	for couldNotLand {
 		landinglocation, err := randomLocationWithin(*randSize)
@@ -42,8 +45,8 @@ func Random() rover.Rover {
 	return randRover
 }
 
-func randomObstaclesWithin(size size.Size) []obstacle.Obstacle {
-	var obstacles []obstacle.Obstacle
+func randomObstaclesWithin(size Size) []Obstacle {
+	var obstacles []Obstacle
 	halfTheArea := size.Width() * size.Height() / 2
 	betweenZeroAndHalfTheArea := rand.Intn(halfTheArea)
 	for i := 0; i < betweenZeroAndHalfTheArea; i++ {
@@ -52,20 +55,20 @@ func randomObstaclesWithin(size size.Size) []obstacle.Obstacle {
 	return obstacles
 }
 
-func randomLocationWithin(size size.Size) (*location.Location, error) {
+func randomLocationWithin(size Size) (*location.Location, error) {
 	return location.From(randomCoordinateWithin(size), randomDirection())
 }
 
-func randomCoordinateWithin(size size.Size) absoluteCoordinate.AbsoluteCoordinate {
+func randomCoordinateWithin(size Size) AbsoluteCoordinate {
 	return *absoluteCoordinate.From(rand.Intn(size.Width()), rand.Intn(size.Height()))
 }
 
-func randomDirection() direction.Direction {
-	directions := []direction.Direction{
-		direction.North{},
-		direction.East{},
-		direction.South{},
-		direction.West{},
+func randomDirection() Direction {
+	directions := []Direction{
+		North{},
+		East{},
+		South{},
+		West{},
 	}
 	return directions[rand.Intn(len(directions))]
 }

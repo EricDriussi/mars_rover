@@ -1,24 +1,24 @@
 package obstacles
 
 import (
-	abs "mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	"mars_rover/internal/domain/obstacle"
-	"mars_rover/internal/domain/size"
+	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/internal/domain/obstacle"
+	. "mars_rover/internal/domain/size"
 )
 
 type Obstacles struct {
-	list []obstacle.Obstacle
+	list []Obstacle
 }
 
-func New(list []obstacle.Obstacle) *Obstacles {
+func New(list []Obstacle) *Obstacles {
 	return &Obstacles{list}
 }
 
-func (this *Obstacles) List() []obstacle.Obstacle {
+func (this *Obstacles) List() []Obstacle {
 	return this.list
 }
 
-func (this *Obstacles) Occupy(coordinate abs.AbsoluteCoordinate) bool {
+func (this *Obstacles) Occupy(coordinate AbsoluteCoordinate) bool {
 	for _, obs := range this.list {
 		if obs.Occupies(coordinate) {
 			return true
@@ -27,7 +27,7 @@ func (this *Obstacles) Occupy(coordinate abs.AbsoluteCoordinate) bool {
 	return false
 }
 
-func (this *Obstacles) IsAnyBeyond(size size.Size) bool {
+func (this *Obstacles) IsAnyBeyond(size Size) bool {
 	for _, obs := range this.list {
 		if obs.IsBeyond(size) {
 			return true

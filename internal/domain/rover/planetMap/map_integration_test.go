@@ -3,12 +3,15 @@ package planetMap_test
 import (
 	"fmt"
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"mars_rover/internal/domain/obstacle"
+	. "mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/smallRock"
-	"mars_rover/internal/domain/planet"
+	. "mars_rover/internal/domain/planet"
 	"mars_rover/internal/domain/planet/rockyPlanet"
 	"mars_rover/internal/domain/rover/planetMap"
 	"mars_rover/internal/domain/size"
+	. "mars_rover/internal/domain/size"
 	"math/rand"
 	"testing"
 
@@ -47,7 +50,7 @@ func TestReportsNOCollision(t *testing.T) {
 	}
 }
 
-func createPlanetWithObstacleIn(x, y int) planet.Planet {
+func createPlanetWithObstacleIn(x, y int) Planet {
 	planetSize, _ := size.Square(y + 2)
 	obstacleCoordinate := absoluteCoordinate.From(x, y)
 	planetObstacle := rock.In(*obstacleCoordinate)
@@ -55,11 +58,11 @@ func createPlanetWithObstacleIn(x, y int) planet.Planet {
 	return testPlanet
 }
 
-func createPlanetWithRandomObstaclesNotIn(planetSize size.Size, exclude absoluteCoordinate.AbsoluteCoordinate) planet.Planet {
+func createPlanetWithRandomObstaclesNotIn(planetSize Size, exclude AbsoluteCoordinate) Planet {
 	maxNumOfObstacles := (planetSize.Height() * planetSize.Width()) - 1
 	numObstacles := max(rand.Intn(maxNumOfObstacles), 1)
 
-	var obstacles []obstacle.Obstacle
+	var obstacles []Obstacle
 
 	for i := 0; i < numObstacles; i++ {
 		randomCoordinate := getRandomCoordinateExcluding(planetSize, exclude)
@@ -70,7 +73,7 @@ func createPlanetWithRandomObstaclesNotIn(planetSize size.Size, exclude absolute
 	return testPlanet
 }
 
-func getRandomCoordinateExcluding(planetSize size.Size, exclude absoluteCoordinate.AbsoluteCoordinate) absoluteCoordinate.AbsoluteCoordinate {
+func getRandomCoordinateExcluding(planetSize Size, exclude AbsoluteCoordinate) AbsoluteCoordinate {
 	for {
 		randomCoordinate := absoluteCoordinate.From(rand.Intn(planetSize.Width()), rand.Intn(planetSize.Height()))
 

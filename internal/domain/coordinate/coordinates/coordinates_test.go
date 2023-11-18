@@ -3,6 +3,7 @@ package coordinates
 import (
 	"github.com/stretchr/testify/assert"
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"mars_rover/internal/domain/size"
 	"math/rand"
 	"testing"
@@ -23,7 +24,7 @@ func TestIsBeyondLimit(t *testing.T) {
 	sizeLimit, _ := size.Square(3)
 	testCases := []struct {
 		name       string
-		coordinate *absoluteCoordinate.AbsoluteCoordinate
+		coordinate *AbsoluteCoordinate
 	}{
 		{
 			name:       "both out of bounds",
@@ -40,7 +41,7 @@ func TestIsBeyondLimit(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			coordinates := New([]absoluteCoordinate.AbsoluteCoordinate{*testCase.coordinate})
+			coordinates := New([]AbsoluteCoordinate{*testCase.coordinate})
 			assert.True(t, coordinates.GoBeyond(*sizeLimit))
 		})
 	}
@@ -48,14 +49,14 @@ func TestIsBeyondLimit(t *testing.T) {
 
 func TestOccupiesAGivenRandomCoordinate(t *testing.T) {
 	testCoordinate := absoluteCoordinate.From(rand.Int(), rand.Int())
-	coordinates := New([]absoluteCoordinate.AbsoluteCoordinate{*testCoordinate})
+	coordinates := New([]AbsoluteCoordinate{*testCoordinate})
 
 	assert.True(t, coordinates.Contain(*testCoordinate))
 }
 
 func TestDoesNotOccupyADifferentCoordinate(t *testing.T) {
 	testCoordinate := absoluteCoordinate.From(1, 1)
-	coordinates := New([]absoluteCoordinate.AbsoluteCoordinate{*testCoordinate})
+	coordinates := New([]AbsoluteCoordinate{*testCoordinate})
 
 	assert.False(t, coordinates.Contain(*absoluteCoordinate.From(1, 2)))
 }

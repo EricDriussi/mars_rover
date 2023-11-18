@@ -1,28 +1,29 @@
 package bigRock
 
 import (
-	abs "mars_rover/internal/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/internal/domain/coordinate/coordinates"
 	coord "mars_rover/internal/domain/coordinate/coordinates"
-	"mars_rover/internal/domain/obstacle"
-	"mars_rover/internal/domain/size"
+	. "mars_rover/internal/domain/obstacle"
+	. "mars_rover/internal/domain/size"
 )
 
 type BigRock struct {
-	coordinates coord.Coordinates
+	coordinates Coordinates
 }
 
-func In(coordinates []abs.AbsoluteCoordinate) obstacle.Obstacle {
+func In(coordinates []AbsoluteCoordinate) Obstacle {
 	return &BigRock{*coord.New(coordinates)}
 }
 
-func (this *BigRock) Occupies(coordinate abs.AbsoluteCoordinate) bool {
+func (this *BigRock) Occupies(coordinate AbsoluteCoordinate) bool {
 	return this.coordinates.Contain(coordinate)
 }
 
-func (this *BigRock) IsBeyond(size size.Size) bool {
+func (this *BigRock) IsBeyond(size Size) bool {
 	return this.coordinates.GoBeyond(size)
 }
 
-func (this *BigRock) Coordinates() []abs.AbsoluteCoordinate {
+func (this *BigRock) Coordinates() []AbsoluteCoordinate {
 	return this.coordinates.List()
 }

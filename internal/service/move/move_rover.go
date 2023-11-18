@@ -3,15 +3,15 @@ package service
 import (
 	"errors"
 	"fmt"
-	"mars_rover/internal/domain/rover"
+	. "mars_rover/internal/domain/rover"
 	"strings"
 )
 
 type MoveService struct {
-	rover rover.Rover
+	rover Rover
 }
 
-func For(rover rover.Rover) *MoveService {
+func For(rover Rover) *MoveService {
 	return &MoveService{
 		rover: rover,
 	}

@@ -1,27 +1,27 @@
 package smallRock
 
 import (
-	coord "mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	"mars_rover/internal/domain/obstacle"
-	"mars_rover/internal/domain/size"
+	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/internal/domain/obstacle"
+	. "mars_rover/internal/domain/size"
 )
 
 type SmallRock struct {
-	coordinate coord.AbsoluteCoordinate
+	coordinate AbsoluteCoordinate
 }
 
-func In(coordinate coord.AbsoluteCoordinate) obstacle.Obstacle {
+func In(coordinate AbsoluteCoordinate) Obstacle {
 	return &SmallRock{coordinate}
 }
 
-func (this *SmallRock) Occupies(coordinate coord.AbsoluteCoordinate) bool {
+func (this *SmallRock) Occupies(coordinate AbsoluteCoordinate) bool {
 	return this.coordinate.Equals(&coordinate)
 }
 
-func (this *SmallRock) IsBeyond(size size.Size) bool {
+func (this *SmallRock) IsBeyond(size Size) bool {
 	return this.coordinate.X() > size.Width() || this.coordinate.Y() > size.Height()
 }
 
-func (this *SmallRock) Coordinates() []coord.AbsoluteCoordinate {
-	return []coord.AbsoluteCoordinate{this.coordinate}
+func (this *SmallRock) Coordinates() []AbsoluteCoordinate {
+	return []AbsoluteCoordinate{this.coordinate}
 }

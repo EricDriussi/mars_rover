@@ -3,6 +3,7 @@ package bigRock_test
 import (
 	"github.com/stretchr/testify/assert"
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"mars_rover/internal/domain/obstacle/bigRock"
 	"mars_rover/internal/domain/size"
 	"math/rand"
@@ -11,7 +12,7 @@ import (
 
 func TestIsWithinLimit(t *testing.T) {
 	sizeLimit, _ := size.Square(4)
-	coordinates := []absoluteCoordinate.AbsoluteCoordinate{
+	coordinates := []AbsoluteCoordinate{
 		*absoluteCoordinate.From(1, 1),
 		*absoluteCoordinate.From(1, 2),
 		*absoluteCoordinate.From(1, 3),
@@ -26,7 +27,7 @@ func TestIsBeyondLimit(t *testing.T) {
 	sizeLimit, _ := size.Square(3)
 	testCases := []struct {
 		name       string
-		coordinate *absoluteCoordinate.AbsoluteCoordinate
+		coordinate *AbsoluteCoordinate
 	}{
 		{
 			name:       "both out of bounds",
@@ -43,7 +44,7 @@ func TestIsBeyondLimit(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			rock := bigRock.In([]absoluteCoordinate.AbsoluteCoordinate{*testCase.coordinate})
+			rock := bigRock.In([]AbsoluteCoordinate{*testCase.coordinate})
 			assert.True(t, rock.IsBeyond(*sizeLimit))
 		})
 	}
@@ -51,14 +52,14 @@ func TestIsBeyondLimit(t *testing.T) {
 
 func TestOccupiesAGivenRandomCoordinate(t *testing.T) {
 	testCoordinate := absoluteCoordinate.From(rand.Int(), rand.Int())
-	rock := bigRock.In([]absoluteCoordinate.AbsoluteCoordinate{*testCoordinate})
+	rock := bigRock.In([]AbsoluteCoordinate{*testCoordinate})
 
 	assert.True(t, rock.Occupies(*testCoordinate))
 }
 
 func TestDoesNotOccupyADifferentCoordinate(t *testing.T) {
 	testCoordinate := absoluteCoordinate.From(1, 1)
-	rock := bigRock.In([]absoluteCoordinate.AbsoluteCoordinate{*testCoordinate})
+	rock := bigRock.In([]AbsoluteCoordinate{*testCoordinate})
 
 	assert.False(t, rock.Occupies(*absoluteCoordinate.From(1, 2)))
 }

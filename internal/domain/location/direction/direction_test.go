@@ -2,7 +2,7 @@ package direction_test
 
 import (
 	"mars_rover/internal/domain/coordinate/relativeCoordinate"
-	"mars_rover/internal/domain/location/direction"
+	. "mars_rover/internal/domain/location/direction"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,7 +11,7 @@ import (
 // TODO.LM: Is this better than a file per direction and a test per function?
 
 func TestNorth(t *testing.T) {
-	north := &direction.North{}
+	north := &North{}
 	assert.Equal(t, north.CardinalPoint(), "N")
 	assert.Equal(t, north.DirectionOnTheLeft().CardinalPoint(), "W")
 	assert.Equal(t, north.DirectionOnTheRight().CardinalPoint(), "E")
@@ -20,7 +20,7 @@ func TestNorth(t *testing.T) {
 }
 
 func TestEast(t *testing.T) {
-	east := &direction.East{}
+	east := &East{}
 	assert.Equal(t, east.CardinalPoint(), "E")
 	assert.Equal(t, east.DirectionOnTheLeft().CardinalPoint(), "N")
 	assert.Equal(t, east.DirectionOnTheRight().CardinalPoint(), "S")
@@ -29,7 +29,7 @@ func TestEast(t *testing.T) {
 }
 
 func TestSouth(t *testing.T) {
-	south := &direction.South{}
+	south := &South{}
 	assert.Equal(t, south.CardinalPoint(), "S")
 	assert.Equal(t, south.DirectionOnTheLeft().CardinalPoint(), "E")
 	assert.Equal(t, south.DirectionOnTheRight().CardinalPoint(), "W")
@@ -38,7 +38,7 @@ func TestSouth(t *testing.T) {
 }
 
 func TestWest(t *testing.T) {
-	west := &direction.West{}
+	west := &West{}
 	assert.Equal(t, west.CardinalPoint(), "W")
 	assert.Equal(t, west.DirectionOnTheLeft().CardinalPoint(), "S")
 	assert.Equal(t, west.DirectionOnTheRight().CardinalPoint(), "N")

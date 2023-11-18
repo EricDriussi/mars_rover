@@ -2,6 +2,7 @@ package absoluteCoordinate_test
 
 import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -19,7 +20,7 @@ func TestNotEqualsBasedOnValues(t *testing.T) {
 	aCoordinate := absoluteCoordinate.From(1, 1)
 	testCases := []struct {
 		name                string
-		differentCoordinate *absoluteCoordinate.AbsoluteCoordinate
+		differentCoordinate *AbsoluteCoordinate
 	}{
 		{
 			name:                "neither X nor Y can differ",
