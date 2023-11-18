@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	"mars_rover/internal/domain/obstacle"
 	. "mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/smallRock"
 	. "mars_rover/internal/domain/planet"
@@ -54,7 +53,7 @@ func createPlanetWithObstacleIn(x, y int) Planet {
 	planetSize, _ := size.Square(y + 2)
 	obstacleCoordinate := absoluteCoordinate.From(x, y)
 	planetObstacle := rock.In(*obstacleCoordinate)
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []obstacle.Obstacle{planetObstacle})
+	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{planetObstacle})
 	return testPlanet
 }
 

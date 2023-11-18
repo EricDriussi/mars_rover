@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	"mars_rover/internal/domain/obstacle"
+	. "mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/smallRock"
 	"mars_rover/internal/domain/planet/rockyPlanet"
 	"mars_rover/internal/domain/rover/wrappingCollidingRover"
@@ -12,7 +12,7 @@ import (
 )
 
 // TODO: LIST OF THINGS!
-// Persistency - WIP
+// Persistence - WIP
 // API
 // GUI
 func Sample() {
@@ -22,7 +22,7 @@ func Sample() {
 		return
 	}
 
-	mars, err := rockyPlanet.Create("red", *marsSize, []obstacle.Obstacle{rock.In(*absoluteCoordinate.From(3, 3)), rock.In(*absoluteCoordinate.From(7, 7))})
+	mars, err := rockyPlanet.Create("red", *marsSize, []Obstacle{rock.In(*absoluteCoordinate.From(3, 3)), rock.In(*absoluteCoordinate.From(7, 7))})
 	if err != nil {
 		fmt.Println("Error creating planet:", err)
 		return

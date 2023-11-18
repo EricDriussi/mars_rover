@@ -4,7 +4,7 @@ type RelativeCoordinate struct {
 	x, y int
 }
 
-func From(x, y int) *RelativeCoordinate {
+func New(x, y int) *RelativeCoordinate {
 	step := 1
 	if isOrthogonal(x, y) {
 		return &RelativeCoordinate{x * step, y * step}

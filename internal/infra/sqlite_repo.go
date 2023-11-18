@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"log"
-	"mars_rover/internal/domain/rover"
+	. "mars_rover/internal/domain/rover"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -34,7 +34,7 @@ func NewSQLite(db *sql.DB) *SQLiteRepository {
 	return &SQLiteRepository{db: db}
 }
 
-func (r *SQLiteRepository) SaveRover(rover rover.Rover) error {
+func (r *SQLiteRepository) SaveRover(rover Rover) error {
 	roverAsBytes, err := json.Marshal(r.mapToPersistenceRover(rover))
 	if err != nil {
 		return err

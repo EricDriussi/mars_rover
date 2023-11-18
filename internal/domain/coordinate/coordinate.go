@@ -3,7 +3,7 @@ package coordinate
 import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	"mars_rover/internal/domain/coordinate/relativeCoordinate"
+	. "mars_rover/internal/domain/coordinate/relativeCoordinate"
 )
 
 type Coordinate interface {
@@ -11,6 +11,6 @@ type Coordinate interface {
 	Y() int
 }
 
-func SumOf(coordinateOne AbsoluteCoordinate, coordinateTwo relativeCoordinate.RelativeCoordinate) *AbsoluteCoordinate {
+func SumOf(coordinateOne AbsoluteCoordinate, coordinateTwo RelativeCoordinate) *AbsoluteCoordinate {
 	return absoluteCoordinate.From(coordinateOne.X()+coordinateTwo.X(), coordinateOne.Y()+coordinateTwo.Y())
 }

@@ -11,7 +11,7 @@ import (
 
 func TestIsWithinLimit(t *testing.T) {
 	sizeLimit, _ := size.Square(4)
-	coordinates := New([]absoluteCoordinate.AbsoluteCoordinate{
+	coordinates := New([]AbsoluteCoordinate{
 		*absoluteCoordinate.From(1, 1),
 		*absoluteCoordinate.From(1, 2),
 		*absoluteCoordinate.From(1, 3),

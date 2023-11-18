@@ -5,14 +5,14 @@ import (
 	"encoding/json"
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/direction"
-	"mars_rover/internal/domain/obstacle"
+	. "mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/obstacle/smallRock"
-	"mars_rover/internal/domain/planet"
+	. "mars_rover/internal/domain/planet"
 	"mars_rover/internal/domain/planet/rockyPlanet"
-	"mars_rover/internal/domain/rover"
+	. "mars_rover/internal/domain/rover"
 	"mars_rover/internal/domain/rover/wrappingCollidingRover"
 	"mars_rover/internal/domain/size"
-	"mars_rover/internal/infra"
+	. "mars_rover/internal/infra"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -20,13 +20,18 @@ import (
 
 func TestSaveRover(t *testing.T) {
 	t.Skip()
-	db := infra.InitMem()
-	defer db.Close()
+	db := InitMem()
+	defer func(db *sql.DB) {
+		err := db.Close()
+		if err != nil {
+
+		}
+	}(db)
 
 	testPlanet := aTestPlanet()
 	testRover := aTestRover(testPlanet)
 
-	repo := infra.NewSQLite(db)
+	repo := NewSQLite(db)
 	err := repo.SaveRover(testRover)
 	assert.Nil(t, err)
 
@@ -37,17 +42,22 @@ func TestSaveRover(t *testing.T) {
 
 	savedPersistenceRover := actualNumberOfRovers[0]
 
-	var foundRover rover.Rover
+	var foundRover Rover
 	foundRover, err = mapToDomainRover(savedPersistenceRover, testPlanet)
 	assert.Nil(t, err)
 	assert.Equal(t, testRover, foundRover)
 }
 
-func getAllPersistenceRovers(t *testing.T, db *sql.DB) []infra.RoverPersistenceEntity {
-	var listOfRovers []infra.RoverPersistenceEntity
+func getAllPersistenceRovers(t *testing.T, db *sql.DB) []RoverPersistenceEntity {
+	var listOfRovers []RoverPersistenceEntity
 	var rovers []string
 	rows, err := db.Query("SELECT rover FROM rovers")
-	defer rows.Close()
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+
+		}
+	}(rows)
 	assert.Nil(t, err)
 
 	for rows.Next() {
@@ -58,7 +68,7 @@ func getAllPersistenceRovers(t *testing.T, db *sql.DB) []infra.RoverPersistenceE
 	}
 
 	for _, roverString := range rovers {
-		var roverData infra.RoverPersistenceEntity
+		var roverData RoverPersistenceEntity
 		err := json.Unmarshal([]byte(roverString), &roverData)
 		assert.Nil(t, err)
 		listOfRovers = append(listOfRovers, roverData)
@@ -66,14 +76,14 @@ func getAllPersistenceRovers(t *testing.T, db *sql.DB) []infra.RoverPersistenceE
 	return listOfRovers
 }
 
-func aTestRover(planet planet.Planet) rover.Rover {
+func aTestRover(planet Planet) Rover {
 	coordinate := absoluteCoordinate.From(0, 0)
 	testRover, _ := wrappingCollidingRover.LandFacing(North{}, *coordinate, planet)
 	return testRover
 }
 
-func aTestPlanet() planet.Planet {
+func aTestPlanet() Planet {
 	s, _ := size.Square(5)
-	planet, _ := rockyPlanet.Create("testColor", *s, []obstacle.Obstacle{smallRock.In(*absoluteCoordinate.From(1, 1))})
+	planet, _ := rockyPlanet.Create("testColor", *s, []Obstacle{smallRock.In(*absoluteCoordinate.From(1, 1))})
 	return planet
 }

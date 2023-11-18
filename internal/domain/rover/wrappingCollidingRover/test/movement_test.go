@@ -64,7 +64,7 @@ func TestMovesBackward(t *testing.T) {
 	testCases := []struct {
 		name               string
 		initialDirection   Direction
-		expectedCoordinate *absoluteCoordinate.AbsoluteCoordinate
+		expectedCoordinate *AbsoluteCoordinate
 	}{
 		{
 			name:               "facing north",
