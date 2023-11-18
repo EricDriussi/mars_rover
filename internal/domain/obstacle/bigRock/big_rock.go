@@ -1,37 +1,28 @@
 package bigRock
 
 import (
-	coord "mars_rover/internal/domain/coordinate/absoluteCoordinate"
+	abs "mars_rover/internal/domain/coordinate/absoluteCoordinate"
+	coord "mars_rover/internal/domain/coordinate/coordinates"
 	"mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/size"
 )
 
 type BigRock struct {
-	coordinates []coord.AbsoluteCoordinate
+	coordinates coord.Coordinates
 }
 
-func In(coordinate []coord.AbsoluteCoordinate) obstacle.Obstacle {
-	return &BigRock{coordinate}
+func In(coordinates []abs.AbsoluteCoordinate) obstacle.Obstacle {
+	return &BigRock{*coord.New(coordinates)}
 }
 
-func (this *BigRock) Occupies(coordinate coord.AbsoluteCoordinate) bool {
-	for _, occupiedCoordinate := range this.coordinates {
-		if coordinate.Equals(&occupiedCoordinate) {
-			return true
-		}
-	}
-	return false
+func (this *BigRock) Occupies(coordinate abs.AbsoluteCoordinate) bool {
+	return this.coordinates.Contain(coordinate)
 }
 
 func (this *BigRock) IsBeyond(size size.Size) bool {
-	for _, occupiedCoordinate := range this.coordinates {
-		if occupiedCoordinate.X() > size.Width() || occupiedCoordinate.Y() > size.Height() {
-			return true
-		}
-	}
-	return false
+	return this.coordinates.GoBeyond(size)
 }
 
-func (this *BigRock) Coordinates() []coord.AbsoluteCoordinate {
-	return this.coordinates
+func (this *BigRock) Coordinates() []abs.AbsoluteCoordinate {
+	return this.coordinates.List()
 }
