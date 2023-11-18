@@ -2,11 +2,10 @@ package rover_test
 
 import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	"mars_rover/internal/domain/location"
-	"mars_rover/internal/domain/location/direction"
-	"mars_rover/internal/domain/obstacle"
+	. "mars_rover/internal/domain/direction"
+	. "mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/smallRock"
-	rockyPlanet "mars_rover/internal/domain/planet/rockyPlanet"
+	"mars_rover/internal/domain/planet/rockyPlanet"
 	"mars_rover/internal/domain/rover"
 	"mars_rover/internal/domain/size"
 	"testing"
@@ -16,59 +15,56 @@ import (
 
 func TestAvoidsCollisionMovingForward(t *testing.T) {
 	planetSize, _ := size.Square(10)
-	landingLocation, _ := location.From(*absoluteCoordinate.From(5, 5), &direction.North{})
-	obstacleInfront := rock.In(*absoluteCoordinate.From(5, 6))
-	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []obstacle.Obstacle{obstacleInfront})
+	coordinate := absoluteCoordinate.From(5, 5)
+	obstacleAhead := rock.In(*absoluteCoordinate.From(5, 6))
+	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{obstacleAhead})
 
-	testRover, _ := rover.Land(*landingLocation, testPlanetWithObstacles)
+	testRover, _ := rover.LandFacing(North{}, *coordinate, testPlanetWithObstacles)
 
 	err := testRover.MoveForward()
 
 	assert.Error(t, err)
-	assert.Equal(t, landingLocation, testRover.Location())
+	assert.Equal(t, *coordinate, testRover.Position())
 }
 
 func TestAvoidsCollisionWrappingForward(t *testing.T) {
 	planetSize, _ := size.Square(5)
-	landingLocation, _ := location.From(*absoluteCoordinate.From(3, 5), &direction.North{})
-	obstacleLocation := *absoluteCoordinate.From(3, 0)
-	obstacleInfront := rock.In(obstacleLocation)
-	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []obstacle.Obstacle{obstacleInfront})
+	coordinate := absoluteCoordinate.From(3, 5)
+	obstacleAhead := rock.In(*absoluteCoordinate.From(3, 0))
+	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{obstacleAhead})
 
-	testRover, _ := rover.Land(*landingLocation, testPlanetWithObstacles)
+	testRover, _ := rover.LandFacing(North{}, *coordinate, testPlanetWithObstacles)
 
 	err := testRover.MoveForward()
 
 	assert.Error(t, err)
-	assert.Equal(t, landingLocation, testRover.Location())
+	assert.Equal(t, *coordinate, testRover.Position())
 }
 
 func TestAvoidsCollisionMovingBackwards(t *testing.T) {
 	planetSize, _ := size.Square(10)
-	landingLocation, _ := location.From(*absoluteCoordinate.From(5, 5), &direction.North{})
-	obstacleLocation := *absoluteCoordinate.From(5, 4)
-	obstacleBehind := rock.In(obstacleLocation)
-	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []obstacle.Obstacle{obstacleBehind})
+	coordinate := absoluteCoordinate.From(5, 5)
+	obstacleBehind := rock.In(*absoluteCoordinate.From(5, 4))
+	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{obstacleBehind})
 
-	testRover, _ := rover.Land(*landingLocation, testPlanetWithObstacles)
+	testRover, _ := rover.LandFacing(North{}, *coordinate, testPlanetWithObstacles)
 
 	err := testRover.MoveBackward()
 
 	assert.Error(t, err)
-	assert.Equal(t, landingLocation, testRover.Location())
+	assert.Equal(t, *coordinate, testRover.Position())
 }
 
 func TestAvoidsCollisionWrappingBackwards(t *testing.T) {
 	planetSize, _ := size.Square(5)
-	landingLocation, _ := location.From(*absoluteCoordinate.From(3, 0), &direction.North{})
-	obstacleLocation := *absoluteCoordinate.From(3, 5)
-	obstacleBehind := rock.In(obstacleLocation)
-	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []obstacle.Obstacle{obstacleBehind})
+	coordinate := absoluteCoordinate.From(3, 0)
+	obstacleBehind := rock.In(*absoluteCoordinate.From(3, 5))
+	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{obstacleBehind})
 
-	testRover, _ := rover.Land(*landingLocation, testPlanetWithObstacles)
+	testRover, _ := rover.LandFacing(North{}, *coordinate, testPlanetWithObstacles)
 
 	err := testRover.MoveBackward()
 
 	assert.Error(t, err)
-	assert.Equal(t, landingLocation, testRover.Location())
+	assert.Equal(t, *coordinate, testRover.Position())
 }

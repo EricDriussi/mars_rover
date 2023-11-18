@@ -2,13 +2,14 @@ package service_test
 
 import (
 	"errors"
-	"mars_rover/internal/domain/location"
-	planetMap "mars_rover/internal/domain/rover/planetMap"
+	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/internal/domain/direction"
+	. "mars_rover/internal/domain/rover/planetMap"
 	service "mars_rover/internal/service/move"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
+	. "github.com/stretchr/testify/mock"
 )
 
 func TestHandlesASingleMovementCommand(t *testing.T) {
@@ -106,7 +107,7 @@ func TestHandlesErrorsAndSuccessfulMovements(t *testing.T) {
 }
 
 type MockRover struct {
-	mock.Mock
+	Mock
 }
 
 func (this *MockRover) TurnLeft() {
@@ -127,12 +128,17 @@ func (this *MockRover) MoveBackward() error {
 	return args.Error(0)
 }
 
-func (this *MockRover) Location() *location.Location {
+func (this *MockRover) Position() AbsoluteCoordinate {
 	args := this.Called()
-	return args.Get(0).(*location.Location)
+	return args.Get(0).(AbsoluteCoordinate)
 }
 
-func (this *MockRover) Map() *planetMap.Map {
+func (this *MockRover) Direction() Direction {
 	args := this.Called()
-	return args.Get(0).(*planetMap.Map)
+	return args.Get(0).(Direction)
+}
+
+func (this *MockRover) Map() Map {
+	args := this.Called()
+	return args.Get(0).(Map)
 }

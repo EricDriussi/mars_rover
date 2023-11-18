@@ -3,8 +3,7 @@ package create
 import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	"mars_rover/internal/domain/location"
-	. "mars_rover/internal/domain/location/direction"
+	. "mars_rover/internal/domain/direction"
 	. "mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/smallRock"
 	"mars_rover/internal/domain/planet/rockyPlanet"
@@ -31,12 +30,8 @@ func Random() Rover {
 	var randRover Rover
 	couldNotLand := true
 	for couldNotLand {
-		landinglocation, err := randomLocationWithin(*randSize)
-		if err != nil {
-			panic("Something went wrong :(")
-		}
 
-		randRover, err = rover.Land(*landinglocation, randPlanet)
+		randRover, err = rover.LandFacing(randomDirection(), randomCoordinateWithin(*randSize), randPlanet)
 		if err == nil {
 			couldNotLand = false
 		}
@@ -53,10 +48,6 @@ func randomObstaclesWithin(size Size) []Obstacle {
 		obstacles = append(obstacles, rock.In(randomCoordinateWithin(size)))
 	}
 	return obstacles
-}
-
-func randomLocationWithin(size Size) (*location.Location, error) {
-	return location.From(randomCoordinateWithin(size), randomDirection())
 }
 
 func randomCoordinateWithin(size Size) AbsoluteCoordinate {

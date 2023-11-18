@@ -3,11 +3,9 @@ package cmd
 import (
 	"fmt"
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	"mars_rover/internal/domain/location"
-	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/smallRock"
-	rockyPlanet "mars_rover/internal/domain/planet/rockyPlanet"
+	"mars_rover/internal/domain/planet/rockyPlanet"
 	"mars_rover/internal/domain/rover"
 	"mars_rover/internal/domain/size"
 	"mars_rover/internal/service/move"
@@ -30,14 +28,9 @@ func Sample() {
 		return
 	}
 
-	facingNorth := direction.North{}
-	landinglocation, err := location.From(*absoluteCoordinate.From(0, 0), facingNorth)
-	if err != nil {
-		fmt.Println("Error creating location:", err)
-		return
-	}
+	coordinate := absoluteCoordinate.From(0, 0)
 
-	curiosity, err := rover.Land(*landinglocation, mars)
+	curiosity, err := rover.Land(*coordinate, mars)
 	if err != nil {
 		fmt.Println("Could not land on selected location:", err)
 		return

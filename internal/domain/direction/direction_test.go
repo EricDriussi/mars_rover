@@ -2,7 +2,7 @@ package direction_test
 
 import (
 	"mars_rover/internal/domain/coordinate/relativeCoordinate"
-	. "mars_rover/internal/domain/location/direction"
+	. "mars_rover/internal/domain/direction"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

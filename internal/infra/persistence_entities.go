@@ -7,8 +7,9 @@ import (
 )
 
 type RoverPersistenceEntity struct {
-	Location  LocationPersistenceEntity  `json:"location"`
-	PlanetMap PlanetMapPersistenceEntity `json:"planetMap"`
+	PlanetMap  PlanetMapPersistenceEntity  `json:"planetMap"`
+	Coordinate CoordinatePersistenceEntity `json:"coordinate"`
+	Direction  string                      `json:"direction"`
 }
 
 type PlanetMapPersistenceEntity struct {
@@ -25,39 +26,26 @@ type CoordinatePersistenceEntity struct {
 	Y int `json:"y"`
 }
 
-type LocationPersistenceEntity struct {
-	CurrentCoord CoordinatePersistenceEntity `json:"currentCoord"`
-	FutureCoord  CoordinatePersistenceEntity `json:"futureCoord"`
-	Direction    string                      `json:"direction"`
-}
-
 type SizePersistenceEntity struct {
 	Width  int `json:"width"`
 	Height int `json:"height"`
 }
 
 func (r *SQLiteRepository) mapToPersistenceRover(rover rover.Rover) RoverPersistenceEntity {
-	currPosition := rover.Location().Position()
-	futurePosition := rover.Location().WillBeAt()
-	size := rover.Map().Size()
+	currPosition := rover.Position()
+	roverMap := rover.Map()
 	return RoverPersistenceEntity{
-		Location: LocationPersistenceEntity{
-			CurrentCoord: CoordinatePersistenceEntity{
-				X: currPosition.X(),
-				Y: currPosition.Y(),
-			},
-			FutureCoord: CoordinatePersistenceEntity{
-				X: futurePosition.X(),
-				Y: futurePosition.Y(),
-			},
-			Direction: rover.Location().Direction().CardinalPoint(),
+		Coordinate: CoordinatePersistenceEntity{
+			X: currPosition.X(),
+			Y: currPosition.Y(),
 		},
+		Direction: rover.Direction().CardinalPoint(),
 		PlanetMap: PlanetMapPersistenceEntity{
 			Size: SizePersistenceEntity{
-				Width:  size.Width(),
-				Height: size.Height(),
+				Width:  roverMap.Width(),
+				Height: roverMap.Height(),
 			},
-			Obstacles: mapToPersistenceObstacles(rover.Map().Obstacles()),
+			Obstacles: mapToPersistenceObstacles(roverMap.Obstacles()),
 		},
 	}
 }
