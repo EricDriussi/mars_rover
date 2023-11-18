@@ -6,8 +6,8 @@ import (
 	"mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/smallRock"
 	"mars_rover/internal/domain/planet"
-	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
-	"mars_rover/internal/domain/rover/planet_map"
+	"mars_rover/internal/domain/planet/rockyPlanet"
+	"mars_rover/internal/domain/rover/planetMap"
 	"mars_rover/internal/domain/size"
 	"math/rand"
 	"testing"
@@ -18,11 +18,11 @@ import (
 func TestReportsCollision(t *testing.T) {
 	x := 3
 	y := 3
-	planet := createPlanetWithObstacleIn(x, y)
-	planetMap := planetMap.Of(planet)
+	testPlanet := createPlanetWithObstacleIn(x, y)
+	testMap := planetMap.Of(testPlanet)
 	obstacleCoordinate := absoluteCoordinate.From(x, y)
 
-	didCollide := planetMap.CollidesWithObstacle(*obstacleCoordinate)
+	didCollide := testMap.CollidesWithObstacle(*obstacleCoordinate)
 
 	assert.True(t, didCollide)
 }
@@ -38,8 +38,8 @@ func TestReportsNOCollision(t *testing.T) {
 				testCoordinate := absoluteCoordinate.From(x, y)
 				testPlanet := createPlanetWithRandomObstaclesNotIn(*planetSize, *testCoordinate)
 
-				planetMap := planetMap.Of(testPlanet)
-				didCollide := planetMap.CollidesWithObstacle(*testCoordinate)
+				testMap := planetMap.Of(testPlanet)
+				didCollide := testMap.CollidesWithObstacle(*testCoordinate)
 
 				assert.False(t, didCollide)
 			})
@@ -51,8 +51,8 @@ func createPlanetWithObstacleIn(x, y int) planet.Planet {
 	planetSize, _ := size.Square(y + 2)
 	obstacleCoordinate := absoluteCoordinate.From(x, y)
 	planetObstacle := rock.In(*obstacleCoordinate)
-	planet, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{planetObstacle})
-	return planet
+	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []obstacle.Obstacle{planetObstacle})
+	return testPlanet
 }
 
 func createPlanetWithRandomObstaclesNotIn(planetSize size.Size, exclude absoluteCoordinate.AbsoluteCoordinate) planet.Planet {
@@ -66,8 +66,8 @@ func createPlanetWithRandomObstaclesNotIn(planetSize size.Size, exclude absolute
 		obstacles = append(obstacles, rock.In(randomCoordinate))
 	}
 
-	planet, _ := rockyPlanet.Create(planetSize, obstacles)
-	return planet
+	testPlanet, _ := rockyPlanet.Create("testColor", planetSize, obstacles)
+	return testPlanet
 }
 
 func getRandomCoordinateExcluding(planetSize size.Size, exclude absoluteCoordinate.AbsoluteCoordinate) absoluteCoordinate.AbsoluteCoordinate {

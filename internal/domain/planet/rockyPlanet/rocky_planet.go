@@ -1,4 +1,4 @@
-package rocky_planet
+package rockyPlanet
 
 import (
 	"errors"
@@ -7,18 +7,19 @@ import (
 )
 
 type RockyPlanet struct {
+	color     string
 	size      size.Size
 	obstacles []obstacle.Obstacle
 }
 
-func Create(size size.Size, obstacles []obstacle.Obstacle) (*RockyPlanet, error) {
+func Create(color string, size size.Size, obstacles []obstacle.Obstacle) (*RockyPlanet, error) {
 	for _, obs := range obstacles {
 		if obs.IsBeyond(size) {
 			return nil, errors.New("an obstacle was set outside of the planet :c")
 		}
 	}
 
-	return &RockyPlanet{size, obstacles}, nil
+	return &RockyPlanet{color, size, obstacles}, nil
 }
 
 func (this *RockyPlanet) Size() size.Size {

@@ -6,7 +6,7 @@ import (
 	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/smallRock"
-	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
+	"mars_rover/internal/domain/planet/rockyPlanet"
 	"mars_rover/internal/domain/rover"
 	"mars_rover/internal/domain/size"
 	"math/rand"
@@ -20,7 +20,7 @@ func Random() rover.Rover {
 		panic("Something went wrong :(")
 	}
 
-	randPlanet, err := rockyPlanet.Create(*randSize, randomObstaclesWithin(*randSize))
+	randPlanet, err := rockyPlanet.Create(randomColor(), *randSize, randomObstaclesWithin(*randSize))
 	if err != nil {
 		panic("Something went wrong :(")
 	}
@@ -68,4 +68,20 @@ func randomDirection() direction.Direction {
 		direction.West{},
 	}
 	return directions[rand.Intn(len(directions))]
+}
+
+func randomColor() string {
+	colors := []string{
+		"red",
+		"blue",
+		"green",
+		"yellow",
+		"black",
+		"white",
+		"pink",
+		"purple",
+		"orange",
+		"brown",
+	}
+	return colors[rand.Intn(len(colors))]
 }

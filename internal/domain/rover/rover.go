@@ -4,7 +4,7 @@ import (
 	"errors"
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/planet"
-	planetMap "mars_rover/internal/domain/rover/planet_map"
+	planetMap "mars_rover/internal/domain/rover/planetMap"
 )
 
 // TODO: extract

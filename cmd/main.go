@@ -7,7 +7,7 @@ import (
 	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/smallRock"
-	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
+	rockyPlanet "mars_rover/internal/domain/planet/rockyPlanet"
 	"mars_rover/internal/domain/rover"
 	"mars_rover/internal/domain/size"
 	"mars_rover/internal/service/move"
@@ -24,7 +24,7 @@ func Sample() {
 		return
 	}
 
-	mars, err := rockyPlanet.Create(*marsSize, []obstacle.Obstacle{rock.In(*absoluteCoordinate.From(3, 3)), rock.In(*absoluteCoordinate.From(7, 7))})
+	mars, err := rockyPlanet.Create("red", *marsSize, []obstacle.Obstacle{rock.In(*absoluteCoordinate.From(3, 3)), rock.In(*absoluteCoordinate.From(7, 7))})
 	if err != nil {
 		fmt.Println("Error creating planet:", err)
 		return

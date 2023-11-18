@@ -3,7 +3,7 @@ package service_test
 import (
 	"errors"
 	"mars_rover/internal/domain/location"
-	planetMap "mars_rover/internal/domain/rover/planet_map"
+	planetMap "mars_rover/internal/domain/rover/planetMap"
 	service "mars_rover/internal/service/move"
 	"testing"
 

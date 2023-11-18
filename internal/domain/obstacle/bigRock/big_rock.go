@@ -24,7 +24,6 @@ func (this *BigRock) Occupies(coordinate coord.AbsoluteCoordinate) bool {
 }
 
 func (this *BigRock) IsBeyond(size size.Size) bool {
-
 	for _, occupiedCoordinate := range this.coordinates {
 		if occupiedCoordinate.X() > size.Width() || occupiedCoordinate.Y() > size.Height() {
 			return true

@@ -5,7 +5,7 @@ import (
 	"mars_rover/internal/domain/location"
 	"mars_rover/internal/domain/location/direction"
 	"mars_rover/internal/domain/obstacle"
-	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
+	rockyPlanet "mars_rover/internal/domain/planet/rockyPlanet"
 	"mars_rover/internal/domain/rover"
 	"mars_rover/internal/domain/size"
 	"testing"
@@ -15,7 +15,7 @@ import (
 
 func TestWrapsLookingNorthMovingForward(t *testing.T) {
 	planetSize, _ := size.Square(3)
-	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
+	testPlanetWithoutObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []obstacle.Obstacle{})
 	landingLocation, _ := location.From(*absoluteCoordinate.From(2, 3), &direction.North{})
 
 	testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
@@ -29,7 +29,7 @@ func TestWrapsLookingNorthMovingForward(t *testing.T) {
 
 func TestWrapsLookingEastMovingForward(t *testing.T) {
 	planetSize, _ := size.Square(3)
-	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
+	testPlanetWithoutObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []obstacle.Obstacle{})
 	landingLocation, _ := location.From(*absoluteCoordinate.From(3, 2), &direction.East{})
 
 	testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
@@ -43,7 +43,7 @@ func TestWrapsLookingEastMovingForward(t *testing.T) {
 
 func TestWrapsLookingSouthMovingForward(t *testing.T) {
 	planetSize, _ := size.Square(3)
-	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
+	testPlanetWithoutObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []obstacle.Obstacle{})
 	landingLocation, _ := location.From(*absoluteCoordinate.From(2, 0), &direction.South{})
 
 	testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)
@@ -57,7 +57,7 @@ func TestWrapsLookingSouthMovingForward(t *testing.T) {
 
 func TestWrapsLookingWestMovingForward(t *testing.T) {
 	planetSize, _ := size.Square(3)
-	testPlanetWithoutObstacles, _ := rockyPlanet.Create(*planetSize, []obstacle.Obstacle{})
+	testPlanetWithoutObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []obstacle.Obstacle{})
 	landingLocation, _ := location.From(*absoluteCoordinate.From(0, 2), &direction.West{})
 
 	testRover, _ := rover.Land(*landingLocation, testPlanetWithoutObstacles)

@@ -1,10 +1,10 @@
-package rocky_planet_test
+package rockyPlanet_test
 
 import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	"mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/smallRock"
-	rockyPlanet "mars_rover/internal/domain/planet/rocky_planet"
+	"mars_rover/internal/domain/planet/rockyPlanet"
 	"mars_rover/internal/domain/size"
 	"math/rand"
 	"testing"
@@ -15,7 +15,7 @@ import (
 func TestCanCreateIfNoObstacleIsOutOfBounds(t *testing.T) {
 	sizeLimit, _ := size.Square(5)
 	obstaclesWithinBounds := generateThreeRandomObstaclesWithin(*sizeLimit)
-	_, err := rockyPlanet.Create(*sizeLimit, obstaclesWithinBounds)
+	_, err := rockyPlanet.Create("testColor", *sizeLimit, obstaclesWithinBounds)
 
 	assert.Nil(t, err)
 }
@@ -25,7 +25,7 @@ func TestCannotCreateIfOneObstacleIsOutOfBounds(t *testing.T) {
 	obstaclesWithinBounds := generateThreeRandomObstaclesWithin(*sizeLimit)
 
 	oneObstacleOutOfBounds := append(obstaclesWithinBounds, randomObstacleOutOf(*sizeLimit))
-	_, err := rockyPlanet.Create(*sizeLimit, oneObstacleOutOfBounds)
+	_, err := rockyPlanet.Create("testColor", *sizeLimit, oneObstacleOutOfBounds)
 
 	assert.Error(t, err)
 }
@@ -36,7 +36,7 @@ func TestCannotCreateIfMoreThanOneObstacleIsOutOfBounds(t *testing.T) {
 
 	oneObstacleOutOfBounds := append(obstaclesWithinBounds, randomObstacleOutOf(*sizeLimit))
 	twoObstacleOutOfBounds := append(oneObstacleOutOfBounds, randomObstacleOutOf(*sizeLimit))
-	_, err := rockyPlanet.Create(*sizeLimit, twoObstacleOutOfBounds)
+	_, err := rockyPlanet.Create("testColor", *sizeLimit, twoObstacleOutOfBounds)
 
 	assert.Error(t, err)
 }

@@ -5,7 +5,7 @@ import (
 	"mars_rover/internal/domain/obstacle"
 	obstacleTest "mars_rover/internal/domain/obstacle/test"
 	planetTest "mars_rover/internal/domain/planet/test"
-	planetMap "mars_rover/internal/domain/rover/planet_map"
+	"mars_rover/internal/domain/rover/planetMap"
 	"mars_rover/internal/domain/size"
 	"testing"
 
@@ -18,11 +18,11 @@ func TestReportsCollisionWithMock(t *testing.T) {
 	mockPlanet := new(planetTest.MockPlanet)
 	mockPlanet.On("Obstacles").Return([]obstacle.Obstacle{mockObstacle})
 	mockPlanet.On("Size").Return(size.Size{})
-	planetMap := planetMap.Of(mockPlanet)
+	testMap := planetMap.Of(mockPlanet)
 
 	mockObstacle.On("Occupies", mock.Anything).Return(true)
 
-	didCollide := planetMap.CollidesWithObstacle(absoluteCoordinate.AbsoluteCoordinate{})
+	didCollide := testMap.CollidesWithObstacle(absoluteCoordinate.AbsoluteCoordinate{})
 
 	mockObstacle.AssertCalled(t, "Occupies", mock.Anything)
 	assert.True(t, didCollide)
@@ -33,11 +33,11 @@ func TestReportsNoCollisionWithMock(t *testing.T) {
 	mockPlanet := new(planetTest.MockPlanet)
 	mockPlanet.On("Obstacles").Return([]obstacle.Obstacle{mockObstacle})
 	mockPlanet.On("Size").Return(size.Size{})
-	planetMap := planetMap.Of(mockPlanet)
+	testMap := planetMap.Of(mockPlanet)
 
 	mockObstacle.On("Occupies", mock.Anything).Return(false)
 
-	didCollide := planetMap.CollidesWithObstacle(absoluteCoordinate.AbsoluteCoordinate{})
+	didCollide := testMap.CollidesWithObstacle(absoluteCoordinate.AbsoluteCoordinate{})
 
 	mockObstacle.AssertCalled(t, "Occupies", mock.Anything)
 	assert.False(t, didCollide)
