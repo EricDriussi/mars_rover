@@ -1,4 +1,4 @@
-package wrappingCollidingRover_test
+package godModRover_test
 
 import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
@@ -6,7 +6,7 @@ import (
 	. "mars_rover/internal/domain/direction"
 	. "mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/planet/rockyPlanet"
-	"mars_rover/internal/domain/rover/wrappingCollidingRover"
+	"mars_rover/internal/domain/rover/godModRover"
 	"mars_rover/internal/domain/size"
 	"testing"
 
@@ -47,7 +47,7 @@ func TestMovesForward(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			coordinate := absoluteCoordinate.From(5, 5)
-			testRover, _ := wrappingCollidingRover.LandFacing(testCase.initialDirection, *coordinate, testPlanetWithoutObstacles)
+			testRover := godModRover.LandFacing(testCase.initialDirection, *coordinate, testPlanetWithoutObstacles)
 
 			err := testRover.MoveForward()
 
@@ -91,7 +91,7 @@ func TestMovesBackward(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			coordinate := absoluteCoordinate.From(5, 5)
-			testRover, _ := wrappingCollidingRover.LandFacing(testCase.initialDirection, *coordinate, testPlanetWithoutObstacles)
+			testRover := godModRover.LandFacing(testCase.initialDirection, *coordinate, testPlanetWithoutObstacles)
 
 			err := testRover.MoveBackward()
 
@@ -135,7 +135,7 @@ func TestTurnsRight(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := wrappingCollidingRover.LandFacing(testCase.initialDirection, *coord, testPlanetWithoutObstacles)
+			testRover := godModRover.LandFacing(testCase.initialDirection, *coord, testPlanetWithoutObstacles)
 
 			testRover.TurnRight()
 
@@ -179,7 +179,7 @@ func TestTurnsLeft(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := wrappingCollidingRover.LandFacing(testCase.initialDirection, *coord, testPlanetWithoutObstacles)
+			testRover := godModRover.LandFacing(testCase.initialDirection, *coord, testPlanetWithoutObstacles)
 
 			testRover.TurnLeft()
 

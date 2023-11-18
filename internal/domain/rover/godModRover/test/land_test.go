@@ -1,4 +1,4 @@
-package wrappingCollidingRover_test
+package godModRover_test
 
 import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
@@ -6,7 +6,7 @@ import (
 	. "mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/obstacle/smallRock"
 	"mars_rover/internal/domain/planet/rockyPlanet"
-	"mars_rover/internal/domain/rover/wrappingCollidingRover"
+	"mars_rover/internal/domain/rover/godModRover"
 	"mars_rover/internal/domain/size"
 	"testing"
 
@@ -18,9 +18,8 @@ func TestLandsOnFreeLocation(t *testing.T) {
 	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{smallRock.In(*absoluteCoordinate.From(1, 2))})
 	coordinate := absoluteCoordinate.From(1, 1)
 
-	testRover, err := wrappingCollidingRover.Land(*coordinate, testPlanet)
+	testRover := godModRover.Land(*coordinate, testPlanet)
 
-	assert.Nil(t, err)
 	assert.Equal(t, *coordinate, testRover.Position())
 }
 
@@ -30,20 +29,19 @@ func TestLandsOnFreeLocationFacingGivenDirection(t *testing.T) {
 	coordinate := absoluteCoordinate.From(1, 1)
 	direction := North{}
 
-	testRover, err := wrappingCollidingRover.LandFacing(direction, *coordinate, testPlanet)
+	testRover := godModRover.LandFacing(direction, *coordinate, testPlanet)
 
-	assert.Nil(t, err)
 	assert.Equal(t, *coordinate, testRover.Position())
 	assert.Equal(t, direction, testRover.Direction())
 }
 
-func TestCannotLandOnObstacle(t *testing.T) {
+func TestCanLandOnObstacle(t *testing.T) {
 	planetSize, _ := size.Square(2)
 	coordinate := absoluteCoordinate.From(1, 1)
 	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{smallRock.In(*coordinate)})
 
-	testRover, err := wrappingCollidingRover.Land(*coordinate, testPlanet)
+	testRover := godModRover.Land(*coordinate, testPlanet)
 
-	assert.Error(t, err)
-	assert.Nil(t, testRover)
+	assert.NotNil(t, testRover)
+	assert.Equal(t, *coordinate, testRover.Position())
 }

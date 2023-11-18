@@ -1,4 +1,4 @@
-package rover_test
+package wrappingCollidingRover_test
 
 import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
