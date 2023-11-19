@@ -17,7 +17,7 @@ import (
 func TestReportsCollisionWithMock(t *testing.T) {
 	mockObstacle := new(MockObstacle)
 	mockPlanet := new(MockPlanet)
-	mockPlanet.On("Obstacles").Return(*obstacles.New([]Obstacle{mockObstacle}))
+	mockPlanet.On("Obstacles").Return(*obstacles.FromList([]Obstacle{mockObstacle}))
 	mockPlanet.On("Size").Return(Size{})
 	testMap := planetMap.Of(mockPlanet)
 
@@ -32,7 +32,7 @@ func TestReportsCollisionWithMock(t *testing.T) {
 func TestReportsNoCollisionWithMock(t *testing.T) {
 	mockObstacle := new(MockObstacle)
 	mockPlanet := new(MockPlanet)
-	mockPlanet.On("Obstacles").Return(*obstacles.New([]Obstacle{mockObstacle}))
+	mockPlanet.On("Obstacles").Return(*obstacles.FromList([]Obstacle{mockObstacle}))
 	mockPlanet.On("Size").Return(Size{})
 	testMap := planetMap.Of(mockPlanet)
 

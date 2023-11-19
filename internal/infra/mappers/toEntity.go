@@ -3,22 +3,20 @@ package mappers
 import (
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/obstacle/obstacles"
-	. "mars_rover/internal/domain/planet/rockyPlanet"
-	. "mars_rover/internal/domain/rover/wrappingCollidingRover"
+	. "mars_rover/internal/domain/planet"
+	. "mars_rover/internal/domain/rover"
+	. "mars_rover/internal/domain/size"
 	. "mars_rover/internal/infra/entities"
 )
 
-func MapToPersistenceRover(rover WrappingCollidingRover) RoverPersistenceEntity {
+func MapToPersistenceRover(rover Rover) RoverEntity {
 	coordinate := rover.Coordinate()
 	roverMap := rover.Map()
-	return RoverPersistenceEntity{
-		Coordinate: CoordinatePersistenceEntity{
-			X: coordinate.X(),
-			Y: coordinate.Y(),
-		},
-		Direction: rover.Direction().CardinalPoint(),
-		PlanetMap: PlanetMapPersistenceEntity{
-			Size: SizePersistenceEntity{
+	return RoverEntity{
+		Coordinate: mapToPersistenceCoordinate(coordinate),
+		Direction:  rover.Direction().CardinalPoint(),
+		PlanetMap: MapEntity{
+			Size: SizeEntity{
 				Width:  roverMap.Width(),
 				Height: roverMap.Height(),
 			},
@@ -27,35 +25,44 @@ func MapToPersistenceRover(rover WrappingCollidingRover) RoverPersistenceEntity 
 	}
 }
 
-func mapToPersistenceCoordinates(coordinates []AbsoluteCoordinate) []CoordinatePersistenceEntity {
-	coords := make([]CoordinatePersistenceEntity, len(coordinates))
+func mapToPersistenceCoordinate(coordinate AbsoluteCoordinate) CoordinateEntity {
+	return CoordinateEntity{
+		X: coordinate.X(),
+		Y: coordinate.Y(),
+	}
+}
+
+func mapToPersistenceCoordinates(coordinates []AbsoluteCoordinate) []CoordinateEntity {
+	coords := make([]CoordinateEntity, len(coordinates))
 	for i, c := range coordinates {
-		coords[i] = CoordinatePersistenceEntity{
-			X: c.X(),
-			Y: c.Y(),
-		}
+		coords[i] = mapToPersistenceCoordinate(c)
 	}
 	return coords
 }
 
-func mapToPersistenceObstacles(obstacles Obstacles) []ObstaclePersistenceEntity {
-	obs := make([]ObstaclePersistenceEntity, len(obstacles.List()))
+func mapToPersistenceObstacles(obstacles Obstacles) []ObstacleEntity {
+	obs := make([]ObstacleEntity, len(obstacles.List()))
 	for i, o := range obstacles.List() {
 		coordinates := o.Coordinates()
-		obs[i] = ObstaclePersistenceEntity{
+		obs[i] = ObstacleEntity{
 			Coordinates: mapToPersistenceCoordinates(coordinates),
 		}
 	}
 	return obs
 }
-func MapToPersistenceRockyPlanet(planet RockyPlanet) RockyPlanetPersistenceEntity {
+
+func mapToPersistenceSize(size Size) SizeEntity {
+	return SizeEntity{
+		Width:  size.Width(),
+		Height: size.Height(),
+	}
+}
+
+func MapToPersistenceRockyPlanet(planet Planet) RockyPlanetEntity {
 	size := planet.Size()
-	return RockyPlanetPersistenceEntity{
-		Color: planet.Color(),
-		Size: SizePersistenceEntity{
-			Width:  size.Width(),
-			Height: size.Height(),
-		},
+	return RockyPlanetEntity{
+		Color:     planet.Color(),
+		Size:      mapToPersistenceSize(size),
 		Obstacles: mapToPersistenceObstacles(planet.Obstacles()),
 	}
 }

@@ -1,32 +1,32 @@
 package entities
 
-type RoverPersistenceEntity struct {
-	PlanetMap  PlanetMapPersistenceEntity  `json:"planetMap"`
-	Coordinate CoordinatePersistenceEntity `json:"coordinate"`
-	Direction  string                      `json:"direction"`
+type RoverEntity struct {
+	PlanetMap  MapEntity        `json:"planetMap"`
+	Coordinate CoordinateEntity `json:"coordinate"`
+	Direction  string           `json:"direction"`
 }
 
-type PlanetMapPersistenceEntity struct {
-	Size      SizePersistenceEntity       `json:"size"`
-	Obstacles []ObstaclePersistenceEntity `json:"obstacles"`
+type MapEntity struct {
+	Size      SizeEntity       `json:"size"`
+	Obstacles []ObstacleEntity `json:"obstacles"`
 }
 
-type ObstaclePersistenceEntity struct {
-	Coordinates []CoordinatePersistenceEntity `json:"coordinates"`
+type ObstacleEntity struct {
+	Coordinates []CoordinateEntity `json:"coordinates"`
 }
 
-type CoordinatePersistenceEntity struct {
+type CoordinateEntity struct {
 	X int `json:"x"`
 	Y int `json:"y"`
 }
 
-type SizePersistenceEntity struct {
+type SizeEntity struct {
 	Width  int `json:"width"`
 	Height int `json:"height"`
 }
 
-type RockyPlanetPersistenceEntity struct {
-	Color     string                      `json:"color"`
-	Size      SizePersistenceEntity       `json:"size"`
-	Obstacles []ObstaclePersistenceEntity `json:"obstacles"`
+type RockyPlanetEntity struct {
+	Color     string           `json:"color"`
+	Size      SizeEntity       `json:"size"`
+	Obstacles []ObstacleEntity `json:"obstacles"`
 }

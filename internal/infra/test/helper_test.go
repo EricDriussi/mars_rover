@@ -18,12 +18,12 @@ import (
 	"testing"
 )
 
-func getAllPersistedRovers(t *testing.T, db *sql.DB) []RoverPersistenceEntity {
-	return getAllPersistedEntities(t, db, WrappingRoversTable, reflect.TypeOf(RoverPersistenceEntity{})).([]RoverPersistenceEntity)
+func getAllPersistedRovers(t *testing.T, db *sql.DB) []RoverEntity {
+	return getAllPersistedEntities(t, db, WrappingRoversTable, reflect.TypeOf(RoverEntity{})).([]RoverEntity)
 }
 
-func getAllPersistedRockyPlanets(t *testing.T, db *sql.DB) []RockyPlanetPersistenceEntity {
-	return getAllPersistedEntities(t, db, RockyPlanetsTable, reflect.TypeOf(RockyPlanetPersistenceEntity{})).([]RockyPlanetPersistenceEntity)
+func getAllPersistedRockyPlanets(t *testing.T, db *sql.DB) []RockyPlanetEntity {
+	return getAllPersistedEntities(t, db, RockyPlanetsTable, reflect.TypeOf(RockyPlanetEntity{})).([]RockyPlanetEntity)
 }
 
 func getAllPersistedEntities(t *testing.T, db *sql.DB, tableName string, entityType reflect.Type) interface{} {

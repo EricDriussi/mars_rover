@@ -10,7 +10,7 @@ type Obstacles struct {
 	list []Obstacle
 }
 
-func New(list []Obstacle) *Obstacles {
+func FromList(list []Obstacle) *Obstacles {
 	return &Obstacles{list}
 }
 

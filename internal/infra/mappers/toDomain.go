@@ -5,10 +5,12 @@ import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/obstacle"
+	"mars_rover/internal/domain/obstacle/bigRock"
 	. "mars_rover/internal/domain/obstacle/obstacles"
 	obstaclesModule "mars_rover/internal/domain/obstacle/obstacles"
 	"mars_rover/internal/domain/obstacle/smallRock"
 	. "mars_rover/internal/domain/planet"
+	"mars_rover/internal/domain/planet/emptyPlanet"
 	"mars_rover/internal/domain/planet/rockyPlanet"
 	. "mars_rover/internal/domain/rover"
 	. "mars_rover/internal/domain/rover/direction"
@@ -17,51 +19,51 @@ import (
 	. "mars_rover/internal/infra/entities"
 )
 
-// TODO: This is cheating, re-thing mapping strategy so that
-// if only one coord, then smallRock, else bigRock
-// same should happen with planets and list of obstacles
-func mapToDomainObstacles(obstacles []ObstaclePersistenceEntity) Obstacles {
-	ob := make([]Obstacle, len(obstacles))
-	for i, o := range obstacles {
-		coordinates := mapToDomainCoordinates(o.Coordinates)
-		r := smallRock.In(coordinates[0])
-		ob[i] = &r
+func mapToDomainObstacles(obstacles []ObstacleEntity) Obstacles {
+	list := make([]Obstacle, 0, len(obstacles))
+	for _, obstacle := range obstacles {
+		coordinates := mapToDomainCoordinates(obstacle.Coordinates)
+		if len(coordinates) <= 1 {
+			rock := smallRock.In(coordinates[0])
+			list = append(list, &rock)
+		} else {
+			rock := bigRock.In(coordinates)
+			list = append(list, &rock)
+		}
 	}
-	return *obstaclesModule.New(ob)
+	return *obstaclesModule.FromList(list)
 }
 
-func mapToDomainCoordinates(coordinates []CoordinatePersistenceEntity) []AbsoluteCoordinate {
-	coords := make([]AbsoluteCoordinate, len(coordinates))
-	for i, c := range coordinates {
-		coords[i] = *absoluteCoordinate.From(c.X, c.Y)
+func mapToDomainCoordinates(coordinates []CoordinateEntity) []AbsoluteCoordinate {
+	list := make([]AbsoluteCoordinate, 0, len(coordinates))
+	for _, coordinate := range coordinates {
+		list = append(list, *absoluteCoordinate.From(coordinate.X, coordinate.Y))
 	}
-	return coords
+	return list
 }
 
-func MapToDomainRover(roverData RoverPersistenceEntity, planet Planet) (Rover, error) {
-	dir, err := directionFromString(roverData.Direction)
+func MapToDomainRover(roverEntity RoverEntity, planet Planet) (Rover, error) {
+	direction, err := directionFromString(roverEntity.Direction)
 	if err != nil {
 		return nil, err
 	}
 
-	coordinate := absoluteCoordinate.From(roverData.Coordinate.X, roverData.Coordinate.Y)
+	coordinate := absoluteCoordinate.From(roverEntity.Coordinate.X, roverEntity.Coordinate.Y)
 
-	roverInstance, err := LandFacing(dir, *coordinate, planet)
-	if err != nil {
-		return nil, err
-	}
-
-	return roverInstance, nil
+	return LandFacing(direction, *coordinate, planet)
 }
 
-func MapToDomainPlanet(planetData RockyPlanetPersistenceEntity) (Planet, error) {
-	color := planetData.Color
-	s, err := s.Square(planetData.Size.Width)
+func MapToDomainPlanet(planetEntity RockyPlanetEntity) (Planet, error) {
+	color := planetEntity.Color
+	size, err := s.Square(planetEntity.Size.Width)
 	if err != nil {
 		return nil, err
 	}
-	obstacles := mapToDomainObstacles(planetData.Obstacles)
-	return rockyPlanet.Create(color, *s, obstacles.List())
+	obstacles := mapToDomainObstacles(planetEntity.Obstacles)
+	if len(obstacles.List()) == 0 {
+		return emptyPlanet.Create(color, *size)
+	}
+	return rockyPlanet.Create(color, *size, obstacles.List())
 }
 
 func directionFromString(dirStr string) (Direction, error) {

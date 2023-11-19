@@ -28,5 +28,5 @@ func TestGetsObstacles(t *testing.T) {
 	obstacleTwo.On("IsBeyond", Anything).Return(false)
 	planet, _ := rockyPlanet.Create("testColor", *sizeLimit, obstacles)
 
-	assert.Equal(t, *obs.New(obstacles), planet.Obstacles())
+	assert.Equal(t, *obs.FromList(obstacles), planet.Obstacles())
 }

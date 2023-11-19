@@ -15,7 +15,7 @@ type RockyPlanet struct {
 }
 
 func Create(color string, size Size, obstacles []Obstacle) (*RockyPlanet, error) {
-	obstacleList := obs.New(obstacles)
+	obstacleList := obs.FromList(obstacles)
 	if obstacleList.IsAnyBeyond(size) {
 		return nil, errors.New("an obstacle was set outside of the planet :c")
 	}

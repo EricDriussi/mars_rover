@@ -25,7 +25,7 @@ func NewSQLite(db *sql.DB) *SQLiteRepository {
 }
 
 func (r *SQLiteRepository) SaveWrappingRover(rover WrappingCollidingRover) error {
-	roverAsBytes, err := json.Marshal(MapToPersistenceRover(rover))
+	roverAsBytes, err := json.Marshal(MapToPersistenceRover(&rover))
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func (r *SQLiteRepository) SaveWrappingRover(rover WrappingCollidingRover) error
 }
 
 func (r *SQLiteRepository) SaveRockyPlanet(planet RockyPlanet) error {
-	planetAsBytes, err := json.Marshal(MapToPersistenceRockyPlanet(planet))
+	planetAsBytes, err := json.Marshal(MapToPersistenceRockyPlanet(&planet))
 	if err != nil {
 		return err
 	}
