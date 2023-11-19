@@ -45,7 +45,8 @@ func randomObstaclesWithin(size Size) []Obstacle {
 	halfTheArea := size.Width() * size.Height() / 2
 	betweenZeroAndHalfTheArea := rand.Intn(halfTheArea)
 	for i := 0; i < betweenZeroAndHalfTheArea; i++ {
-		obstacles = append(obstacles, rock.In(randomCoordinateWithin(size)))
+		smallRock := rock.In(randomCoordinateWithin(size))
+		obstacles = append(obstacles, &smallRock)
 	}
 	return obstacles
 }

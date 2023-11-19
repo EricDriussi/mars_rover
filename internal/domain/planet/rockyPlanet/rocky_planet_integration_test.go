@@ -54,11 +54,13 @@ func generateThreeRandomObstaclesWithin(size Size) []Obstacle {
 func generateRandomObstacleWithin(size Size) Obstacle {
 	randomX := rand.Intn(size.Width())
 	randomY := rand.Intn(size.Height())
-	return rock.In(*absoluteCoordinate.From(randomX, randomY))
+	smallRock := rock.In(*absoluteCoordinate.From(randomX, randomY))
+	return &smallRock
 }
 
 func randomObstacleOutOf(size Size) Obstacle {
 	randomX := rand.Intn(99-size.Width()) + size.Width() + 1
 	randomY := rand.Intn(99-size.Height()) + size.Height() + 1
-	return rock.In(*absoluteCoordinate.From(randomX, randomY))
+	smallRock := rock.In(*absoluteCoordinate.From(randomX, randomY))
+	return &smallRock
 }

@@ -15,7 +15,8 @@ import (
 
 func TestLandsOnFreeSpot(t *testing.T) {
 	planetSize, _ := size.Square(2)
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{smallRock.In(*absoluteCoordinate.From(1, 2))})
+	rock := smallRock.In(*absoluteCoordinate.From(1, 2))
+	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
 	coordinate := absoluteCoordinate.From(1, 1)
 
 	testRover := godModRover.Land(*coordinate, testPlanet)
@@ -25,7 +26,8 @@ func TestLandsOnFreeSpot(t *testing.T) {
 
 func TestLandsOnFreeSpotFacingGivenDirection(t *testing.T) {
 	planetSize, _ := size.Square(2)
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{smallRock.In(*absoluteCoordinate.From(1, 2))})
+	rock := smallRock.In(*absoluteCoordinate.From(1, 2))
+	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
 	coordinate := absoluteCoordinate.From(1, 1)
 	direction := North{}
 
@@ -38,7 +40,8 @@ func TestLandsOnFreeSpotFacingGivenDirection(t *testing.T) {
 func TestCanLandOnObstacle(t *testing.T) {
 	planetSize, _ := size.Square(2)
 	coordinate := absoluteCoordinate.From(1, 1)
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{smallRock.In(*coordinate)})
+	rock := smallRock.In(*coordinate)
+	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
 
 	testRover := godModRover.Land(*coordinate, testPlanet)
 

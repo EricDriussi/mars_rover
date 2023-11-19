@@ -4,7 +4,6 @@ import (
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/coordinate/coordinates"
 	coord "mars_rover/internal/domain/coordinate/coordinates"
-	. "mars_rover/internal/domain/obstacle"
 	. "mars_rover/internal/domain/size"
 )
 
@@ -12,8 +11,8 @@ type BigRock struct {
 	coordinates Coordinates
 }
 
-func In(coordinates []AbsoluteCoordinate) Obstacle {
-	return &BigRock{*coord.New(coordinates)}
+func In(coordinates []AbsoluteCoordinate) BigRock {
+	return BigRock{*coord.New(coordinates)}
 }
 
 func (this *BigRock) Occupies(coordinate AbsoluteCoordinate) bool {

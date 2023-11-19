@@ -2,7 +2,6 @@ package smallRock
 
 import (
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	. "mars_rover/internal/domain/obstacle"
 	. "mars_rover/internal/domain/size"
 )
 
@@ -10,8 +9,8 @@ type SmallRock struct {
 	coordinate AbsoluteCoordinate
 }
 
-func In(coordinate AbsoluteCoordinate) Obstacle {
-	return &SmallRock{coordinate}
+func In(coordinate AbsoluteCoordinate) SmallRock {
+	return SmallRock{coordinate}
 }
 
 func (this *SmallRock) Occupies(coordinate AbsoluteCoordinate) bool {
