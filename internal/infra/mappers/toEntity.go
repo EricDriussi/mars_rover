@@ -25,6 +25,15 @@ func MapToPersistenceRover(rover Rover) RoverEntity {
 	}
 }
 
+func MapToPersistencePlanet(planet Planet) PlanetEntity {
+	size := planet.Size()
+	return PlanetEntity{
+		Color:     planet.Color(),
+		Size:      mapToPersistenceSize(size),
+		Obstacles: mapToPersistenceObstacles(planet.Obstacles()),
+	}
+}
+
 func mapToPersistenceCoordinate(coordinate AbsoluteCoordinate) CoordinateEntity {
 	return CoordinateEntity{
 		X: coordinate.X(),
@@ -55,14 +64,5 @@ func mapToPersistenceSize(size Size) SizeEntity {
 	return SizeEntity{
 		Width:  size.Width(),
 		Height: size.Height(),
-	}
-}
-
-func MapToPersistenceRockyPlanet(planet Planet) RockyPlanetEntity {
-	size := planet.Size()
-	return RockyPlanetEntity{
-		Color:     planet.Color(),
-		Size:      mapToPersistenceSize(size),
-		Obstacles: mapToPersistenceObstacles(planet.Obstacles()),
 	}
 }

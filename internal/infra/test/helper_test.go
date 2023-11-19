@@ -6,24 +6,32 @@ import (
 	"github.com/stretchr/testify/assert"
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/obstacle"
+	"mars_rover/internal/domain/obstacle/bigRock"
 	"mars_rover/internal/domain/obstacle/smallRock"
-	. "mars_rover/internal/domain/obstacle/smallRock"
-	. "mars_rover/internal/domain/planet/rockyPlanet"
-	. "mars_rover/internal/domain/rover/direction"
-	. "mars_rover/internal/domain/rover/wrappingCollidingRover"
+	. "mars_rover/internal/domain/planet"
+	"mars_rover/internal/domain/planet/rockyPlanet"
+	. "mars_rover/internal/domain/rover"
+	"mars_rover/internal/domain/rover/wrappingCollidingRover"
 	s "mars_rover/internal/domain/size"
 	. "mars_rover/internal/infra"
 	. "mars_rover/internal/infra/entities"
+	. "mars_rover/internal/infra/mappers"
 	"reflect"
 	"testing"
 )
 
-func getAllPersistedRovers(t *testing.T, db *sql.DB) []RoverEntity {
-	return getAllPersistedEntities(t, db, WrappingRoversTable, reflect.TypeOf(RoverEntity{})).([]RoverEntity)
+func getAllPersistedRovers(t *testing.T, db *sql.DB, planet Planet) []Rover {
+	persistedRovers := getAllPersistedEntities(t, db, RoversTable, reflect.TypeOf(RoverEntity{})).([]RoverEntity)
+	foundRovers, err := MapToDomainRovers(persistedRovers, planet)
+	assert.Nil(t, err)
+	return foundRovers
 }
 
-func getAllPersistedRockyPlanets(t *testing.T, db *sql.DB) []RockyPlanetEntity {
-	return getAllPersistedEntities(t, db, RockyPlanetsTable, reflect.TypeOf(RockyPlanetEntity{})).([]RockyPlanetEntity)
+func getAllPersistedPlanets(t *testing.T, db *sql.DB) []Planet {
+	persistedPlanets := getAllPersistedEntities(t, db, PlanetsTable, reflect.TypeOf(PlanetEntity{})).([]PlanetEntity)
+	foundPlanets, err := MapToDomainPlanets(persistedPlanets)
+	assert.Nil(t, err)
+	return foundPlanets
 }
 
 func getAllPersistedEntities(t *testing.T, db *sql.DB, tableName string, entityType reflect.Type) interface{} {
@@ -56,19 +64,20 @@ func getAllPersistedEntities(t *testing.T, db *sql.DB, tableName string, entityT
 	return listOfEntities.Interface()
 }
 
-func aWrappingTestRover(planet RockyPlanet) WrappingCollidingRover {
-	coordinate := absoluteCoordinate.From(0, 0)
-	testRover, _ := LandFacing(North{}, *coordinate, &planet)
-	return *testRover
+func setupWrappingRoverOnRockyPlanet() (Rover, Planet) {
+	rovCoord := absoluteCoordinate.From(0, 0)
+	testPlanet := setupRockyPlanet()
+	testRover, _ := wrappingCollidingRover.Land(*rovCoord, testPlanet)
+	return testRover, testPlanet
 }
 
-func aSmallRockWithin(size int) SmallRock {
-	coordinate := absoluteCoordinate.From(size-1, size-1)
-	return smallRock.In(*coordinate)
-}
-
-func aRockyTestPlanetWith(size int, rock SmallRock) RockyPlanet {
-	siz, _ := s.Square(size)
-	planet, _ := Create("testColor", *siz, []Obstacle{&rock})
-	return *planet
+func setupRockyPlanet() Planet {
+	size, _ := s.Square(10)
+	smallCoord := absoluteCoordinate.From(1, 1)
+	testSmallRock := smallRock.In(*smallCoord)
+	bigCoord1 := absoluteCoordinate.From(2, 2)
+	bigCoord2 := absoluteCoordinate.From(2, 3)
+	testBigRock := bigRock.In([]absoluteCoordinate.AbsoluteCoordinate{*bigCoord1, *bigCoord2})
+	testPlanet, _ := rockyPlanet.Create("testColor", *size, []Obstacle{&testSmallRock, &testBigRock})
+	return testPlanet
 }

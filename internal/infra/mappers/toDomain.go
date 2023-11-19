@@ -19,6 +19,69 @@ import (
 	. "mars_rover/internal/infra/entities"
 )
 
+func MapToDomainRovers(roverEntities []RoverEntity, planet Planet) ([]Rover, error) {
+	rovers := make([]Rover, 0, len(roverEntities))
+	for _, roverEntity := range roverEntities {
+		rover, err := mapToDomainRover(roverEntity, planet)
+		if err != nil {
+			return nil, err
+		}
+		rovers = append(rovers, rover)
+	}
+	return rovers, nil
+
+}
+
+func mapToDomainRover(roverEntity RoverEntity, planet Planet) (Rover, error) {
+	direction, err := directionFromString(roverEntity.Direction)
+	if err != nil {
+		return nil, err
+	}
+
+	coordinate := absoluteCoordinate.From(roverEntity.Coordinate.X, roverEntity.Coordinate.Y)
+
+	return LandFacing(direction, *coordinate, planet)
+}
+
+func directionFromString(dirStr string) (Direction, error) {
+	switch dirStr {
+	case "N":
+		return &North{}, nil
+	case "S":
+		return &South{}, nil
+	case "E":
+		return &East{}, nil
+	case "W":
+		return &West{}, nil
+	}
+	return nil, errors.New("Invalid direction")
+}
+
+func MapToDomainPlanets(planetEntities []PlanetEntity) ([]Planet, error) {
+	planets := make([]Planet, 0, len(planetEntities))
+	for _, planetEntity := range planetEntities {
+		planet, err := mapToDomainPlanet(planetEntity)
+		if err != nil {
+			return nil, err
+		}
+		planets = append(planets, planet)
+	}
+	return planets, nil
+}
+
+func mapToDomainPlanet(planetEntity PlanetEntity) (Planet, error) {
+	color := planetEntity.Color
+	size, err := s.Square(planetEntity.Size.Width)
+	if err != nil {
+		return nil, err
+	}
+	obstacles := mapToDomainObstacles(planetEntity.Obstacles)
+	if len(obstacles.List()) == 0 {
+		return emptyPlanet.Create(color, *size)
+	}
+	return rockyPlanet.Create(color, *size, obstacles.List())
+}
+
 func mapToDomainObstacles(obstacles []ObstacleEntity) Obstacles {
 	list := make([]Obstacle, 0, len(obstacles))
 	for _, obstacle := range obstacles {
@@ -40,42 +103,4 @@ func mapToDomainCoordinates(coordinates []CoordinateEntity) []AbsoluteCoordinate
 		list = append(list, *absoluteCoordinate.From(coordinate.X, coordinate.Y))
 	}
 	return list
-}
-
-func MapToDomainRover(roverEntity RoverEntity, planet Planet) (Rover, error) {
-	direction, err := directionFromString(roverEntity.Direction)
-	if err != nil {
-		return nil, err
-	}
-
-	coordinate := absoluteCoordinate.From(roverEntity.Coordinate.X, roverEntity.Coordinate.Y)
-
-	return LandFacing(direction, *coordinate, planet)
-}
-
-func MapToDomainPlanet(planetEntity RockyPlanetEntity) (Planet, error) {
-	color := planetEntity.Color
-	size, err := s.Square(planetEntity.Size.Width)
-	if err != nil {
-		return nil, err
-	}
-	obstacles := mapToDomainObstacles(planetEntity.Obstacles)
-	if len(obstacles.List()) == 0 {
-		return emptyPlanet.Create(color, *size)
-	}
-	return rockyPlanet.Create(color, *size, obstacles.List())
-}
-
-func directionFromString(dirStr string) (Direction, error) {
-	switch dirStr {
-	case "N":
-		return &North{}, nil
-	case "S":
-		return &South{}, nil
-	case "E":
-		return &East{}, nil
-	case "W":
-		return &West{}, nil
-	}
-	return nil, errors.New("Invalid direction")
 }

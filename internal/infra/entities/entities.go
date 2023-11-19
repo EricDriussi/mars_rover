@@ -25,7 +25,7 @@ type SizeEntity struct {
 	Height int `json:"height"`
 }
 
-type RockyPlanetEntity struct {
+type PlanetEntity struct {
 	Color     string           `json:"color"`
 	Size      SizeEntity       `json:"size"`
 	Obstacles []ObstacleEntity `json:"obstacles"`
