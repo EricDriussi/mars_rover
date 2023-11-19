@@ -7,12 +7,11 @@ import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/obstacle/smallRock"
-	. "mars_rover/internal/domain/planet"
-	"mars_rover/internal/domain/planet/rockyPlanet"
-	. "mars_rover/internal/domain/rover"
+	. "mars_rover/internal/domain/obstacle/smallRock"
+	. "mars_rover/internal/domain/planet/rockyPlanet"
 	. "mars_rover/internal/domain/rover/direction"
-	"mars_rover/internal/domain/rover/wrappingCollidingRover"
-	"mars_rover/internal/domain/size"
+	. "mars_rover/internal/domain/rover/wrappingCollidingRover"
+	s "mars_rover/internal/domain/size"
 	. "mars_rover/internal/infra"
 	"testing"
 )
@@ -20,7 +19,7 @@ import (
 func getAllPersistedRovers(t *testing.T, db *sql.DB) []RoverPersistenceEntity {
 	var listOfRovers []RoverPersistenceEntity
 	var rovers []string
-	rows, err := db.Query("SELECT rover FROM rovers")
+	rows, err := db.Query("SELECT rover FROM wrapping_rovers")
 	defer func(rows *sql.Rows) {
 		err := rows.Close()
 		if err != nil {
@@ -45,14 +44,47 @@ func getAllPersistedRovers(t *testing.T, db *sql.DB) []RoverPersistenceEntity {
 	return listOfRovers
 }
 
-func aTestRover(planet Planet) Rover {
-	coordinate := absoluteCoordinate.From(0, 0)
-	testRover, _ := wrappingCollidingRover.LandFacing(North{}, *coordinate, planet)
-	return testRover
+func getAllPersistedRockyPlanets(t *testing.T, db *sql.DB) []RockyPlanetPersistenceEntity {
+	var listOfRockyPlanets []RockyPlanetPersistenceEntity
+	var rockyPlanets []string
+	rows, err := db.Query("SELECT planet FROM rocky_planets")
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+
+		}
+	}(rows)
+	assert.Nil(t, err)
+
+	for rows.Next() {
+		var planet string
+		err := rows.Scan(&planet)
+		assert.Nil(t, err)
+		rockyPlanets = append(rockyPlanets, planet)
+	}
+
+	for _, rockyPlanetString := range rockyPlanets {
+		var rockyPlanetData RockyPlanetPersistenceEntity
+		err := json.Unmarshal([]byte(rockyPlanetString), &rockyPlanetData)
+		assert.Nil(t, err)
+		listOfRockyPlanets = append(listOfRockyPlanets, rockyPlanetData)
+	}
+	return listOfRockyPlanets
 }
 
-func aTestPlanet() Planet {
-	s, _ := size.Square(5)
-	planet, _ := rockyPlanet.Create("testColor", *s, []Obstacle{smallRock.In(*absoluteCoordinate.From(1, 1))})
-	return planet
+func aWrappingTestRover(planet RockyPlanet) WrappingCollidingRover {
+	coordinate := absoluteCoordinate.From(0, 0)
+	testRover, _ := LandFacing(North{}, *coordinate, &planet)
+	return *testRover
+}
+
+func aSmallRockWithin(size int) SmallRock {
+	coordinate := absoluteCoordinate.From(size-1, size-1)
+	return smallRock.In(*coordinate)
+}
+
+func aRockyTestPlanetWith(size int, rock SmallRock) RockyPlanet {
+	siz, _ := s.Square(size)
+	planet, _ := Create("testColor", *siz, []Obstacle{&rock})
+	return *planet
 }

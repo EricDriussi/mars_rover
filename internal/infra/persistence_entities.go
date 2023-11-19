@@ -24,3 +24,9 @@ type SizePersistenceEntity struct {
 	Width  int `json:"width"`
 	Height int `json:"height"`
 }
+
+type RockyPlanetPersistenceEntity struct {
+	Color     string                      `json:"color"`
+	Size      SizePersistenceEntity       `json:"size"`
+	Obstacles []ObstaclePersistenceEntity `json:"obstacles"`
+}
