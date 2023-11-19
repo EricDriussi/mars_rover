@@ -10,6 +10,11 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+const (
+	WrappingRoversTable = "wrapping_rovers"
+	RockyPlanetsTable   = "rocky_planets"
+)
+
 type SQLiteRepository struct {
 	db *sql.DB
 }
@@ -25,7 +30,7 @@ func (r *SQLiteRepository) SaveWrappingRover(rover WrappingCollidingRover) error
 	}
 	roverAsString := string(roverAsBytes)
 
-	_, err = r.db.Exec("INSERT INTO wrapping_rovers (rover) VALUES (?)",
+	_, err = r.db.Exec("INSERT INTO "+WrappingRoversTable+" (rover) VALUES (?)",
 		roverAsString)
 	return err
 }
@@ -37,46 +42,37 @@ func (r *SQLiteRepository) SaveRockyPlanet(planet RockyPlanet) error {
 	}
 	planetAsString := string(planetAsBytes)
 
-	_, err = r.db.Exec("INSERT INTO rocky_planets (planet) VALUES (?)",
+	_, err = r.db.Exec("INSERT INTO "+RockyPlanetsTable+" (planet) VALUES (?)",
 		planetAsString)
 	return err
-
 }
 
 func InitMem() *sql.DB {
-	db, err := sql.Open("sqlite3", ":memory:")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	_, err = db.Exec(`
-	CREATE TABLE IF NOT EXISTS wrapping_rovers (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		rover TEXT NOT NULL
-	);
-	CREATE TABLE IF NOT EXISTS rocky_planets (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		planet TEXT NOT NULL
-	);
-`)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return db
+	return setup(":memory:")
 }
 
 func InitFS() *sql.DB {
-	db, err := sql.Open("sqlite3", "./mars_rover.db")
+	return setup("./mars_rover.db")
+
+}
+
+func setup(location string) *sql.DB {
+	db, err := sql.Open("sqlite3", location)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	_, err = db.Exec(`
-	CREATE TABLE IF NOT EXISTS wrapping_rovers (
+	createTables(db)
+	return db
+}
+
+func createTables(db *sql.DB) {
+	_, err := db.Exec(`
+	CREATE TABLE IF NOT EXISTS ` + WrappingRoversTable + ` (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		rover TEXT NOT NULL
 	);
-	CREATE TABLE IF NOT EXISTS rocky_planets (
+	CREATE TABLE IF NOT EXISTS ` + RockyPlanetsTable + ` (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		planet TEXT NOT NULL
 	);
@@ -84,5 +80,4 @@ func InitFS() *sql.DB {
 	if err != nil {
 		log.Fatal(err)
 	}
-	return db
 }

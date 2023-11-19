@@ -30,12 +30,11 @@ func TestSaveRover(t *testing.T) {
 
 	persistedRovers := getAllPersistedRovers(t, db)
 	assert.Len(t, persistedRovers, 1)
-
 	savedPersistenceRover := persistedRovers[0]
-
 	var foundRover Rover
 	foundRover, err = MapToDomainRover(savedPersistenceRover, &testPlanet)
 	assert.Nil(t, err)
+
 	assert.Equal(t, testRover.Coordinate(), foundRover.Coordinate())
 	assert.Equal(t, testRover.Direction().CardinalPoint(), foundRover.Direction().CardinalPoint())
 	assert.Equal(t, testRover.Map(), foundRover.Map())
@@ -60,12 +59,11 @@ func TestSavePlanet(t *testing.T) {
 
 	persistedRockyPlanets := getAllPersistedRockyPlanets(t, db)
 	assert.Len(t, persistedRockyPlanets, 1)
-
 	savedPersistenceRover := persistedRockyPlanets[0]
-
 	var foundPlanet Planet
 	foundPlanet, err = MapToDomainPlanet(savedPersistenceRover)
 	assert.Nil(t, err)
+
 	assert.Equal(t, testPlanet.Color(), foundPlanet.Color())
 	assert.Equal(t, testPlanet.Obstacles(), foundPlanet.Obstacles())
 	assert.Equal(t, testPlanet.Size(), foundPlanet.Size())

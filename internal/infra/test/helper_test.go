@@ -13,41 +13,23 @@ import (
 	. "mars_rover/internal/domain/rover/wrappingCollidingRover"
 	s "mars_rover/internal/domain/size"
 	. "mars_rover/internal/infra"
+	"reflect"
 	"testing"
 )
 
 func getAllPersistedRovers(t *testing.T, db *sql.DB) []RoverPersistenceEntity {
-	var listOfRovers []RoverPersistenceEntity
-	var rovers []string
-	rows, err := db.Query("SELECT rover FROM wrapping_rovers")
-	defer func(rows *sql.Rows) {
-		err := rows.Close()
-		if err != nil {
-
-		}
-	}(rows)
-	assert.Nil(t, err)
-
-	for rows.Next() {
-		var rover string
-		err := rows.Scan(&rover)
-		assert.Nil(t, err)
-		rovers = append(rovers, rover)
-	}
-
-	for _, roverString := range rovers {
-		var roverData RoverPersistenceEntity
-		err := json.Unmarshal([]byte(roverString), &roverData)
-		assert.Nil(t, err)
-		listOfRovers = append(listOfRovers, roverData)
-	}
-	return listOfRovers
+	return getAllPersistedEntities(t, db, WrappingRoversTable, reflect.TypeOf(RoverPersistenceEntity{})).([]RoverPersistenceEntity)
 }
 
 func getAllPersistedRockyPlanets(t *testing.T, db *sql.DB) []RockyPlanetPersistenceEntity {
-	var listOfRockyPlanets []RockyPlanetPersistenceEntity
-	var rockyPlanets []string
-	rows, err := db.Query("SELECT planet FROM rocky_planets")
+	return getAllPersistedEntities(t, db, RockyPlanetsTable, reflect.TypeOf(RockyPlanetPersistenceEntity{})).([]RockyPlanetPersistenceEntity)
+}
+
+func getAllPersistedEntities(t *testing.T, db *sql.DB, tableName string, entityType reflect.Type) interface{} {
+	var listOfEntities reflect.Value
+	listOfEntities = reflect.MakeSlice(reflect.SliceOf(entityType), 0, 0)
+	var entities []string
+	rows, err := db.Query("SELECT * FROM " + tableName)
 	defer func(rows *sql.Rows) {
 		err := rows.Close()
 		if err != nil {
@@ -57,19 +39,20 @@ func getAllPersistedRockyPlanets(t *testing.T, db *sql.DB) []RockyPlanetPersiste
 	assert.Nil(t, err)
 
 	for rows.Next() {
-		var planet string
-		err := rows.Scan(&planet)
+		var entity string
+		var id int
+		err := rows.Scan(&id, &entity)
 		assert.Nil(t, err)
-		rockyPlanets = append(rockyPlanets, planet)
+		entities = append(entities, entity)
 	}
 
-	for _, rockyPlanetString := range rockyPlanets {
-		var rockyPlanetData RockyPlanetPersistenceEntity
-		err := json.Unmarshal([]byte(rockyPlanetString), &rockyPlanetData)
+	for _, entityString := range entities {
+		entityValue := reflect.New(entityType)
+		err := json.Unmarshal([]byte(entityString), entityValue.Interface())
 		assert.Nil(t, err)
-		listOfRockyPlanets = append(listOfRockyPlanets, rockyPlanetData)
+		listOfEntities = reflect.Append(listOfEntities, entityValue.Elem())
 	}
-	return listOfRockyPlanets
+	return listOfEntities.Interface()
 }
 
 func aWrappingTestRover(planet RockyPlanet) WrappingCollidingRover {
