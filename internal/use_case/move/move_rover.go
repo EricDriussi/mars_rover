@@ -1,4 +1,4 @@
-package service
+package move
 
 import (
 	"errors"
@@ -7,17 +7,17 @@ import (
 	"strings"
 )
 
-type MoveService struct {
+type UseCase struct {
 	rover Rover
 }
 
-func For(rover Rover) *MoveService {
-	return &MoveService{
+func For(rover Rover) *UseCase {
+	return &UseCase{
 		rover: rover,
 	}
 }
 
-func (this *MoveService) MoveSequence(commands string) []error {
+func (this *UseCase) MoveSequence(commands string) []error {
 	var errs []error
 	for _, cmd := range strings.ToLower(commands) {
 		err := this.mapCommandToMovement(string(cmd))
@@ -32,21 +32,32 @@ func (this *MoveService) MoveSequence(commands string) []error {
 	return nil
 }
 
+func (this *UseCase) MoveSequenceAborting(commands string) error {
+	for _, cmd := range strings.ToLower(commands) {
+		err := this.mapCommandToMovement(string(cmd))
+		// TODO: Persist rover
+		if err != nil {
+			return errors.New(fmt.Sprintf("aborting command '%v': %v", cmd, err))
+		}
+	}
+	return nil
+}
+
 type (
 	Movement func() error
 	Rotation func()
 )
 
-func (this *MoveService) mapCommandToMovement(command string) error {
+func (this *UseCase) mapCommandToMovement(command string) error {
 	commandActions := map[string]interface{}{
 		"f": Movement(this.rover.MoveForward),
 		"b": Movement(this.rover.MoveBackward),
 		"l": Rotation(this.rover.TurnLeft),
 		"r": Rotation(this.rover.TurnRight),
 	}
+	// if action := commandActions[command]; action != nil {}
+	// TODO.LM: is ⬆️ more readable than ⬇️ ?
 	if action, ok := commandActions[command]; ok {
-		// TODO.LM: is this more readable than ⬇️ ?
-		// if action := commandActions[command]; action != nil {}
 		switch action := action.(type) {
 		case Movement:
 			return action()

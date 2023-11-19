@@ -1,11 +1,11 @@
-package service_test
+package move_test
 
 import (
 	"errors"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/rover/direction"
 	. "mars_rover/internal/domain/rover/planetMap"
-	service "mars_rover/internal/service/move"
+	"mars_rover/internal/use_case/move"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -15,9 +15,9 @@ import (
 func TestHandlesASingleMovementCommand(t *testing.T) {
 	curiosity := new(MockRover)
 	curiosity.On("MoveForward").Return(nil)
-	moveService := service.For(curiosity)
+	moveUseCase := move.For(curiosity)
 
-	movementErrors := moveService.MoveSequence("f")
+	movementErrors := moveUseCase.MoveSequence("f")
 
 	curiosity.AssertCalled(t, "MoveForward")
 	assert.Nil(t, movementErrors)
@@ -26,9 +26,9 @@ func TestHandlesASingleMovementCommand(t *testing.T) {
 func TestHandlesASingleTurningCommand(t *testing.T) {
 	curiosity := new(MockRover)
 	curiosity.On("TurnRight").Return()
-	moveService := service.For(curiosity)
+	moveUseCase := move.For(curiosity)
 
-	movementErrors := moveService.MoveSequence("r")
+	movementErrors := moveUseCase.MoveSequence("r")
 
 	curiosity.AssertCalled(t, "TurnRight")
 	assert.Nil(t, movementErrors)
@@ -37,9 +37,9 @@ func TestHandlesASingleTurningCommand(t *testing.T) {
 func TestHandlesASingleFailedMovementCommand(t *testing.T) {
 	curiosity := new(MockRover)
 	curiosity.On("MoveForward").Return(errors.New(""))
-	moveService := service.For(curiosity)
+	moveUseCase := move.For(curiosity)
 
-	movementErrors := moveService.MoveSequence("f")
+	movementErrors := moveUseCase.MoveSequence("f")
 
 	curiosity.AssertCalled(t, "MoveForward")
 	assert.Error(t, movementErrors[0])
@@ -47,9 +47,9 @@ func TestHandlesASingleFailedMovementCommand(t *testing.T) {
 
 func TestHandlesASingleUnknownCommand(t *testing.T) {
 	curiosity := new(MockRover)
-	moveService := service.For(curiosity)
+	moveUseCase := move.For(curiosity)
 
-	movementErrors := moveService.MoveSequence("X")
+	movementErrors := moveUseCase.MoveSequence("X")
 
 	curiosity.AssertNotCalled(t, "TurnRight")
 	curiosity.AssertNotCalled(t, "TurnLeft")
@@ -64,9 +64,9 @@ func TestHandlesMultipleKnownCommands(t *testing.T) {
 	curiosity.On("TurnLeft").Return()
 	curiosity.On("MoveForward").Return(nil)
 	curiosity.On("MoveBackward").Return(nil)
-	moveService := service.For(curiosity)
+	moveUseCase := move.For(curiosity)
 
-	movementErrors := moveService.MoveSequence("rlfb")
+	movementErrors := moveUseCase.MoveSequence("rlfb")
 
 	curiosity.AssertCalled(t, "TurnRight")
 	curiosity.AssertCalled(t, "TurnLeft")
@@ -79,9 +79,9 @@ func TestHandlesMultipleErrors(t *testing.T) {
 	curiosity := new(MockRover)
 	curiosity.On("MoveForward").Return(errors.New(""))
 	curiosity.On("MoveBackward").Return(errors.New(""))
-	moveService := service.For(curiosity)
+	moveUseCase := move.For(curiosity)
 
-	movementErrors := moveService.MoveSequence("fbXY")
+	movementErrors := moveUseCase.MoveSequence("fbXY")
 
 	curiosity.AssertNotCalled(t, "TurnRight")
 	curiosity.AssertNotCalled(t, "TurnLeft")
@@ -95,9 +95,9 @@ func TestHandlesErrorsAndSuccessfulMovements(t *testing.T) {
 	curiosity.On("MoveBackward").Return(nil)
 	curiosity.On("MoveForward").Return(errors.New(""))
 	curiosity.On("TurnLeft").Return()
-	moveService := service.For(curiosity)
+	moveUseCase := move.For(curiosity)
 
-	movementErrors := moveService.MoveSequence("bfXYl")
+	movementErrors := moveUseCase.MoveSequence("bfXYl")
 
 	curiosity.AssertNotCalled(t, "TurnRight")
 	curiosity.AssertCalled(t, "TurnLeft")

@@ -5,5 +5,6 @@ import (
 )
 
 func main() {
-	cmd.Sample()
+	cmd.Sample1()
+	cmd.Sample2()
 }
