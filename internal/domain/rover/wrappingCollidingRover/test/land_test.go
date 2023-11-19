@@ -47,3 +47,14 @@ func TestCannotLandOnObstacle(t *testing.T) {
 	assert.Error(t, err)
 	assert.Nil(t, testRover)
 }
+
+func TestCannotLandOutOfPlanet(t *testing.T) {
+	planetSize, _ := size.Square(2)
+	coordinate := absoluteCoordinate.From(4, 3)
+	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{})
+
+	testRover, err := wrappingCollidingRover.Land(*coordinate, testPlanet)
+
+	assert.Error(t, err)
+	assert.Nil(t, testRover)
+}

@@ -45,3 +45,14 @@ func TestCanLandOnObstacle(t *testing.T) {
 	assert.NotNil(t, testRover)
 	assert.Equal(t, *coordinate, testRover.Coordinate())
 }
+
+func TestCannotLandOutOfPlanet(t *testing.T) {
+	planetSize, _ := size.Square(2)
+	coordinate := absoluteCoordinate.From(4, 3)
+	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{})
+
+	testRover := godModRover.Land(*coordinate, testPlanet)
+
+	assert.NotNil(t, testRover)
+	assert.Equal(t, *coordinate, testRover.Coordinate())
+}

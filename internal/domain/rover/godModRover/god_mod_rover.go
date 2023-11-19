@@ -32,14 +32,6 @@ func LandFacing(direction Direction, coordinate AbsoluteCoordinate, planet Plane
 	}
 }
 
-func (this *GodModRover) TurnLeft() {
-	this.direction = this.direction.DirectionOnTheLeft()
-}
-
-func (this *GodModRover) TurnRight() {
-	this.direction = this.direction.DirectionOnTheRight()
-}
-
 func (this *GodModRover) MoveForward() error {
 	this.coordinate = *coordinate.SumOf(this.coordinate, this.direction.RelativeCoordinateAhead())
 	return nil
@@ -48,6 +40,14 @@ func (this *GodModRover) MoveForward() error {
 func (this *GodModRover) MoveBackward() error {
 	this.coordinate = *coordinate.SumOf(this.coordinate, this.direction.RelativeCoordinateBehind())
 	return nil
+}
+
+func (this *GodModRover) TurnLeft() {
+	this.direction = this.direction.DirectionOnTheLeft()
+}
+
+func (this *GodModRover) TurnRight() {
+	this.direction = this.direction.DirectionOnTheRight()
 }
 
 func (this *GodModRover) Coordinate() AbsoluteCoordinate {

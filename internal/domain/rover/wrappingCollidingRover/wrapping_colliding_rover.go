@@ -21,6 +21,9 @@ func Land(coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRover
 	if mapOfPlanet.HasObstacleIn(coordinate) {
 		return nil, errors.New("cannot land on obstacle")
 	}
+	if mapOfPlanet.IsOutOfBounds(coordinate) {
+		return nil, errors.New("cannot land out of planet")
+	}
 	newRover := &WrappingCollidingRover{
 		planetMap:  *mapOfPlanet,
 		coordinate: coordinate,
@@ -34,6 +37,9 @@ func LandFacing(direction Direction, coordinate AbsoluteCoordinate, planet Plane
 	mapOfPlanet := planetMap.Of(planet)
 	if mapOfPlanet.HasObstacleIn(coordinate) {
 		return nil, errors.New("cannot land on obstacle")
+	}
+	if mapOfPlanet.IsOutOfBounds(coordinate) {
+		return nil, errors.New("cannot land out of planet")
 	}
 	newRover := &WrappingCollidingRover{
 		planetMap:  *mapOfPlanet,
