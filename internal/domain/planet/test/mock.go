@@ -20,3 +20,8 @@ func (this *MockPlanet) Obstacles() Obstacles {
 	args := this.Called()
 	return args.Get(0).(Obstacles)
 }
+
+func (this *MockPlanet) Color() string {
+	args := this.Called()
+	return args.String(0)
+}

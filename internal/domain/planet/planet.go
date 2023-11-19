@@ -6,6 +6,7 @@ import (
 )
 
 type Planet interface {
+	Color() string
 	Size() Size
 	Obstacles() Obstacles
 }

@@ -21,3 +21,7 @@ func (this *EmptyPlanet) Size() Size {
 func (this *EmptyPlanet) Obstacles() Obstacles {
 	return Obstacles{}
 }
+
+func (this *EmptyPlanet) Color() string {
+	return this.color
+}

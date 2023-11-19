@@ -30,3 +30,7 @@ func (this *RockyPlanet) Size() Size {
 func (this *RockyPlanet) Obstacles() Obstacles {
 	return this.obstacles
 }
+
+func (this *RockyPlanet) Color() string {
+	return this.color
+}
