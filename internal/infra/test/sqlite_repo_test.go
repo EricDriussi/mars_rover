@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSaveRover(t *testing.T) {
+func TestSaveWrappingRover(t *testing.T) {
 	db := InitMem()
 	defer func(db *sql.DB) {
 		err := db.Close()
@@ -18,6 +18,28 @@ func TestSaveRover(t *testing.T) {
 	}(db)
 
 	testRover, testPlanet := setupWrappingRoverOnRockyPlanet()
+	repo := NewSQLite(db)
+	err := repo.SaveRover(testRover)
+	assert.Nil(t, err)
+
+	foundRovers := getAllPersistedRovers(t, db, testPlanet)
+	assert.Len(t, foundRovers, 1)
+	foundRover := foundRovers[0]
+	assert.Equal(t, testRover.Coordinate(), foundRover.Coordinate())
+	assert.Equal(t, testRover.Direction().CardinalPoint(), foundRover.Direction().CardinalPoint())
+	assert.Equal(t, testRover.Map(), foundRover.Map())
+}
+
+func TestSaveGodModRover(t *testing.T) {
+	db := InitMem()
+	defer func(db *sql.DB) {
+		err := db.Close()
+		if err != nil {
+
+		}
+	}(db)
+
+	testRover, testPlanet := setupGodModRoverOnRockyPlanet()
 	repo := NewSQLite(db)
 	err := repo.SaveRover(testRover)
 	assert.Nil(t, err)

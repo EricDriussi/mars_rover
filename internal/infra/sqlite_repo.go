@@ -5,7 +5,8 @@ import (
 	"encoding/json"
 	"log"
 	. "mars_rover/internal/domain/planet"
-	"mars_rover/internal/domain/rover"
+	. "mars_rover/internal/domain/rover"
+	. "mars_rover/internal/domain/rover/godModRover"
 	. "mars_rover/internal/infra/mappers"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -24,16 +25,23 @@ func NewSQLite(db *sql.DB) *SQLiteRepository {
 	return &SQLiteRepository{db: db}
 }
 
-func (r *SQLiteRepository) SaveRover(rover rover.Rover) error {
+func (r *SQLiteRepository) SaveRover(rover Rover) error {
 	roverAsBytes, err := json.Marshal(MapToPersistenceRover(rover))
 	if err != nil {
 		return err
 	}
 	roverAsString := string(roverAsBytes)
 
-	_, err = r.db.Exec("INSERT INTO "+RoversTable+" (rover) VALUES (?)",
-		roverAsString)
+	_, err = r.db.Exec("INSERT INTO "+RoversTable+" (rover, godMod) VALUES (?, ?)",
+		roverAsString,
+		isGodMod(rover),
+	)
 	return err
+}
+
+func isGodMod(rover Rover) bool {
+	_, isGodMod := rover.(*GodModRover)
+	return isGodMod
 }
 
 func (r *SQLiteRepository) SavePlanet(planet Planet) error {
@@ -71,7 +79,8 @@ func createTables(db *sql.DB) {
 	_, err := db.Exec(`
 	CREATE TABLE IF NOT EXISTS ` + RoversTable + ` (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		rover TEXT NOT NULL
+		rover TEXT NOT NULL,
+		godMod BOOLEAN NOT NULL
 	);
 	CREATE TABLE IF NOT EXISTS ` + PlanetsTable + ` (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -4,6 +4,7 @@ type RoverEntity struct {
 	PlanetMap  MapEntity        `json:"planetMap"`
 	Coordinate CoordinateEntity `json:"coordinate"`
 	Direction  string           `json:"direction"`
+	GodMod     bool             `json:"godMod"`
 }
 
 type MapEntity struct {

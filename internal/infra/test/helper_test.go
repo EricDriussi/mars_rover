@@ -11,6 +11,7 @@ import (
 	. "mars_rover/internal/domain/planet"
 	"mars_rover/internal/domain/planet/rockyPlanet"
 	. "mars_rover/internal/domain/rover"
+	"mars_rover/internal/domain/rover/godModRover"
 	"mars_rover/internal/domain/rover/wrappingCollidingRover"
 	s "mars_rover/internal/domain/size"
 	. "mars_rover/internal/infra"
@@ -21,10 +22,42 @@ import (
 )
 
 func getAllPersistedRovers(t *testing.T, db *sql.DB, planet Planet) []Rover {
-	persistedRovers := getAllPersistedEntities(t, db, RoversTable, reflect.TypeOf(RoverEntity{})).([]RoverEntity)
+	rows, err := db.Query("SELECT * FROM " + RoversTable)
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+
+		}
+	}(rows)
+	assert.Nil(t, err)
+
+	persistedRovers, err := unmarshalRoverEntity(rows)
+	assert.Nil(t, err)
 	foundRovers, err := MapToDomainRovers(persistedRovers, planet)
 	assert.Nil(t, err)
 	return foundRovers
+}
+
+func unmarshalRoverEntity(rows *sql.Rows) ([]RoverEntity, error) {
+	var listOfRovers []RoverEntity
+	for rows.Next() {
+		var rover string
+		var id int
+		var godMod bool
+		err := rows.Scan(&id, &rover, &godMod)
+		if err != nil {
+			return nil, err
+
+		}
+		var roverData RoverEntity
+		err = json.Unmarshal([]byte(rover), &roverData)
+		if err != nil {
+			return nil, err
+		}
+		roverData.GodMod = godMod
+		listOfRovers = append(listOfRovers, roverData)
+	}
+	return listOfRovers, nil
 }
 
 func getAllPersistedPlanets(t *testing.T, db *sql.DB) []Planet {
@@ -68,6 +101,13 @@ func setupWrappingRoverOnRockyPlanet() (Rover, Planet) {
 	rovCoord := absoluteCoordinate.From(0, 0)
 	testPlanet := setupRockyPlanet()
 	testRover, _ := wrappingCollidingRover.Land(*rovCoord, testPlanet)
+	return testRover, testPlanet
+}
+
+func setupGodModRoverOnRockyPlanet() (Rover, Planet) {
+	rovCoord := absoluteCoordinate.From(1, 1)
+	testPlanet := setupRockyPlanet()
+	testRover := godModRover.Land(*rovCoord, testPlanet)
 	return testRover, testPlanet
 }
 

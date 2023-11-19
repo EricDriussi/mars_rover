@@ -14,7 +14,8 @@ import (
 	"mars_rover/internal/domain/planet/rockyPlanet"
 	. "mars_rover/internal/domain/rover"
 	. "mars_rover/internal/domain/rover/direction"
-	. "mars_rover/internal/domain/rover/wrappingCollidingRover"
+	"mars_rover/internal/domain/rover/godModRover"
+	"mars_rover/internal/domain/rover/wrappingCollidingRover"
 	s "mars_rover/internal/domain/size"
 	. "mars_rover/internal/infra/entities"
 )
@@ -37,10 +38,12 @@ func mapToDomainRover(roverEntity RoverEntity, planet Planet) (Rover, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	coordinate := absoluteCoordinate.From(roverEntity.Coordinate.X, roverEntity.Coordinate.Y)
 
-	return LandFacing(direction, *coordinate, planet)
+	if roverEntity.GodMod {
+		return godModRover.LandFacing(direction, *coordinate, planet), nil
+	}
+	return wrappingCollidingRover.LandFacing(direction, *coordinate, planet)
 }
 
 func directionFromString(dirStr string) (Direction, error) {
