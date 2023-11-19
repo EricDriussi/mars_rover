@@ -6,6 +6,7 @@ import (
 	"log"
 	. "mars_rover/internal/domain/planet/rockyPlanet"
 	. "mars_rover/internal/domain/rover/wrappingCollidingRover"
+	. "mars_rover/internal/infra/mappers"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -24,7 +25,7 @@ func NewSQLite(db *sql.DB) *SQLiteRepository {
 }
 
 func (r *SQLiteRepository) SaveWrappingRover(rover WrappingCollidingRover) error {
-	roverAsBytes, err := json.Marshal(mapToPersistenceRover(rover))
+	roverAsBytes, err := json.Marshal(MapToPersistenceRover(rover))
 	if err != nil {
 		return err
 	}
@@ -36,7 +37,7 @@ func (r *SQLiteRepository) SaveWrappingRover(rover WrappingCollidingRover) error
 }
 
 func (r *SQLiteRepository) SaveRockyPlanet(planet RockyPlanet) error {
-	planetAsBytes, err := json.Marshal(mapToPersistenceRockyPlanet(planet))
+	planetAsBytes, err := json.Marshal(MapToPersistenceRockyPlanet(planet))
 	if err != nil {
 		return err
 	}

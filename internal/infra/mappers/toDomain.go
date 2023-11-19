@@ -1,4 +1,4 @@
-package infra
+package mappers
 
 import (
 	"errors"
@@ -10,53 +10,12 @@ import (
 	"mars_rover/internal/domain/obstacle/smallRock"
 	. "mars_rover/internal/domain/planet"
 	"mars_rover/internal/domain/planet/rockyPlanet"
-	. "mars_rover/internal/domain/planet/rockyPlanet"
 	. "mars_rover/internal/domain/rover"
 	. "mars_rover/internal/domain/rover/direction"
 	. "mars_rover/internal/domain/rover/wrappingCollidingRover"
 	s "mars_rover/internal/domain/size"
+	. "mars_rover/internal/infra/entities"
 )
-
-func mapToPersistenceRover(rover WrappingCollidingRover) RoverPersistenceEntity {
-	coordinate := rover.Coordinate()
-	roverMap := rover.Map()
-	return RoverPersistenceEntity{
-		Coordinate: CoordinatePersistenceEntity{
-			X: coordinate.X(),
-			Y: coordinate.Y(),
-		},
-		Direction: rover.Direction().CardinalPoint(),
-		PlanetMap: PlanetMapPersistenceEntity{
-			Size: SizePersistenceEntity{
-				Width:  roverMap.Width(),
-				Height: roverMap.Height(),
-			},
-			Obstacles: mapToPersistenceObstacles(roverMap.Obstacles()),
-		},
-	}
-}
-
-func mapToPersistenceCoordinates(coordinates []AbsoluteCoordinate) []CoordinatePersistenceEntity {
-	coords := make([]CoordinatePersistenceEntity, len(coordinates))
-	for i, c := range coordinates {
-		coords[i] = CoordinatePersistenceEntity{
-			X: c.X(),
-			Y: c.Y(),
-		}
-	}
-	return coords
-}
-
-func mapToPersistenceObstacles(obstacles Obstacles) []ObstaclePersistenceEntity {
-	obs := make([]ObstaclePersistenceEntity, len(obstacles.List()))
-	for i, o := range obstacles.List() {
-		coordinates := o.Coordinates()
-		obs[i] = ObstaclePersistenceEntity{
-			Coordinates: mapToPersistenceCoordinates(coordinates),
-		}
-	}
-	return obs
-}
 
 // TODO: This is cheating, re-thing mapping strategy so that
 // if only one coord, then smallRock, else bigRock
@@ -77,18 +36,6 @@ func mapToDomainCoordinates(coordinates []CoordinatePersistenceEntity) []Absolut
 		coords[i] = *absoluteCoordinate.From(c.X, c.Y)
 	}
 	return coords
-}
-
-func mapToPersistenceRockyPlanet(planet RockyPlanet) RockyPlanetPersistenceEntity {
-	size := planet.Size()
-	return RockyPlanetPersistenceEntity{
-		Color: planet.Color(),
-		Size: SizePersistenceEntity{
-			Width:  size.Width(),
-			Height: size.Height(),
-		},
-		Obstacles: mapToPersistenceObstacles(planet.Obstacles()),
-	}
 }
 
 func MapToDomainRover(roverData RoverPersistenceEntity, planet Planet) (Rover, error) {

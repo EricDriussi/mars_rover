@@ -13,6 +13,7 @@ import (
 	. "mars_rover/internal/domain/rover/wrappingCollidingRover"
 	s "mars_rover/internal/domain/size"
 	. "mars_rover/internal/infra"
+	. "mars_rover/internal/infra/entities"
 	"reflect"
 	"testing"
 )

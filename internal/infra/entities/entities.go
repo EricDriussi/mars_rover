@@ -1,4 +1,4 @@
-package infra
+package entities
 
 type RoverPersistenceEntity struct {
 	PlanetMap  PlanetMapPersistenceEntity  `json:"planetMap"`

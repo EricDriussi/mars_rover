@@ -5,6 +5,7 @@ import (
 	. "mars_rover/internal/domain/planet"
 	. "mars_rover/internal/domain/rover"
 	. "mars_rover/internal/infra"
+	. "mars_rover/internal/infra/mappers"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
