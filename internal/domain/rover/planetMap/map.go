@@ -28,7 +28,7 @@ func (this *Map) Obstacles() Obstacles {
 	return this.obstacles
 }
 
-func (this *Map) CollidesWithObstacle(absoluteCoordinate AbsoluteCoordinate) bool {
+func (this *Map) HasObstacleIn(absoluteCoordinate AbsoluteCoordinate) bool {
 	return this.obstacles.Occupy(absoluteCoordinate)
 }
 

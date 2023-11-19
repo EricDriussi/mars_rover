@@ -7,44 +7,48 @@ import (
 	. "mars_rover/internal/domain/planet"
 	"mars_rover/internal/domain/rover/planetMap"
 	. "mars_rover/internal/domain/rover/planetMap"
-	"mars_rover/internal/domain/rover/wrappingCollidingRover/positionCalculator"
+	"mars_rover/internal/domain/rover/wrappingCollidingRover/gps"
+	. "mars_rover/internal/domain/rover/wrappingCollidingRover/gps"
 )
 
-type WrappingCollidingRover struct {
+type WrappingCollidingRoverV2 struct {
 	planetMap  Map
 	coordinate AbsoluteCoordinate
 	direction  Direction
+	gps        GPS
 }
 
-func Land(coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRover, error) {
+func LandV2(coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRoverV2, error) {
 	mapOfPlanet := planetMap.Of(planet)
 	if mapOfPlanet.HasObstacleIn(coordinate) {
 		return nil, errors.New("cannot land on obstacle")
 	}
-	newRover := &WrappingCollidingRover{
+	newRover := &WrappingCollidingRoverV2{
 		planetMap:  *mapOfPlanet,
 		coordinate: coordinate,
 		direction:  North{},
 	}
+	newRover.gps = gps.Bind(newRover)
 	return newRover, nil
 }
 
 // TODO.LM: should be LandFacing{North, East, South, West}
-func LandFacing(direction Direction, coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRover, error) {
+func LandFacingV2(direction Direction, coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRoverV2, error) {
 	mapOfPlanet := planetMap.Of(planet)
 	if mapOfPlanet.HasObstacleIn(coordinate) {
 		return nil, errors.New("cannot land on obstacle")
 	}
-	newRover := &WrappingCollidingRover{
+	newRover := &WrappingCollidingRoverV2{
 		planetMap:  *mapOfPlanet,
 		coordinate: coordinate,
 		direction:  direction,
 	}
+	newRover.gps = gps.Bind(newRover)
 	return newRover, nil
 }
 
-func (this *WrappingCollidingRover) MoveForward() error {
-	futureCoordinate := positionCalculator.Forward(this.direction, this.coordinate, this.planetMap)
+func (this *WrappingCollidingRoverV2) MoveForward() error {
+	futureCoordinate := this.gps.Ahead()
 	willHitSomething := this.planetMap.HasObstacleIn(futureCoordinate)
 	if willHitSomething {
 		return errors.New("cannot move forward, something is in the way")
@@ -53,8 +57,8 @@ func (this *WrappingCollidingRover) MoveForward() error {
 	return nil
 }
 
-func (this *WrappingCollidingRover) MoveBackward() error {
-	futureCoordinate := positionCalculator.Backward(this.direction, this.coordinate, this.planetMap)
+func (this *WrappingCollidingRoverV2) MoveBackward() error {
+	futureCoordinate := this.gps.Behind()
 	willHitSomething := this.planetMap.HasObstacleIn(futureCoordinate)
 	if willHitSomething {
 		return errors.New("cannot move backward, something is in the way")
@@ -63,22 +67,22 @@ func (this *WrappingCollidingRover) MoveBackward() error {
 	return nil
 }
 
-func (this *WrappingCollidingRover) TurnLeft() {
+func (this *WrappingCollidingRoverV2) TurnLeft() {
 	this.direction = this.direction.DirectionOnTheLeft()
 }
 
-func (this *WrappingCollidingRover) TurnRight() {
+func (this *WrappingCollidingRoverV2) TurnRight() {
 	this.direction = this.direction.DirectionOnTheRight()
 }
 
-func (this *WrappingCollidingRover) Coordinate() AbsoluteCoordinate {
+func (this *WrappingCollidingRoverV2) Coordinate() AbsoluteCoordinate {
 	return this.coordinate
 }
 
-func (this *WrappingCollidingRover) Direction() Direction {
+func (this *WrappingCollidingRoverV2) Direction() Direction {
 	return this.direction
 }
 
-func (this *WrappingCollidingRover) Map() Map {
+func (this *WrappingCollidingRoverV2) Map() Map {
 	return this.planetMap
 }
