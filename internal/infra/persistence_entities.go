@@ -1,11 +1,5 @@
 package infra
 
-import (
-	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	. "mars_rover/internal/domain/obstacle/obstacles"
-	. "mars_rover/internal/domain/rover"
-)
-
 type RoverPersistenceEntity struct {
 	PlanetMap  PlanetMapPersistenceEntity  `json:"planetMap"`
 	Coordinate CoordinatePersistenceEntity `json:"coordinate"`
@@ -29,45 +23,4 @@ type CoordinatePersistenceEntity struct {
 type SizePersistenceEntity struct {
 	Width  int `json:"width"`
 	Height int `json:"height"`
-}
-
-func (r *SQLiteRepository) mapToPersistenceRover(rover Rover) RoverPersistenceEntity {
-	coordinate := rover.Coordinate()
-	roverMap := rover.Map()
-	return RoverPersistenceEntity{
-		Coordinate: CoordinatePersistenceEntity{
-			X: coordinate.X(),
-			Y: coordinate.Y(),
-		},
-		Direction: rover.Direction().CardinalPoint(),
-		PlanetMap: PlanetMapPersistenceEntity{
-			Size: SizePersistenceEntity{
-				Width:  roverMap.Width(),
-				Height: roverMap.Height(),
-			},
-			Obstacles: mapToPersistenceObstacles(roverMap.Obstacles()),
-		},
-	}
-}
-
-func mapToPersistenceCoordinates(coordinates []AbsoluteCoordinate) []CoordinatePersistenceEntity {
-	coords := make([]CoordinatePersistenceEntity, len(coordinates))
-	for i, c := range coordinates {
-		coords[i] = CoordinatePersistenceEntity{
-			X: c.X(),
-			Y: c.Y(),
-		}
-	}
-	return coords
-}
-
-func mapToPersistenceObstacles(obstacles Obstacles) []ObstaclePersistenceEntity {
-	obs := make([]ObstaclePersistenceEntity, len(obstacles.List()))
-	for i, o := range obstacles.List() {
-		coordinates := o.Coordinates()
-		obs[i] = ObstaclePersistenceEntity{
-			Coordinates: mapToPersistenceCoordinates(coordinates),
-		}
-	}
-	return obs
 }

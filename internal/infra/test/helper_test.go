@@ -1,41 +1,58 @@
 package infra_test
 
 import (
-	"errors"
+	"database/sql"
+	"encoding/json"
+	"github.com/stretchr/testify/assert"
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/internal/domain/obstacle"
+	"mars_rover/internal/domain/obstacle/smallRock"
 	. "mars_rover/internal/domain/planet"
+	"mars_rover/internal/domain/planet/rockyPlanet"
 	. "mars_rover/internal/domain/rover"
 	. "mars_rover/internal/domain/rover/direction"
 	"mars_rover/internal/domain/rover/wrappingCollidingRover"
+	"mars_rover/internal/domain/size"
 	. "mars_rover/internal/infra"
+	"testing"
 )
 
-func mapToDomainRover(roverData RoverPersistenceEntity, planet Planet) (Rover, error) {
-	dir, err := directionFromString(roverData.Direction)
-	if err != nil {
-		return nil, err
+func getAllPersistedRovers(t *testing.T, db *sql.DB) []RoverPersistenceEntity {
+	var listOfRovers []RoverPersistenceEntity
+	var rovers []string
+	rows, err := db.Query("SELECT rover FROM rovers")
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+
+		}
+	}(rows)
+	assert.Nil(t, err)
+
+	for rows.Next() {
+		var rover string
+		err := rows.Scan(&rover)
+		assert.Nil(t, err)
+		rovers = append(rovers, rover)
 	}
 
-	coordinate := absoluteCoordinate.From(roverData.Coordinate.X, roverData.Coordinate.Y)
-
-	roverInstance, err := wrappingCollidingRover.LandFacing(dir, *coordinate, planet)
-	if err != nil {
-		return nil, err
+	for _, roverString := range rovers {
+		var roverData RoverPersistenceEntity
+		err := json.Unmarshal([]byte(roverString), &roverData)
+		assert.Nil(t, err)
+		listOfRovers = append(listOfRovers, roverData)
 	}
-
-	return roverInstance, nil
+	return listOfRovers
 }
 
-func directionFromString(dirStr string) (Direction, error) {
-	switch dirStr {
-	case "N":
-		return &North{}, nil
-	case "S":
-		return &South{}, nil
-	case "E":
-		return &East{}, nil
-	case "W":
-		return &West{}, nil
-	}
-	return nil, errors.New("Invalid direction")
+func aTestRover(planet Planet) Rover {
+	coordinate := absoluteCoordinate.From(0, 0)
+	testRover, _ := wrappingCollidingRover.LandFacing(North{}, *coordinate, planet)
+	return testRover
+}
+
+func aTestPlanet() Planet {
+	s, _ := size.Square(5)
+	planet, _ := rockyPlanet.Create("testColor", *s, []Obstacle{smallRock.In(*absoluteCoordinate.From(1, 1))})
+	return planet
 }
