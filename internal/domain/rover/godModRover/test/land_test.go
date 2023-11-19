@@ -2,10 +2,10 @@ package godModRover_test
 
 import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	. "mars_rover/internal/domain/direction"
 	. "mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/obstacle/smallRock"
 	"mars_rover/internal/domain/planet/rockyPlanet"
+	. "mars_rover/internal/domain/rover/direction"
 	"mars_rover/internal/domain/rover/godModRover"
 	"mars_rover/internal/domain/size"
 	"testing"

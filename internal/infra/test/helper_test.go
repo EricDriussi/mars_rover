@@ -3,9 +3,9 @@ package infra_test
 import (
 	"errors"
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	. "mars_rover/internal/domain/direction"
 	. "mars_rover/internal/domain/planet"
 	. "mars_rover/internal/domain/rover"
+	. "mars_rover/internal/domain/rover/direction"
 	"mars_rover/internal/domain/rover/wrappingCollidingRover"
 	. "mars_rover/internal/infra"
 )

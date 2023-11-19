@@ -4,7 +4,7 @@ import (
 	coord "mars_rover/internal/domain/coordinate"
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	. "mars_rover/internal/domain/direction"
+	. "mars_rover/internal/domain/rover/direction"
 	. "mars_rover/internal/domain/rover/planetMap"
 )
 

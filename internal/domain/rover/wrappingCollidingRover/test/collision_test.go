@@ -2,10 +2,10 @@ package wrappingCollidingRover_test
 
 import (
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	. "mars_rover/internal/domain/direction"
 	. "mars_rover/internal/domain/obstacle"
 	rock "mars_rover/internal/domain/obstacle/smallRock"
 	"mars_rover/internal/domain/planet/rockyPlanet"
+	. "mars_rover/internal/domain/rover/direction"
 	"mars_rover/internal/domain/rover/wrappingCollidingRover"
 	"mars_rover/internal/domain/size"
 	"testing"
