@@ -23,6 +23,7 @@ func Land(coordinate AbsoluteCoordinate, planet Planet) *GodModRover {
 	}
 }
 
+// TODO.LM: should be LandFacing{North, East, South, West}
 func LandFacing(direction Direction, coordinate AbsoluteCoordinate, planet Planet) *GodModRover {
 	return &GodModRover{
 		planetMap:  *planetMap.Of(planet),
