@@ -1,10 +1,14 @@
 package entities
 
+import . "github.com/google/uuid"
+
 type RoverEntity struct {
+	ID         UUID             `json:"id"`
 	PlanetMap  MapEntity        `json:"planetMap"`
 	Coordinate CoordinateEntity `json:"coordinate"`
 	Direction  string           `json:"direction"`
 	GodMod     bool             `json:"godMod"`
+	PlanetId   int              `json:"planetId"`
 }
 
 type MapEntity struct {

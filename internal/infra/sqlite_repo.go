@@ -25,16 +25,53 @@ func NewSQLite(db *sql.DB) *SQLiteRepository {
 	return &SQLiteRepository{db: db}
 }
 
-func (r *SQLiteRepository) SaveRover(rover Rover) error {
+func (r *SQLiteRepository) SaveGame(rover Rover, planet Planet) error {
+	planetId, err := r.savePlanet(planet)
+	if err != nil {
+		return err
+	}
+
+	return r.saveRover(rover, planetId)
+}
+
+func (r *SQLiteRepository) UpdateRover(rover Rover) error {
 	roverAsBytes, err := json.Marshal(MapToPersistenceRover(rover))
 	if err != nil {
 		return err
 	}
 	roverAsString := string(roverAsBytes)
-
-	_, err = r.db.Exec("INSERT INTO "+RoversTable+" (rover, godMod) VALUES (?, ?)",
+	_, err = r.db.Exec("UPDATE "+RoversTable+" SET rover = ? WHERE id = ?",
 		roverAsString,
+		rover.Id().String(),
+	)
+	return err
+}
+
+func (r *SQLiteRepository) savePlanet(planet Planet) (int64, error) {
+	planetAsBytes, err := json.Marshal(MapToPersistencePlanet(planet))
+	if err != nil {
+		return 0, err
+	}
+
+	planetInsertResult, err := r.db.Exec("INSERT INTO "+PlanetsTable+" (planet) VALUES (?)",
+		string(planetAsBytes))
+	if err != nil {
+		return 0, err
+	}
+	return planetInsertResult.LastInsertId()
+}
+
+func (r *SQLiteRepository) saveRover(rover Rover, planetId int64) error {
+	roverAsBytes, err := json.Marshal(MapToPersistenceRover(rover))
+	if err != nil {
+		return err
+	}
+
+	_, err = r.db.Exec("INSERT INTO "+RoversTable+" (id, rover, godMod, planet_id) VALUES (?, ?, ?, ?)",
+		rover.Id().String(),
+		string(roverAsBytes),
 		isGodMod(rover),
+		planetId,
 	)
 	return err
 }
@@ -42,18 +79,6 @@ func (r *SQLiteRepository) SaveRover(rover Rover) error {
 func isGodMod(rover Rover) bool {
 	_, isGodMod := rover.(*GodModRover)
 	return isGodMod
-}
-
-func (r *SQLiteRepository) SavePlanet(planet Planet) error {
-	planetAsBytes, err := json.Marshal(MapToPersistencePlanet(planet))
-	if err != nil {
-		return err
-	}
-	planetAsString := string(planetAsBytes)
-
-	_, err = r.db.Exec("INSERT INTO "+PlanetsTable+" (planet) VALUES (?)",
-		planetAsString)
-	return err
 }
 
 func InitMem() *sql.DB {
@@ -78,9 +103,11 @@ func setup(location string) *sql.DB {
 func createTables(db *sql.DB) {
 	_, err := db.Exec(`
 	CREATE TABLE IF NOT EXISTS ` + RoversTable + ` (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		id TEXT PRIMARY KEY,
 		rover TEXT NOT NULL,
-		godMod BOOLEAN NOT NULL
+		godMod BOOLEAN NOT NULL,
+		planet_id INTEGER,
+		FOREIGN KEY(planet_id) REFERENCES ` + PlanetsTable + `(id)
 	);
 	CREATE TABLE IF NOT EXISTS ` + PlanetsTable + ` (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,

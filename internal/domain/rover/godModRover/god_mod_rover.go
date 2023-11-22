@@ -1,6 +1,8 @@
 package godModRover
 
 import (
+	"github.com/google/uuid"
+	. "github.com/google/uuid"
 	"mars_rover/internal/domain/coordinate"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/planet"
@@ -10,6 +12,7 @@ import (
 )
 
 type GodModRover struct {
+	id         UUID
 	planetMap  Map
 	coordinate AbsoluteCoordinate
 	direction  Direction
@@ -17,6 +20,7 @@ type GodModRover struct {
 
 func Land(coordinate AbsoluteCoordinate, planet Planet) *GodModRover {
 	return &GodModRover{
+		id:         uuid.New(),
 		planetMap:  *planetMap.Of(planet),
 		coordinate: coordinate,
 		direction:  North{},
@@ -26,6 +30,7 @@ func Land(coordinate AbsoluteCoordinate, planet Planet) *GodModRover {
 // TODO.LM: should be LandFacing{North, East, South, West}
 func LandFacing(direction Direction, coordinate AbsoluteCoordinate, planet Planet) *GodModRover {
 	return &GodModRover{
+		id:         uuid.New(),
 		planetMap:  *planetMap.Of(planet),
 		coordinate: coordinate,
 		direction:  direction,
@@ -48,6 +53,10 @@ func (this *GodModRover) TurnLeft() {
 
 func (this *GodModRover) TurnRight() {
 	this.direction = this.direction.DirectionOnTheRight()
+}
+
+func (this *GodModRover) Id() UUID {
+	return this.id
 }
 
 func (this *GodModRover) Coordinate() AbsoluteCoordinate {

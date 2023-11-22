@@ -2,6 +2,8 @@ package wrappingCollidingRover
 
 import (
 	"errors"
+	"github.com/google/uuid"
+	. "github.com/google/uuid"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/planet"
 	. "mars_rover/internal/domain/rover/direction"
@@ -12,6 +14,7 @@ import (
 )
 
 type WrappingCollidingRoverV2 struct {
+	id         UUID
 	planetMap  Map
 	coordinate AbsoluteCoordinate
 	direction  Direction
@@ -27,6 +30,7 @@ func LandV2(coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRov
 		return nil, errors.New("cannot land out of planet")
 	}
 	newRover := &WrappingCollidingRoverV2{
+		id:         uuid.New(),
 		planetMap:  *mapOfPlanet,
 		coordinate: coordinate,
 		direction:  North{},
@@ -45,6 +49,7 @@ func LandFacingV2(direction Direction, coordinate AbsoluteCoordinate, planet Pla
 		return nil, errors.New("cannot land out of planet")
 	}
 	newRover := &WrappingCollidingRoverV2{
+		id:         uuid.New(),
 		planetMap:  *mapOfPlanet,
 		coordinate: coordinate,
 		direction:  direction,
@@ -79,6 +84,10 @@ func (this *WrappingCollidingRoverV2) TurnLeft() {
 
 func (this *WrappingCollidingRoverV2) TurnRight() {
 	this.direction = this.direction.DirectionOnTheRight()
+}
+
+func (this *WrappingCollidingRoverV2) Id() UUID {
+	return this.id
 }
 
 func (this *WrappingCollidingRoverV2) Coordinate() AbsoluteCoordinate {

@@ -2,6 +2,7 @@ package move_test
 
 import (
 	"errors"
+	. "github.com/google/uuid"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/rover/direction"
 	. "mars_rover/internal/domain/rover/planetMap"
@@ -126,6 +127,11 @@ func (this *MockRover) MoveForward() error {
 func (this *MockRover) MoveBackward() error {
 	args := this.Called()
 	return args.Error(0)
+}
+
+func (this *MockRover) Id() UUID {
+	args := this.Called()
+	return args.Get(0).(UUID)
 }
 
 func (this *MockRover) Coordinate() AbsoluteCoordinate {

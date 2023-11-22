@@ -41,10 +41,11 @@ func getAllPersistedRovers(t *testing.T, db *sql.DB, planet Planet) []Rover {
 func unmarshalRoverEntity(rows *sql.Rows) ([]RoverEntity, error) {
 	var listOfRovers []RoverEntity
 	for rows.Next() {
+		var id string
 		var rover string
-		var id int
 		var godMod bool
-		err := rows.Scan(&id, &rover, &godMod)
+		var planetId int
+		err := rows.Scan(&id, &rover, &godMod, &planetId)
 		if err != nil {
 			return nil, err
 
@@ -55,6 +56,7 @@ func unmarshalRoverEntity(rows *sql.Rows) ([]RoverEntity, error) {
 			return nil, err
 		}
 		roverData.GodMod = godMod
+		roverData.PlanetId = planetId
 		listOfRovers = append(listOfRovers, roverData)
 	}
 	return listOfRovers, nil
