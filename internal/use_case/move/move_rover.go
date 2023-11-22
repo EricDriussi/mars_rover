@@ -3,17 +3,20 @@ package move
 import (
 	"errors"
 	"fmt"
+	. "mars_rover/internal/domain"
 	. "mars_rover/internal/domain/rover"
 	"strings"
 )
 
 type UseCase struct {
 	rover Rover
+	repo  Repository
 }
 
-func For(rover Rover) *UseCase {
+func For(rover Rover, repo Repository) *UseCase {
 	return &UseCase{
 		rover: rover,
+		repo:  repo,
 	}
 }
 
@@ -21,10 +24,13 @@ func (this *UseCase) MoveSequence(commands string) []error {
 	var errs []error
 	for _, cmd := range strings.ToLower(commands) {
 		err := this.mapCommandToMovement(string(cmd))
-		// TODO: Persist rover
 		if err != nil {
 			errs = append(errs, errors.New(fmt.Sprintf("%v, skipping command %v", err, cmd)))
 		}
+	}
+	err := this.repo.UpdateRover(this.rover)
+	if err != nil {
+		errs = append(errs, err)
 	}
 	if len(errs) > 0 {
 		return errs
@@ -35,12 +41,11 @@ func (this *UseCase) MoveSequence(commands string) []error {
 func (this *UseCase) MoveSequenceAborting(commands string) error {
 	for _, cmd := range strings.ToLower(commands) {
 		err := this.mapCommandToMovement(string(cmd))
-		// TODO: Persist rover
 		if err != nil {
 			return errors.New(fmt.Sprintf("aborting command '%v': %v", cmd, err))
 		}
 	}
-	return nil
+	return this.repo.UpdateRover(this.rover)
 }
 
 type (

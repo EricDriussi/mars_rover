@@ -7,8 +7,8 @@ import (
 )
 
 type Repository interface {
-	SaveRover(rover Rover) error
-	SavePlanet(planet Planet) error
+	UpdateRover(rover Rover) error
+	SaveGame(rover Rover, planet Planet) error
 	LoadGame(id UUID) (GameDTO, error)
 }
 

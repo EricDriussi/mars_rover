@@ -3,7 +3,10 @@ package move_test
 import (
 	"errors"
 	. "github.com/google/uuid"
+	. "mars_rover/internal/domain"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/internal/domain/planet"
+	. "mars_rover/internal/domain/rover"
 	. "mars_rover/internal/domain/rover/direction"
 	. "mars_rover/internal/domain/rover/planetMap"
 	"mars_rover/internal/use_case/move"
@@ -16,7 +19,9 @@ import (
 func TestHandlesASingleMovementCommand(t *testing.T) {
 	curiosity := new(MockRover)
 	curiosity.On("MoveForward").Return(nil)
-	moveUseCase := move.For(curiosity)
+	repo := new(MockRepo)
+	repo.On("UpdateRover").Return(nil)
+	moveUseCase := move.For(curiosity, repo)
 
 	movementErrors := moveUseCase.MoveSequence("f")
 
@@ -27,7 +32,9 @@ func TestHandlesASingleMovementCommand(t *testing.T) {
 func TestHandlesASingleTurningCommand(t *testing.T) {
 	curiosity := new(MockRover)
 	curiosity.On("TurnRight").Return()
-	moveUseCase := move.For(curiosity)
+	repo := new(MockRepo)
+	repo.On("UpdateRover").Return(nil)
+	moveUseCase := move.For(curiosity, repo)
 
 	movementErrors := moveUseCase.MoveSequence("r")
 
@@ -38,7 +45,9 @@ func TestHandlesASingleTurningCommand(t *testing.T) {
 func TestHandlesASingleFailedMovementCommand(t *testing.T) {
 	curiosity := new(MockRover)
 	curiosity.On("MoveForward").Return(errors.New(""))
-	moveUseCase := move.For(curiosity)
+	repo := new(MockRepo)
+	repo.On("UpdateRover").Return(nil)
+	moveUseCase := move.For(curiosity, repo)
 
 	movementErrors := moveUseCase.MoveSequence("f")
 
@@ -48,7 +57,9 @@ func TestHandlesASingleFailedMovementCommand(t *testing.T) {
 
 func TestHandlesASingleUnknownCommand(t *testing.T) {
 	curiosity := new(MockRover)
-	moveUseCase := move.For(curiosity)
+	repo := new(MockRepo)
+	repo.On("UpdateRover").Return(nil)
+	moveUseCase := move.For(curiosity, repo)
 
 	movementErrors := moveUseCase.MoveSequence("X")
 
@@ -65,7 +76,9 @@ func TestHandlesMultipleKnownCommands(t *testing.T) {
 	curiosity.On("TurnLeft").Return()
 	curiosity.On("MoveForward").Return(nil)
 	curiosity.On("MoveBackward").Return(nil)
-	moveUseCase := move.For(curiosity)
+	repo := new(MockRepo)
+	repo.On("UpdateRover").Return(nil)
+	moveUseCase := move.For(curiosity, repo)
 
 	movementErrors := moveUseCase.MoveSequence("rlfb")
 
@@ -80,7 +93,9 @@ func TestHandlesMultipleErrors(t *testing.T) {
 	curiosity := new(MockRover)
 	curiosity.On("MoveForward").Return(errors.New(""))
 	curiosity.On("MoveBackward").Return(errors.New(""))
-	moveUseCase := move.For(curiosity)
+	repo := new(MockRepo)
+	repo.On("UpdateRover").Return(nil)
+	moveUseCase := move.For(curiosity, repo)
 
 	movementErrors := moveUseCase.MoveSequence("fbXY")
 
@@ -96,7 +111,9 @@ func TestHandlesErrorsAndSuccessfulMovements(t *testing.T) {
 	curiosity.On("MoveBackward").Return(nil)
 	curiosity.On("MoveForward").Return(errors.New(""))
 	curiosity.On("TurnLeft").Return()
-	moveUseCase := move.For(curiosity)
+	repo := new(MockRepo)
+	repo.On("UpdateRover").Return(nil)
+	moveUseCase := move.For(curiosity, repo)
 
 	movementErrors := moveUseCase.MoveSequence("bfXYl")
 
@@ -147,4 +164,23 @@ func (this *MockRover) Direction() Direction {
 func (this *MockRover) Map() Map {
 	args := this.Called()
 	return args.Get(0).(Map)
+}
+
+type MockRepo struct {
+	Mock
+}
+
+func (this MockRepo) UpdateRover(rover Rover) error {
+	args := this.Called()
+	return args.Error(0)
+}
+
+func (this MockRepo) SaveGame(rover Rover, planet Planet) error {
+	args := this.Called()
+	return args.Error(0)
+}
+
+func (this MockRepo) LoadGame(id UUID) (GameDTO, error) {
+	args := this.Called()
+	return GameDTO{}, args.Error(0)
 }
