@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	. "github.com/google/uuid"
 	"log"
+	. "mars_rover/internal/domain"
 	. "mars_rover/internal/domain/planet"
 	. "mars_rover/internal/domain/rover"
 	. "mars_rover/internal/domain/rover/godModRover"
