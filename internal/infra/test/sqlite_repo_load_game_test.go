@@ -27,7 +27,7 @@ func TestLoadsRover(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			db := InitMem()
+			db, repo := InitMem()
 			defer func(db *sql.DB) {
 				err := db.Close()
 				if err != nil {
@@ -35,7 +35,7 @@ func TestLoadsRover(t *testing.T) {
 				}
 			}(db)
 			testRover, testPlanet := testCase.setupFunc()
-			repo := NewSQLite(db)
+
 			err := repo.SaveGame(testRover, testPlanet)
 			assert.Nil(t, err)
 
@@ -64,7 +64,7 @@ func TestDoesNotLoadRover(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			db := InitMem()
+			db, repo := InitMem()
 			defer func(db *sql.DB) {
 				err := db.Close()
 				if err != nil {
@@ -72,7 +72,7 @@ func TestDoesNotLoadRover(t *testing.T) {
 				}
 			}(db)
 			testRover, testPlanet := testCase.setupFunc()
-			repo := NewSQLite(db)
+
 			err := repo.SaveGame(testRover, testPlanet)
 			assert.Nil(t, err)
 
