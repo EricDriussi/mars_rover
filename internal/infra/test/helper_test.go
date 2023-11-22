@@ -3,7 +3,7 @@ package infra_test
 import (
 	"database/sql"
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
+	"errors"
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/obstacle/bigRock"
@@ -18,10 +18,9 @@ import (
 	. "mars_rover/internal/infra/entities"
 	. "mars_rover/internal/infra/mappers"
 	"reflect"
-	"testing"
 )
 
-func getAllPersistedRovers(t *testing.T, db *sql.DB, planet Planet) []Rover {
+func getLastPersistedRover(db *sql.DB, planet Planet) (Rover, error) {
 	rows, err := db.Query("SELECT * FROM " + RoversTable)
 	defer func(rows *sql.Rows) {
 		err := rows.Close()
@@ -29,13 +28,22 @@ func getAllPersistedRovers(t *testing.T, db *sql.DB, planet Planet) []Rover {
 
 		}
 	}(rows)
-	assert.Nil(t, err)
+	if err != nil {
+		return nil, err
+	}
 
 	persistedRovers, err := unmarshalRoverEntity(rows)
-	assert.Nil(t, err)
+	if err != nil {
+		return nil, err
+	}
 	foundRovers, err := MapToDomainRovers(persistedRovers, planet)
-	assert.Nil(t, err)
-	return foundRovers
+	if err != nil {
+		return nil, err
+	}
+	if len(foundRovers) > 1 {
+		return nil, errors.New("more than one rover found")
+	}
+	return foundRovers[0], nil
 }
 
 func unmarshalRoverEntity(rows *sql.Rows) ([]RoverEntity, error) {
@@ -62,14 +70,22 @@ func unmarshalRoverEntity(rows *sql.Rows) ([]RoverEntity, error) {
 	return listOfRovers, nil
 }
 
-func getAllPersistedPlanets(t *testing.T, db *sql.DB) []Planet {
-	persistedPlanets := getAllPersistedEntities(t, db, PlanetsTable, reflect.TypeOf(PlanetEntity{})).([]PlanetEntity)
-	foundPlanets, err := MapToDomainPlanets(persistedPlanets)
-	assert.Nil(t, err)
-	return foundPlanets
+func getLastPersistedPlanet(db *sql.DB) (Planet, error) {
+	persistedEntities, err := getAllPersistedEntities(db, PlanetsTable, reflect.TypeOf(PlanetEntity{}))
+	if err != nil {
+		return nil, err
+	}
+	foundPlanets, err := MapToDomainPlanets(persistedEntities.([]PlanetEntity))
+	if err != nil {
+		return nil, err
+	}
+	if len(foundPlanets) > 1 {
+		return nil, errors.New("more than one planet found")
+	}
+	return foundPlanets[0], nil
 }
 
-func getAllPersistedEntities(t *testing.T, db *sql.DB, tableName string, entityType reflect.Type) interface{} {
+func getAllPersistedEntities(db *sql.DB, tableName string, entityType reflect.Type) (interface{}, error) {
 	var listOfEntities reflect.Value
 	listOfEntities = reflect.MakeSlice(reflect.SliceOf(entityType), 0, 0)
 	var entities []string
@@ -80,23 +96,29 @@ func getAllPersistedEntities(t *testing.T, db *sql.DB, tableName string, entityT
 
 		}
 	}(rows)
-	assert.Nil(t, err)
+	if err != nil {
+		return nil, err
+	}
 
 	for rows.Next() {
 		var entity string
 		var id int
 		err := rows.Scan(&id, &entity)
-		assert.Nil(t, err)
+		if err != nil {
+			return nil, err
+		}
 		entities = append(entities, entity)
 	}
 
 	for _, entityString := range entities {
 		entityValue := reflect.New(entityType)
 		err := json.Unmarshal([]byte(entityString), entityValue.Interface())
-		assert.Nil(t, err)
+		if err != nil {
+			return nil, err
+		}
 		listOfEntities = reflect.Append(listOfEntities, entityValue.Elem())
 	}
-	return listOfEntities.Interface()
+	return listOfEntities.Interface(), nil
 }
 
 func setupWrappingRoverOnRockyPlanet() (Rover, Planet) {

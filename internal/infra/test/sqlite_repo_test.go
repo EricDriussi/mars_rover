@@ -24,19 +24,10 @@ func TestSaveGodModRoverGame(t *testing.T) {
 	err := repo.SaveGame(testRover, testPlanet)
 	assert.Nil(t, err)
 
-	foundRovers := getAllPersistedRovers(t, db, testPlanet)
-	assert.Len(t, foundRovers, 1)
-	foundRover := foundRovers[0]
-	assert.Equal(t, testRover.Coordinate(), foundRover.Coordinate())
-	assert.Equal(t, testRover.Direction().CardinalPoint(), foundRover.Direction().CardinalPoint())
-	assert.Equal(t, testRover.Map(), foundRover.Map())
-
-	foundPlanets := getAllPersistedPlanets(t, db)
-	assert.Len(t, foundPlanets, 1)
-	foundPlanet := foundPlanets[0]
-	assert.Equal(t, testPlanet.Color(), foundPlanet.Color())
-	assert.Equal(t, testPlanet.Obstacles(), foundPlanet.Obstacles())
-	assert.Equal(t, testPlanet.Size(), foundPlanet.Size())
+	foundRover, err := getLastPersistedRover(db, testPlanet)
+	assertRoversAreEqual(t, foundRover, testRover)
+	foundPlanet, err := getLastPersistedPlanet(db)
+	assertPlanetsAreEqual(t, testPlanet, foundPlanet)
 }
 
 func TestSaveWrappingRoverGame(t *testing.T) {
@@ -53,27 +44,10 @@ func TestSaveWrappingRoverGame(t *testing.T) {
 	err := repo.SaveGame(testRover, testPlanet)
 	assert.Nil(t, err)
 
-	foundRovers := getAllPersistedRovers(t, db, testPlanet)
-	assert.Len(t, foundRovers, 1)
-	foundRover := foundRovers[0]
+	foundRover, err := getLastPersistedRover(db, testPlanet)
 	assertRoversAreEqual(t, foundRover, testRover)
-
-	foundPlanets := getAllPersistedPlanets(t, db)
-	assert.Len(t, foundPlanets, 1)
-	foundPlanet := foundPlanets[0]
+	foundPlanet, err := getLastPersistedPlanet(db)
 	assertPlanetsAreEqual(t, testPlanet, foundPlanet)
-}
-
-func assertPlanetsAreEqual(t *testing.T, testPlanet planet.Planet, foundPlanet planet.Planet) {
-	assert.Equal(t, testPlanet.Color(), foundPlanet.Color())
-	assert.Equal(t, testPlanet.Obstacles(), foundPlanet.Obstacles())
-	assert.Equal(t, testPlanet.Size(), foundPlanet.Size())
-}
-
-func assertRoversAreEqual(t *testing.T, foundRover rover.Rover, testRover rover.Rover) {
-	assert.Equal(t, testRover.Coordinate(), foundRover.Coordinate())
-	assert.Equal(t, testRover.Direction().CardinalPoint(), foundRover.Direction().CardinalPoint())
-	assert.Equal(t, testRover.Map(), foundRover.Map())
 }
 
 func TestUpdateWrappingRover(t *testing.T) {
@@ -93,12 +67,8 @@ func TestUpdateWrappingRover(t *testing.T) {
 	err = repo.UpdateRover(testRover)
 	assert.Nil(t, err)
 
-	foundRovers := getAllPersistedRovers(t, db, testPlanet)
-	assert.Len(t, foundRovers, 1)
-	foundRover := foundRovers[0]
-	assert.Equal(t, testRover.Coordinate(), foundRover.Coordinate())
-	assert.Equal(t, testRover.Direction().CardinalPoint(), foundRover.Direction().CardinalPoint())
-	assert.Equal(t, testRover.Map(), foundRover.Map())
+	foundRover, err := getLastPersistedRover(db, testPlanet)
+	assertRoversAreEqual(t, foundRover, testRover)
 }
 
 func TestUpdateGodModRover(t *testing.T) {
@@ -118,9 +88,17 @@ func TestUpdateGodModRover(t *testing.T) {
 	err = repo.UpdateRover(testRover)
 	assert.Nil(t, err)
 
-	foundRovers := getAllPersistedRovers(t, db, testPlanet)
-	assert.Len(t, foundRovers, 1)
-	foundRover := foundRovers[0]
+	foundRover, err := getLastPersistedRover(db, testPlanet)
+	assertRoversAreEqual(t, foundRover, testRover)
+}
+
+func assertPlanetsAreEqual(t *testing.T, testPlanet planet.Planet, foundPlanet planet.Planet) {
+	assert.Equal(t, testPlanet.Color(), foundPlanet.Color())
+	assert.Equal(t, testPlanet.Obstacles(), foundPlanet.Obstacles())
+	assert.Equal(t, testPlanet.Size(), foundPlanet.Size())
+}
+
+func assertRoversAreEqual(t *testing.T, foundRover rover.Rover, testRover rover.Rover) {
 	assert.Equal(t, testRover.Coordinate(), foundRover.Coordinate())
 	assert.Equal(t, testRover.Direction().CardinalPoint(), foundRover.Direction().CardinalPoint())
 	assert.Equal(t, testRover.Map(), foundRover.Map())

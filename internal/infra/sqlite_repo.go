@@ -30,7 +30,6 @@ func (r *SQLiteRepository) SaveGame(rover Rover, planet Planet) error {
 	if err != nil {
 		return err
 	}
-
 	return r.saveRover(rover, planetId)
 }
 
