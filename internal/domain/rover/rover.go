@@ -12,6 +12,7 @@ type Rover interface {
 	TurnRight()
 	MoveForward() error
 	MoveBackward() error
+	// TODO: wrap google's uuid
 	Id() UUID
 	Coordinate() AbsoluteCoordinate
 	Direction() Direction

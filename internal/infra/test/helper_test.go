@@ -25,7 +25,7 @@ func getLastPersistedRover(db *sql.DB, planet Planet) (Rover, error) {
 	defer func(rows *sql.Rows) {
 		err := rows.Close()
 		if err != nil {
-
+			panic("err closing db connection")
 		}
 	}(rows)
 	if err != nil {
@@ -93,7 +93,7 @@ func getAllPersistedEntities(db *sql.DB, tableName string, entityType reflect.Ty
 	defer func(rows *sql.Rows) {
 		err := rows.Close()
 		if err != nil {
-
+			panic("err closing db connection")
 		}
 	}(rows)
 	if err != nil {

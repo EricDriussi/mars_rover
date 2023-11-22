@@ -1,6 +1,10 @@
 package entities
 
-import . "github.com/google/uuid"
+import (
+	. "github.com/google/uuid"
+	. "mars_rover/internal/domain/planet"
+	. "mars_rover/internal/domain/rover"
+)
 
 type RoverEntity struct {
 	ID         UUID             `json:"id"`
@@ -34,4 +38,9 @@ type PlanetEntity struct {
 	Color     string           `json:"color"`
 	Size      SizeEntity       `json:"size"`
 	Obstacles []ObstacleEntity `json:"obstacles"`
+}
+
+type GameDTO struct {
+	Planet Planet
+	Rover  Rover
 }

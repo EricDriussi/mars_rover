@@ -23,7 +23,7 @@ import (
 func MapToDomainRovers(roverEntities []RoverEntity, planet Planet) ([]Rover, error) {
 	rovers := make([]Rover, 0, len(roverEntities))
 	for _, roverEntity := range roverEntities {
-		rover, err := mapToDomainRover(roverEntity, planet)
+		rover, err := MapToDomainRover(roverEntity, planet)
 		if err != nil {
 			return nil, err
 		}
@@ -33,7 +33,7 @@ func MapToDomainRovers(roverEntities []RoverEntity, planet Planet) ([]Rover, err
 
 }
 
-func mapToDomainRover(roverEntity RoverEntity, planet Planet) (Rover, error) {
+func MapToDomainRover(roverEntity RoverEntity, planet Planet) (Rover, error) {
 	direction, err := directionFromString(roverEntity.Direction)
 	if err != nil {
 		return nil, err
@@ -63,7 +63,7 @@ func directionFromString(dirStr string) (Direction, error) {
 func MapToDomainPlanets(planetEntities []PlanetEntity) ([]Planet, error) {
 	planets := make([]Planet, 0, len(planetEntities))
 	for _, planetEntity := range planetEntities {
-		planet, err := mapToDomainPlanet(planetEntity)
+		planet, err := MapToDomainPlanet(planetEntity)
 		if err != nil {
 			return nil, err
 		}
@@ -72,7 +72,7 @@ func MapToDomainPlanets(planetEntities []PlanetEntity) ([]Planet, error) {
 	return planets, nil
 }
 
-func mapToDomainPlanet(planetEntity PlanetEntity) (Planet, error) {
+func MapToDomainPlanet(planetEntity PlanetEntity) (Planet, error) {
 	color := planetEntity.Color
 	size, err := s.Square(planetEntity.Size.Width)
 	if err != nil {
