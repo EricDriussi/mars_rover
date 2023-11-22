@@ -1,6 +1,7 @@
 package infra_test
 
 import (
+	"github.com/stretchr/testify/assert"
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/obstacle/bigRock"
@@ -11,6 +12,7 @@ import (
 	"mars_rover/internal/domain/rover/godModRover"
 	"mars_rover/internal/domain/rover/wrappingCollidingRover"
 	s "mars_rover/internal/domain/size"
+	"testing"
 )
 
 func setupWrappingRoverOnRockyPlanet() (Rover, Planet) {
@@ -36,4 +38,16 @@ func setupRockyPlanet() Planet {
 	testBigRock := bigRock.In([]absoluteCoordinate.AbsoluteCoordinate{*bigCoord1, *bigCoord2})
 	testPlanet, _ := rockyPlanet.Create("testColor", *size, []Obstacle{&testSmallRock, &testBigRock})
 	return testPlanet
+}
+
+func assertPlanetsAreEqual(t *testing.T, testPlanet Planet, foundPlanet Planet) {
+	assert.Equal(t, testPlanet.Color(), foundPlanet.Color())
+	assert.Equal(t, testPlanet.Obstacles(), foundPlanet.Obstacles())
+	assert.Equal(t, testPlanet.Size(), foundPlanet.Size())
+}
+
+func assertRoversAreEqual(t *testing.T, foundRover Rover, testRover Rover) {
+	assert.Equal(t, testRover.Coordinate(), foundRover.Coordinate())
+	assert.Equal(t, testRover.Direction().CardinalPoint(), foundRover.Direction().CardinalPoint())
+	assert.Equal(t, testRover.Map(), foundRover.Map())
 }
