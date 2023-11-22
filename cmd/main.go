@@ -19,7 +19,7 @@ func Sample1() {
 			panic("err closing db connection")
 		}
 	}(db)
-	curiosity := create.Random()
+	curiosity := create.Random(repository)
 	moveUseCase := move.For(curiosity, repository)
 	movementErrors := moveUseCase.MoveSequence("ffrfblf")
 
@@ -38,7 +38,7 @@ func Sample2() {
 			panic("err closing db connection")
 		}
 	}(db)
-	curiosity := create.Random()
+	curiosity := create.Random(repository)
 	moveUseCase := move.For(curiosity, repository)
 	err := moveUseCase.MoveSequenceAborting("ffrfblf")
 

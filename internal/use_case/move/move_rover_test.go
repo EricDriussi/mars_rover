@@ -3,12 +3,10 @@ package move_test
 import (
 	"errors"
 	. "github.com/google/uuid"
-	. "mars_rover/internal/domain"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
-	. "mars_rover/internal/domain/planet"
-	. "mars_rover/internal/domain/rover"
 	. "mars_rover/internal/domain/rover/direction"
 	. "mars_rover/internal/domain/rover/planetMap"
+	. "mars_rover/internal/infra/test"
 	"mars_rover/internal/use_case/move"
 	"testing"
 
@@ -164,23 +162,4 @@ func (this *MockRover) Direction() Direction {
 func (this *MockRover) Map() Map {
 	args := this.Called()
 	return args.Get(0).(Map)
-}
-
-type MockRepo struct {
-	Mock
-}
-
-func (this MockRepo) UpdateRover(rover Rover) error {
-	args := this.Called()
-	return args.Error(0)
-}
-
-func (this MockRepo) SaveGame(rover Rover, planet Planet) error {
-	args := this.Called()
-	return args.Error(0)
-}
-
-func (this MockRepo) LoadGame(id UUID) (GameDTO, error) {
-	args := this.Called()
-	return GameDTO{}, args.Error(0)
 }

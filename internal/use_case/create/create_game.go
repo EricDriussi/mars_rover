@@ -1,6 +1,7 @@
 package create
 
 import (
+	. "mars_rover/internal/domain"
 	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/obstacle"
@@ -14,8 +15,8 @@ import (
 	"math/rand"
 )
 
-// TODO.LM: Return error instead of panic?
-func Random() Rover {
+// TODO: Return error instead of panic?
+func Random(repository Repository) Rover {
 	randNum := rand.Intn(99) + 2
 	randSize, err := size.Square(randNum)
 	if err != nil {
@@ -36,7 +37,10 @@ func Random() Rover {
 			couldNotLand = false
 		}
 	}
-	// TODO: Persist planet and rover
+	err = repository.SaveGame(randRover, randPlanet)
+	if err != nil {
+		panic("Couldn't save game :(")
+	}
 	return randRover
 }
 

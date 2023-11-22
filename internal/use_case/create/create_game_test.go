@@ -1,6 +1,7 @@
 package create_test
 
 import (
+	. "mars_rover/internal/infra/test"
 	"mars_rover/internal/use_case/create"
 	"testing"
 
@@ -13,9 +14,11 @@ func TestRandomCreationDoesNotPanic(t *testing.T) {
 			t.Errorf("The code panicked: %v", r)
 		}
 	}()
+	repo := new(MockRepo)
+	repo.On("SaveGame").Return(nil)
 
 	for i := 0; i < 25; i++ {
-		rover := create.Random()
+		rover := create.Random(repo)
 		assert.NotNil(t, rover)
 	}
 }
