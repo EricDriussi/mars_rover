@@ -9,8 +9,8 @@ import (
 )
 
 // TODO: LIST OF THINGS!
-// API
 // GUI
+// API
 func Sample1() {
 	db, repository := infra.InitFS()
 	defer func(db *sql.DB) {
@@ -19,7 +19,10 @@ func Sample1() {
 			panic("err closing db connection")
 		}
 	}(db)
-	curiosity := create.Random(repository)
+	curiosity, err := create.Random(repository)
+	if err != nil {
+		panic("Could not initialize game :c")
+	}
 	moveUseCase := move.For(curiosity, repository)
 	movementErrors := moveUseCase.MoveSequence("ffrfblf")
 
@@ -38,9 +41,12 @@ func Sample2() {
 			panic("err closing db connection")
 		}
 	}(db)
-	curiosity := create.Random(repository)
+	curiosity, err := create.Random(repository)
+	if err != nil {
+		panic("Could not initialize game :c")
+	}
 	moveUseCase := move.For(curiosity, repository)
-	err := moveUseCase.MoveSequenceAborting("ffrfblf")
+	err = moveUseCase.MoveSequenceAborting("ffrfblf")
 
 	if err != nil {
 		fmt.Println(err)

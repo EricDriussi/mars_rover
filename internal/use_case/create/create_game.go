@@ -15,33 +15,32 @@ import (
 	"math/rand"
 )
 
-// TODO: Return error instead of panic?
-func Random(repository Repository) Rover {
+func Random(repository Repository) (Rover, error) {
 	randNum := rand.Intn(99) + 2
 	randSize, err := size.Square(randNum)
 	if err != nil {
-		panic("Something went wrong :(")
+		return nil, err
 	}
 
 	randPlanet, err := rockyPlanet.Create(randomColor(), *randSize, randomObstaclesWithin(*randSize))
 	if err != nil {
-		panic("Something went wrong :(")
+		return nil, err
 	}
 
 	var randRover Rover
 	couldNotLand := true
 	for couldNotLand {
-
 		randRover, err = wrappingCollidingRover.LandFacing(randomDirection(), randomCoordinateWithin(*randSize), randPlanet)
 		if err == nil {
 			couldNotLand = false
 		}
 	}
+
 	err = repository.SaveGame(randRover, randPlanet)
 	if err != nil {
-		panic("Couldn't save game :(")
+		return nil, err
 	}
-	return randRover
+	return randRover, nil
 }
 
 func randomObstaclesWithin(size Size) []Obstacle {
