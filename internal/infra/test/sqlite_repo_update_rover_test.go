@@ -41,7 +41,7 @@ func TestUpdatesRover(t *testing.T) {
 			err = repo.UpdateRover(testRover)
 			assert.Nil(t, err)
 
-			foundRover, err := getLastPersistedRover(db, testPlanet)
+			foundRover, err := getLastPersistedRover(db)
 			assertRoversAreEqual(t, foundRover, testRover)
 		})
 	}

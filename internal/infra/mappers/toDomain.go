@@ -15,15 +15,17 @@ import (
 	. "mars_rover/internal/domain/rover"
 	. "mars_rover/internal/domain/rover/direction"
 	"mars_rover/internal/domain/rover/godModRover"
+	. "mars_rover/internal/domain/rover/planetMap"
+	pm "mars_rover/internal/domain/rover/planetMap"
 	"mars_rover/internal/domain/rover/wrappingCollidingRover"
 	s "mars_rover/internal/domain/size"
 	. "mars_rover/internal/infra/entities"
 )
 
-func MapToDomainRovers(roverEntities []RoverEntity, planet Planet) ([]Rover, error) {
+func MapToDomainRovers(roverEntities []RoverEntity) ([]Rover, error) {
 	rovers := make([]Rover, 0, len(roverEntities))
 	for _, roverEntity := range roverEntities {
-		rover, err := MapToDomainRover(roverEntity, planet)
+		rover, err := MapToDomainRover(roverEntity)
 		if err != nil {
 			return nil, err
 		}
@@ -33,17 +35,31 @@ func MapToDomainRovers(roverEntities []RoverEntity, planet Planet) ([]Rover, err
 
 }
 
-func MapToDomainRover(roverEntity RoverEntity, planet Planet) (Rover, error) {
+func MapToDomainRover(roverEntity RoverEntity) (Rover, error) {
 	direction, err := directionFromString(roverEntity.Direction)
 	if err != nil {
 		return nil, err
 	}
 	coordinate := absoluteCoordinate.From(roverEntity.Coordinate.X, roverEntity.Coordinate.Y)
 
-	if roverEntity.GodMod {
-		return godModRover.LandFacing(direction, *coordinate, planet), nil
+	domainMap, err := mapToDomainMap(roverEntity.PlanetMap)
+	if err != nil {
+		return nil, err
 	}
-	return wrappingCollidingRover.LandFacing(direction, *coordinate, planet)
+
+	if roverEntity.GodMod {
+		return godModRover.Start(direction, *coordinate, domainMap), nil
+	}
+	return wrappingCollidingRover.Start(direction, *coordinate, domainMap)
+}
+
+func mapToDomainMap(planetMap MapEntity) (Map, error) {
+	size, err := s.Shape(planetMap.Size.Width, planetMap.Size.Height)
+	if err != nil {
+		return Map{}, err
+	}
+	obstacles := mapToDomainObstacles(planetMap.Obstacles)
+	return *pm.Of(*size, obstacles), nil
 }
 
 func directionFromString(dirStr string) (Direction, error) {

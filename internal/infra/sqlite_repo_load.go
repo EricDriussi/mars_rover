@@ -2,6 +2,7 @@ package infra
 
 import (
 	"encoding/json"
+	"errors"
 	. "github.com/google/uuid"
 	. "mars_rover/internal/domain"
 	. "mars_rover/internal/infra/entities"
@@ -11,12 +12,15 @@ import (
 )
 
 func (r *SQLiteRepository) LoadGame(id UUID) (GameDTO, error) {
-	roverEntity, err := r.getRover(id)
+	optionalRover, err := r.getRover(id)
 	if err != nil {
 		return GameDTO{}, err
 	}
+	if !optionalRover.Present {
+		return GameDTO{}, errors.New("rover not found")
+	}
 
-	planetEntity, err := r.getPlanet(roverEntity.PlanetId)
+	planetEntity, err := r.getPlanet(optionalRover.Value.PlanetId)
 	if err != nil {
 		return GameDTO{}, err
 	}
@@ -26,7 +30,7 @@ func (r *SQLiteRepository) LoadGame(id UUID) (GameDTO, error) {
 		return GameDTO{}, err
 	}
 
-	domainRover, err := MapToDomainRover(roverEntity, domainPlanet)
+	domainRover, err := MapToDomainRover(optionalRover.Value)
 	if err != nil {
 		return GameDTO{}, err
 	}
@@ -37,7 +41,7 @@ func (r *SQLiteRepository) LoadGame(id UUID) (GameDTO, error) {
 	}, nil
 }
 
-func (r *SQLiteRepository) getRover(roverId UUID) (RoverEntity, error) {
+func (r *SQLiteRepository) getRover(roverId UUID) (OptionalRover, error) {
 	row := r.db.QueryRow("SELECT * FROM "+RoversTable+" WHERE id = ?", roverId.String())
 
 	var id string
@@ -46,16 +50,25 @@ func (r *SQLiteRepository) getRover(roverId UUID) (RoverEntity, error) {
 	var planetId int
 	err := row.Scan(&id, &rover, &godMod, &planetId)
 	if err != nil {
-		return RoverEntity{}, err
+		return OptionalRover{
+			Value:   RoverEntity{},
+			Present: false,
+		}, nil
 	}
 	var roverEntity RoverEntity
 	err = json.Unmarshal([]byte(rover), &roverEntity)
 	if err != nil {
-		return RoverEntity{}, err
+		return OptionalRover{
+			Value:   RoverEntity{},
+			Present: false,
+		}, err
 	}
 	roverEntity.GodMod = godMod
 	roverEntity.PlanetId = planetId
-	return roverEntity, nil
+	return OptionalRover{
+		Value:   roverEntity,
+		Present: true,
+	}, nil
 }
 
 func (r *SQLiteRepository) getPlanet(planetId int) (PlanetEntity, error) {

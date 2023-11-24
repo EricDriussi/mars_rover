@@ -16,7 +16,7 @@ func InitMem() (*sql.DB, *SQLiteRepository) {
 }
 
 func InitFS() (*sql.DB, *SQLiteRepository) {
-	db := setup("./mars_rover.db")
+	db := setup("./rover.db")
 	return db, &SQLiteRepository{db: db}
 }
 

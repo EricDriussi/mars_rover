@@ -13,6 +13,11 @@ type RoverEntity struct {
 	PlanetId   int              `json:"planetId"`
 }
 
+type OptionalRover struct {
+	Value   RoverEntity
+	Present bool
+}
+
 type MapEntity struct {
 	Size      SizeEntity       `json:"size"`
 	Obstacles []ObstacleEntity `json:"obstacles"`

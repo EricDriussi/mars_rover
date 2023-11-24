@@ -38,7 +38,7 @@ func TestSavesRover(t *testing.T) {
 			err := repo.SaveGame(testRover, testPlanet)
 			assert.Nil(t, err)
 
-			foundRover, err := getLastPersistedRover(db, testPlanet)
+			foundRover, err := getLastPersistedRover(db)
 			assertRoversAreEqual(t, foundRover, testRover)
 			foundPlanet, err := getLastPersistedPlanet(db)
 			assertPlanetsAreEqual(t, testPlanet, foundPlanet)
