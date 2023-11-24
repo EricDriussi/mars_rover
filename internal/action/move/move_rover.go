@@ -9,17 +9,17 @@ import (
 	"strings"
 )
 
-type UseCase struct {
+type Action struct {
 	repo Repository
 }
 
-func For(repo Repository) *UseCase {
-	return &UseCase{
+func For(repo Repository) *Action {
+	return &Action{
 		repo: repo,
 	}
 }
 
-func (this *UseCase) MoveSequence(id string, commands string) []error {
+func (this *Action) MoveSequence(id string, commands string) []error {
 	var errs []error
 	uid, err := uuid.Parse(id)
 	if err != nil {
@@ -47,7 +47,7 @@ func (this *UseCase) MoveSequence(id string, commands string) []error {
 	return nil
 }
 
-func (this *UseCase) MoveSequenceAborting(id string, commands string) error {
+func (this *Action) MoveSequenceAborting(id string, commands string) error {
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		return errors.New("invalid id format")

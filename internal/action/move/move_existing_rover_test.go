@@ -4,11 +4,11 @@ import (
 	"errors"
 	"github.com/google/uuid"
 	. "github.com/google/uuid"
+	"mars_rover/internal/action/move"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/rover/direction"
 	. "mars_rover/internal/domain/rover/planetMap"
 	. "mars_rover/internal/infra/test"
-	"mars_rover/internal/use_case/move"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

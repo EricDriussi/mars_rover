@@ -1,8 +1,8 @@
 package create_test
 
 import (
+	"mars_rover/internal/action/create"
 	. "mars_rover/internal/infra/test"
-	"mars_rover/internal/use_case/create"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

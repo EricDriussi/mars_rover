@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"mars_rover/internal/action/create"
+	"mars_rover/internal/action/move"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/obstacle/obstacles"
 	. "mars_rover/internal/infra"
-	"mars_rover/internal/use_case/create"
-	"mars_rover/internal/use_case/move"
 	"net/http"
 	"strconv"
 )
