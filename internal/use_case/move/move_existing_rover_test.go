@@ -2,6 +2,7 @@ package move_test
 
 import (
 	"errors"
+	"github.com/google/uuid"
 	. "github.com/google/uuid"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/rover/direction"
@@ -15,70 +16,81 @@ import (
 )
 
 func TestHandlesASingleMovementCommand(t *testing.T) {
-	curiosity := new(MockRover)
-	curiosity.On("MoveForward").Return(nil)
 	repo := new(MockRepo)
+	moveUseCase := move.For(repo)
+	curiosity := new(MockRover)
+	repo.On("GetRover").Return(curiosity, nil)
+	curiosity.On("Id").Return(uuid.New())
 	repo.On("UpdateRover").Return(nil)
-	moveUseCase := move.For(curiosity, repo)
+	curiosity.On("MoveForward").Return(nil)
 
-	movementErrors := moveUseCase.MoveSequence("f")
+	movementErrors := moveUseCase.MoveSequence(curiosity.Id().String(), "f")
 
 	curiosity.AssertCalled(t, "MoveForward")
 	assert.Nil(t, movementErrors)
 }
 
 func TestHandlesASingleTurningCommand(t *testing.T) {
-	curiosity := new(MockRover)
-	curiosity.On("TurnRight").Return()
 	repo := new(MockRepo)
+	moveUseCase := move.For(repo)
+	curiosity := new(MockRover)
+	repo.On("GetRover").Return(curiosity, nil)
+	curiosity.On("Id").Return(uuid.New())
 	repo.On("UpdateRover").Return(nil)
-	moveUseCase := move.For(curiosity, repo)
+	curiosity.On("TurnRight").Return()
 
-	movementErrors := moveUseCase.MoveSequence("r")
+	movementErrors := moveUseCase.MoveSequence(curiosity.Id().String(), "r")
 
 	curiosity.AssertCalled(t, "TurnRight")
 	assert.Nil(t, movementErrors)
 }
 
 func TestHandlesASingleFailedMovementCommand(t *testing.T) {
-	curiosity := new(MockRover)
-	curiosity.On("MoveForward").Return(errors.New(""))
 	repo := new(MockRepo)
+	moveUseCase := move.For(repo)
+	curiosity := new(MockRover)
+	repo.On("GetRover").Return(curiosity, nil)
+	curiosity.On("Id").Return(uuid.New())
 	repo.On("UpdateRover").Return(nil)
-	moveUseCase := move.For(curiosity, repo)
+	curiosity.On("MoveForward").Return(errors.New(""))
 
-	movementErrors := moveUseCase.MoveSequence("f")
+	movementErrors := moveUseCase.MoveSequence(curiosity.Id().String(), "f")
 
 	curiosity.AssertCalled(t, "MoveForward")
 	assert.Error(t, movementErrors[0])
 }
 
 func TestHandlesASingleUnknownCommand(t *testing.T) {
-	curiosity := new(MockRover)
 	repo := new(MockRepo)
+	moveUseCase := move.For(repo)
+	curiosity := new(MockRover)
+	repo.On("GetRover").Return(curiosity, nil)
+	curiosity.On("Id").Return(uuid.New())
 	repo.On("UpdateRover").Return(nil)
-	moveUseCase := move.For(curiosity, repo)
 
-	movementErrors := moveUseCase.MoveSequence("X")
+	movementErrors := moveUseCase.MoveSequence(curiosity.Id().String(), "X")
 
 	curiosity.AssertNotCalled(t, "TurnRight")
 	curiosity.AssertNotCalled(t, "TurnLeft")
 	curiosity.AssertNotCalled(t, "MoveForward")
 	curiosity.AssertNotCalled(t, "MoveBackward")
 	assert.Error(t, movementErrors[0])
+	assert.Contains(t, movementErrors[0].Error(), "invalid command")
 }
 
 func TestHandlesMultipleKnownCommands(t *testing.T) {
+	repo := new(MockRepo)
+	moveUseCase := move.For(repo)
 	curiosity := new(MockRover)
+	repo.On("GetRover").Return(curiosity, nil)
+	curiosity.On("Id").Return(uuid.New())
 	curiosity.On("TurnRight").Return()
 	curiosity.On("TurnLeft").Return()
 	curiosity.On("MoveForward").Return(nil)
 	curiosity.On("MoveBackward").Return(nil)
-	repo := new(MockRepo)
 	repo.On("UpdateRover").Return(nil)
-	moveUseCase := move.For(curiosity, repo)
 
-	movementErrors := moveUseCase.MoveSequence("rlfb")
+	movementErrors := moveUseCase.MoveSequence(curiosity.Id().String(), "rlfb")
 
 	curiosity.AssertCalled(t, "TurnRight")
 	curiosity.AssertCalled(t, "TurnLeft")
@@ -88,38 +100,51 @@ func TestHandlesMultipleKnownCommands(t *testing.T) {
 }
 
 func TestHandlesMultipleErrors(t *testing.T) {
-	curiosity := new(MockRover)
-	curiosity.On("MoveForward").Return(errors.New(""))
-	curiosity.On("MoveBackward").Return(errors.New(""))
 	repo := new(MockRepo)
+	moveUseCase := move.For(repo)
+	curiosity := new(MockRover)
+	repo.On("GetRover").Return(curiosity, nil)
+	curiosity.On("Id").Return(uuid.New())
+	movementBlockedError := "movement blocked"
+	curiosity.On("MoveForward").Return(errors.New(movementBlockedError))
+	curiosity.On("MoveBackward").Return(errors.New(movementBlockedError))
 	repo.On("UpdateRover").Return(nil)
-	moveUseCase := move.For(curiosity, repo)
 
-	movementErrors := moveUseCase.MoveSequence("fbXY")
+	movementErrors := moveUseCase.MoveSequence(curiosity.Id().String(), "fbXY")
 
 	curiosity.AssertNotCalled(t, "TurnRight")
 	curiosity.AssertNotCalled(t, "TurnLeft")
 	curiosity.AssertCalled(t, "MoveForward")
 	curiosity.AssertCalled(t, "MoveBackward")
 	assert.Len(t, movementErrors, 4)
+	assert.Contains(t, movementErrors[0].Error(), movementBlockedError)
+	assert.Contains(t, movementErrors[1].Error(), movementBlockedError)
+	assert.Contains(t, movementErrors[2].Error(), "invalid command")
+	assert.Contains(t, movementErrors[3].Error(), "invalid command")
 }
 
 func TestHandlesErrorsAndSuccessfulMovements(t *testing.T) {
-	curiosity := new(MockRover)
-	curiosity.On("MoveBackward").Return(nil)
-	curiosity.On("MoveForward").Return(errors.New(""))
-	curiosity.On("TurnLeft").Return()
 	repo := new(MockRepo)
+	moveUseCase := move.For(repo)
+	curiosity := new(MockRover)
+	repo.On("GetRover").Return(curiosity, nil)
+	curiosity.On("Id").Return(uuid.New())
+	movementBlockedError := "movement blocked"
+	curiosity.On("MoveBackward").Return(nil)
+	curiosity.On("MoveForward").Return(errors.New(movementBlockedError))
+	curiosity.On("TurnLeft").Return()
 	repo.On("UpdateRover").Return(nil)
-	moveUseCase := move.For(curiosity, repo)
 
-	movementErrors := moveUseCase.MoveSequence("bfXYl")
+	movementErrors := moveUseCase.MoveSequence(curiosity.Id().String(), "bfXYl")
 
 	curiosity.AssertNotCalled(t, "TurnRight")
 	curiosity.AssertCalled(t, "TurnLeft")
 	curiosity.AssertCalled(t, "MoveForward")
 	curiosity.AssertCalled(t, "MoveBackward")
 	assert.Len(t, movementErrors, 3)
+	assert.Contains(t, movementErrors[0].Error(), movementBlockedError)
+	assert.Contains(t, movementErrors[1].Error(), "invalid command")
+	assert.Contains(t, movementErrors[2].Error(), "invalid command")
 }
 
 type MockRover struct {

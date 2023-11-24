@@ -57,7 +57,7 @@ func main() {
 }
 
 func randomRoverHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Creating Random Value...")
+	fmt.Println("Creating Random Rover...")
 	db, repository = InitFS()
 	defer func(db *sql.DB) {
 		err := db.Close()
@@ -107,7 +107,7 @@ func randomRoverHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	fmt.Println("Random Value Created!")
+	fmt.Println("Random Rover Created!")
 }
 
 func mapDomainToDTOObstacles(obstacles Obstacles) []ObstacleDTO {
@@ -133,7 +133,7 @@ func mapDomainToDTOCoordinates(c []AbsoluteCoordinate) []CoordinateDTO {
 }
 
 func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Moving Value...")
+	fmt.Println("Moving Rover...")
 	db, repository = InitFS()
 	defer func(db *sql.DB) {
 		err := db.Close()
@@ -156,8 +156,8 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	moveAction, err := move.For2(request.Id, repository)
-	errs := moveAction.MoveSequence(request.Commands)
+	moveAction := move.For(repository)
+	errs := moveAction.MoveSequence(request.Id, request.Commands)
 
 	if len(errs) > 0 {
 		w.Header().Set("Content-Type", "application/json")
@@ -169,5 +169,5 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	fmt.Println("Done Moving Value!")
+	fmt.Println("Done Moving Rover!")
 }

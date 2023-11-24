@@ -10,38 +10,34 @@ import (
 )
 
 type UseCase struct {
-	rover Rover
-	repo  Repository
+	repo Repository
 }
 
-// TODO: rm
-func For(rover Rover, repo Repository) *UseCase {
+func For(repo Repository) *UseCase {
 	return &UseCase{
-		rover: rover,
-		repo:  repo,
+		repo: repo,
 	}
 }
 
-func For2(id string, repo Repository) (*UseCase, error) {
-	rover, err := repo.GetRover(uuid.MustParse(id))
-	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Repository error: %v", err))
-	}
-	return &UseCase{
-		rover: rover,
-		repo:  repo,
-	}, nil
-}
-
-func (this *UseCase) MoveSequence(commands string) []error {
+func (this *UseCase) MoveSequence(id string, commands string) []error {
 	var errs []error
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		errs = append(errs, errors.New("invalid id format"))
+		return errs
+	}
+	rover, err := this.repo.GetRover(uid)
+	if err != nil {
+		errs = append(errs, errors.New(fmt.Sprintf("Repository error: %v", err)))
+		return errs
+	}
 	for _, cmd := range strings.ToLower(commands) {
-		err := this.mapCommandToMovement(string(cmd))
+		err := mapCommandToMovement(rover, string(cmd))
 		if err != nil {
-			errs = append(errs, errors.New(fmt.Sprintf("%v, skipping command %v", err, cmd)))
+			errs = append(errs, errors.New(fmt.Sprintf("%v, skipping command %v", err, string(cmd))))
 		}
 	}
-	err := this.repo.UpdateRover(this.rover)
+	err = this.repo.UpdateRover(rover)
 	if err != nil {
 		errs = append(errs, err)
 	}
@@ -51,14 +47,22 @@ func (this *UseCase) MoveSequence(commands string) []error {
 	return nil
 }
 
-func (this *UseCase) MoveSequenceAborting(commands string) error {
+func (this *UseCase) MoveSequenceAborting(id string, commands string) error {
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		return errors.New("invalid id format")
+	}
+	rover, err := this.repo.GetRover(uid)
+	if err != nil {
+		return errors.New(fmt.Sprintf("Repository error: %v", err))
+	}
 	for _, cmd := range strings.ToLower(commands) {
-		err := this.mapCommandToMovement(string(cmd))
+		err := mapCommandToMovement(rover, string(cmd))
 		if err != nil {
-			return errors.New(fmt.Sprintf("aborting command '%v': %v", cmd, err))
+			return errors.New(fmt.Sprintf("aborting command '%v': %v", string(cmd), err))
 		}
 	}
-	return this.repo.UpdateRover(this.rover)
+	return this.repo.UpdateRover(rover)
 }
 
 type (
@@ -66,12 +70,12 @@ type (
 	Rotation func()
 )
 
-func (this *UseCase) mapCommandToMovement(command string) error {
+func mapCommandToMovement(rover Rover, command string) error {
 	commandActions := map[string]interface{}{
-		"f": Movement(this.rover.MoveForward),
-		"b": Movement(this.rover.MoveBackward),
-		"l": Rotation(this.rover.TurnLeft),
-		"r": Rotation(this.rover.TurnRight),
+		"f": Movement(rover.MoveForward),
+		"b": Movement(rover.MoveBackward),
+		"l": Rotation(rover.TurnLeft),
+		"r": Rotation(rover.TurnRight),
 	}
 	// if action := commandActions[command]; action != nil {}
 	// TODO.LM: is ⬆️ more readable than ⬇️ ?

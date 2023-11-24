@@ -29,5 +29,5 @@ func (this MockRepo) LoadGame(id UUID) (GameDTO, error) {
 
 func (this MockRepo) GetRover(id UUID) (Rover, error) {
 	args := this.Called()
-	return args.Get(0).(Rover), args.Error(0)
+	return args.Get(0).(Rover), args.Error(1)
 }
