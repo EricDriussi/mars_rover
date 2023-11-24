@@ -3,6 +3,7 @@ package move
 import (
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
 	. "mars_rover/internal/domain"
 	. "mars_rover/internal/domain/rover"
 	"strings"
@@ -13,11 +14,23 @@ type UseCase struct {
 	repo  Repository
 }
 
+// TODO: rm
 func For(rover Rover, repo Repository) *UseCase {
 	return &UseCase{
 		rover: rover,
 		repo:  repo,
 	}
+}
+
+func For2(id string, repo Repository) (*UseCase, error) {
+	rover, err := repo.GetRover(uuid.MustParse(id))
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("Repository error: %v", err))
+	}
+	return &UseCase{
+		rover: rover,
+		repo:  repo,
+	}, nil
 }
 
 func (this *UseCase) MoveSequence(commands string) []error {
