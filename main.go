@@ -47,6 +47,7 @@ type CreateResponseDTO struct {
 	Planet PlanetDTO
 }
 
+// TODO: refactor api
 func main() {
 	http.HandleFunc("/api/randomRover", randomRoverHandler)
 	http.HandleFunc("/api/moveSequence", moveSequenceHandler)

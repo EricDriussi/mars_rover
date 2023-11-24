@@ -27,6 +27,10 @@ func (this *Action) MoveSequence(id string, commands string) []error {
 		return errs
 	}
 	rover, err := this.repo.GetRover(uid)
+	if rover == nil {
+		errs = append(errs, errors.New("no rover found for given id"))
+		return errs
+	}
 	if err != nil {
 		errs = append(errs, errors.New(fmt.Sprintf("Repository error: %v", err)))
 		return errs
@@ -53,6 +57,9 @@ func (this *Action) MoveSequenceAborting(id string, commands string) error {
 		return errors.New("invalid id format")
 	}
 	rover, err := this.repo.GetRover(uid)
+	if rover == nil {
+		return errors.New("no rover found for given id")
+	}
 	if err != nil {
 		return errors.New(fmt.Sprintf("Repository error: %v", err))
 	}
