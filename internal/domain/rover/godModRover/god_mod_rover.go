@@ -21,7 +21,7 @@ type GodModRover struct {
 func Land(coordinate AbsoluteCoordinate, planet Planet) *GodModRover {
 	return &GodModRover{
 		id:         uuid.New(),
-		planetMap:  *planetMap.Of(planet),
+		planetMap:  *planetMap.OfPlanet(planet),
 		coordinate: coordinate,
 		direction:  North{},
 	}
@@ -31,7 +31,16 @@ func Land(coordinate AbsoluteCoordinate, planet Planet) *GodModRover {
 func LandFacing(direction Direction, coordinate AbsoluteCoordinate, planet Planet) *GodModRover {
 	return &GodModRover{
 		id:         uuid.New(),
-		planetMap:  *planetMap.Of(planet),
+		planetMap:  *planetMap.OfPlanet(planet),
+		coordinate: coordinate,
+		direction:  direction,
+	}
+}
+
+func Start(direction Direction, coordinate AbsoluteCoordinate, planetMap Map) *GodModRover {
+	return &GodModRover{
+		id:         uuid.New(),
+		planetMap:  planetMap,
 		coordinate: coordinate,
 		direction:  direction,
 	}

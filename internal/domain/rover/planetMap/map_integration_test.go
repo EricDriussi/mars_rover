@@ -21,7 +21,7 @@ func TestReportsCollision(t *testing.T) {
 	x := 3
 	y := 3
 	testPlanet := createPlanetWithObstacleIn(x, y)
-	testMap := planetMap.Of(testPlanet)
+	testMap := planetMap.OfPlanet(testPlanet)
 	obstacleCoordinate := absoluteCoordinate.From(x, y)
 
 	didCollide := testMap.HasObstacleIn(*obstacleCoordinate)
@@ -40,7 +40,7 @@ func TestReportsNOCollision(t *testing.T) {
 				testCoordinate := absoluteCoordinate.From(x, y)
 				testPlanet := createPlanetWithRandomObstaclesNotIn(*planetSize, *testCoordinate)
 
-				testMap := planetMap.Of(testPlanet)
+				testMap := planetMap.OfPlanet(testPlanet)
 				didCollide := testMap.HasObstacleIn(*testCoordinate)
 
 				assert.False(t, didCollide)

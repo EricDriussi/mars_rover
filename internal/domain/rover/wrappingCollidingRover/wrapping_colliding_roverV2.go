@@ -22,7 +22,7 @@ type WrappingCollidingRoverV2 struct {
 }
 
 func LandV2(coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRoverV2, error) {
-	mapOfPlanet := planetMap.Of(planet)
+	mapOfPlanet := planetMap.OfPlanet(planet)
 	if mapOfPlanet.HasObstacleIn(coordinate) {
 		return nil, errors.New("cannot land on obstacle")
 	}
@@ -41,7 +41,7 @@ func LandV2(coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRov
 
 // TODO.LM: should be LandFacing{North, East, South, West}
 func LandFacingV2(direction Direction, coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRoverV2, error) {
-	mapOfPlanet := planetMap.Of(planet)
+	mapOfPlanet := planetMap.OfPlanet(planet)
 	if mapOfPlanet.HasObstacleIn(coordinate) {
 		return nil, errors.New("cannot land on obstacle")
 	}

@@ -17,7 +17,7 @@ import (
 func TestMovesForward(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{})
-	testMap := planetMap.Of(testPlanetWithoutObstacles)
+	testMap := planetMap.OfPlanet(testPlanetWithoutObstacles)
 	initialCoordinate := absoluteCoordinate.From(5, 5)
 
 	testCases := []struct {
@@ -58,7 +58,7 @@ func TestMovesForward(t *testing.T) {
 func TestMovesBackward(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{})
-	testMap := planetMap.Of(testPlanetWithoutObstacles)
+	testMap := planetMap.OfPlanet(testPlanetWithoutObstacles)
 	initialCoordinate := absoluteCoordinate.From(5, 5)
 
 	testCases := []struct {

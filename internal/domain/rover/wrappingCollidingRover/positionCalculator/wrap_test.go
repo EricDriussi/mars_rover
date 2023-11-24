@@ -17,7 +17,7 @@ import (
 func TestWrapsMovingForward(t *testing.T) {
 	planetSize, _ := size.Square(3)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{})
-	testMap := planetMap.Of(testPlanetWithoutObstacles)
+	testMap := planetMap.OfPlanet(testPlanetWithoutObstacles)
 
 	testCases := []struct {
 		name               string
@@ -62,7 +62,7 @@ func TestWrapsMovingForward(t *testing.T) {
 func TestWrapsMovingBackwards(t *testing.T) {
 	planetSize, _ := size.Square(3)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{})
-	testMap := planetMap.Of(testPlanetWithoutObstacles)
+	testMap := planetMap.OfPlanet(testPlanetWithoutObstacles)
 
 	testCases := []struct {
 		name               string

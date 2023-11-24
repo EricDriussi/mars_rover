@@ -12,6 +12,7 @@ import (
 	"mars_rover/internal/domain/rover/wrappingCollidingRover/positionCalculator"
 )
 
+// TODO: use V2
 type WrappingCollidingRover struct {
 	id         UUID
 	planetMap  Map
@@ -20,7 +21,7 @@ type WrappingCollidingRover struct {
 }
 
 func Land(coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRover, error) {
-	mapOfPlanet := planetMap.Of(planet)
+	mapOfPlanet := planetMap.OfPlanet(planet)
 	if mapOfPlanet.HasObstacleIn(coordinate) {
 		return nil, errors.New("cannot land on obstacle")
 	}
@@ -38,7 +39,7 @@ func Land(coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRover
 
 // TODO.LM: should be LandFacing{North, East, South, West}
 func LandFacing(direction Direction, coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRover, error) {
-	mapOfPlanet := planetMap.Of(planet)
+	mapOfPlanet := planetMap.OfPlanet(planet)
 	if mapOfPlanet.HasObstacleIn(coordinate) {
 		return nil, errors.New("cannot land on obstacle")
 	}
@@ -48,6 +49,16 @@ func LandFacing(direction Direction, coordinate AbsoluteCoordinate, planet Plane
 	newRover := &WrappingCollidingRover{
 		id:         uuid.New(),
 		planetMap:  *mapOfPlanet,
+		coordinate: coordinate,
+		direction:  direction,
+	}
+	return newRover, nil
+}
+
+func Start(direction Direction, coordinate AbsoluteCoordinate, planetMap Map) (*WrappingCollidingRover, error) {
+	newRover := &WrappingCollidingRover{
+		id:         uuid.New(),
+		planetMap:  planetMap,
 		coordinate: coordinate,
 		direction:  direction,
 	}
