@@ -9,15 +9,16 @@ import (
 	. "mars_rover/internal/domain/rover/direction"
 	"mars_rover/internal/domain/rover/planetMap"
 	. "mars_rover/internal/domain/rover/planetMap"
-	"mars_rover/internal/domain/rover/wrappingCollidingRover/positionCalculator"
+	"mars_rover/internal/domain/rover/wrappingCollidingRover/gps"
+	. "mars_rover/internal/domain/rover/wrappingCollidingRover/gps"
 )
 
-// TODO: use V2
 type WrappingCollidingRover struct {
 	id         UUID
 	planetMap  Map
 	coordinate AbsoluteCoordinate
 	direction  Direction
+	gps        GPS
 }
 
 func Land(coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRover, error) {
@@ -34,6 +35,7 @@ func Land(coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRover
 		coordinate: coordinate,
 		direction:  North{},
 	}
+	newRover.gps = gps.Bind(newRover)
 	return newRover, nil
 }
 
@@ -52,11 +54,12 @@ func LandFacing(direction Direction, coordinate AbsoluteCoordinate, planet Plane
 		coordinate: coordinate,
 		direction:  direction,
 	}
+	newRover.gps = gps.Bind(newRover)
 	return newRover, nil
 }
 
 func (this *WrappingCollidingRover) MoveForward() error {
-	futureCoordinate := positionCalculator.Forward(this.direction, this.coordinate, this.planetMap)
+	futureCoordinate := this.gps.Ahead()
 	willHitSomething := this.planetMap.HasObstacleIn(futureCoordinate)
 	if willHitSomething {
 		return errors.New("cannot move forward, something is in the way")
@@ -66,7 +69,7 @@ func (this *WrappingCollidingRover) MoveForward() error {
 }
 
 func (this *WrappingCollidingRover) MoveBackward() error {
-	futureCoordinate := positionCalculator.Backward(this.direction, this.coordinate, this.planetMap)
+	futureCoordinate := this.gps.Behind()
 	willHitSomething := this.planetMap.HasObstacleIn(futureCoordinate)
 	if willHitSomething {
 		return errors.New("cannot move backward, something is in the way")
