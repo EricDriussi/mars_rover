@@ -5,7 +5,6 @@ import (
 	"fmt"
 	. "mars_rover/internal/domain"
 	. "mars_rover/internal/domain/rover"
-	"reflect"
 	"strings"
 )
 
@@ -20,8 +19,7 @@ func For(repo Repository) *Action {
 }
 
 func (this *Action) MoveSequence(rover Rover, commands string) (Rover, []error) {
-	roverBeforeMovement, err := copyOfRover(rover)
-	if err != nil {
+	if rover == nil {
 		return nil, []error{errors.New("unexpected error, got nil rover")}
 	}
 	var movementErrors []error
@@ -31,16 +29,15 @@ func (this *Action) MoveSequence(rover Rover, commands string) (Rover, []error) 
 			movementErrors = append(movementErrors, errors.New(fmt.Sprintf("%v, skipping command %v", err, string(cmd))))
 		}
 	}
-	err = this.repo.UpdateRover(rover)
+	err := this.repo.UpdateRover(rover)
 	if err != nil {
-		return roverBeforeMovement, []error{errors.New(fmt.Sprintf("unexpected error, couldn't save rover: %v", err))}
+		return nil, []error{errors.New(fmt.Sprintf("unexpected error, couldn't save rover: %v", err))}
 	}
 	return rover, movementErrors
 }
 
 func (this *Action) MoveSequenceAborting(rover Rover, commands string) (Rover, error) {
-	roverBeforeMovement, err := copyOfRover(rover)
-	if err != nil {
+	if rover == nil {
 		return nil, errors.New("unexpected error, got nil rover")
 	}
 	for _, cmd := range strings.ToLower(commands) {
@@ -49,9 +46,9 @@ func (this *Action) MoveSequenceAborting(rover Rover, commands string) (Rover, e
 			return rover, errors.New(fmt.Sprintf("aborting command '%v': %v", string(cmd), err))
 		}
 	}
-	err = this.repo.UpdateRover(rover)
+	err := this.repo.UpdateRover(rover)
 	if err != nil {
-		return roverBeforeMovement, errors.New(fmt.Sprintf("unexpected error, couldn't save rover: %v", err))
+		return nil, errors.New(fmt.Sprintf("unexpected error, couldn't save rover: %v", err))
 	}
 	return rover, nil
 }
@@ -80,22 +77,4 @@ func mapCommandToMovement(rover Rover, command string) error {
 		}
 	}
 	return errors.New("invalid command")
-}
-
-func copyOfRover(original Rover) (Rover, error) {
-	if original == nil {
-		return nil, errors.New("cannot create copy of nil rover")
-	}
-
-	roverType := reflect.TypeOf(original).Elem()
-	copyRover := reflect.New(roverType).Interface().(Rover)
-
-	copyRoverValue := reflect.ValueOf(copyRover).Elem()
-	originalRoverValue := reflect.ValueOf(original).Elem()
-
-	for i := 0; i < roverType.NumField(); i++ {
-		copyRoverValue.Field(i).Set(originalRoverValue.Field(i))
-	}
-
-	return copyRover, nil
 }

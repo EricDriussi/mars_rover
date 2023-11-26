@@ -1,4 +1,5 @@
 let roverId;
+let planet;
 
 document.addEventListener('DOMContentLoaded', function () {
     getRandomRover();
@@ -12,6 +13,7 @@ function getRandomRover() {
         .then(data => {
             console.log('Random Rover:', data);
             roverId = data.Rover.Id;
+            planet = data.Planet;
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -39,17 +41,16 @@ function moveRover() {
     })
         .then(response => {
             if (response.ok) {
-                console.log('Rover moved successfully');
-                console.log(response.json());
-            } else {
                 return response.json();
+            } else {
+                return response.json().then(errors => {
+                    throw new Error(errors.join('\n'));
+                });
             }
         })
-        .then(errors => {
-            if (errors) {
-                console.error('Error moving rover:', errors);
-                alert('Error moving rover. Check the console for details.');
-            }
+        .then(data => {
+            console.log('Rover moved successfully:', data);
+            drawPlanetAndRover(planet, data)
         })
         .catch(error => {
             console.error('Error moving rover:', error);

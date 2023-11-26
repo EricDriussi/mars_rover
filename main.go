@@ -166,24 +166,50 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 
 	rover, exists := roversMap[request.Id]
 	if !exists {
+		// TODO: get from db?
 		http.Error(w, "Rover not found", http.StatusBadRequest)
 		return
 	}
 
 	moveAction := move.For(repository)
-	// TODO: is copying rover and returning enough?
-	// returning the new rover hides the mutation
-	_, errs := moveAction.MoveSequence(rover, request.Commands)
+	updatedRover, errs := moveAction.MoveSequence(rover, request.Commands)
+	// TODO: this sucks, find a better way
+	if updatedRover == nil {
+		http.Error(w, "Could not save rover, aborting", http.StatusInternalServerError)
+		return
+	}
 
+	coordinate := updatedRover.Coordinate()
+	roverToReturn := RoverDTO{
+		Id: updatedRover.Id().String(),
+		Coordinate: CoordinateDTO{
+			X: coordinate.X(),
+			Y: coordinate.Y(),
+		},
+		Direction: updatedRover.Direction().CardinalPoint(),
+	}
+
+	jsonResponse, err := json.Marshal(roverToReturn)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	// TODO: handle differently based on if movement errors or other type of error
 	if len(errs) > 0 {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
 		err = json.NewEncoder(w).Encode(errs)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
+	}
+	w.Header().Set("Content-Length", strconv.Itoa(len(jsonResponse)))
+	w.WriteHeader(http.StatusOK)
+	_, err = w.Write(jsonResponse)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
+
 	fmt.Println("Done Moving Rover!")
 }
