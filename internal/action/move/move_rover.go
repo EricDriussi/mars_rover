@@ -3,9 +3,9 @@ package move
 import (
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
 	. "mars_rover/internal/domain"
 	. "mars_rover/internal/domain/rover"
+	"reflect"
 	"strings"
 )
 
@@ -19,57 +19,41 @@ func For(repo Repository) *Action {
 	}
 }
 
-func (this *Action) MoveSequence(id string, commands string) []error {
-	var errs []error
-	uid, err := uuid.Parse(id)
+func (this *Action) MoveSequence(rover Rover, commands string) (Rover, []error) {
+	roverBeforeMovement, err := copyOfRover(rover)
 	if err != nil {
-		errs = append(errs, errors.New("invalid id format"))
-		return errs
+		return nil, []error{errors.New("unexpected error, got nil rover")}
 	}
-	rover, err := this.repo.GetRover(uid)
-	if rover == nil {
-		errs = append(errs, errors.New("no rover found for given id"))
-		return errs
-	}
-	if err != nil {
-		errs = append(errs, errors.New(fmt.Sprintf("Repository error: %v", err)))
-		return errs
-	}
+	var movementErrors []error
 	for _, cmd := range strings.ToLower(commands) {
 		err := mapCommandToMovement(rover, string(cmd))
 		if err != nil {
-			errs = append(errs, errors.New(fmt.Sprintf("%v, skipping command %v", err, string(cmd))))
+			movementErrors = append(movementErrors, errors.New(fmt.Sprintf("%v, skipping command %v", err, string(cmd))))
 		}
 	}
 	err = this.repo.UpdateRover(rover)
 	if err != nil {
-		errs = append(errs, err)
+		return roverBeforeMovement, []error{errors.New(fmt.Sprintf("unexpected error, couldn't save rover: %v", err))}
 	}
-	if len(errs) > 0 {
-		return errs
-	}
-	return nil
+	return rover, movementErrors
 }
 
-func (this *Action) MoveSequenceAborting(id string, commands string) error {
-	uid, err := uuid.Parse(id)
+func (this *Action) MoveSequenceAborting(rover Rover, commands string) (Rover, error) {
+	roverBeforeMovement, err := copyOfRover(rover)
 	if err != nil {
-		return errors.New("invalid id format")
-	}
-	rover, err := this.repo.GetRover(uid)
-	if rover == nil {
-		return errors.New("no rover found for given id")
-	}
-	if err != nil {
-		return errors.New(fmt.Sprintf("Repository error: %v", err))
+		return nil, errors.New("unexpected error, got nil rover")
 	}
 	for _, cmd := range strings.ToLower(commands) {
 		err := mapCommandToMovement(rover, string(cmd))
 		if err != nil {
-			return errors.New(fmt.Sprintf("aborting command '%v': %v", string(cmd), err))
+			return rover, errors.New(fmt.Sprintf("aborting command '%v': %v", string(cmd), err))
 		}
 	}
-	return this.repo.UpdateRover(rover)
+	err = this.repo.UpdateRover(rover)
+	if err != nil {
+		return roverBeforeMovement, errors.New(fmt.Sprintf("unexpected error, couldn't save rover: %v", err))
+	}
+	return rover, nil
 }
 
 type (
@@ -96,4 +80,22 @@ func mapCommandToMovement(rover Rover, command string) error {
 		}
 	}
 	return errors.New("invalid command")
+}
+
+func copyOfRover(original Rover) (Rover, error) {
+	if original == nil {
+		return nil, errors.New("cannot create copy of nil rover")
+	}
+
+	roverType := reflect.TypeOf(original).Elem()
+	copyRover := reflect.New(roverType).Interface().(Rover)
+
+	copyRoverValue := reflect.ValueOf(copyRover).Elem()
+	originalRoverValue := reflect.ValueOf(original).Elem()
+
+	for i := 0; i < roverType.NumField(); i++ {
+		copyRoverValue.Field(i).Set(originalRoverValue.Field(i))
+	}
+
+	return copyRover, nil
 }

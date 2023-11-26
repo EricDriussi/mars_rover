@@ -171,7 +171,7 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	moveAction := move.For(repository)
-	errs := moveAction.MoveSequence(request.Id, request.Commands)
+	_, errs := moveAction.MoveSequence(rover, request.Commands)
 
 	if len(errs) > 0 {
 		w.Header().Set("Content-Type", "application/json")
