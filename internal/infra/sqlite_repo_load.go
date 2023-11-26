@@ -30,7 +30,7 @@ func (r *SQLiteRepository) LoadGame(id UUID) (GameDTO, error) {
 		return GameDTO{}, err
 	}
 
-	domainRover, err := MapToDomainRover(optionalRover.Value)
+	domainRover, err := MapToDomainRover(optionalRover.Value, domainPlanet)
 	if err != nil {
 		return GameDTO{}, err
 	}

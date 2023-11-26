@@ -10,7 +10,6 @@ type Repository interface {
 	UpdateRover(rover Rover) error
 	SaveGame(rover Rover, planet Planet) error
 	LoadGame(id UUID) (GameDTO, error)
-	GetRover(id UUID) (Rover, error)
 }
 
 type GameDTO struct {

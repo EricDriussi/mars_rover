@@ -16,10 +16,6 @@ func OfPlanet(planet Planet) *Map {
 	return &Map{planet.Size(), planet.Obstacles()}
 }
 
-func Of(size Size, obstacles Obstacles) *Map {
-	return &Map{size, obstacles}
-}
-
 func (this *Map) Width() int {
 	return this.size.Width()
 }

@@ -171,6 +171,8 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	moveAction := move.For(repository)
+	// TODO: is copying rover and returning enough?
+	// returning the new rover hides the mutation
 	_, errs := moveAction.MoveSequence(rover, request.Commands)
 
 	if len(errs) > 0 {

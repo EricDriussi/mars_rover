@@ -11,7 +11,7 @@ import (
 	. "mars_rover/internal/infra/mappers"
 )
 
-func getLastPersistedRover(db *sql.DB) (Rover, error) {
+func getLastPersistedRover(db *sql.DB, planet Planet) (Rover, error) {
 	rows, err := db.Query("SELECT * FROM " + RoversTable)
 	defer func(rows *sql.Rows) {
 		err := rows.Close()
@@ -27,14 +27,14 @@ func getLastPersistedRover(db *sql.DB) (Rover, error) {
 	if err != nil {
 		return nil, err
 	}
-	foundRovers, err := MapToDomainRovers(persistedRovers)
+	if len(persistedRovers) > 1 {
+		return nil, errors.New("more than one rover found")
+	}
+	foundRover, err := MapToDomainRover(persistedRovers[0], planet)
 	if err != nil {
 		return nil, err
 	}
-	if len(foundRovers) > 1 {
-		return nil, errors.New("more than one rover found")
-	}
-	return foundRovers[0], nil
+	return foundRover, nil
 }
 
 func getLastPersistedPlanet(db *sql.DB) (Planet, error) {

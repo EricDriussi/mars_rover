@@ -37,15 +37,6 @@ func LandFacing(direction Direction, coordinate AbsoluteCoordinate, planet Plane
 	}
 }
 
-func Start(direction Direction, coordinate AbsoluteCoordinate, planetMap Map) *GodModRover {
-	return &GodModRover{
-		id:         uuid.New(),
-		planetMap:  planetMap,
-		coordinate: coordinate,
-		direction:  direction,
-	}
-}
-
 func (this *GodModRover) MoveForward() error {
 	this.coordinate = *coordinate.SumOf(this.coordinate, this.direction.RelativeCoordinateAhead())
 	return nil

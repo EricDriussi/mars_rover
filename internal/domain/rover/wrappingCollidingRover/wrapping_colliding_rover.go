@@ -55,16 +55,6 @@ func LandFacing(direction Direction, coordinate AbsoluteCoordinate, planet Plane
 	return newRover, nil
 }
 
-func Start(direction Direction, coordinate AbsoluteCoordinate, planetMap Map) (*WrappingCollidingRover, error) {
-	newRover := &WrappingCollidingRover{
-		id:         uuid.New(),
-		planetMap:  planetMap,
-		coordinate: coordinate,
-		direction:  direction,
-	}
-	return newRover, nil
-}
-
 func (this *WrappingCollidingRover) MoveForward() error {
 	futureCoordinate := positionCalculator.Forward(this.direction, this.coordinate, this.planetMap)
 	willHitSomething := this.planetMap.HasObstacleIn(futureCoordinate)
