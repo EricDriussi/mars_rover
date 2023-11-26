@@ -35,3 +35,12 @@ func TestSquareAllowsRandomPositiveValues(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, testSize)
 }
+
+func TestGetWidthAndHeight(t *testing.T) {
+	dimension := 5
+	testSize, err := size.Square(dimension)
+	assert.Nil(t, err)
+
+	assert.Equal(t, dimension, testSize.Width())
+	assert.Equal(t, dimension, testSize.Height())
+}

@@ -22,3 +22,11 @@ func TestGetsObstacles(t *testing.T) {
 
 	assert.Equal(t, Obstacles{}, planet.Obstacles())
 }
+
+func TestGetsColor(t *testing.T) {
+	sizeLimit, _ := size.Square(5)
+	color := "aColor"
+	planet, _ := emptyPlanet.Create(color, *sizeLimit)
+
+	assert.Equal(t, color, planet.Color())
+}

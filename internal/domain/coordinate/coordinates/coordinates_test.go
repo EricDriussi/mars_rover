@@ -60,3 +60,10 @@ func TestDoesNotOccupyADifferentCoordinate(t *testing.T) {
 
 	assert.False(t, coordinates.Contain(*absoluteCoordinate.From(1, 2)))
 }
+
+func TestGetsList(t *testing.T) {
+	testCoordinates := []AbsoluteCoordinate{*From(1, 1)}
+	coordinates := New(testCoordinates)
+
+	assert.Equal(t, testCoordinates, coordinates.List())
+}

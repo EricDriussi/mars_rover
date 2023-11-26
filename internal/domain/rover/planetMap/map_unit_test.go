@@ -1,12 +1,14 @@
 package planetMap_test
 
 import (
+	"mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/obstacle"
 	"mars_rover/internal/domain/obstacle/obstacles"
 	. "mars_rover/internal/domain/obstacle/test"
 	. "mars_rover/internal/domain/planet/test"
 	"mars_rover/internal/domain/rover/planetMap"
+	"mars_rover/internal/domain/size"
 	. "mars_rover/internal/domain/size"
 	"testing"
 
@@ -42,4 +44,18 @@ func TestReportsNoCollisionWithMock(t *testing.T) {
 
 	mockObstacle.AssertCalled(t, "Occupies", mock.Anything)
 	assert.False(t, didCollide)
+}
+
+func TestIsOutOfBoundsWithMock(t *testing.T) {
+	planetSize, err := size.Square(5)
+	assert.Nil(t, err)
+	mockPlanet := new(MockPlanet)
+	mockPlanet.On("Obstacles").Return(*obstacles.FromList([]Obstacle{}))
+	mockPlanet.On("Size").Return(*planetSize)
+	testMap := planetMap.OfPlanet(mockPlanet)
+
+	assert.False(t, testMap.IsOutOfBounds(*absoluteCoordinate.From(0, 0)))
+	assert.False(t, testMap.IsOutOfBounds(*absoluteCoordinate.From(4, 4)))
+	assert.True(t, testMap.IsOutOfBounds(*absoluteCoordinate.From(6, 6)))
+	assert.True(t, testMap.IsOutOfBounds(*absoluteCoordinate.From(-1, -1)))
 }

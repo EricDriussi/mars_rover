@@ -30,3 +30,16 @@ func TestGetsObstacles(t *testing.T) {
 
 	assert.Equal(t, *obs.FromList(obstacles), planet.Obstacles())
 }
+
+func TestGetsColor(t *testing.T) {
+	sizeLimit, _ := size.Square(5)
+	obstacleOne := new(MockObstacle)
+	obstacleTwo := new(MockObstacle)
+	obstacles := []Obstacle{obstacleOne, obstacleTwo}
+	obstacleOne.On("IsBeyond", Anything).Return(false)
+	obstacleTwo.On("IsBeyond", Anything).Return(false)
+	color := "aColor"
+	planet, _ := rockyPlanet.Create(color, *sizeLimit, obstacles)
+
+	assert.Equal(t, color, planet.Color())
+}

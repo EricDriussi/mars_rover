@@ -64,3 +64,10 @@ func TestDoesNotOccupyADifferentCoordinate(t *testing.T) {
 
 	assert.False(t, rock.Occupies(*absoluteCoordinate.From(1, 2)))
 }
+
+func TestGetCoordinates(t *testing.T) {
+	testCoordinate := absoluteCoordinate.From(2, 1)
+	rock := smallRock.In(*testCoordinate)
+
+	assert.Equal(t, rock.Coordinates(), []AbsoluteCoordinate{*testCoordinate})
+}

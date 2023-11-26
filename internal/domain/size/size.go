@@ -13,13 +13,6 @@ func Square(side int) (*Size, error) {
 	return &Size{side, side}, nil
 }
 
-func Shape(width, height int) (*Size, error) {
-	if width <= 0 || height <= 0 {
-		return nil, errors.New("invalid size!")
-	}
-	return &Size{width, height}, nil
-}
-
 func (this *Size) Width() int {
 	return this.width
 }
