@@ -1,6 +1,7 @@
 let roverId;
 let planet;
 
+// TODO: refactor this file
 document.addEventListener('DOMContentLoaded', function () {
     getRandomRover();
 });

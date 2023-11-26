@@ -50,6 +50,11 @@ type CreateResponseDTO struct {
 	Planet PlanetDTO
 }
 
+type MovementResponseDTO struct {
+	Rover  RoverDTO
+	Errors []string
+}
+
 // TODO: refactor api
 func main() {
 	fs := http.FileServer(http.Dir("./static"))
@@ -172,13 +177,13 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	moveAction := move.For(repository)
-	updatedRover, errs := moveAction.MoveSequence(rover, request.Commands)
-	// TODO: this sucks, find a better way
-	if updatedRover == nil {
-		http.Error(w, "Could not save rover, aborting", http.StatusInternalServerError)
+	movementResult := moveAction.MoveSequence(rover, request.Commands)
+	if movementResult.Error != nil {
+		http.Error(w, fmt.Sprintf("Unexpected error, aborting: %v", movementResult.Error.Error()), http.StatusInternalServerError)
 		return
 	}
 
+	updatedRover := movementResult.Rover
 	coordinate := updatedRover.Coordinate()
 	roverToReturn := RoverDTO{
 		Id: updatedRover.Id().String(),
@@ -189,20 +194,18 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 		Direction: updatedRover.Direction().CardinalPoint(),
 	}
 
-	jsonResponse, err := json.Marshal(roverToReturn)
+	response := MovementResponseDTO{
+		Rover:  roverToReturn,
+		Errors: movementResult.MovementErrors.AsStringArray(),
+	}
+
+	jsonResponse, err := json.Marshal(response)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	// TODO: handle differently based on if movement errors or other type of error
-	if len(errs) > 0 {
-		err = json.NewEncoder(w).Encode(errs)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
-	}
 	w.Header().Set("Content-Length", strconv.Itoa(len(jsonResponse)))
 	w.WriteHeader(http.StatusOK)
 	_, err = w.Write(jsonResponse)
