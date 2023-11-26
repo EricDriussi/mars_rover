@@ -2,17 +2,23 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mars Rover UI</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mars Rover</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-  <button onclick="getRandomRover()">Get Random Rover</button>
-  <textarea id="commands" placeholder="Enter commands"></textarea>
-  <button onclick="moveRover()">Move Rover</button>
+<div id="controls">
+    <button onclick="getRandomRover()">Get Random Rover</button>
+    <input id="commands" placeholder="Enter commands"/>
+    <button onclick="moveRover()">Move Rover</button>
+</div>
+<div id="canvas-container">
+    <canvas id="canvas"></canvas>
+</div>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 
 </html>

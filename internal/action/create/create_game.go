@@ -16,7 +16,7 @@ import (
 )
 
 func Random(repository Repository) (Rover, error) {
-	randNum := rand.Intn(99) + 2
+	randNum := rand.Intn(19) + 4
 	randSize, err := size.Square(randNum)
 	if err != nil {
 		return nil, err

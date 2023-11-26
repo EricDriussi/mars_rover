@@ -49,6 +49,9 @@ type CreateResponseDTO struct {
 
 // TODO: refactor api
 func main() {
+	fs := http.FileServer(http.Dir("./static"))
+	http.Handle("/", fs)
+
 	http.HandleFunc("/api/randomRover", randomRoverHandler)
 	http.HandleFunc("/api/moveSequence", moveSequenceHandler)
 
