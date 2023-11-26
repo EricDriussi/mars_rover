@@ -9,6 +9,7 @@ import (
 	"mars_rover/internal/action/move"
 	. "mars_rover/internal/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/internal/domain/obstacle/obstacles"
+	. "mars_rover/internal/domain/rover"
 	. "mars_rover/internal/infra"
 	"net/http"
 	"strconv"
@@ -20,6 +21,8 @@ var (
 )
 
 const PORT = ":8080"
+
+var roversMap = make(map[string]Rover)
 
 type CoordinateDTO struct {
 	X int
@@ -80,6 +83,7 @@ func randomRoverHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	roversMap[curiosity.Id().String()] = curiosity
 	coordinate := curiosity.Coordinate()
 	m := curiosity.Map()
 	response := CreateResponseDTO{
@@ -157,6 +161,12 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	rover, exists := roversMap[request.Id]
+	if !exists {
+		http.Error(w, "Rover not found", http.StatusBadRequest)
 		return
 	}
 
