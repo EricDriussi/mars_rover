@@ -38,7 +38,7 @@ function moveRover() {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({id: roverId, commands}),
+        body: JSON.stringify({ id: roverId, commands }),
     })
         .then(response => {
             if (response.ok) {
@@ -51,12 +51,31 @@ function moveRover() {
         })
         .then(data => {
             console.log('Rover moved successfully:', data);
-            drawPlanetAndRover(planet, data)
+            drawPlanetAndRover(planet, data.Rover);
+            displayErrors(data.Errors);
         })
         .catch(error => {
             console.error('Error moving rover:', error);
             alert('Error moving rover. Check the console for details.');
         });
+}
+
+function displayErrors(errors) {
+    const errorBox = document.getElementById('error-box');
+    const errorList = document.getElementById('error-list');
+
+    errorList.innerHTML = '';
+
+    if (errors && errors.length > 0) {
+        errorBox.classList.remove('hidden');
+        errors.forEach(error => {
+            const listItem = document.createElement('li');
+            listItem.textContent = error;
+            errorList.appendChild(listItem);
+        });
+    } else {
+        errorBox.classList.add('hidden');
+    }
 }
 
 function drawPlanetAndRover(planet, rover) {
@@ -82,7 +101,7 @@ function drawPlanetAndRover(planet, rover) {
 
         // Draw the rover
         ctx.fillStyle = 'red';
-        // TODO: sometimes it's not there
+        // TODO: sometimes it's not there or it disappears
         ctx.beginPath();
         const roverX = rover.Coordinate.X * cellSize;
         const roverY = canvas.height - (rover.Coordinate.Y + 1) * cellSize;

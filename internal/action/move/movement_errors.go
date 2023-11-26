@@ -30,5 +30,5 @@ type MovementError struct {
 }
 
 func (this *MovementError) AsString() string {
-	return fmt.Sprintf("error executing command %v, collision detected: %v", this.command, this.err)
+	return fmt.Sprintf("error executing command %v: %v", this.command, this.err)
 }
