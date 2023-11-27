@@ -3,58 +3,30 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    height: 100vh;
-    margin: 0;
 }
 
 #controls {
     display: flex;
     justify-content: center;
-    position: fixed;
-    top: 0;
-    margin-top: 20px;
+    margin: 10px;
     background-color: white;
-    z-index: 1;
 }
 
 #canvas-container {
-    margin-top: 60px;
-    position: relative;
+    margin: 10px;
 }
 
 #canvas {
     border: 2px solid black;
 }
 
+#error-box {
+    margin: 10px;
+    padding: 0 20px;
+    border: 2px solid red;
+    background-color: #ffcccc;
+}
+
 .hidden {
     display: none;
-}
-
-#error-box {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, 150%);
-    width: auto;
-    padding: 10px;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    overflow-y: auto;
-    max-height: 200px;
-    white-space: nowrap;
-}
-#error-box h2 {
-    color: #721c24;
-}
-
-#error-list {
-    list-style-type: none;
-    padding: 0;
-}
-
-#error-list li {
-    color: #721c24;
-    margin-bottom: 5px;
 }

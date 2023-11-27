@@ -9,20 +9,19 @@
 </head>
 
 <body>
-<div id="controls">
-    <button onclick="getRandomRover()">Get Random Rover</button>
-    <input id="commands" placeholder="Enter commands"/>
-    <button onclick="moveRover()">Move Rover</button>
-</div>
-<div id="canvas-container">
-    <canvas id="canvas"></canvas>
+    <div id="controls">
+        <button onclick="getRandomRover()">Get Random Rover</button>
+        <input id="commands" placeholder="Enter commands"/>
+        <button onclick="moveRover()">Move Rover</button>
+    </div>
+    <div id="canvas-container">
+        <canvas id="canvas" width="400" height="400"></canvas>
+    </div>
     <div id="error-box" class="hidden">
-        <h2>Movement Errors</h2>
+        <h3>Errors</h3>
         <ul id="error-list"></ul>
     </div>
-</div>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>
