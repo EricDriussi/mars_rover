@@ -1,2 +1,4 @@
 rover.db
 .idea/
+*.iml
+package-lock.json

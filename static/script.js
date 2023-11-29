@@ -4,9 +4,7 @@ import {CanvasPainter} from './painter.js';
 let roverId;
 let planet;
 
-document.addEventListener('DOMContentLoaded', async function () {
-    await getRandomRover();
-});
+document.addEventListener('DOMContentLoaded', () => getRandomRover());
 
 export async function getRandomRover() {
     const response = await fetch('/api/randomRover', {
@@ -25,7 +23,7 @@ export async function getRandomRover() {
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const roverDrawer = new CanvasPainter(canvas);
+    const roverDrawer = new CanvasPainter(canvas, 20);
     roverDrawer.drawPlanetAndRover(data.Planet, data.Rover);
 }
 
@@ -51,7 +49,7 @@ export async function moveRover() {
 
     console.log('Rover moved successfully:', data);
     const canvas = document.getElementById('canvas');
-    const roverDrawer = new CanvasPainter(canvas);
+    const roverDrawer = new CanvasPainter(canvas, 20);
     roverDrawer.drawPlanetAndRover(planet, data.Rover);
     displayErrors(data.Errors);
 }

@@ -1,19 +1,20 @@
 export class CanvasPainter {
-    constructor(canvas) {
+    constructor(canvas, cellSize) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
-        this.cellSize = 20;
+        this.cellSize = cellSize;
     }
 
     drawPlanet(planet) {
         this.canvas.width = planet.Width * this.cellSize;
         this.canvas.height = planet.Height * this.cellSize;
 
-        // Draw the planet
         this.ctx.fillStyle = 'white';
-        this.ctx.fillRect(0, 0, planet.Width * this.cellSize, planet.Height * this.cellSize);
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.drawCellBorders(planet);
+    }
 
-        // Draw the borders
+    drawCellBorders(planet) {
         this.ctx.strokeStyle = 'lightgrey';
         for (let x = 0; x < planet.Width; x++) {
             for (let y = 0; y < planet.Height; y++) {
@@ -28,23 +29,37 @@ export class CanvasPainter {
         const roverX = rover.Coordinate.X * this.cellSize;
         const roverY = this.canvas.height - (rover.Coordinate.Y + 1) * this.cellSize;
 
+        console.log('Rover:', rover.Coordinate.X, rover.Coordinate.Y, rover.Direction);
+
+        console.log('POINTS:', roverX, roverY)
+
+        // Save the current state of the context
+        this.ctx.save();
+
+        // Translate to the center of the rover
+        this.ctx.translate(roverX + this.cellSize / 2, roverY + this.cellSize / 2);
+
+        // Rotate the context based on the rover's direction
         if (rover.Direction === 'N') {
-            this.ctx.moveTo(roverX, roverY);
-            this.ctx.lineTo(roverX + this.cellSize, roverY);
-            this.ctx.lineTo(roverX + this.cellSize / 2, roverY - this.cellSize);
+            this.ctx.rotate(Math.PI);
         } else if (rover.Direction === 'S') {
-            this.ctx.moveTo(roverX, roverY);
-            this.ctx.lineTo(roverX + this.cellSize, roverY);
-            this.ctx.lineTo(roverX + this.cellSize / 2, roverY + this.cellSize);
+            this.ctx.rotate(0);
         } else if (rover.Direction === 'E') {
-            this.ctx.moveTo(roverX, roverY);
-            this.ctx.lineTo(roverX, roverY + this.cellSize);
-            this.ctx.lineTo(roverX + this.cellSize, roverY + this.cellSize / 2);
+            this.ctx.rotate(3 * Math.PI / 2);
         } else if (rover.Direction === 'W') {
-            this.ctx.moveTo(roverX, roverY);
-            this.ctx.lineTo(roverX, roverY + this.cellSize);
-            this.ctx.lineTo(roverX - this.cellSize, roverY + this.cellSize / 2);
+            this.ctx.rotate(Math.PI / 2);
         }
+
+        // Draw the rover at the origin (0, 0)
+        this.ctx.moveTo(-this.cellSize / 2, -this.cellSize / 2);
+        this.ctx.lineTo(this.cellSize / 2, -this.cellSize / 2);
+        this.ctx.lineTo(0, this.cellSize / 2);
+        this.ctx.lineTo(-this.cellSize / 2, -this.cellSize / 2);
+        this.ctx.closePath();
+
+        // Restore the context to its original state
+        this.ctx.restore();
+
         this.ctx.fill();
     }
 
