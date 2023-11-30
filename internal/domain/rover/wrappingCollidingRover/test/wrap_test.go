@@ -14,7 +14,7 @@ import (
 )
 
 func TestWrapsMovingForward(t *testing.T) {
-	planetSize, _ := size.Square(3)
+	planetSize, _ := size.Square(4)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{})
 	testCases := []struct {
 		name               string
@@ -65,7 +65,7 @@ func TestWrapsMovingForward(t *testing.T) {
 }
 
 func TestWrapsMovingBackwards(t *testing.T) {
-	planetSize, _ := size.Square(3)
+	planetSize, _ := size.Square(4)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{})
 	testCases := []struct {
 		name               string

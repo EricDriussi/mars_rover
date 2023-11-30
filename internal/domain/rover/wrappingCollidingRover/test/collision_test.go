@@ -28,7 +28,7 @@ func TestAvoidsCollisionMovingForward(t *testing.T) {
 }
 
 func TestAvoidsCollisionWrappingForward(t *testing.T) {
-	planetSize, _ := size.Square(5)
+	planetSize, _ := size.Square(6)
 	coordinate := absoluteCoordinate.From(3, 5)
 	obstacleAhead := rock.In(*absoluteCoordinate.From(3, 0))
 	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&obstacleAhead})
@@ -56,7 +56,7 @@ func TestAvoidsCollisionMovingBackwards(t *testing.T) {
 }
 
 func TestAvoidsCollisionWrappingBackwards(t *testing.T) {
-	planetSize, _ := size.Square(5)
+	planetSize, _ := size.Square(6)
 	coordinate := absoluteCoordinate.From(3, 0)
 	obstacleBehind := rock.In(*absoluteCoordinate.From(3, 5))
 	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&obstacleBehind})

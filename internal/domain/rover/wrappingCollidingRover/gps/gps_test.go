@@ -103,7 +103,7 @@ func TestCalculatesBehind(t *testing.T) {
 }
 
 func TestCalculatesWrappingAhead(t *testing.T) {
-	planetSize, _ := size.Square(3)
+	planetSize, _ := size.Square(4)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{})
 	testCases := []struct {
 		name               string
@@ -154,7 +154,7 @@ func TestCalculatesWrappingAhead(t *testing.T) {
 }
 
 func TestCalculatesWrappingBehind(t *testing.T) {
-	planetSize, _ := size.Square(3)
+	planetSize, _ := size.Square(4)
 	testPlanetWithoutObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{})
 	testCases := []struct {
 		name               string
