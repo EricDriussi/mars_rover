@@ -29,10 +29,6 @@ export class CanvasPainter {
         const roverX = rover.Coordinate.X * this.cellSize;
         const roverY = this.canvas.height - (rover.Coordinate.Y + 1) * this.cellSize;
 
-        console.log('Rover:', rover.Coordinate.X, rover.Coordinate.Y, rover.Direction);
-
-        console.log('POINTS:', roverX, roverY)
-
         // Save the current state of the context
         this.ctx.save();
 

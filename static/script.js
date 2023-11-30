@@ -17,7 +17,6 @@ export async function getRandomRover() {
         displayErrors(data);
     }
 
-    console.log('Random Rover:', data);
     roverId = data.Rover.Id;
     planet = data.Planet;
     const canvas = document.getElementById('canvas');
