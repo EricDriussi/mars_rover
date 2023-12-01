@@ -3,25 +3,19 @@ import {displayErrors} from "./ErrorPainter.js";
 export class RoverHandler {
     #roverId;
     #lastRoverPosition;
-    #canvas;
     #apiWrapper;
     #canvasPainter;
 
     constructor(apiWrapper, canvasPainter) {
         this.#apiWrapper = apiWrapper;
         this.#canvasPainter = canvasPainter;
-        this.#canvas = canvasPainter.getCanvas();
     }
 
-    async getRandomRover() {
+    async getNewRoverAndPlanet() {
         const gameData = await this.#apiWrapper.callGetEndpoint();
-
         this.#roverId = gameData.Rover.Id;
-        this.#lastRoverPosition = {
-            x: gameData.Rover.Coordinate.X, y: gameData.Rover.Coordinate.Y
-        };
-        const ctx = this.#canvas.getContext('2d');
-        ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
+        this.#lastRoverPosition = gameData.Rover.Coordinate;
+
         this.#canvasPainter.drawPlanet(gameData.Planet);
         this.#canvasPainter.drawObstacles(gameData.Planet.Obstacles);
         this.#canvasPainter.drawRover(gameData.Rover);
@@ -33,18 +27,19 @@ export class RoverHandler {
             return;
         }
 
-        const moveData = await this.#apiWrapper.callMoveEndpoint(this.#roverId, commands)
-        this.#clearPreviousCell();
-        let x = moveData.Rover.Coordinate.X;
-        let y = moveData.Rover.Coordinate.Y;
-        this.#canvasPainter.clearCell(x, y);
-        this.#canvasPainter.drawRover(moveData.Rover);
-        this.#lastRoverPosition = {x, y};
-        displayErrors(moveData.Errors);
+        const movementData = await this.#apiWrapper.callMoveEndpoint(this.#roverId, commands)
+        this.#clearCell(movementData.Rover.Coordinate);
+        this.#canvasPainter.drawRover(movementData.Rover);
+        this.#lastRoverPosition = movementData.Rover.Coordinate;
+        displayErrors(movementData.Errors);
     }
 
-    #clearPreviousCell() {
-        this.#canvasPainter.clearCell(this.#lastRoverPosition.x, this.#lastRoverPosition.y);
+    #clearCell(coordinate) {
+        this.#canvasPainter.clearCell({
+            x: this.#lastRoverPosition.X,
+            y: this.#lastRoverPosition.Y
+        });
+        this.#canvasPainter.clearCell(coordinate);
     }
 }
 

@@ -8,14 +8,15 @@ export class CanvasPainter {
         this.#cellSize = cellSize;
     }
 
-    getCanvas() {
-        return this.#canvas;
-    }
-
     drawPlanet(planet) {
+        this.#clearPlanet();
         this.#setCanvasSize(planet);
         this.#drawEmptyPlanet();
         this.#drawCellsBorders(planet);
+    }
+
+    #clearPlanet() {
+        this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
     }
 
     #drawEmptyPlanet() {
@@ -74,7 +75,7 @@ export class CanvasPainter {
         this.#ctx.closePath();
     }
 
-    clearCell(x, y) {
+    clearCell({x, y}) {
         const roverXGridPosition = x * this.#cellSize;
         const roverYGridPosition = this.#canvas.height - (y + 1) * this.#cellSize;
 
