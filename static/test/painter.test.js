@@ -82,6 +82,38 @@ describe('CanvasPainter should', () => {
         });
     })
 
+    describe('clear a cell given its grid position', () => {
+        const x = 1;
+        const y = 2;
+
+        it('painted white', () => {
+            canvasPainter.clearCell(x, y);
+
+            const xGridPosition = x * cellSize;
+            const yGridPosition = mockCanvas.height - (y + 1) * cellSize;
+            expect(mockCanvas.getContext().fillStyle).toEqual('white');
+            expect(mockCanvas.getContext().fillRect).toHaveBeenCalledWith(
+                xGridPosition,
+                yGridPosition,
+                cellSize,
+                cellSize);
+        });
+
+        it('with lightgray borders', () => {
+            canvasPainter.clearCell(x, y);
+
+            const xGridPosition = x * cellSize;
+            const yGridPosition = mockCanvas.height - (y + 1) * cellSize;
+            expect(mockCanvas.getContext().strokeStyle).toEqual('lightgrey');
+            expect(mockCanvas.getContext().strokeRect).toHaveBeenCalledWith(
+                xGridPosition,
+                yGridPosition,
+                cellSize,
+                cellSize);
+        });
+    });
+
+
     describe('draw a rover', () => {
         const mockRover = newMockRover();
 

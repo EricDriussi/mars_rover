@@ -8,7 +8,7 @@ export class CanvasPainter {
     drawPlanet(planet) {
         this.#setCanvasSize(planet);
         this.#drawEmptyPlanet();
-        this.#drawCellBorders(planet);
+        this.#drawCellsBorders(planet);
     }
 
     #drawEmptyPlanet() {
@@ -21,32 +21,30 @@ export class CanvasPainter {
         this.canvas.height = planet.Height * this.cellSize;
     }
 
-    #drawCellBorders(planet) {
-        this.ctx.strokeStyle = 'lightgrey';
+    #drawCellsBorders(planet) {
         for (let x = 0; x < planet.Width; x++) {
             for (let y = 0; y < planet.Height; y++) {
-                this.ctx.strokeRect(x * this.cellSize, y * this.cellSize, this.cellSize, this.cellSize);
+                this.#drawCellBorder(x * this.cellSize, y * this.cellSize);
             }
         }
     }
 
+    #drawCellBorder(x, y) {
+        this.ctx.strokeStyle = 'lightgrey';
+        this.ctx.strokeRect(x, y, this.cellSize, this.cellSize);
+    }
+
     drawRover(rover) {
+        this.ctx.fillStyle = 'red';
         this.ctx.save();
         this.ctx.beginPath();
 
-        this.ctx.fillStyle = 'red';
         this.#centerOnCell(rover);
         this.#pointDirection(rover.Direction);
         this.#drawTriangle();
 
         this.ctx.restore();
         this.ctx.fill();
-    }
-
-    #centerOnCell(rover) {
-        const roverXGridPosition = rover.Coordinate.X * this.cellSize;
-        const roverYGridPosition = this.canvas.height - (rover.Coordinate.Y + 1) * this.cellSize;
-        this.ctx.translate(roverXGridPosition + this.cellSize / 2, roverYGridPosition + this.cellSize / 2);
     }
 
     #pointDirection(direction) {
@@ -69,6 +67,25 @@ export class CanvasPainter {
         this.ctx.closePath();
     }
 
+    clearCell(x, y) {
+        const roverXGridPosition = x * this.cellSize;
+        const roverYGridPosition = this.canvas.height - (y + 1) * this.cellSize;
+
+        this.#drawEmptyCell(roverXGridPosition, roverYGridPosition);
+        this.#drawCellBorder(roverXGridPosition, roverYGridPosition);
+    }
+
+    #drawEmptyCell(roverXGridPosition, roverYGridPosition) {
+        this.ctx.fillStyle = 'white';
+        this.ctx.fillRect(roverXGridPosition, roverYGridPosition, this.cellSize, this.cellSize);
+    }
+
+    #centerOnCell(rover) {
+        const roverXGridPosition = rover.Coordinate.X * this.cellSize;
+        const roverYGridPosition = this.canvas.height - (rover.Coordinate.Y + 1) * this.cellSize;
+        this.ctx.translate(roverXGridPosition + this.cellSize / 2, roverYGridPosition + this.cellSize / 2);
+    }
+
     drawObstacles(planet) {
         this.ctx.fillStyle = 'black';
         planet.Obstacles.forEach(obstacle => {
@@ -85,11 +102,5 @@ export class CanvasPainter {
             this.cellSize,
             this.cellSize
         );
-    }
-
-    drawPlanetAndRover(planet, rover) {
-        this.drawPlanet(planet);
-        this.drawObstacles(planet);
-        this.drawRover(rover);
     }
 }
