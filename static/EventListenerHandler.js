@@ -1,15 +1,14 @@
-import {getRandomRover, moveRover} from "./script.js";
 
 export class EventHandler {
     #dom;
-    #canvas;
-    constructor(dom) {
+    #roverHandler;
+    constructor(dom, roverHandler) {
         this.#dom = dom;
-        this.#canvas = dom.getElementById('canvas');
+        this.#roverHandler = roverHandler;
     }
 
     listenOnReload() {
-        this.#dom.addEventListener('DOMContentLoaded', () => getRandomRover(this.#canvas)); // NOSONAR
+        this.#dom.addEventListener('DOMContentLoaded', () => this.#roverHandler.getRandomRover()); // NOSONAR
     }
 
     listenOnKeyPress() {
@@ -17,19 +16,19 @@ export class EventHandler {
             switch (event.key) {
                 case 'ArrowUp':
                 case 'k':
-                    await moveRover('f', this.#canvas);
+                    await this.#roverHandler.moveRover('f');
                     break;
                 case 'ArrowDown':
                 case 'j':
-                    await moveRover('b', this.#canvas);
+                    await this.#roverHandler.moveRover('b');
                     break;
                 case 'ArrowLeft':
                 case 'h':
-                    await moveRover('l', this.#canvas);
+                    await this.#roverHandler.moveRover('l');
                     break;
                 case 'ArrowRight':
                 case 'l':
-                    await moveRover('r', this.#canvas);
+                    await this.#roverHandler.moveRover('r');
                     break;
                 default:
                     break;

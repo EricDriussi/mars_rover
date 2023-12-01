@@ -1,4 +1,4 @@
-import {CanvasPainter} from '../canvas_painter.js';
+import {CanvasPainter} from '../CanvasPainter.js';
 
 describe('CanvasPainter should', () => {
     const mockPlanetSize = 5;

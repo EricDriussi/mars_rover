@@ -1,4 +1,4 @@
-import { displayErrors } from './error_painter.js';
+import { displayErrors } from './ErrorPainter.js';
 
 export class ApiWrapper {
     async callGetEndpoint() {

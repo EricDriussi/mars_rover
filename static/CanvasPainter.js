@@ -8,6 +8,10 @@ export class CanvasPainter {
         this.#cellSize = cellSize;
     }
 
+    getCanvas() {
+        return this.#canvas;
+    }
+
     drawPlanet(planet) {
         this.#setCanvasSize(planet);
         this.#drawEmptyPlanet();
