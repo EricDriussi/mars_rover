@@ -89,9 +89,9 @@ export class CanvasPainter {
         this.#ctx.translate(roverXGridPosition + this.#cellSize / 2, roverYGridPosition + this.#cellSize / 2);
     }
 
-    drawObstacles(planet) {
+    drawObstacles(obstacles) {
         this.#ctx.fillStyle = 'black';
-        planet.Obstacles.forEach(obstacle => {
+        obstacles.forEach(obstacle => {
             obstacle.Coordinate.forEach(coordinate => {
                 this.#drawObstacle(coordinate);
             });

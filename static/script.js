@@ -22,7 +22,7 @@ export async function getRandomRover(canvas) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const roverDrawer = new CanvasPainter(canvas, 20);
     roverDrawer.drawPlanet(gameData.Planet);
-    roverDrawer.drawObstacles(gameData.Planet);
+    roverDrawer.drawObstacles(gameData.Planet.Obstacles);
     roverDrawer.drawRover(gameData.Rover);
 }
 

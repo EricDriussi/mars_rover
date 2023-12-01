@@ -1,7 +1,6 @@
 import {CanvasPainter} from '../canvas_painter.js';
 
 describe('CanvasPainter should', () => {
-
     const mockPlanetSize = 5;
     const mockPlanet = newMockPlanet(mockPlanetSize);
 
@@ -48,20 +47,18 @@ describe('CanvasPainter should', () => {
         const anObstacleYPosition = 1;
         const anotherObstacleXPosition = 2;
         const anotherObstacleYPosition = 2;
-        const planetWithObstacles = {
-            ...mockPlanet, Obstacles: [
-                {Coordinate: [{X: anObstacleXPosition, Y: anObstacleYPosition}]},
-                {Coordinate: [{X: anotherObstacleXPosition, Y: anotherObstacleYPosition}]}
-            ]
-        };
+        const obstacles = [
+            {Coordinate: [{X: anObstacleXPosition, Y: anObstacleYPosition}]},
+            {Coordinate: [{X: anotherObstacleXPosition, Y: anotherObstacleYPosition}]}
+        ]
         it('painted black', () => {
-            canvasPainter.drawObstacles(planetWithObstacles);
+            canvasPainter.drawObstacles(obstacles);
 
             expect(mockCanvas.getContext().fillStyle).toEqual('black');
         })
 
         it('at the right position', () => {
-            canvasPainter.drawObstacles(planetWithObstacles);
+            canvasPainter.drawObstacles(obstacles);
 
             const anExpectedXGridPosition = anObstacleXPosition * cellSize;
             const anExpectedYGridPosition = mockCanvas.height - (anObstacleYPosition + 1) * cellSize;
