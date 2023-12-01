@@ -1,4 +1,4 @@
-import {CanvasPainter} from '../painter.js';
+import {CanvasPainter} from '../canvas_painter.js';
 
 describe('CanvasPainter should', () => {
 

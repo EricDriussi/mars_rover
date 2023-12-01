@@ -1,108 +1,65 @@
-// TODO: refactor and test this file
-import {CanvasPainter} from './painter.js';
+import {CanvasPainter} from './canvas_painter.js';
+import {displayErrors} from './error_painter.js';
+import {ApiWrapper} from "./api_wrapper.js";
+import {EventHandler} from "./event_listener_handler.js";
+
+const eventHandler = new EventHandler(document);
+eventHandler.listenOnReload();
+eventHandler.listenOnKeyPress();
 
 let roverId;
-let planet;
+let lastRoverPosition;
 
-document.addEventListener('DOMContentLoaded', () => getRandomRover()); // NOSONAR
+export async function getRandomRover(canvas) {
+    const apiWrapper = new ApiWrapper();
+    const gameData = await apiWrapper.callGetEndpoint();
 
-document.addEventListener('keydown', async (event) => { // NOSONAR
-    switch (event.key) {
-        case 'ArrowUp':
-        case 'k':
-            await moveRover('f');
-            break;
-        case 'ArrowDown':
-        case 'j':
-            await moveRover('b');
-            break;
-        case 'ArrowLeft':
-        case 'h':
-            await moveRover('l');
-            break;
-        case 'ArrowRight':
-        case 'l':
-            await moveRover('r');
-            break;
-        default:
-            break;
-    }
-});
-
-export async function getRandomRover() {
-    const response = await fetch('/api/randomRover', {
-        method: 'POST',
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-        console.error('Error getting random rover:', data);
-        displayErrors(data);
-    }
-
-    roverId = data.Rover.Id;
-    planet = data.Planet;
-    const canvas = document.getElementById('canvas');
+    roverId = gameData.Rover.Id;
+    lastRoverPosition = {
+        x: gameData.Rover.Coordinate.X, y: gameData.Rover.Coordinate.Y
+    };
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const roverDrawer = new CanvasPainter(canvas, 20);
-    roverDrawer.drawPlanetAndRover(data.Planet, data.Rover);
+    roverDrawer.drawPlanet(gameData.Planet);
+    roverDrawer.drawObstacles(gameData.Planet);
+    roverDrawer.drawRover(gameData.Rover);
 }
 
-export async function moveRoverByCommands() {
-    const commands = document.getElementById('commands').value;
-    await moveRover(commands);
-}
-
-async function moveRover(commands) {
+export async function moveRover(commands, canvas) {
     if (!roverId) {
         displayErrors('Rover ID not available. Call getRandomRover first.');
         return;
     }
-    const moveData = await callMoveEndpoint(commands);
-    const canvas = document.getElementById('canvas');
+
+    const apiWrapper = new ApiWrapper();
+    const moveData = await apiWrapper.callMoveEndpoint(roverId, commands)
     const roverDrawer = new CanvasPainter(canvas, 20);
-    roverDrawer.drawPlanetAndRover(planet, moveData.Rover);
+    clearPreviousCell();
+    let x = moveData.Rover.Coordinate.X;
+    let y = moveData.Rover.Coordinate.Y;
+    roverDrawer.clearCell(x, y);
+    roverDrawer.drawRover(moveData.Rover);
+    lastRoverPosition = {x, y};
     displayErrors(moveData.Errors);
 }
 
-async function callMoveEndpoint(commands) {
-    const response = await fetch('/api/moveSequence', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({id: roverId, commands}),
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-        console.error('Error calling endpoint:', data);
-        displayErrors(data);
-    }
-
-    return data;
+function clearPreviousCell() {
+    const canvas = document.getElementById('canvas');
+    const roverDrawer = new CanvasPainter(canvas, 20);
+    roverDrawer.clearCell(lastRoverPosition.x, lastRoverPosition.y);
 }
 
 
-// TODO: movement errors should be treated differently than bad requests (sending invalid commands)
-function displayErrors(errors) {
-    const errorBox = document.getElementById('error-box');
-    const errorList = document.getElementById('error-list');
-
-    errorList.innerHTML = '';
-
-    if (errors && errors.length > 0) {
-        errorBox.classList.remove('hidden');
-        errors.forEach(error => {
-            const listItem = document.createElement('li');
-            listItem.textContent = error;
-            errorList.appendChild(listItem);
-        });
-    } else {
-        errorBox.classList.add('hidden');
-    }
-}
-
-window.random = getRandomRover;
-window.move = moveRoverByCommands;
+window.random = function (dom) {
+    getRandomRover(dom.getElementById('canvas'))
+        .then()
+        .catch(e => console.log(e));
+};
+window.move = function (dom) {
+    const commands = dom.getElementById('commands').value
+    const canvas = dom.getElementById('canvas');
+    moveRover(commands, canvas)
+        .then()
+        .catch(e => console.log(e));
+};
