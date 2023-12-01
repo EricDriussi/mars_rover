@@ -1,8 +1,127 @@
 import {CanvasPainter} from '../painter.js';
 
-describe('CanvasPainter', () => {
+describe('CanvasPainter should', () => {
 
-    const mockContext = {
+    const mockPlanetSize = 5;
+    const mockPlanet = newMockPlanet(mockPlanetSize);
+
+    const cellSize = 20;
+    let canvasPainter;
+    let mockCanvas;
+
+    beforeEach(() => {
+        mockCanvas = newMockCanvas(newMockContext());
+        canvasPainter = new CanvasPainter(mockCanvas, cellSize);
+    });
+
+    describe('draw a planet', () => {
+        it('with expected size based on cell size', () => {
+            canvasPainter.drawPlanet(mockPlanet);
+
+            const expectedSize = mockPlanetSize * cellSize;
+            expect(mockCanvas.width).toBe(expectedSize);
+            expect(mockCanvas.height).toBe(expectedSize);
+            expect(mockCanvas.getContext().fillRect)
+                .toHaveBeenCalledWith(0, 0, expectedSize, expectedSize);
+        });
+
+        it('with expected number of cells based on size', () => {
+            canvasPainter.drawPlanet(mockPlanet);
+
+            const expectedNumberOfCells = mockPlanetSize * mockPlanetSize;
+            expect(mockCanvas.getContext().strokeRect)
+                .toHaveBeenCalledTimes(expectedNumberOfCells);
+        });
+
+        it('with white background and lightgrey cell borders', () => {
+            canvasPainter.drawPlanet(mockPlanet);
+
+            expect(mockCanvas.getContext().fillStyle).toEqual('white');
+            expect(mockCanvas.getContext().fillRect).toHaveBeenCalled();
+            expect(mockCanvas.getContext().strokeStyle).toEqual('lightgrey');
+            expect(mockCanvas.getContext().strokeRect).toHaveBeenCalled();
+        });
+    });
+
+    describe('draw obstacles', () => {
+        const anObstacleXPosition = 1;
+        const anObstacleYPosition = 1;
+        const anotherObstacleXPosition = 2;
+        const anotherObstacleYPosition = 2;
+        const planetWithObstacles = {
+            ...mockPlanet, Obstacles: [
+                {Coordinate: [{X: anObstacleXPosition, Y: anObstacleYPosition}]},
+                {Coordinate: [{X: anotherObstacleXPosition, Y: anotherObstacleYPosition}]}
+            ]
+        };
+        it('painted black', () => {
+            canvasPainter.drawObstacles(planetWithObstacles);
+
+            expect(mockCanvas.getContext().fillStyle).toEqual('black');
+        })
+
+        it('at the right position', () => {
+            canvasPainter.drawObstacles(planetWithObstacles);
+
+            const anExpectedXGridPosition = anObstacleXPosition * cellSize;
+            const anExpectedYGridPosition = mockCanvas.height - (anObstacleYPosition + 1) * cellSize;
+            expect(mockCanvas.getContext().fillRect)
+                .toHaveBeenCalledWith(
+                    anExpectedXGridPosition,
+                    anExpectedYGridPosition,
+                    cellSize,
+                    cellSize);
+            const anotherExpectedXGridPosition = anotherObstacleXPosition * cellSize;
+            const anotherExpectedYGridPosition = mockCanvas.height - (anotherObstacleYPosition + 1) * cellSize;
+            expect(mockCanvas.getContext().fillRect)
+                .toHaveBeenCalledWith(
+                    anotherExpectedXGridPosition,
+                    anotherExpectedYGridPosition,
+                    cellSize,
+                    cellSize);
+        });
+    })
+
+    describe('draw a rover', () => {
+        const mockRover = newMockRover();
+
+        it('painted red', () => {
+            canvasPainter.drawRover(mockRover);
+
+            expect(mockCanvas.getContext().fillStyle).toEqual('red');
+            expect(mockCanvas.getContext().fill).toHaveBeenCalled();
+        });
+
+        it('at the right position', () => {
+            canvasPainter.drawRover(mockRover);
+
+            const roverXGridPosition = mockRover.Coordinate.X * cellSize;
+            const roverYGridPosition = mockCanvas.height - (mockRover.Coordinate.Y + 1) * cellSize;
+            const halfCellSize = cellSize / 2;
+            const centeredRoverXGridPosition = roverXGridPosition + halfCellSize;
+            const centeredRoverYGridPosition = roverYGridPosition + halfCellSize;
+            expect(mockCanvas.getContext().translate).toHaveBeenCalledWith(
+                centeredRoverXGridPosition,
+                centeredRoverYGridPosition);
+            expect(mockCanvas.getContext().fill).toHaveBeenCalled();
+        });
+
+        it.each([
+            ['N', Math.PI],
+            ['S', 0],
+            ['E', 3 * Math.PI / 2],
+            ['W', Math.PI / 2],
+        ])('facing %s', (direction, expectedRotation) => {
+            const mockRover = newMockRoverFacing(direction);
+            canvasPainter.drawRover(mockRover);
+
+            expect(mockCanvas.getContext().rotate).toHaveBeenCalledWith(expectedRotation);
+        });
+    });
+});
+
+function newMockContext() {
+    return {
         fillRect: jest.fn(),
         strokeRect: jest.fn(),
         beginPath: jest.fn(),
@@ -15,84 +134,34 @@ describe('CanvasPainter', () => {
         closePath: jest.fn(),
         restore: jest.fn(),
     };
+}
 
-    const mockCanvas = {
-        getContext: jest.fn(() => mockContext),
+function newMockCanvas(context) {
+    return {
+        getContext: jest.fn(() => context),
         width: 0,
         height: 0,
     };
+}
 
-    const mockPlanetSize = 5;
-    const mockPlanet = {
-        Width: mockPlanetSize,
-        Height: mockPlanetSize,
+function newMockPlanet(size) {
+    return {
+        Width: size,
+        Height: size,
         Obstacles: [],
     };
+}
 
-    const mockRover = {
+function newMockRover() {
+    return {
         Coordinate: {X: 2, Y: 3},
         Direction: 'N',
     };
+}
 
-    beforeEach(() => {
-        mockCanvas.getContext.mockClear();
-    });
-
-    const cellSize = 20;
-    const canvasPainter = new CanvasPainter(mockCanvas, cellSize);
-
-    it('should draw a planet with expected size', () => {
-        canvasPainter.drawPlanet(mockPlanet);
-
-        const expectedSize = mockPlanetSize * cellSize;
-        expect(mockCanvas.width).toBe(expectedSize);
-        expect(mockCanvas.height).toBe(expectedSize);
-        expect(mockCanvas.getContext().fillRect).toHaveBeenCalledWith(0, 0, expectedSize, expectedSize);
-        const expectedCells = mockPlanetSize * mockPlanetSize;
-        expect(mockCanvas.getContext().strokeRect).toHaveBeenCalledTimes(expectedCells);
-    });
-
-    it('should draw a white planet with lightgrey cell borders', () => {
-        canvasPainter.drawPlanet(mockPlanet);
-
-        expect(mockCanvas.getContext().fillStyle).toEqual('white');
-        expect(mockCanvas.getContext().strokeStyle).toEqual('lightgrey');
-    });
-
-    it('should draw a red rover', () => {
-        canvasPainter.drawRover(mockRover);
-
-        expect(mockCanvas.getContext().fillStyle).toEqual('red');
-        expect(mockCanvas.getContext().fill).toHaveBeenCalled();
-    });
-
-    it('should draw a rover in the expected position', () => {
-        canvasPainter.drawRover(mockRover);
-
-        // TODO: fix this test
-        // const expectedX = mockRover.Coordinate.X * cellSize;
-        // const expectedY = mockCanvas.height - (mockRover.Coordinate.Y + 1) * cellSize;
-        // expect(mockCanvas.getContext().moveTo).toHaveBeenCalledWith(expectedX, expectedY);
-        expect(mockCanvas.getContext().moveTo).toHaveBeenCalled()
-        expect(mockCanvas.getContext().fill).toHaveBeenCalled();
-    });
-
-    it('should draw obstacles correctly', () => {
-        const pos1 = {X: 1, Y: 1};
-        const pos2 = {X: 2, Y: 2};
-        const planetWithObstacles = {
-            ...mockPlanet, Obstacles: [
-                {Coordinate: [pos1]},
-                {Coordinate: [pos2]}
-            ]
-        };
-        canvasPainter.drawObstacles(planetWithObstacles);
-        expect(mockCanvas.getContext().fillStyle).toEqual('black');
-        expect(mockCanvas.getContext().fillRect).toHaveBeenCalledWith(pos1.X * cellSize, mockCanvas.height - (pos1.Y + 1) * cellSize, cellSize, cellSize);
-    });
-
-    it('should draw planet and rover correctly', () => {
-        // TODO: test
-        canvasPainter.drawPlanetAndRover(mockPlanet, mockRover);
-    });
-});
+function newMockRoverFacing(direction) {
+    return {
+        Coordinate: {X: 2, Y: 3},
+        Direction: direction,
+    };
+}
