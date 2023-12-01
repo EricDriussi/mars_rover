@@ -1,27 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mars Rover</title>
-    <link rel="stylesheet" href="styles.css">
-    <script type="module" src="script.js"></script>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+        <link rel="stylesheet" href="styles.css">
+        <script type="module" src="script.js"></script>
+        <title>Mars Rover</title>
+    </head>
 
-<body>
-    <div id="controls">
-        <button onclick="random()">Get Random Rover</button>
-        <input id="commands" placeholder="Enter commands"/>
-        <button onclick="move()">Move Rover</button>
-    </div>
-    <div id="canvas-container">
-        <canvas id="canvas" width="400" height="400"></canvas>
-    </div>
-    <div id="error-box" class="hidden">
-        <h3>Errors</h3>
-        <ul id="error-list"></ul>
-    </div>
-</body>
+    <body>
+        <div id="controls">
+            <button onclick="random()">Get Random Rover</button>
+            <input id="commands" placeholder="Enter commands"/>
+            <button onclick="move()">Move Rover</button>
+        </div>
+        <div id="planet-canvas">
+            <canvas id="canvas" width="400" height="400"></canvas>
+        </div>
+        <div id="error-box" class="hidden">
+            <h3>Errors</h3>
+            <ul id="error-list"></ul>
+        </div>
+    </body>
 
 </html>

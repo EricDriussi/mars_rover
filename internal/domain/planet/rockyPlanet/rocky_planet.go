@@ -14,6 +14,8 @@ type RockyPlanet struct {
 	obstacles Obstacles
 }
 
+// TODO: should not take an empty list, that would be an EmptyPlanet,
+// hide behind a factory?
 func Create(color string, size Size, obstacles []Obstacle) (*RockyPlanet, error) {
 	obstacleList := obs.FromList(obstacles)
 	if obstacleList.IsAnyBeyond(size) {

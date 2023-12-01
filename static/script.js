@@ -4,7 +4,30 @@ import {CanvasPainter} from './painter.js';
 let roverId;
 let planet;
 
-document.addEventListener('DOMContentLoaded', () => getRandomRover());
+document.addEventListener('DOMContentLoaded', () => getRandomRover()); // NOSONAR
+
+document.addEventListener('keydown', async (event) => { // NOSONAR
+    switch (event.key) {
+        case 'ArrowUp':
+        case 'k':
+            await moveRover('f');
+            break;
+        case 'ArrowDown':
+        case 'j':
+            await moveRover('b');
+            break;
+        case 'ArrowLeft':
+        case 'h':
+            await moveRover('l');
+            break;
+        case 'ArrowRight':
+        case 'l':
+            await moveRover('r');
+            break;
+        default:
+            break;
+    }
+});
 
 export async function getRandomRover() {
     const response = await fetch('/api/randomRover', {
@@ -26,12 +49,24 @@ export async function getRandomRover() {
     roverDrawer.drawPlanetAndRover(data.Planet, data.Rover);
 }
 
-export async function moveRover() {
+export async function moveRoverByCommands() {
+    const commands = document.getElementById('commands').value;
+    await moveRover(commands);
+}
+
+async function moveRover(commands) {
     if (!roverId) {
         displayErrors('Rover ID not available. Call getRandomRover first.');
         return;
     }
-    const commands = document.getElementById('commands').value;
+    const moveData = await callMoveEndpoint(commands);
+    const canvas = document.getElementById('canvas');
+    const roverDrawer = new CanvasPainter(canvas, 20);
+    roverDrawer.drawPlanetAndRover(planet, moveData.Rover);
+    displayErrors(moveData.Errors);
+}
+
+async function callMoveEndpoint(commands) {
     const response = await fetch('/api/moveSequence', {
         method: 'POST',
         headers: {
@@ -42,18 +77,15 @@ export async function moveRover() {
 
     const data = await response.json();
     if (!response.ok) {
-        console.error('Error moving rover:', data);
+        console.error('Error calling endpoint:', data);
         displayErrors(data);
     }
 
-    console.log('Rover moved successfully:', data);
-    const canvas = document.getElementById('canvas');
-    const roverDrawer = new CanvasPainter(canvas, 20);
-    roverDrawer.drawPlanetAndRover(planet, data.Rover);
-    displayErrors(data.Errors);
+    return data;
 }
 
 
+// TODO: movement errors should be treated differently than bad requests (sending invalid commands)
 function displayErrors(errors) {
     const errorBox = document.getElementById('error-box');
     const errorList = document.getElementById('error-list');
@@ -73,4 +105,4 @@ function displayErrors(errors) {
 }
 
 window.random = getRandomRover;
-window.move = moveRover;
+window.move = moveRoverByCommands;
