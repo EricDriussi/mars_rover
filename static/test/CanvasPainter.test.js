@@ -1,4 +1,5 @@
 import {CanvasPainter} from '../CanvasPainter.js';
+import {newMockCanvas, newMockContext, newMockPlanet, newMockRover, newMockRoverFacing} from "./TestHelper";
 
 describe('CanvasPainter should', () => {
     const mockPlanetSize = 5;
@@ -148,50 +149,3 @@ describe('CanvasPainter should', () => {
         });
     });
 });
-
-function newMockContext() {
-    return {
-        fillRect: jest.fn(),
-        strokeRect: jest.fn(),
-        beginPath: jest.fn(),
-        moveTo: jest.fn(),
-        lineTo: jest.fn(),
-        fill: jest.fn(),
-        save: jest.fn(),
-        translate: jest.fn(),
-        rotate: jest.fn(),
-        closePath: jest.fn(),
-        restore: jest.fn(),
-        clearRect: jest.fn(),
-    };
-}
-
-function newMockCanvas(context) {
-    return {
-        getContext: jest.fn(() => context),
-        width: 0,
-        height: 0,
-    };
-}
-
-function newMockPlanet(size) {
-    return {
-        Width: size,
-        Height: size,
-        Obstacles: [],
-    };
-}
-
-function newMockRover() {
-    return {
-        Coordinate: {X: 2, Y: 3},
-        Direction: 'N',
-    };
-}
-
-function newMockRoverFacing(direction) {
-    return {
-        Coordinate: {X: 2, Y: 3},
-        Direction: direction,
-    };
-}
