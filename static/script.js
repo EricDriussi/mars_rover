@@ -1,12 +1,12 @@
 import {ApiWrapper} from "./ApiWrapper.js";
 import {CanvasPainter} from './CanvasPainter.js';
-import {ErrorPainter} from "./ErrorPainter.js";
+import {InfoPainter} from "./InfoPainter.js";
 import {EventHandler} from "./EventListenerHandler.js";
 import {RoverHandler} from "./RoverHandler.js";
 
 const canvasPainter = new CanvasPainter(document.getElementById('canvas'), 20);
-const errorPainter = new ErrorPainter(document);
-const roverHandler = new RoverHandler(new ApiWrapper(errorPainter), canvasPainter, errorPainter);
+const infoPainter = new InfoPainter(document);
+const roverHandler = new RoverHandler(new ApiWrapper(infoPainter), canvasPainter, infoPainter);
 const eventHandler = new EventHandler(document, roverHandler);
 eventHandler.listenOnReload();
 eventHandler.listenOnKeyPress();

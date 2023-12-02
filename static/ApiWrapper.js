@@ -1,8 +1,8 @@
 export class ApiWrapper {
-    #errorPainter;
+    #infoPainter;
 
-    constructor(errorPainter) {
-        this.#errorPainter = errorPainter;
+    constructor(infoPainter) {
+        this.#infoPainter = infoPainter;
     }
 
     async callGetEndpoint() {
@@ -27,7 +27,7 @@ export class ApiWrapper {
     async #unpackResponse(response) {
         if (!response.ok) {
             console.error('API error:', response.statusText);
-            this.#errorPainter.displayErrors(response.statusText);
+            this.#infoPainter.displayErrors(response.statusText);
         }
         return await response.json();
     }

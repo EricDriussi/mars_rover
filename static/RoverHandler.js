@@ -3,12 +3,12 @@ export class RoverHandler {
     #lastRoverPosition;
     #apiWrapper;
     #canvasPainter;
-    #errorPainter;
+    #infoPainter;
 
-    constructor(apiWrapper, canvasPainter, errorPainter) {
+    constructor(apiWrapper, canvasPainter, infoPainter) {
         this.#apiWrapper = apiWrapper;
         this.#canvasPainter = canvasPainter;
-        this.#errorPainter = errorPainter;
+        this.#infoPainter = infoPainter;
     }
 
     async getNewRoverAndPlanet() {
@@ -23,7 +23,7 @@ export class RoverHandler {
 
     async moveRover(commands) {
         if (!this.#roverId) {
-            this.#errorPainter.displayErrors('Rover ID not available. Call getRandomRover first.');
+            this.#infoPainter.displayErrors('Rover ID not available. Call getRandomRover first.');
             return;
         }
 
@@ -31,7 +31,7 @@ export class RoverHandler {
         this.#clearCell(movementData.Rover.Coordinate);
         this.#canvasPainter.drawRover(movementData.Rover);
         this.#lastRoverPosition = movementData.Rover.Coordinate;
-        this.#errorPainter.displayErrors(movementData.Errors);
+        this.#infoPainter.displayErrors(movementData.Errors);
     }
 
     #clearCell(coordinate) {

@@ -1,26 +1,26 @@
-import {ErrorPainter} from '../ErrorPainter.js';
+import {InfoPainter} from '../InfoPainter.js';
 import * as helper from "./TestHelper.js";
 
-describe('ErrorPainter should', () => {
+describe('InfoPainter should', () => {
     let mockDom;
-    let errorPainter;
+    let infoPainter;
 
     beforeEach(() => {
         mockDom = helper.mockDom();
-        errorPainter = new ErrorPainter(mockDom.window.document);
+        infoPainter = new InfoPainter(mockDom.window.document);
     });
 
     describe('display errors', () => {
         const errors = ['Error 1', 'Error 2'];
         it('when errors are provided', () => {
-            errorPainter.displayErrors(errors);
+            infoPainter.errors(errors);
 
             const errorBox = helper.getErrorBoxFrom(mockDom);
             expect(isHidden(errorBox)).toBe(false);
         });
 
         it('populating the error list with error messages', () => {
-            errorPainter.displayErrors(errors);
+            infoPainter.errors(errors);
 
             const errorList = mockDom.window.document.getElementById('error-list');
             errors.forEach((error, index) => {
@@ -32,15 +32,15 @@ describe('ErrorPainter should', () => {
 
     describe('not display error box', () => {
         it('when no errors are provided', () => {
-            errorPainter.displayErrors([]);
+            infoPainter.errors([]);
 
             const errorBox = helper.getErrorBoxFrom(mockDom);
             expect(isHidden(errorBox)).toBe(true);
         });
 
         it('for old errors', () => {
-            errorPainter.displayErrors(['Error 1', 'Error 2']);
-            errorPainter.displayErrors([]);
+            infoPainter.errors(['Error 1', 'Error 2']);
+            infoPainter.errors([]);
 
             const errorBox = helper.getErrorBoxFrom(mockDom);
             expect(isHidden(errorBox)).toBe(true);
