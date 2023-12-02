@@ -53,11 +53,14 @@ export function mockDom() {
         '<div id="error-box" class="hidden">' +
         '<ul id="error-list"></ul>' +
         '</div>' +
+        '<div id="warn-box" class="hidden">' +
+        '<ul id="warn-list"></ul>' +
+        '</div>' +
         '</body></html>'
     );
 }
 
-export function getErrorBoxFrom(mockDom) {
-    return mockDom.window.document.getElementById('error-box');
+export function getElementFrom(mockDom, elementId) {
+    return mockDom.window.document.getElementById(elementId);
 }
 

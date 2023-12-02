@@ -10,40 +10,42 @@ describe('InfoPainter should', () => {
         infoPainter = new InfoPainter(mockDom.window.document);
     });
 
-    describe('display errors', () => {
-        const errors = ['Error 1', 'Error 2'];
-        it('when errors are provided', () => {
-            infoPainter.errors(errors);
+    describe.each([
+        ['for errors', 'errors', 'error-list', 'error-box'],
+        ['for warnings', 'warnings', 'warn-list', 'warn-box'],
+    ])('%s', (_, testedMethod, listId, boxId) => {
+        const messages = ['Message 1', 'Message 2'];
 
-            const errorBox = helper.getErrorBoxFrom(mockDom);
-            expect(isHidden(errorBox)).toBe(false);
+        it('display messages box when messages are provided', () => {
+            infoPainter[testedMethod](messages);
+
+            const messageBox = helper.getElementFrom(mockDom, boxId);
+            expect(isHidden(messageBox)).toBe(false);
         });
 
-        it('populating the error list with error messages', () => {
-            infoPainter.errors(errors);
+        it('populate the message list', () => {
+            infoPainter[testedMethod](messages);
 
-            const errorList = mockDom.window.document.getElementById('error-list');
-            errors.forEach((error, index) => {
-                const listItem = errorList.childNodes[index];
-                expect(listItem.textContent).toBe(error);
+            const messageList = helper.getElementFrom(mockDom, listId);
+            messages.forEach((message, index) => {
+                const listItem = messageList.childNodes[index];
+                expect(listItem.textContent).toBe(message);
             });
         });
-    });
 
-    describe('not display error box', () => {
-        it('when no errors are provided', () => {
-            infoPainter.errors([]);
+        it('not display message box when no messages are provided', () => {
+            infoPainter[testedMethod]([]);
 
-            const errorBox = helper.getErrorBoxFrom(mockDom);
-            expect(isHidden(errorBox)).toBe(true);
+            const messageBox = helper.getElementFrom(mockDom, boxId);
+            expect(isHidden(messageBox)).toBe(true);
         });
 
-        it('for old errors', () => {
-            infoPainter.errors(['Error 1', 'Error 2']);
-            infoPainter.errors([]);
+        it('disregard old messages', () => {
+            infoPainter[testedMethod](['Message 1', 'Message 2']);
+            infoPainter[testedMethod]([]);
 
-            const errorBox = helper.getErrorBoxFrom(mockDom);
-            expect(isHidden(errorBox)).toBe(true);
+            const messageBox = helper.getElementFrom(mockDom, boxId);
+            expect(isHidden(messageBox)).toBe(true);
         });
     });
 });
@@ -51,4 +53,3 @@ describe('InfoPainter should', () => {
 function isHidden(element) {
     return element.classList.contains('hidden');
 }
-

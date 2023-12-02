@@ -23,7 +23,7 @@ export class RoverHandler {
 
     async moveRover(commands) {
         if (!this.#roverId) {
-            this.#infoPainter.displayErrors('Rover ID not available. Call getRandomRover first.');
+            this.#infoPainter.errors('Rover ID not available. Call getRandomRover first.');
             return;
         }
 
@@ -31,7 +31,7 @@ export class RoverHandler {
         this.#clearCell(movementData.Rover.Coordinate);
         this.#canvasPainter.drawRover(movementData.Rover);
         this.#lastRoverPosition = movementData.Rover.Coordinate;
-        this.#infoPainter.displayErrors(movementData.Errors);
+        this.#infoPainter.errors(movementData.Errors);
     }
 
     #clearCell(coordinate) {

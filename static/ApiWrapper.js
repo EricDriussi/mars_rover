@@ -27,7 +27,7 @@ export class ApiWrapper {
     async #unpackResponse(response) {
         if (!response.ok) {
             console.error('API error:', response.statusText);
-            this.#infoPainter.displayErrors(response.statusText);
+            this.#infoPainter.errors(response.statusText);
         }
         return await response.json();
     }

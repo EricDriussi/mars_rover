@@ -5,38 +5,48 @@ export class InfoPainter {
         this.#dom = dom;
     }
 
-    // TODO: movement errors should be treated differently than bad requests (sending invalid commands)
     errors(errors) {
-        const errorList = this.#dom.getElementById('error-list');
-        this.#clear(errorList);
-
-        const errorBox = this.#dom.getElementById('error-box');
-        if (!errors || errors.length === 0) {
-            this.#hide(errorBox);
-            return
-        }
-
-        this.#reveal(errorBox);
-        this.#paintErrors(errors, errorList);
+        this.#render('error', errors);
     }
 
-    #paintErrors(errors, errorList) {
-        errors.forEach(error => {
+    warnings(warnings) {
+        this.#render('warn', warnings);
+    }
+
+    #render(type, messages) {
+        const listId = `${type}-list`;
+        const boxId = `${type}-box`;
+
+        const messageList = this.#dom.getElementById(listId);
+        this.#clear(messageList);
+
+        const messageBox = this.#dom.getElementById(boxId);
+        if (!messages || messages.length === 0) {
+            this.#hide(messageBox);
+            return;
+        }
+
+        this.#paintMessages(messages, messageList);
+        this.#reveal(messageBox);
+    }
+
+    #paintMessages(messages, list) {
+        messages.forEach(message => {
             const listItem = this.#dom.createElement('li');
-            listItem.textContent = error;
-            errorList.appendChild(listItem);
+            listItem.textContent = message;
+            list.appendChild(listItem);
         });
     }
 
-    #clear(errorList) {
-        errorList.innerHTML = '';
+    #clear(list) {
+        list.innerHTML = '';
     }
 
-    #reveal(errorBox) {
-        errorBox.classList.remove('hidden');
+    #reveal(box) {
+        box.classList.remove('hidden');
     }
 
-    #hide(errorBox) {
-        errorBox.classList.add('hidden');
+    #hide(box) {
+        box.classList.add('hidden');
     }
 }
