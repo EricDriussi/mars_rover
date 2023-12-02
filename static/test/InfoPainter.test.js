@@ -23,6 +23,13 @@ describe('InfoPainter should', () => {
             expect(isHidden(messageBox)).toBe(false);
         });
 
+        it('display messages box when a single message is provided', () => {
+            infoPainter[testedMethod]('not an array');
+
+            const messageBox = helper.getElementFrom(mockDom, boxId);
+            expect(isHidden(messageBox)).toBe(false);
+        });
+
         it('populate the message list', () => {
             infoPainter[testedMethod](messages);
 

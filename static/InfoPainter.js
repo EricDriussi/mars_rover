@@ -31,6 +31,7 @@ export class InfoPainter {
     }
 
     #paintMessages(messages, list) {
+        messages = Array.isArray(messages) ? messages : [messages];
         messages.forEach(message => {
             const listItem = this.#dom.createElement('li');
             listItem.textContent = message;
