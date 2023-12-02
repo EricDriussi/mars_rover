@@ -1,6 +1,10 @@
-import { displayErrors } from './ErrorPainter.js';
-
 export class ApiWrapper {
+    #errorPainter;
+
+    constructor(errorPainter) {
+        this.#errorPainter = errorPainter;
+    }
+
     async callGetEndpoint() {
         const response = await fetch('/api/randomRover', {
             method: 'POST',
@@ -19,13 +23,13 @@ export class ApiWrapper {
         return await this.#unpackResponse(response);
     }
 
+    // TODO: should return Error() if response is not ok
     async #unpackResponse(response) {
-        const data = await response.json();
         if (!response.ok) {
-            console.error('API error:', data);
-            displayErrors(data);
+            console.error('API error:', response.statusText);
+            this.#errorPainter.displayErrors(response.statusText);
         }
-        return data;
+        return await response.json();
     }
 }
 
