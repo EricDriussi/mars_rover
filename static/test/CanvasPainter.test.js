@@ -84,7 +84,7 @@ describe('CanvasPainter should', () => {
         const y = 2;
 
         it('painted white', () => {
-            canvasPainter.clearCell(x, y);
+            canvasPainter.clearCell({x, y});
 
             const xGridPosition = x * cellSize;
             const yGridPosition = mockCanvas.height - (y + 1) * cellSize;
@@ -97,7 +97,7 @@ describe('CanvasPainter should', () => {
         });
 
         it('with lightgray borders', () => {
-            canvasPainter.clearCell(x, y);
+            canvasPainter.clearCell({x, y});
 
             const xGridPosition = x * cellSize;
             const yGridPosition = mockCanvas.height - (y + 1) * cellSize;
@@ -162,6 +162,7 @@ function newMockContext() {
         rotate: jest.fn(),
         closePath: jest.fn(),
         restore: jest.fn(),
+        clearRect: jest.fn(),
     };
 }
 
