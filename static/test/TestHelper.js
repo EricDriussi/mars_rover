@@ -13,7 +13,6 @@ export function mockContext() {
         rotate: jest.fn(),
         closePath: jest.fn(),
         restore: jest.fn(),
-        clearRect: jest.fn(),
     };
 }
 

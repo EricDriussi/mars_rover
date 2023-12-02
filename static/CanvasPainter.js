@@ -1,7 +1,8 @@
 export class CanvasPainter {
     #canvas;
     #ctx;
-    #cellSize ;
+    #cellSize;
+
     constructor(canvas, cellSize) {
         this.#canvas = canvas;
         this.#ctx = canvas.getContext('2d');
@@ -9,14 +10,9 @@ export class CanvasPainter {
     }
 
     drawPlanet(planet) {
-        this.#clearPlanet();
-        this.#setCanvasSize(planet);
+        this.#setCanvasSize(planet.Width, planet.Height);
         this.#drawEmptyPlanet();
         this.#drawCellsBorders(planet);
-    }
-
-    #clearPlanet() {
-        this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
     }
 
     #drawEmptyPlanet() {
@@ -24,9 +20,9 @@ export class CanvasPainter {
         this.#ctx.fillRect(0, 0, this.#canvas.width, this.#canvas.height);
     }
 
-    #setCanvasSize(planet) {
-        this.#canvas.width = planet.Width * this.#cellSize;
-        this.#canvas.height = planet.Height * this.#cellSize;
+    #setCanvasSize(width, height) {
+        this.#canvas.width = width * this.#cellSize;
+        this.#canvas.height = height * this.#cellSize;
     }
 
     #drawCellsBorders(planet) {
