@@ -4,12 +4,12 @@ import * as helper from "./TestHelper.js";
 describe('EventListener should', () => {
     let mockDom;
     let eventHandler;
-    let mockRoverHandler;
+    let mockGameHandler;
 
     beforeEach(() => {
         mockDom = helper.mockDom();
-        mockRoverHandler = helper.mockRoverHandler();
-        eventHandler = new EventHandler(mockDom, mockRoverHandler);
+        mockGameHandler = helper.mockGameHandler();
+        eventHandler = new EventHandler(mockDom, mockGameHandler);
     });
 
     it('listen on reload', () => {
@@ -19,7 +19,7 @@ describe('EventListener should', () => {
         // Hack to get the function from within the callback passed to addEventListener
         const eventCallback = mockDom.addEventListener.mock.calls[0][1];
         eventCallback();
-        expect(mockRoverHandler.getNewRoverAndPlanet).toHaveBeenCalled();
+        expect(mockGameHandler.randomGame).toHaveBeenCalled();
     });
 
     it.each([
@@ -40,7 +40,7 @@ describe('EventListener should', () => {
             // Hack to get the function from within the callback passed to addEventListener
             const eventCallback = mockDom.addEventListener.mock.calls[0][1];
             eventCallback({key: givenKey});
-            expect(mockRoverHandler.moveRover).toHaveBeenCalledWith(expectedDirection);
+            expect(mockGameHandler.moveRover).toHaveBeenCalledWith(expectedDirection);
         }
     );
 
@@ -51,7 +51,7 @@ describe('EventListener should', () => {
         // Hack to get the function from within the callback passed to addEventListener
         const eventCallback = mockDom.addEventListener.mock.calls[0][1];
         eventCallback({ key: 'wrong!' });
-        expect(mockRoverHandler.moveRover).not.toHaveBeenCalled();
+        expect(mockGameHandler.moveRover).not.toHaveBeenCalled();
 
     });
 });

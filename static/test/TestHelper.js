@@ -46,10 +46,33 @@ export function mockRoverFacing(direction) {
     };
 }
 
-export function mockRoverHandler() {
+export function mockGameHandler() {
     return {
-        getNewRoverAndPlanet: jest.fn(),
+        randomGame: jest.fn(),
         moveRover: jest.fn(),
+    };
+}
+
+export function mockApiWrapper() {
+    return {
+        callGetEndpoint: jest.fn(),
+        callMoveEndpoint: jest.fn(),
+    };
+}
+
+export function mockCanvasPainter() {
+    return {
+        drawPlanet: jest.fn(),
+        drawObstacles: jest.fn(),
+        drawRover: jest.fn(),
+        clearCell: jest.fn(),
+    };
+}
+
+export function mockInfoPainter() {
+    return {
+        error: jest.fn(),
+        warning: jest.fn(),
     };
 }
 

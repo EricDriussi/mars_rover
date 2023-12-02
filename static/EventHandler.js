@@ -8,7 +8,7 @@ export class EventHandler {
     }
 
     listenOnReload() {
-        this.#dom.addEventListener('DOMContentLoaded', () => this.#roverHandler.getNewRoverAndPlanet()); // NOSONAR
+        this.#dom.addEventListener('DOMContentLoaded', () => this.#roverHandler.randomGame()); // NOSONAR
     }
 
     listenOnKeyPress() {

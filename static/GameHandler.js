@@ -1,4 +1,4 @@
-export class RoverHandler {
+export class GameHandler {
     #roverId;
     #lastRoverPosition;
     #apiWrapper;
@@ -11,7 +11,8 @@ export class RoverHandler {
         this.#infoPainter = infoPainter;
     }
 
-    async getNewRoverAndPlanet() {
+    async randomGame() {
+        // TODO: handle api errors!
         const gameData = await this.#apiWrapper.callGetEndpoint();
         this.#roverId = gameData.Rover.Id;
         this.#lastRoverPosition = gameData.Rover.Coordinate;
@@ -27,6 +28,7 @@ export class RoverHandler {
             return;
         }
 
+        // TODO: handle api errors!
         const movementData = await this.#apiWrapper.callMoveEndpoint(this.#roverId, commands)
         this.#clearCell(movementData.Rover.Coordinate);
         this.#canvasPainter.drawRover(movementData.Rover);
