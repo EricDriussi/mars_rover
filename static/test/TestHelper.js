@@ -46,8 +46,15 @@ export function mockRoverFacing(direction) {
     };
 }
 
+export function mockRoverHandler() {
+    return {
+        getNewRoverAndPlanet: jest.fn(),
+        moveRover: jest.fn(),
+    };
+}
+
 export function mockDom() {
-    return new JSDOM('' +
+    const dom = new JSDOM('' +
         '<html><body>' +
         '<div id="error-box" class="hidden">' +
         '<ul id="error-list"></ul>' +
@@ -57,6 +64,10 @@ export function mockDom() {
         '</div>' +
         '</body></html>'
     );
+    Object.assign(dom, {
+        addEventListener: jest.fn()
+    });
+    return dom;
 }
 
 export function getElementFrom(mockDom, elementId) {
