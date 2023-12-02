@@ -11,8 +11,8 @@ describe('InfoPainter should', () => {
     });
 
     describe.each([
-        ['for errors', 'errors', 'error-list', 'error-box'],
-        ['for warnings', 'warnings', 'warn-list', 'warn-box'],
+        ['for errors', 'error', 'error-list', 'error-box'],
+        ['for warnings', 'warning', 'warn-list', 'warn-box'],
     ])('%s', (_, testedMethod, listId, boxId) => {
         const messages = ['Message 1', 'Message 2'];
 

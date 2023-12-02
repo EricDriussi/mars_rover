@@ -197,6 +197,7 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 	response := MovementResponseDTO{
 		Rover:  roverToReturn,
 		Errors: movementResult.MovementErrors.AsStringArray(),
+		// TODO: what aboud non-movement errors?
 	}
 
 	jsonResponse, err := json.Marshal(response)

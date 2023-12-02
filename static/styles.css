@@ -27,6 +27,13 @@ body {
     background-color: #ffcccc;
 }
 
+#warn-box {
+    margin: 1rem;
+    padding: 0 2rem;
+    border: 0.2rem solid orange;
+    background-color: #ffddcc;
+}
+
 .hidden {
     display: none;
 }

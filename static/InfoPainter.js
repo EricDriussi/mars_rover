@@ -5,11 +5,11 @@ export class InfoPainter {
         this.#dom = dom;
     }
 
-    errors(errors) {
+    error(errors) {
         this.#render('error', errors);
     }
 
-    warnings(warnings) {
+    warning(warnings) {
         this.#render('warn', warnings);
     }
 
