@@ -1,16 +1,16 @@
 import {CanvasPainter} from '../CanvasPainter.js';
-import {newMockCanvas, newMockContext, newMockPlanet, newMockRover, newMockRoverFacing} from "./TestHelper";
+import * as helper from "./TestHelper.js";
 
 describe('CanvasPainter should', () => {
     const mockPlanetSize = 5;
-    const mockPlanet = newMockPlanet(mockPlanetSize);
+    const mockPlanet = helper.mockPlanet(mockPlanetSize);
 
     const cellSize = 20;
     let canvasPainter;
     let mockCanvas;
 
     beforeEach(() => {
-        mockCanvas = newMockCanvas(newMockContext());
+        mockCanvas = helper.mockCanvas(helper.mockContext());
         canvasPainter = new CanvasPainter(mockCanvas, cellSize);
     });
 
@@ -113,7 +113,7 @@ describe('CanvasPainter should', () => {
 
 
     describe('draw a rover', () => {
-        const mockRover = newMockRover();
+        const mockRover = helper.mockRover();
 
         it('painted red', () => {
             canvasPainter.drawRover(mockRover);
@@ -142,7 +142,7 @@ describe('CanvasPainter should', () => {
             ['E', 3 * Math.PI / 2],
             ['W', Math.PI / 2],
         ])('facing %s', (direction, expectedRotation) => {
-            const mockRover = newMockRoverFacing(direction);
+            const mockRover = helper.mockRoverFacing(direction);
             canvasPainter.drawRover(mockRover);
 
             expect(mockCanvas.getContext().rotate).toHaveBeenCalledWith(expectedRotation);

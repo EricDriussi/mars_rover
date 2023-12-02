@@ -1,4 +1,6 @@
-export function newMockContext() {
+import {JSDOM} from "jsdom";
+
+export function mockContext() {
     return {
         fillRect: jest.fn(),
         strokeRect: jest.fn(),
@@ -15,7 +17,7 @@ export function newMockContext() {
     };
 }
 
-export function newMockCanvas(context) {
+export function mockCanvas(context) {
     return {
         getContext: jest.fn(() => context),
         width: 0,
@@ -23,7 +25,7 @@ export function newMockCanvas(context) {
     };
 }
 
-export function newMockPlanet(size) {
+export function mockPlanet(size) {
     return {
         Width: size,
         Height: size,
@@ -31,16 +33,31 @@ export function newMockPlanet(size) {
     };
 }
 
-export function newMockRover() {
+export function mockRover() {
     return {
         Coordinate: {X: 2, Y: 3},
         Direction: 'N',
     };
 }
 
-export function newMockRoverFacing(direction) {
+export function mockRoverFacing(direction) {
     return {
         Coordinate: {X: 2, Y: 3},
         Direction: direction,
     };
 }
+
+export function mockDom() {
+    return new JSDOM('' +
+        '<html><body>' +
+        '<div id="error-box" class="hidden">' +
+        '<ul id="error-list"></ul>' +
+        '</div>' +
+        '</body></html>'
+    );
+}
+
+export function getErrorBoxFrom(mockDom) {
+    return mockDom.window.document.getElementById('error-box');
+}
+

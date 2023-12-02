@@ -1,8 +1,8 @@
-import {CanvasPainter} from './CanvasPainter.js';
 import {ApiWrapper} from "./ApiWrapper.js";
+import {CanvasPainter} from './CanvasPainter.js';
+import {ErrorPainter} from "./ErrorPainter.js";
 import {EventHandler} from "./EventListenerHandler.js";
 import {RoverHandler} from "./RoverHandler.js";
-import {ErrorPainter} from "./ErrorPainter.js";
 
 const canvasPainter = new CanvasPainter(document.getElementById('canvas'), 20);
 const errorPainter = new ErrorPainter(document);
