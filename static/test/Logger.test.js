@@ -56,6 +56,16 @@ describe('Logger should', () => {
             expect(isHidden(messageBox)).toBe(true);
         });
     });
+
+    it('reset all log messages', () => {
+        logger.resetLogMessages();
+
+        const errorBox = helper.getElementFrom(mockDom, 'error-box');
+        expect(isHidden(errorBox)).toBe(true);
+        const warnBox = helper.getElementFrom(mockDom, 'warn-box');
+        expect(isHidden(warnBox)).toBe(true);
+    });
+
 });
 
 function isHidden(element) {

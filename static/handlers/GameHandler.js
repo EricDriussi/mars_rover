@@ -12,11 +12,13 @@ export class GameHandler {
     }
 
     async randomGame() {
+        this.#logger.resetLogMessages()
         const apiResult = await ApiWrapper.postRandomGame()
         this.#handleNewGameResult(apiResult);
     }
 
     async loadGame(roverId) {
+        this.#logger.resetLogMessages()
         const apiResult = await ApiWrapper.getLoadGame(roverId)
         this.#handleNewGameResult(apiResult);
     }
@@ -40,6 +42,7 @@ export class GameHandler {
     }
 
     async moveRover(commands) {
+        this.#logger.resetLogMessages()
         if (!this.#roverId) {
             this.#logger.error('Rover ID not available. Call getRandomRover first.');
             return;

@@ -88,6 +88,17 @@ describe('GameHandler should', () => {
             expect(mockLogger.error).toHaveBeenCalledWith(mockApiResponse.value());
         });
     });
+
+    it('reset logs on every operation', async () => {
+        const mockApiResponse = genericFailedApiResponse();
+        ApiWrapper.getLoadGame.mockResolvedValue(mockApiResponse);
+
+        await gameHandler.loadGame('123');
+        await gameHandler.randomGame();
+        await gameHandler.moveRover('321');
+
+        expect(mockLogger.resetLogMessages).toHaveBeenCalledTimes(3);
+    });
 });
 
 function genericSuccessfulApiResponse() {

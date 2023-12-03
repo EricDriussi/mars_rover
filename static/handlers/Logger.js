@@ -18,16 +18,26 @@ export class Logger {
         const boxId = `${type}-box`;
 
         const messageList = this.#dom.getElementById(listId);
-        this.#clear(messageList);
-
         const messageBox = this.#dom.getElementById(boxId);
         if (!messages || messages.length === 0) {
-            this.#hide(messageBox);
+            this.#resetMessages(type);
             return;
         }
 
         this.#paintMessages(messages, messageList);
         this.#reveal(messageBox);
+    }
+
+    resetLogMessages() {
+        this.#resetMessages('error')
+        this.#resetMessages('warn')
+    }
+
+    #resetMessages(type) {
+        const listId = `${type}-list`;
+        const boxId = `${type}-box`;
+        this.#clear(this.#dom.getElementById(listId));
+        this.#hide(this.#dom.getElementById(boxId));
     }
 
     #paintMessages(messages, list) {

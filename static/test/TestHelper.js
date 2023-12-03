@@ -66,6 +66,7 @@ export function mockLogger() {
     return {
         error: jest.fn(),
         warning: jest.fn(),
+        resetLogMessages: jest.fn(),
     };
 }
 
