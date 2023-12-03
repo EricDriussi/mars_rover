@@ -10,6 +10,7 @@ describe('CanvasPainter should', () => {
     let mockCanvas;
 
     beforeEach(() => {
+        jest.clearAllMocks();
         mockCanvas = helper.mockCanvas(helper.mockContext());
         canvasPainter = new CanvasPainter(mockCanvas, cellSize);
     });

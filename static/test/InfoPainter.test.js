@@ -6,6 +6,7 @@ describe('InfoPainter should', () => {
     let infoPainter;
 
     beforeEach(() => {
+        jest.clearAllMocks();
         mockDom = helper.mockDom();
         infoPainter = new InfoPainter(mockDom.window.document);
     });

@@ -26,7 +26,6 @@ export class ApiWrapper {
     // TODO: should return Error() if response is not ok
     async #unpackResponse(response) {
         if (!response.ok) {
-            console.error('API error:', response.statusText);
             this.#infoPainter.error(response.statusText);
         }
         return await response.json();

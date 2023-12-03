@@ -7,6 +7,7 @@ describe('EventListener should', () => {
     let mockGameHandler;
 
     beforeEach(() => {
+        jest.clearAllMocks();
         mockDom = helper.mockDom();
         mockGameHandler = helper.mockGameHandler();
         eventHandler = new EventHandler(mockDom, mockGameHandler);
