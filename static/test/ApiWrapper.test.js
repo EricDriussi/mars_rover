@@ -22,7 +22,7 @@ describe('ApiWrapper should', () => {
             };
             global.fetch.mockResolvedValue(errorFreeResponse);
 
-            const result = await apiWrapper.callGetEndpoint();
+            const result = await apiWrapper.postRandomGame();
 
             expect(global.fetch).toHaveBeenCalledWith(...expectedFetchParams);
             expect(errorFreeResponse.json).toHaveBeenCalled();
@@ -37,7 +37,7 @@ describe('ApiWrapper should', () => {
             };
             global.fetch.mockResolvedValue(mockErrorResponse);
 
-            const result = await apiWrapper.callGetEndpoint();
+            const result = await apiWrapper.postRandomGame();
 
             expect(global.fetch).toHaveBeenCalledWith(...expectedFetchParams);
             expect(result.isFailure()).toBe(true);
@@ -63,7 +63,7 @@ describe('ApiWrapper should', () => {
             };
             global.fetch.mockResolvedValue(mockResponse);
 
-            const result = await apiWrapper.callMoveEndpoint('roverId', 'f');
+            const result = await apiWrapper.postMoveRover('roverId', 'f');
 
             expect(global.fetch).toHaveBeenCalledWith(...expectedMoveFetchParams);
             expect(mockResponse.json).toHaveBeenCalled();
@@ -78,7 +78,7 @@ describe('ApiWrapper should', () => {
             };
             global.fetch.mockResolvedValue(mockErrorResponse);
 
-            const result = await apiWrapper.callMoveEndpoint('roverId', 'f');
+            const result = await apiWrapper.postMoveRover('roverId', 'f');
 
             expect(global.fetch).toHaveBeenCalledWith(...expectedMoveFetchParams);
             expect(result.isFailure()).toBe(true);

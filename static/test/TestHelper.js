@@ -55,8 +55,8 @@ export function mockGameHandler() {
 
 export function mockApiWrapper() {
     return {
-        callGetEndpoint: jest.fn(),
-        callMoveEndpoint: jest.fn(),
+        postRandomGame: jest.fn(),
+        postMoveRover: jest.fn(),
     };
 }
 

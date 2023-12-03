@@ -12,7 +12,7 @@ export class GameHandler {
     }
 
     async randomGame() {
-        const apiResult = await this.#apiWrapper.callGetEndpoint();
+        const apiResult = await this.#apiWrapper.postRandomGame();
         if (apiResult.isFailure()) {
             this.#infoPainter.error(apiResult.value());
             return;
@@ -35,7 +35,7 @@ export class GameHandler {
             this.#infoPainter.error('Rover ID not available. Call getRandomRover first.');
             return;
         }
-        const apiResult = await this.#apiWrapper.callMoveEndpoint(this.#roverId, commands)
+        const apiResult = await this.#apiWrapper.postMoveRover(this.#roverId, commands)
         if (apiResult.isFailure()) {
             this.#infoPainter.error(apiResult.value());
             return;

@@ -4,14 +4,14 @@ export class ApiWrapper {
     constructor() {
     }
 
-    async callGetEndpoint() {
+    async postRandomGame() {
         const response = await fetch('/api/randomRover', {
             method: 'POST',
         });
         return await this.#unpackResponse(response);
     }
 
-    async callMoveEndpoint(id, commands) {
+    async postMoveRover(id, commands) {
         const response = await fetch('/api/moveSequence', {
             method: 'POST',
             headers: {
