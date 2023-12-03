@@ -171,7 +171,6 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 
 	rover, exists := roversMap[request.Id]
 	if !exists {
-		// TODO: get from db?
 		http.Error(w, "Rover not found", http.StatusBadRequest)
 		return
 	}
@@ -197,9 +196,10 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 	response := MovementResponseDTO{
 		// TODO: returning the rover is not enough, should return a list of coordinates-directions since one command might fail but the rover can keep moving
 		// Decide in front end if paint all positions or just the last one
-		Rover:  roverToReturn,
+		Rover: roverToReturn,
+		// TODO: these are not "Errors", they are collisions
 		Errors: movementResult.MovementErrors.AsStringArray(),
-		// TODO: what aboud non-movement errors?
+		// TODO: what about non-movement errors?
 	}
 
 	jsonResponse, err := json.Marshal(response)
@@ -216,6 +216,4 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	fmt.Println("Done Moving Rover!")
 }

@@ -39,7 +39,7 @@ func Land(coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRover
 	return newRover, nil
 }
 
-// TODO.LM: should be LandFacing{North, East, South, West}
+// TODO.LM: should be 4 separate constructors: LandFacing{North, East, South, West}
 func LandFacing(direction Direction, coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRover, error) {
 	mapOfPlanet := planetMap.OfPlanet(planet)
 	if mapOfPlanet.HasObstacleIn(coordinate) {

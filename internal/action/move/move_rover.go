@@ -67,7 +67,8 @@ func mapCommandToMovement(rover Rover, command string) error {
 		"r": Rotation(rover.TurnRight),
 	}
 	// if action := commandActions[command]; action != nil {}
-	// TODO.LM: is ⬆️ more readable than ⬇️ ?
+	// TODO.LM: not sure if ⬆️ is more readable than ⬇️ ¯\_(ツ)_/¯
+	// Go people like ⬆️ but I think that ⬇️ is easier to read if you come from other langs
 	if action, ok := commandActions[command]; ok {
 		switch action := action.(type) {
 		case Movement:

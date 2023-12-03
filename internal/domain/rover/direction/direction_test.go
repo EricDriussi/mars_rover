@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// TODO.LM: Is this better than a file per direction and a test per function?
+// TODO.LM: not sure if this approach is better than a file per direction and a test per function ¯\_(ツ)_/¯
 
 func TestNorth(t *testing.T) {
 	north := &North{}
