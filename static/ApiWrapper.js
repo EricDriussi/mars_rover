@@ -1,28 +1,20 @@
 import {Result} from "./Result.js";
+import {RequestBuilder} from "./RequestBuilder";
 
 export class ApiWrapper {
-    constructor() {
+    static async postRandomGame() {
+        const request = RequestBuilder.randomGameRequest();
+        const response = await fetch(...request);
+        return await ApiWrapper.#unpackResponse(response);
     }
 
-    async postRandomGame() {
-        const response = await fetch('/api/randomRover', {
-            method: 'POST',
-        });
-        return await this.#unpackResponse(response);
+    static async postMoveRover(id, commands) {
+        const request = RequestBuilder.moveRoverRequest(id, commands);
+        const response = await fetch(...request);
+        return await ApiWrapper.#unpackResponse(response);
     }
 
-    async postMoveRover(id, commands) {
-        const response = await fetch('/api/moveSequence', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({id, commands}),
-        });
-        return await this.#unpackResponse(response);
-    }
-
-    async #unpackResponse(response) {
+    static async #unpackResponse(response) {
         if (!response.ok) {
             return Result.failure(response.statusText);
         }

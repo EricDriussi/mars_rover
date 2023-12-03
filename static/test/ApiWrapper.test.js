@@ -1,20 +1,16 @@
-import * as helper from "./TestHelper.js";
-import {GameHandler} from "../GameHandler.js";
 import {ApiWrapper} from "../ApiWrapper";
+import {RequestBuilder} from "../RequestBuilder";
 
 global.fetch = jest.fn();
 
 describe('ApiWrapper should', () => {
-    let mockInfoPainter = helper.mockInfoPainter();
-    let apiWrapper;
 
     beforeEach(() => {
         jest.clearAllMocks();
-        apiWrapper = new ApiWrapper(mockInfoPainter);
     });
 
-    describe('when calling the /api/randomRover endpoint', () => {
-        const expectedFetchParams = ['/api/randomRover', { method: 'POST' }];
+    describe('when calling the random game endpoint', () => {
+        const expectedFetchParams = RequestBuilder.randomGameRequest();
         it('fetch and unpack the response', async () => {
             const errorFreeResponse = {
                 ok: true,
@@ -22,7 +18,7 @@ describe('ApiWrapper should', () => {
             };
             global.fetch.mockResolvedValue(errorFreeResponse);
 
-            const result = await apiWrapper.postRandomGame();
+            const result = await ApiWrapper.postRandomGame();
 
             expect(global.fetch).toHaveBeenCalledWith(...expectedFetchParams);
             expect(errorFreeResponse.json).toHaveBeenCalled();
@@ -30,55 +26,47 @@ describe('ApiWrapper should', () => {
         });
 
         it('handle error if present in response', async () => {
-            const mockErrorResponse = {
+            const errorResponse = {
                 ok: false,
                 statusText: 'Not Found',
                 json: jest.fn()
             };
-            global.fetch.mockResolvedValue(mockErrorResponse);
+            global.fetch.mockResolvedValue(errorResponse);
 
-            const result = await apiWrapper.postRandomGame();
+            const result = await ApiWrapper.postRandomGame();
 
             expect(global.fetch).toHaveBeenCalledWith(...expectedFetchParams);
             expect(result.isFailure()).toBe(true);
         });
     });
 
-    describe('when calling the /api/moveSequence endpoint', () => {
-        const expectedMoveFetchParams = [
-            '/api/moveSequence',
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ id: 'roverId', commands: 'f' }),
-            },
-        ];
+    describe('when calling the move rover endpoint', () => {
+        const requestData = ['roverId', 'f']
+        const expectedMoveFetchParams = RequestBuilder.moveRoverRequest(...requestData);
 
         it('fetch and unpack the response', async () => {
-            const mockResponse = {
+            const errorFreeResponse = {
                 ok: true,
                 json: jest.fn()
             };
-            global.fetch.mockResolvedValue(mockResponse);
+            global.fetch.mockResolvedValue(errorFreeResponse);
 
-            const result = await apiWrapper.postMoveRover('roverId', 'f');
+            const result = await ApiWrapper.postMoveRover(...requestData);
 
             expect(global.fetch).toHaveBeenCalledWith(...expectedMoveFetchParams);
-            expect(mockResponse.json).toHaveBeenCalled();
+            expect(errorFreeResponse.json).toHaveBeenCalled();
             expect(result.isFailure()).toBe(false);
         });
 
         it('handle error if present in response', async () => {
-            const mockErrorResponse = {
+            const errorResponse = {
                 ok: false,
                 statusText: 'Bad Request',
                 json: jest.fn()
             };
-            global.fetch.mockResolvedValue(mockErrorResponse);
+            global.fetch.mockResolvedValue(errorResponse);
 
-            const result = await apiWrapper.postMoveRover('roverId', 'f');
+            const result = await ApiWrapper.postMoveRover(...requestData);
 
             expect(global.fetch).toHaveBeenCalledWith(...expectedMoveFetchParams);
             expect(result.isFailure()).toBe(true);
