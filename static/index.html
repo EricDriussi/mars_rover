@@ -1,32 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-        <link rel="stylesheet" href="styles.css">
-        <script type="module" src="script.js"></script>
-        <title>Mars Rover</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="script.js"></script>
+    <title>Mars Rover</title>
+</head>
 
-    <body>
-        <div id="controls">
-            <button onclick="newGame()">New Game</button>
-            <input id="commands" placeholder="Enter commands"/>
-            <button onclick="move()">Move Rover</button>
-        </div>
-        <div id="planet-canvas">
-            <canvas id="canvas" width="400" height="400"></canvas>
-        </div>
-        <div id="warn-box" class="hidden">
-            <h3>Oops!</h3>
-            <ul id="warn-list"></ul>
-        </div>
-        <div id="error-box" class="hidden">
-            <h3>Errors</h3>
-            <ul id="error-list"></ul>
-        </div>
-    </body>
+<body>
+    <div id="new-game" class="controls">
+        <button onclick="newGame()">New Game</button>
+    </div>
+
+    <div id="load-game" class="controls">
+        <input id="roverId" placeholder="Rover ID" />
+        <button onclick="loadGame()">Load Game</button>
+    </div>
+
+    <div id="move-rover" class="controls">
+        <input id="commands" placeholder="Movement Commands" />
+        <button onclick="move()">Move Rover</button>
+    </div>
+
+    <div id="planet-canvas">
+        <canvas id="canvas" width="400" height="400"></canvas>
+    </div>
+
+    <div id="warn-box" class="hidden">
+        <h3>Oops!</h3>
+        <ul id="warn-list"></ul>
+    </div>
+    <div id="error-box" class="hidden">
+        <h3>Errors</h3>
+        <ul id="error-list"></ul>
+    </div>
+</body>
 
 </html>

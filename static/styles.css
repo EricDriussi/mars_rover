@@ -5,11 +5,10 @@ body {
     justify-content: flex-start;
 }
 
-#controls {
+.controls {
     display: flex;
     justify-content: center;
-    margin: 1rem;
-    background-color: white;
+    margin: 0.5rem;
 }
 
 #planet-canvas {

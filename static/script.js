@@ -20,3 +20,9 @@ window.move = function () {
         .then()
         .catch(e => console.log(e));
 };
+window.loadGame = function () {
+    const roverId = document.getElementById('roverId').value
+    gameHandler.loadGame(roverId)
+        .then()
+        .catch(e => console.log(e));
+};
