@@ -1,14 +1,14 @@
-import {InfoPainter} from '../InfoPainter.js';
+import {Logger} from '../Logger.js';
 import * as helper from "./TestHelper.js";
 
-describe('InfoPainter should', () => {
+describe('Logger should', () => {
     let mockDom;
-    let infoPainter;
+    let logger;
 
     beforeEach(() => {
         jest.clearAllMocks();
         mockDom = helper.mockDom();
-        infoPainter = new InfoPainter(mockDom.window.document);
+        logger = new Logger(mockDom.window.document);
     });
 
     describe.each([
@@ -18,21 +18,21 @@ describe('InfoPainter should', () => {
         const messages = ['Message 1', 'Message 2'];
 
         it('display messages box when messages are provided', () => {
-            infoPainter[testedMethod](messages);
+            logger[testedMethod](messages);
 
             const messageBox = helper.getElementFrom(mockDom, boxId);
             expect(isHidden(messageBox)).toBe(false);
         });
 
         it('display messages box when a single message is provided', () => {
-            infoPainter[testedMethod]('not an array');
+            logger[testedMethod]('not an array');
 
             const messageBox = helper.getElementFrom(mockDom, boxId);
             expect(isHidden(messageBox)).toBe(false);
         });
 
         it('populate the message list', () => {
-            infoPainter[testedMethod](messages);
+            logger[testedMethod](messages);
 
             const messageList = helper.getElementFrom(mockDom, listId);
             messages.forEach((message, index) => {
@@ -42,15 +42,15 @@ describe('InfoPainter should', () => {
         });
 
         it('not display message box when no messages are provided', () => {
-            infoPainter[testedMethod]([]);
+            logger[testedMethod]([]);
 
             const messageBox = helper.getElementFrom(mockDom, boxId);
             expect(isHidden(messageBox)).toBe(true);
         });
 
         it('disregard old messages', () => {
-            infoPainter[testedMethod](['Message 1', 'Message 2']);
-            infoPainter[testedMethod]([]);
+            logger[testedMethod](['Message 1', 'Message 2']);
+            logger[testedMethod]([]);
 
             const messageBox = helper.getElementFrom(mockDom, boxId);
             expect(isHidden(messageBox)).toBe(true);

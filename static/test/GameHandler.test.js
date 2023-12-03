@@ -6,12 +6,12 @@ jest.mock("../ApiWrapper.js");
 
 describe('GameHandler should', () => {
     let mockCanvasPainter = helper.mockCanvasPainter();
-    let mockInfoPainter = helper.mockInfoPainter();
+    let mockLogger = helper.mockLogger();
     let gameHandler;
 
     beforeEach(() => {
         jest.clearAllMocks();
-        gameHandler = new GameHandler(mockCanvasPainter, mockInfoPainter);
+        gameHandler = new GameHandler(mockCanvasPainter, mockLogger);
     });
 
     describe('when creating a new game', () => {
@@ -32,7 +32,7 @@ describe('GameHandler should', () => {
 
             await gameHandler.randomGame();
 
-            expect(mockInfoPainter.error).toHaveBeenCalledWith(mockApiResponse.value());
+            expect(mockLogger.error).toHaveBeenCalledWith(mockApiResponse.value());
         });
     });
 
@@ -46,7 +46,7 @@ describe('GameHandler should', () => {
             await gameHandler.moveRover();
 
             expect(mockCanvasPainter.drawRover).toHaveBeenCalledWith(mockApiResponse.value().Rover);
-            expect(mockInfoPainter.warning).toHaveBeenCalledWith(mockApiResponse.value().Errors);
+            expect(mockLogger.warning).toHaveBeenCalledWith(mockApiResponse.value().Errors);
         });
 
         it('error when trying to move a rover before it is created', async () => {
@@ -63,7 +63,7 @@ describe('GameHandler should', () => {
             await gameHandler.randomGame();
             await gameHandler.moveRover();
 
-            expect(mockInfoPainter.error).toHaveBeenCalledWith(mockApiResponse.value());
+            expect(mockLogger.error).toHaveBeenCalledWith(mockApiResponse.value());
         });
     });
 });

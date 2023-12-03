@@ -1,4 +1,4 @@
-export class InfoPainter {
+export class Logger {
     #dom;
 
     constructor(dom) {

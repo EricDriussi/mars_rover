@@ -62,7 +62,7 @@ export function mockCanvasPainter() {
     };
 }
 
-export function mockInfoPainter() {
+export function mockLogger() {
     return {
         error: jest.fn(),
         warning: jest.fn(),

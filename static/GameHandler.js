@@ -4,17 +4,17 @@ export class GameHandler {
     #roverId;
     #lastRoverPosition;
     #canvasPainter;
-    #infoPainter;
+    #logger;
 
-    constructor(canvasPainter, infoPainter) {
+    constructor(canvasPainter, logger) {
         this.#canvasPainter = canvasPainter;
-        this.#infoPainter = infoPainter;
+        this.#logger = logger;
     }
 
     async randomGame() {
         const apiResult = await ApiWrapper.postRandomGame()
         if (apiResult.isFailure()) {
-            this.#infoPainter.error(apiResult.value());
+            this.#logger.error(apiResult.value());
             return;
         }
 
@@ -32,12 +32,12 @@ export class GameHandler {
 
     async moveRover(commands) {
         if (!this.#roverId) {
-            this.#infoPainter.error('Rover ID not available. Call getRandomRover first.');
+            this.#logger.error('Rover ID not available. Call getRandomRover first.');
             return;
         }
         const apiResult = await ApiWrapper.postMoveRover(this.#roverId, commands)
         if (apiResult.isFailure()) {
-            this.#infoPainter.error(apiResult.value());
+            this.#logger.error(apiResult.value());
             return;
         }
 
@@ -45,7 +45,7 @@ export class GameHandler {
         this.#clearCell(movementData.Rover.Coordinate);
         this.#canvasPainter.drawRover(movementData.Rover);
         this.#lastRoverPosition = movementData.Rover.Coordinate;
-        this.#infoPainter.warning(movementData.Errors);
+        this.#logger.warning(movementData.Errors);
     }
 
     #clearCell(coordinate) {

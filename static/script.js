@@ -1,11 +1,10 @@
 import {CanvasPainter} from './CanvasPainter.js';
-import {InfoPainter} from "./InfoPainter.js";
+import {Logger} from "./Logger.js";
 import {EventHandler} from "./EventHandler.js";
 import {GameHandler} from "./GameHandler.js";
 
 const canvasPainter = new CanvasPainter(document.getElementById('canvas'), 20);
-const infoPainter = new InfoPainter(document);
-const gameHandler = new GameHandler(canvasPainter, infoPainter);
+const gameHandler = new GameHandler(canvasPainter, new Logger(document));
 const eventHandler = new EventHandler(document, gameHandler);
 eventHandler.listenOnReload();
 eventHandler.listenOnKeyPress();
