@@ -7,6 +7,8 @@ export class EventHandler {
     }
 
     listenOnReload() {
+        // TODO: only get random game on first page load, use localstorage
+        // rest of page loads just load the game given the rover ID
         this.#dom.addEventListener('DOMContentLoaded', () => this.#roverHandler.randomGame()); // NOSONAR
     }
 

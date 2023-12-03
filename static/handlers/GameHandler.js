@@ -13,6 +13,15 @@ export class GameHandler {
 
     async randomGame() {
         const apiResult = await ApiWrapper.postRandomGame()
+        this.#handleNewGameResult(apiResult);
+    }
+
+    async loadGame(roverId) {
+        const apiResult = await ApiWrapper.getLoadGame(roverId)
+        this.#handleNewGameResult(apiResult);
+    }
+
+    #handleNewGameResult(apiResult) {
         if (apiResult.isFailure()) {
             this.#logger.error(apiResult.value());
             return;
