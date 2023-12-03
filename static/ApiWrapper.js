@@ -1,8 +1,7 @@
-export class ApiWrapper {
-    #infoPainter;
+import {Result} from "./Result.js";
 
-    constructor(infoPainter) {
-        this.#infoPainter = infoPainter;
+export class ApiWrapper {
+    constructor() {
     }
 
     async callGetEndpoint() {
@@ -23,12 +22,10 @@ export class ApiWrapper {
         return await this.#unpackResponse(response);
     }
 
-    // TODO: should return Error() if response is not ok
     async #unpackResponse(response) {
         if (!response.ok) {
-            this.#infoPainter.error(response.statusText);
+            return Result.failure(response.statusText);
         }
-        return await response.json();
+        return Result.success(await response.json());
     }
 }
-

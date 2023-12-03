@@ -12,11 +12,19 @@ export class GameHandler {
     }
 
     async randomGame() {
-        // TODO: handle api errors!
-        const gameData = await this.#apiWrapper.callGetEndpoint();
+        const apiResult = await this.#apiWrapper.callGetEndpoint();
+        if (apiResult.isFailure()) {
+            this.#infoPainter.error(apiResult.value());
+            return;
+        }
+
+        const gameData = apiResult.value();
         this.#roverId = gameData.Rover.Id;
         this.#lastRoverPosition = gameData.Rover.Coordinate;
+        this.#paintGame(gameData);
+    }
 
+    #paintGame(gameData) {
         this.#canvasPainter.drawPlanet(gameData.Planet);
         this.#canvasPainter.drawObstacles(gameData.Planet.Obstacles);
         this.#canvasPainter.drawRover(gameData.Rover);
@@ -27,9 +35,13 @@ export class GameHandler {
             this.#infoPainter.error('Rover ID not available. Call getRandomRover first.');
             return;
         }
+        const apiResult = await this.#apiWrapper.callMoveEndpoint(this.#roverId, commands)
+        if (apiResult.isFailure()) {
+            this.#infoPainter.error(apiResult.value());
+            return;
+        }
 
-        // TODO: handle api errors!
-        const movementData = await this.#apiWrapper.callMoveEndpoint(this.#roverId, commands)
+        const movementData = apiResult.value();
         this.#clearCell(movementData.Rover.Coordinate);
         this.#canvasPainter.drawRover(movementData.Rover);
         this.#lastRoverPosition = movementData.Rover.Coordinate;

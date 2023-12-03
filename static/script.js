@@ -6,19 +6,19 @@ import {GameHandler} from "./GameHandler.js";
 
 const canvasPainter = new CanvasPainter(document.getElementById('canvas'), 20);
 const infoPainter = new InfoPainter(document);
-const roverHandler = new GameHandler(new ApiWrapper(infoPainter), canvasPainter, infoPainter);
-const eventHandler = new EventHandler(document, roverHandler);
+const gameHandler = new GameHandler(new ApiWrapper(), canvasPainter, infoPainter);
+const eventHandler = new EventHandler(document, gameHandler);
 eventHandler.listenOnReload();
 eventHandler.listenOnKeyPress();
 
 window.newGame = function () {
-    roverHandler.randomGame()
+    gameHandler.randomGame()
         .then()
         .catch(e => console.log(e));
 };
 window.move = function () {
     const commands = document.getElementById('commands').value
-    roverHandler.moveRover(commands)
+    gameHandler.moveRover(commands)
         .then()
         .catch(e => console.log(e));
 };

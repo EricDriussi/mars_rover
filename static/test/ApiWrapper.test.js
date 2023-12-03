@@ -22,11 +22,11 @@ describe('ApiWrapper should', () => {
             };
             global.fetch.mockResolvedValue(errorFreeResponse);
 
-            await apiWrapper.callGetEndpoint();
+            const result = await apiWrapper.callGetEndpoint();
 
             expect(global.fetch).toHaveBeenCalledWith(...expectedFetchParams);
-            expect(mockInfoPainter.error).not.toHaveBeenCalled();
             expect(errorFreeResponse.json).toHaveBeenCalled();
+            expect(result.isFailure()).toBe(false);
         });
 
         it('handle error if present in response', async () => {
@@ -37,10 +37,10 @@ describe('ApiWrapper should', () => {
             };
             global.fetch.mockResolvedValue(mockErrorResponse);
 
-            await apiWrapper.callGetEndpoint();
+            const result = await apiWrapper.callGetEndpoint();
 
             expect(global.fetch).toHaveBeenCalledWith(...expectedFetchParams);
-            expect(mockInfoPainter.error).toHaveBeenCalledWith('Not Found');
+            expect(result.isFailure()).toBe(true);
         });
     });
 
@@ -63,11 +63,11 @@ describe('ApiWrapper should', () => {
             };
             global.fetch.mockResolvedValue(mockResponse);
 
-            await apiWrapper.callMoveEndpoint('roverId', 'f');
+            const result = await apiWrapper.callMoveEndpoint('roverId', 'f');
 
             expect(global.fetch).toHaveBeenCalledWith(...expectedMoveFetchParams);
-            expect(mockInfoPainter.error).not.toHaveBeenCalled();
             expect(mockResponse.json).toHaveBeenCalled();
+            expect(result.isFailure()).toBe(false);
         });
 
         it('handle error if present in response', async () => {
@@ -78,10 +78,10 @@ describe('ApiWrapper should', () => {
             };
             global.fetch.mockResolvedValue(mockErrorResponse);
 
-            await apiWrapper.callMoveEndpoint('roverId', 'f');
+            const result = await apiWrapper.callMoveEndpoint('roverId', 'f');
 
             expect(global.fetch).toHaveBeenCalledWith(...expectedMoveFetchParams);
-            expect(mockInfoPainter.error).toHaveBeenCalledWith('Bad Request');
+            expect(result.isFailure()).toBe(true);
         });
     });
 });
