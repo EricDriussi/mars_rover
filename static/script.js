@@ -1,7 +1,7 @@
 import {CanvasPainter} from './CanvasPainter.js';
-import {Logger} from "./Logger.js";
-import {EventHandler} from "./EventHandler.js";
-import {GameHandler} from "./GameHandler.js";
+import {Logger} from "./handlers/Logger.js";
+import {EventHandler} from "./handlers/EventHandler.js";
+import {GameHandler} from "./handlers/GameHandler.js";
 
 const canvasPainter = new CanvasPainter(document.getElementById('canvas'), 20);
 const gameHandler = new GameHandler(canvasPainter, new Logger(document));

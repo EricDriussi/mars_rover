@@ -1,4 +1,4 @@
-import {Logger} from '../Logger.js';
+import {Logger} from '../handlers/Logger.js';
 import * as helper from "./TestHelper.js";
 
 describe('Logger should', () => {

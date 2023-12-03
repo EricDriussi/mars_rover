@@ -1,4 +1,4 @@
-import {EventHandler} from '../EventHandler.js';
+import {EventHandler} from '../handlers/EventHandler.js';
 import * as helper from "./TestHelper.js";
 
 describe('EventListener should', () => {

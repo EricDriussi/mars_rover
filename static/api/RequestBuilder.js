@@ -1,6 +1,6 @@
 export class RequestBuilder {
     static randomGameRequest() {
-        return ['/api/randomRover', {
+        return ['/api/randomGame', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

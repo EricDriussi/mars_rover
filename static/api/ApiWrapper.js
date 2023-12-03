@@ -1,4 +1,4 @@
-import {Result} from "./Result.js";
+import {Result} from "../Result.js";
 import {RequestBuilder} from "./RequestBuilder.js";
 
 export class ApiWrapper {

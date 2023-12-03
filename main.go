@@ -60,7 +60,7 @@ func main() {
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/", fs)
 
-	http.HandleFunc("/api/randomRover", randomRoverHandler)
+	http.HandleFunc("/api/randomGame", randomGameHandler)
 	http.HandleFunc("/api/moveSequence", moveSequenceHandler)
 
 	fmt.Println("Ready to go!")
@@ -68,7 +68,7 @@ func main() {
 	log.Fatal(http.ListenAndServe(PORT, nil))
 }
 
-func randomRoverHandler(w http.ResponseWriter, r *http.Request) {
+func randomGameHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Creating Random Rover...")
 	db, repository = InitFS()
 	defer func(db *sql.DB) {
@@ -195,6 +195,8 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := MovementResponseDTO{
+		// TODO: returning the rover is not enough, should return a list of coordinates-directions since one command might fail but the rover can keep moving
+		// Decide in front end if paint all positions or just the last one
 		Rover:  roverToReturn,
 		Errors: movementResult.MovementErrors.AsStringArray(),
 		// TODO: what aboud non-movement errors?

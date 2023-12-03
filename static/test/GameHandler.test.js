@@ -1,8 +1,8 @@
 import * as helper from "./TestHelper.js";
-import {GameHandler} from "../GameHandler.js";
-import {ApiWrapper} from "../ApiWrapper.js";
+import {GameHandler} from "../handlers/GameHandler.js";
+import {ApiWrapper} from "../api/ApiWrapper.js";
 
-jest.mock("../ApiWrapper.js");
+jest.mock("../api/ApiWrapper.js");
 
 describe('GameHandler should', () => {
     let mockCanvasPainter = helper.mockCanvasPainter();

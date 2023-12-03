@@ -1,5 +1,5 @@
-import {ApiWrapper} from "../ApiWrapper.js";
-import {RequestBuilder} from "../RequestBuilder.js";
+import {ApiWrapper} from "../api/ApiWrapper.js";
+import {RequestBuilder} from "../api/RequestBuilder.js";
 
 describe('ApiWrapper should', () => {
 
@@ -8,13 +8,20 @@ describe('ApiWrapper should', () => {
         jest.clearAllMocks();
     });
 
+    const errorResponse = {
+        ok: false,
+        statusText: 'Bad Request',
+        json: jest.fn()
+    };
+
+    const errorFreeResponse = {
+        ok: true,
+        json: jest.fn()
+    };
+
     describe('when calling the random game endpoint', () => {
         const expectedFetchParams = RequestBuilder.randomGameRequest();
         it('fetch and unpack the response', async () => {
-            const errorFreeResponse = {
-                ok: true,
-                json: jest.fn()
-            };
             global.fetch.mockResolvedValue(errorFreeResponse);
 
             const result = await ApiWrapper.postRandomGame();
@@ -25,11 +32,6 @@ describe('ApiWrapper should', () => {
         });
 
         it('handle error if present in response', async () => {
-            const errorResponse = {
-                ok: false,
-                statusText: 'Not Found',
-                json: jest.fn()
-            };
             global.fetch.mockResolvedValue(errorResponse);
 
             const result = await ApiWrapper.postRandomGame();
@@ -44,10 +46,6 @@ describe('ApiWrapper should', () => {
         const expectedMoveFetchParams = RequestBuilder.moveRoverRequest(...requestData);
 
         it('fetch and unpack the response', async () => {
-            const errorFreeResponse = {
-                ok: true,
-                json: jest.fn()
-            };
             global.fetch.mockResolvedValue(errorFreeResponse);
 
             const result = await ApiWrapper.postMoveRover(...requestData);
@@ -58,11 +56,6 @@ describe('ApiWrapper should', () => {
         });
 
         it('handle error if present in response', async () => {
-            const errorResponse = {
-                ok: false,
-                statusText: 'Bad Request',
-                json: jest.fn()
-            };
             global.fetch.mockResolvedValue(errorResponse);
 
             const result = await ApiWrapper.postMoveRover(...requestData);

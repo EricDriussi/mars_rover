@@ -1,4 +1,4 @@
-import {ApiWrapper} from "./ApiWrapper.js";
+import {ApiWrapper} from "../api/ApiWrapper.js";
 
 export class GameHandler {
     #roverId;
