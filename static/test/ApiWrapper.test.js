@@ -42,7 +42,7 @@ describe('ApiWrapper should', () => {
     });
 
     describe('when calling the move rover endpoint', () => {
-        const requestData = ['roverId', 'f']
+        const requestData = ['roverId', 'f'];
         const expectedMoveFetchParams = RequestBuilder.moveRoverRequest(...requestData);
 
         it('fetch and unpack the response', async () => {
@@ -61,6 +61,30 @@ describe('ApiWrapper should', () => {
             const result = await ApiWrapper.postMoveRover(...requestData);
 
             expect(global.fetch).toHaveBeenCalledWith(...expectedMoveFetchParams);
+            expect(result.isFailure()).toBe(true);
+        });
+    });
+
+    describe('when calling the load game endpoint', () => {
+        const requestData = '123';
+        const expectedLoadFetchParams = RequestBuilder.loadGameRequest(requestData);
+
+        it('fetch and unpack the response', async () => {
+            global.fetch.mockResolvedValue(errorFreeResponse);
+
+            const result = await ApiWrapper.getLoadGame(requestData);
+
+            expect(global.fetch).toHaveBeenCalledWith(...expectedLoadFetchParams);
+            expect(errorFreeResponse.json).toHaveBeenCalled();
+            expect(result.isFailure()).toBe(false);
+        });
+
+        it('handle error if present in response', async () => {
+            global.fetch.mockResolvedValue(errorResponse);
+
+            const result = await ApiWrapper.getLoadGame(requestData);
+
+            expect(global.fetch).toHaveBeenCalledWith(...expectedLoadFetchParams);
             expect(result.isFailure()).toBe(true);
         });
     });

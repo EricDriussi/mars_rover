@@ -17,4 +17,14 @@ export class RequestBuilder {
             body: JSON.stringify({id, commands}),
         }]
     }
+
+    static loadGameRequest(id) {
+        return ['/api/loadGame', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({id}),
+        }]
+    }
 }

@@ -14,6 +14,12 @@ export class ApiWrapper {
         return await ApiWrapper.#unpackResponse(response);
     }
 
+    static async getLoadGame(id) {
+        const request = RequestBuilder.loadGameRequest(id);
+        const response = await fetch(...request);
+        return await ApiWrapper.#unpackResponse(response);
+    }
+
     static async #unpackResponse(response) {
         if (!response.ok) {
             return Result.failure(response.statusText);
