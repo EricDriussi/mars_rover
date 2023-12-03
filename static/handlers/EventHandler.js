@@ -1,15 +1,27 @@
+import {StorageWrapper} from "./StorageWrapper.js";
+
 export class EventHandler {
     #dom;
-    #roverHandler;
-    constructor(dom, roverHandler) {
+    #window;
+    #gameHandler;
+
+    constructor(dom, window, gameHandler) {
         this.#dom = dom;
-        this.#roverHandler = roverHandler;
+        this.#window = window;
+        this.#gameHandler = gameHandler;
     }
 
     listenOnReload() {
-        // TODO: only get random game on first page load, use localstorage
-        // rest of page loads just load the game given the rover ID
-        this.#dom.addEventListener('DOMContentLoaded', () => this.#roverHandler.randomGame()); // NOSONAR
+        this.#window.onload = () => {
+            const storedRoverId = StorageWrapper.getRoverId();
+            if (storedRoverId === null) {
+                this.#gameHandler.randomGame();
+            } else {
+                this.#gameHandler.randomGame();
+                // TODO: uncomment once loadGame endpoint is implemented
+                // this.#gameHandler.loadGame(storedRoverId);
+            }
+        }
     }
 
     listenOnKeyPress() {
@@ -17,19 +29,19 @@ export class EventHandler {
             switch (event.key) {
                 case 'ArrowUp':
                 case 'k':
-                    await this.#roverHandler.moveRover('f');
+                    await this.#gameHandler.moveRover('f');
                     break;
                 case 'ArrowDown':
                 case 'j':
-                    await this.#roverHandler.moveRover('b');
+                    await this.#gameHandler.moveRover('b');
                     break;
                 case 'ArrowLeft':
                 case 'h':
-                    await this.#roverHandler.moveRover('l');
+                    await this.#gameHandler.moveRover('l');
                     break;
                 case 'ArrowRight':
                 case 'l':
-                    await this.#roverHandler.moveRover('r');
+                    await this.#gameHandler.moveRover('r');
                     break;
                 default:
                     break;

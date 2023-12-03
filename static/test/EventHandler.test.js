@@ -1,26 +1,40 @@
 import {EventHandler} from '../handlers/EventHandler.js';
 import * as helper from "./TestHelper.js";
+import {StorageWrapper} from "../handlers/StorageWrapper.js";
+
+jest.mock("../handlers/StorageWrapper.js");
 
 describe('EventListener should', () => {
     let mockDom;
     let eventHandler;
     let mockGameHandler;
+    const mockWindow = {};
 
     beforeEach(() => {
         jest.clearAllMocks();
         mockDom = helper.mockDom();
         mockGameHandler = helper.mockGameHandler();
-        eventHandler = new EventHandler(mockDom, mockGameHandler);
+        eventHandler = new EventHandler(mockDom, mockWindow, mockGameHandler);
     });
 
-    it('listen on reload', () => {
-        eventHandler.listenOnReload();
+    it('call randomGame on reload if no roverId is found', () => {
+        StorageWrapper.getRoverId.mockReturnValueOnce(null);
 
-        expect(mockDom.addEventListener).toHaveBeenCalledWith('DOMContentLoaded', expect.any(Function));
-        // Hack to get the function from within the callback passed to addEventListener
-        const eventCallback = mockDom.addEventListener.mock.calls[0][1];
-        eventCallback();
+        eventHandler.listenOnReload();
+        mockWindow.onload();
+
         expect(mockGameHandler.randomGame).toHaveBeenCalled();
+    });
+
+    // TODO: unskip once loadGame endpoint is implemented
+    it.skip('call loadGame on reload if a roverId is found', () => {
+        const storedRoverId = 'mockedRoverId';
+        StorageWrapper.getRoverId.mockReturnValueOnce(storedRoverId);
+
+        eventHandler.listenOnReload();
+        mockWindow.onload();
+
+        expect(mockGameHandler.loadGame).toHaveBeenCalledWith(storedRoverId);
     });
 
     it.each([

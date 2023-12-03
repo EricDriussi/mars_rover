@@ -1,7 +1,7 @@
 import {ApiWrapper} from "../api/ApiWrapper.js";
+import {StorageWrapper} from "./StorageWrapper.js";
 
 export class GameHandler {
-    #roverId;
     #lastRoverPosition;
     #canvasPainter;
     #logger;
@@ -30,7 +30,7 @@ export class GameHandler {
         }
 
         const gameData = apiResult.value();
-        this.#roverId = gameData.Rover.Id;
+        StorageWrapper.setRoverId(gameData.Rover.Id);
         this.#lastRoverPosition = gameData.Rover.Coordinate;
         this.#paintGame(gameData);
     }
@@ -43,11 +43,12 @@ export class GameHandler {
 
     async moveRover(commands) {
         this.#logger.resetLogMessages()
-        if (!this.#roverId) {
+        const roverId = StorageWrapper.getRoverId();
+        if (roverId === null) {
             this.#logger.error('Rover ID not available. Call getRandomRover first.');
             return;
         }
-        const apiResult = await ApiWrapper.postMoveRover(this.#roverId, commands)
+        const apiResult = await ApiWrapper.postMoveRover(roverId, commands)
         if (apiResult.isFailure()) {
             this.#logger.error(apiResult.value());
             return;
