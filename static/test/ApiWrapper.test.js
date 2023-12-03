@@ -1,10 +1,9 @@
-import {ApiWrapper} from "../ApiWrapper";
-import {RequestBuilder} from "../RequestBuilder";
-
-global.fetch = jest.fn();
+import {ApiWrapper} from "../ApiWrapper.js";
+import {RequestBuilder} from "../RequestBuilder.js";
 
 describe('ApiWrapper should', () => {
 
+    global.fetch = jest.fn();
     beforeEach(() => {
         jest.clearAllMocks();
     });

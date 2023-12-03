@@ -53,13 +53,6 @@ export function mockGameHandler() {
     };
 }
 
-export function mockApiWrapper() {
-    return {
-        postRandomGame: jest.fn(),
-        postMoveRover: jest.fn(),
-    };
-}
-
 export function mockCanvasPainter() {
     return {
         drawPlanet: jest.fn(),

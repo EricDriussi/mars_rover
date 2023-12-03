@@ -1,18 +1,18 @@
+import {ApiWrapper} from "./ApiWrapper.js";
+
 export class GameHandler {
     #roverId;
     #lastRoverPosition;
-    #apiWrapper;
     #canvasPainter;
     #infoPainter;
 
-    constructor(apiWrapper, canvasPainter, infoPainter) {
-        this.#apiWrapper = apiWrapper;
+    constructor(canvasPainter, infoPainter) {
         this.#canvasPainter = canvasPainter;
         this.#infoPainter = infoPainter;
     }
 
     async randomGame() {
-        const apiResult = await this.#apiWrapper.postRandomGame();
+        const apiResult = await ApiWrapper.postRandomGame()
         if (apiResult.isFailure()) {
             this.#infoPainter.error(apiResult.value());
             return;
@@ -35,7 +35,7 @@ export class GameHandler {
             this.#infoPainter.error('Rover ID not available. Call getRandomRover first.');
             return;
         }
-        const apiResult = await this.#apiWrapper.postMoveRover(this.#roverId, commands)
+        const apiResult = await ApiWrapper.postMoveRover(this.#roverId, commands)
         if (apiResult.isFailure()) {
             this.#infoPainter.error(apiResult.value());
             return;

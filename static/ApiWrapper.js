@@ -1,5 +1,5 @@
 import {Result} from "./Result.js";
-import {RequestBuilder} from "./RequestBuilder";
+import {RequestBuilder} from "./RequestBuilder.js";
 
 export class ApiWrapper {
     static async postRandomGame() {
