@@ -4,13 +4,13 @@ import (
 	"database/sql"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
-	. "mars_rover/src/infra"
+	. "mars_rover/src/infra/persistence"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSavesRover(t *testing.T) {
+func TestUpdatesRover(t *testing.T) {
 	testCases := []struct {
 		name      string
 		setupFunc func() (Rover, Planet)
@@ -37,10 +37,11 @@ func TestSavesRover(t *testing.T) {
 
 			err := repo.SaveGame(testRover, testPlanet)
 			assert.Nil(t, err)
+			testRover.TurnRight()
+			err = repo.UpdateRover(testRover)
+			assert.Nil(t, err)
 
-			foundPlanet, err := getLastPersistedPlanet(db)
-			assertPlanetsAreEqual(t, testPlanet, foundPlanet)
-			foundRover, err := getLastPersistedRover(db, foundPlanet)
+			foundRover, err := getLastPersistedRover(db, testPlanet)
 			assertRoversAreEqual(t, foundRover, testRover)
 		})
 	}

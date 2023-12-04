@@ -10,7 +10,7 @@ import (
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/rover"
-	. "mars_rover/src/infra"
+	. "mars_rover/src/infra/persistence"
 	"net/http"
 	"strconv"
 )
@@ -55,10 +55,8 @@ type MovementResponseDTO struct {
 	Errors []string
 }
 
-// TODO: refactor api
 func main() {
-	fs := http.FileServer(http.Dir("./static"))
-	http.Handle("/", fs)
+	http.Handle("/", http.FileServer(http.Dir("./static")))
 
 	http.HandleFunc("/api/randomGame", randomGameHandler)
 	http.HandleFunc("/api/moveSequence", moveSequenceHandler)

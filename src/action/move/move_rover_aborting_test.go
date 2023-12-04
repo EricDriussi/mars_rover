@@ -4,7 +4,7 @@ import (
 	"errors"
 	"mars_rover/src/action/move"
 	. "mars_rover/src/domain/rover"
-	. "mars_rover/src/infra/test"
+	. "mars_rover/src/infra/persistence/test"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

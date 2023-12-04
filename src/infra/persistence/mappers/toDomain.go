@@ -17,7 +17,7 @@ import (
 	"mars_rover/src/domain/rover/godModRover"
 	"mars_rover/src/domain/rover/wrappingCollidingRover"
 	s "mars_rover/src/domain/size"
-	. "mars_rover/src/infra/entities"
+	. "mars_rover/src/infra/persistence/entities"
 )
 
 func MapToDomainRover(roverEntity RoverEntity, planet Planet) (Rover, error) {

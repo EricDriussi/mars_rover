@@ -1,9 +1,9 @@
-package infra
+package persistence
 
 import (
 	"encoding/json"
 	. "mars_rover/src/domain/rover"
-	. "mars_rover/src/infra/mappers"
+	. "mars_rover/src/infra/persistence/mappers"
 
 	_ "github.com/mattn/go-sqlite3"
 )

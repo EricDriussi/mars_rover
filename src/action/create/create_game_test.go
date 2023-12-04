@@ -2,7 +2,7 @@ package create_test
 
 import (
 	"mars_rover/src/action/create"
-	. "mars_rover/src/infra/test"
+	. "mars_rover/src/infra/persistence/test"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

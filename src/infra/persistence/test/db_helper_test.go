@@ -6,9 +6,9 @@ import (
 	"errors"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
-	. "mars_rover/src/infra"
-	. "mars_rover/src/infra/entities"
-	. "mars_rover/src/infra/mappers"
+	. "mars_rover/src/infra/persistence"
+	. "mars_rover/src/infra/persistence/entities"
+	. "mars_rover/src/infra/persistence/mappers"
 )
 
 func getLastPersistedRover(db *sql.DB, planet Planet) (Rover, error) {

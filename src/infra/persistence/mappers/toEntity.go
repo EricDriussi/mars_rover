@@ -6,7 +6,7 @@ import (
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/domain/size"
-	. "mars_rover/src/infra/entities"
+	. "mars_rover/src/infra/persistence/entities"
 )
 
 func MapToPersistenceRover(rover Rover) RoverEntity {

@@ -1,12 +1,12 @@
-package infra
+package persistence
 
 import (
 	"encoding/json"
 	"errors"
 	. "github.com/google/uuid"
 	. "mars_rover/src/domain"
-	. "mars_rover/src/infra/entities"
-	. "mars_rover/src/infra/mappers"
+	. "mars_rover/src/infra/persistence/entities"
+	. "mars_rover/src/infra/persistence/mappers"
 
 	_ "github.com/mattn/go-sqlite3"
 )
