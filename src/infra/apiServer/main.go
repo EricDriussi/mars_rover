@@ -9,19 +9,20 @@ import (
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/rover"
+	. "mars_rover/src/infra/apiServer/dto"
 	. "mars_rover/src/infra/persistence"
 	"net/http"
 	"strconv"
 	"sync"
 )
 
-// TODO: don't share db connection between handlers
 var repository *SQLiteRepository
 
 var roversMap = make(map[string]Rover)
 
 func RunOn(port string, wg *sync.WaitGroup) {
 	defer wg.Done()
+	repository = InitFS()
 
 	apiServer := http.NewServeMux()
 	// TODO: add load game endpoint
@@ -33,9 +34,7 @@ func RunOn(port string, wg *sync.WaitGroup) {
 }
 
 func randomGameHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Creating Random Rover...")
-	repository = InitFS()
-
+	fmt.Println("Creating Random Game...")
 	if r.Method != "POST" {
 		http.Error(w, "Invalid method", http.StatusBadRequest)
 		return
@@ -105,8 +104,6 @@ func mapDomainToDTOCoordinates(c []AbsoluteCoordinate) []CoordinateDTO {
 
 func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Moving Rover...")
-	repository = InitFS()
-
 	if r.Method != "POST" {
 		http.Error(w, "Invalid method", http.StatusBadRequest)
 		return

@@ -1,4 +1,4 @@
-package apiServer
+package dto
 
 type CoordinateDTO struct {
 	X int
