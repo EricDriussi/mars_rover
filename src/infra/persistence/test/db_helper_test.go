@@ -6,10 +6,42 @@ import (
 	"errors"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
+	. "mars_rover/src/domain/rover/godModRover"
 	. "mars_rover/src/infra/persistence"
 	. "mars_rover/src/infra/persistence/entities"
 	. "mars_rover/src/infra/persistence/mappers"
 )
+
+func saveGame(db *sql.DB, rover Rover, planet Planet) error {
+	planetAsBytes, err := json.Marshal(MapToPersistencePlanet(planet))
+	if err != nil {
+		return err
+	}
+
+	planetInsertResult, err := db.Exec("INSERT INTO "+PlanetsTable+" (planet) VALUES (?)",
+		string(planetAsBytes))
+	if err != nil {
+		return err
+	}
+	planetId, err := planetInsertResult.LastInsertId()
+	if err != nil {
+		return err
+	}
+
+	roverAsBytes, err := json.Marshal(MapToPersistenceRover(rover))
+	if err != nil {
+		return err
+	}
+
+	_, isGodMod := rover.(*GodModRover)
+	_, err = db.Exec("INSERT INTO "+RoversTable+" (id, rover, godMod, planet_id) VALUES (?, ?, ?, ?)",
+		rover.Id().String(),
+		string(roverAsBytes),
+		isGodMod,
+		planetId,
+	)
+	return err
+}
 
 func getLastPersistedRover(db *sql.DB, planet Planet) (Rover, error) {
 	rows, err := db.Query("SELECT * FROM " + RoversTable)
@@ -24,6 +56,7 @@ func getLastPersistedRover(db *sql.DB, planet Planet) (Rover, error) {
 	}
 
 	persistedRovers, err := unmarshalRoverEntities(rows)
+
 	if err != nil {
 		return nil, err
 	}

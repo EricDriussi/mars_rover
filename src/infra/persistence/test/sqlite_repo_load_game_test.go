@@ -26,16 +26,14 @@ func TestLoadsGame(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			_, repo := InitMem()
-
+			db, repo := InitMem()
 			testRover, testPlanet := testCase.setupFunc()
-
-			err := repo.SaveGame(testRover, testPlanet)
+			err := saveGame(db, testRover, testPlanet)
 			assert.Nil(t, err)
 
 			gameDTO, err := repo.LoadGame(testRover.Id())
-			assert.Nil(t, err)
 
+			assert.Nil(t, err)
 			assertRoversAreEqual(t, testRover, gameDTO.Rover)
 			assertPlanetsAreEqual(t, testPlanet, gameDTO.Planet)
 		})
@@ -58,13 +56,12 @@ func TestDoesNotLoadGame(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			_, repo := InitMem()
-
+			db, repo := InitMem()
 			testRover, testPlanet := testCase.setupFunc()
 
-			err := repo.SaveGame(testRover, testPlanet)
-			assert.Nil(t, err)
+			err := saveGame(db, testRover, testPlanet)
 
+			assert.Nil(t, err)
 			_, err = repo.LoadGame(uuid.New())
 			assert.NotNil(t, err)
 		})

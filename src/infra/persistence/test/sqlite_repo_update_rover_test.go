@@ -26,16 +26,14 @@ func TestUpdatesRover(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			db, repo := InitMem()
-
 			testRover, testPlanet := testCase.setupFunc()
-
-			// TODO: don't use save in update test
-			err := repo.SaveGame(testRover, testPlanet)
+			err := saveGame(db, testRover, testPlanet)
 			assert.Nil(t, err)
+
 			testRover.TurnRight()
 			err = repo.UpdateRover(testRover)
-			assert.Nil(t, err)
 
+			assert.Nil(t, err)
 			foundRover, err := getLastPersistedRover(db, testPlanet)
 			assertRoversAreEqual(t, foundRover, testRover)
 		})
