@@ -23,12 +23,13 @@ var roversMap = make(map[string]Rover)
 func RunOn(port string, wg *sync.WaitGroup) {
 	defer wg.Done()
 
+	apiServer := http.NewServeMux()
 	// TODO: add load game endpoint
-	http.HandleFunc("/api/randomGame", randomGameHandler)
-	http.HandleFunc("/api/moveSequence", moveSequenceHandler)
+	apiServer.HandleFunc("/api/randomGame", randomGameHandler)
+	apiServer.HandleFunc("/api/moveSequence", moveSequenceHandler)
 
 	fmt.Println("API up and running on http://localhost" + port + "/api/")
-	log.Fatal(http.ListenAndServe(port, nil))
+	log.Fatal(http.ListenAndServe(port, apiServer))
 }
 
 func randomGameHandler(w http.ResponseWriter, r *http.Request) {

@@ -1,15 +1,16 @@
 export class RequestBuilder {
     static randomGameRequest() {
-        return ['/api/randomGame', {
+        return ['http://localhost:4242/api/randomGame', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
+            body: JSON.stringify({}),
         }]
     }
 
     static moveRoverRequest(id, commands) {
-        return ['/api/moveSequence', {
+        return ['http://localhost:4242/api/moveSequence', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -19,7 +20,7 @@ export class RequestBuilder {
     }
 
     static loadGameRequest(id) {
-        return ['/api/loadGame', {
+        return ['http://localhost:4242/api/loadGame', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
