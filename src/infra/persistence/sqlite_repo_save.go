@@ -11,15 +11,14 @@ import (
 )
 
 func (r *SQLiteRepository) SaveGame(rover Rover, planet Planet) error {
-
-	planetId, err := r.savePlanet(planet)
+	planetId, err := r.AddPlanet(planet)
 	if err != nil {
 		return err
 	}
-	return r.saveRover(rover, planetId)
+	return r.AddRover(rover, planetId)
 }
 
-func (r *SQLiteRepository) savePlanet(planet Planet) (int64, error) {
+func (r *SQLiteRepository) AddPlanet(planet Planet) (int64, error) {
 	planetAsBytes, err := json.Marshal(MapToPersistencePlanet(planet))
 	if err != nil {
 		return 0, err
@@ -33,7 +32,7 @@ func (r *SQLiteRepository) savePlanet(planet Planet) (int64, error) {
 	return planetInsertResult.LastInsertId()
 }
 
-func (r *SQLiteRepository) saveRover(rover Rover, planetId int64) error {
+func (r *SQLiteRepository) AddRover(rover Rover, planetId int64) error {
 	roverAsBytes, err := json.Marshal(MapToPersistenceRover(rover))
 	if err != nil {
 		return err

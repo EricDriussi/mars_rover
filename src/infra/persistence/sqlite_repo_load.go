@@ -5,6 +5,8 @@ import (
 	"errors"
 	. "github.com/google/uuid"
 	. "mars_rover/src/domain"
+	. "mars_rover/src/domain/planet"
+	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/infra/persistence/entities"
 	. "mars_rover/src/infra/persistence/mappers"
 
@@ -40,6 +42,50 @@ func (r *SQLiteRepository) LoadGame(id UUID) (GameDTO, error) {
 		Planet: domainPlanet,
 		Rover:  domainRover,
 	}, nil
+}
+
+func (r *SQLiteRepository) GetRover(roverId UUID) (Rover, error) {
+	optionalRover, err := r.getRover(roverId)
+	if err != nil {
+		return nil, err
+	}
+	if !optionalRover.Present {
+		return nil, errors.New("rover not found")
+	}
+
+	domainPlanet, err := r.GetPlanet(roverId)
+	if err != nil {
+		return nil, err
+	}
+
+	domainRover, err := MapToDomainRover(optionalRover.Value, domainPlanet)
+	if err != nil {
+		return nil, err
+	}
+
+	return domainRover, nil
+}
+
+func (r *SQLiteRepository) GetPlanet(roverId UUID) (Planet, error) {
+	optionalRover, err := r.getRover(roverId)
+	if err != nil {
+		return nil, err
+	}
+	if !optionalRover.Present {
+		return nil, errors.New("rover not found")
+	}
+
+	planetEntity, err := r.getPlanet(optionalRover.Value.PlanetId)
+	if err != nil {
+		return nil, err
+	}
+
+	domainPlanet, err := MapToDomainPlanet(planetEntity)
+	if err != nil {
+		return nil, err
+	}
+
+	return domainPlanet, nil
 }
 
 // TODO: why the OptionalRover?
