@@ -16,9 +16,10 @@ func TestRandomCreationDoesNotPanic(t *testing.T) {
 	}()
 	repo := new(MockRepo)
 	repo.On("SaveGame").Return(nil)
+	action := create.For(repo)
 
 	for i := 0; i < 25; i++ {
-		rover, err := create.Random(repo)
+		rover, err := action.Random()
 		assert.Nil(t, err)
 		assert.NotNil(t, rover)
 	}

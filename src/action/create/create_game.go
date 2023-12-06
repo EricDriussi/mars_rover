@@ -15,7 +15,18 @@ import (
 	"math/rand"
 )
 
-func Random(repository Repository) (Rover, error) {
+// TODO: should there be only one action?
+type CreateAction struct {
+	repo Repository
+}
+
+func For(repo Repository) *CreateAction {
+	return &CreateAction{
+		repo: repo,
+	}
+}
+
+func (this *CreateAction) Random() (Rover, error) {
 	randNum := rand.Intn(19) + 4
 	randSize, err := size.Square(randNum)
 	if err != nil {
@@ -36,7 +47,7 @@ func Random(repository Repository) (Rover, error) {
 		}
 	}
 
-	err = repository.SaveGame(randRover, randPlanet)
+	err = this.repo.SaveGame(randRover, randPlanet)
 	if err != nil {
 		return nil, err
 	}

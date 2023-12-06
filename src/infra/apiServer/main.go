@@ -39,7 +39,8 @@ func randomGameHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid method", http.StatusBadRequest)
 		return
 	}
-	curiosity, err := create.Random(repository)
+	action := create.For(repository)
+	curiosity, err := action.Random()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
