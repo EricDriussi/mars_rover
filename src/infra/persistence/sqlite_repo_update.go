@@ -9,7 +9,6 @@ import (
 )
 
 func (r *SQLiteRepository) UpdateRover(rover Rover) error {
-
 	roverAsBytes, err := json.Marshal(MapToPersistenceRover(rover))
 	if err != nil {
 		return err

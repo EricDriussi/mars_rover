@@ -3,6 +3,7 @@ package move
 import (
 	"errors"
 	"fmt"
+	. "github.com/google/uuid"
 	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/rover"
 	"strings"
@@ -16,6 +17,26 @@ func For(repo Repository) *Action {
 	return &Action{
 		repo: repo,
 	}
+}
+
+func (this *Action) MoveSequenceById(roverId UUID, commands string) MovementResult {
+	rover, err := this.repo.GetRover(roverId)
+	if err != nil {
+		return MovementResult{Error: err}
+	}
+	movementErrors := &MovementErrors{}
+	for _, cmd := range strings.ToLower(commands) {
+		err := mapCommandToMovement(rover, string(cmd))
+		if err != nil {
+			movementErrors.Add(string(cmd), err)
+		}
+	}
+	err = this.repo.UpdateRover(rover)
+	if err != nil {
+		return MovementResult{Error: fmt.Errorf("couldn't save rover: %v", err)}
+	}
+
+	return MovementResult{Rover: rover, MovementErrors: movementErrors}
 }
 
 func (this *Action) MoveSequence(rover Rover, commands string) MovementResult {

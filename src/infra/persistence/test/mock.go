@@ -28,10 +28,10 @@ func (this MockRepo) AddPlanet(planet Planet) (int64, error) {
 
 func (this MockRepo) GetRover(roverId UUID) (Rover, error) {
 	args := this.Called()
-	return nil, args.Error(0)
+	return args.Get(0).(Rover), args.Error(1)
 }
 
 func (this MockRepo) GetPlanet(roverId UUID) (Planet, error) {
 	args := this.Called()
-	return nil, args.Error(0)
+	return args.Get(0).(Planet), args.Error(1)
 }
