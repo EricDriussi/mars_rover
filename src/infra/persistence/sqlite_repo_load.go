@@ -12,6 +12,7 @@ import (
 )
 
 func (r *SQLiteRepository) LoadGame(id UUID) (GameDTO, error) {
+
 	optionalRover, err := r.getRover(id)
 	if err != nil {
 		return GameDTO{}, err
@@ -41,6 +42,7 @@ func (r *SQLiteRepository) LoadGame(id UUID) (GameDTO, error) {
 	}, nil
 }
 
+// TODO: why the OptionalRover?
 func (r *SQLiteRepository) getRover(roverId UUID) (OptionalRover, error) {
 	row := r.db.QueryRow("SELECT * FROM "+RoversTable+" WHERE id = ?", roverId.String())
 

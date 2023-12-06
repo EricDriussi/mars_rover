@@ -1,7 +1,6 @@
 package infra_test
 
 import (
-	"database/sql"
 	"github.com/google/uuid"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
@@ -27,13 +26,8 @@ func TestLoadsGame(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			db, repo := InitMem()
-			defer func(db *sql.DB) {
-				err := db.Close()
-				if err != nil {
-					panic("err closing db connection")
-				}
-			}(db)
+			_, repo := InitMem()
+
 			testRover, testPlanet := testCase.setupFunc()
 
 			err := repo.SaveGame(testRover, testPlanet)
@@ -64,13 +58,8 @@ func TestDoesNotLoadGame(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			db, repo := InitMem()
-			defer func(db *sql.DB) {
-				err := db.Close()
-				if err != nil {
-					panic("err closing db connection")
-				}
-			}(db)
+			_, repo := InitMem()
+
 			testRover, testPlanet := testCase.setupFunc()
 
 			err := repo.SaveGame(testRover, testPlanet)

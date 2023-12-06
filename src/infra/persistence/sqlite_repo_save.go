@@ -11,6 +11,7 @@ import (
 )
 
 func (r *SQLiteRepository) SaveGame(rover Rover, planet Planet) error {
+
 	planetId, err := r.savePlanet(planet)
 	if err != nil {
 		return err

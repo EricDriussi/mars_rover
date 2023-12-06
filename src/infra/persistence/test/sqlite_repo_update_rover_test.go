@@ -1,7 +1,6 @@
 package infra_test
 
 import (
-	"database/sql"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/infra/persistence"
@@ -27,14 +26,10 @@ func TestUpdatesRover(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			db, repo := InitMem()
-			defer func(db *sql.DB) {
-				err := db.Close()
-				if err != nil {
-					panic("err closing db connection")
-				}
-			}(db)
+
 			testRover, testPlanet := testCase.setupFunc()
 
+			// TODO: don't use save in update test
 			err := repo.SaveGame(testRover, testPlanet)
 			assert.Nil(t, err)
 			testRover.TurnRight()

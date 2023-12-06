@@ -2,31 +2,36 @@ package persistence
 
 import (
 	"database/sql"
-	_ "github.com/mattn/go-sqlite3"
 	"log"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type SQLiteRepository struct {
-	db *sql.DB
+	db    *sql.DB
+	store string
 }
 
 func InitMem() (*sql.DB, *SQLiteRepository) {
-	db := setup(":memory:")
-	return db, &SQLiteRepository{db: db}
+	repo := &SQLiteRepository{store: ":memory:"}
+	repo.connect()
+	createTables(repo.db)
+	return repo.db, repo
 }
 
-func InitFS() (*sql.DB, *SQLiteRepository) {
-	db := setup("./rover.db")
-	return db, &SQLiteRepository{db: db}
+func InitFS() *SQLiteRepository {
+	repo := &SQLiteRepository{store: "./rover.db"}
+	repo.connect()
+	createTables(repo.db)
+	return repo
 }
 
-func setup(location string) *sql.DB {
-	db, err := sql.Open("sqlite3", location)
+func (r *SQLiteRepository) connect() {
+	db, err := sql.Open("sqlite3", r.store)
 	if err != nil {
 		log.Fatal(err)
 	}
-	createTables(db)
-	return db
+	r.db = db
 }
 
 func createTables(db *sql.DB) {

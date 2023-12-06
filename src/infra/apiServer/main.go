@@ -1,7 +1,6 @@
 package apiServer
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -16,16 +15,15 @@ import (
 	"sync"
 )
 
-var (
-	repository *SQLiteRepository
-	db         *sql.DB
-)
+// TODO: don't share db connection between handlers
+var repository *SQLiteRepository
 
 var roversMap = make(map[string]Rover)
 
 func RunOn(port string, wg *sync.WaitGroup) {
 	defer wg.Done()
 
+	// TODO: add load game endpoint
 	http.HandleFunc("/api/randomGame", randomGameHandler)
 	http.HandleFunc("/api/moveSequence", moveSequenceHandler)
 
@@ -35,13 +33,7 @@ func RunOn(port string, wg *sync.WaitGroup) {
 
 func randomGameHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Creating Random Rover...")
-	db, repository = InitFS()
-	defer func(db *sql.DB) {
-		err := db.Close()
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
-	}(db)
+	repository = InitFS()
 
 	if r.Method != "POST" {
 		http.Error(w, "Invalid method", http.StatusBadRequest)
@@ -112,13 +104,7 @@ func mapDomainToDTOCoordinates(c []AbsoluteCoordinate) []CoordinateDTO {
 
 func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Moving Rover...")
-	db, repository = InitFS()
-	defer func(db *sql.DB) {
-		err := db.Close()
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
-	}(db)
+	repository = InitFS()
 
 	if r.Method != "POST" {
 		http.Error(w, "Invalid method", http.StatusBadRequest)
