@@ -3,7 +3,6 @@ package infra
 import (
 	. "github.com/google/uuid"
 	. "github.com/stretchr/testify/mock"
-	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
 )
@@ -25,11 +24,6 @@ func (this MockRepo) AddRover(rover Rover, planetId int64) error {
 func (this MockRepo) AddPlanet(planet Planet) (int64, error) {
 	args := this.Called()
 	return 0, args.Error(0)
-}
-
-func (this MockRepo) LoadGame(id UUID) (GameDTO, error) {
-	args := this.Called()
-	return GameDTO{}, args.Error(0)
 }
 
 func (this MockRepo) GetRover(roverId UUID) (Rover, error) {

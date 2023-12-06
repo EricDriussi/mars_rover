@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	. "github.com/google/uuid"
-	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/infra/persistence/entities"
@@ -12,37 +11,6 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 )
-
-func (r *SQLiteRepository) LoadGame(id UUID) (GameDTO, error) {
-
-	optionalRover, err := r.getRover(id)
-	if err != nil {
-		return GameDTO{}, err
-	}
-	if !optionalRover.Present {
-		return GameDTO{}, errors.New("rover not found")
-	}
-
-	planetEntity, err := r.getPlanet(optionalRover.Value.PlanetId)
-	if err != nil {
-		return GameDTO{}, err
-	}
-
-	domainPlanet, err := MapToDomainPlanet(planetEntity)
-	if err != nil {
-		return GameDTO{}, err
-	}
-
-	domainRover, err := MapToDomainRover(optionalRover.Value, domainPlanet)
-	if err != nil {
-		return GameDTO{}, err
-	}
-
-	return GameDTO{
-		Planet: domainPlanet,
-		Rover:  domainRover,
-	}, nil
-}
 
 func (r *SQLiteRepository) GetRover(roverId UUID) (Rover, error) {
 	optionalRover, err := r.getRover(roverId)
