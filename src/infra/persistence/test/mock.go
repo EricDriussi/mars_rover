@@ -17,11 +17,6 @@ func (this MockRepo) UpdateRover(rover Rover) error {
 	return args.Error(0)
 }
 
-func (this MockRepo) SaveGame(rover Rover, planet Planet) error {
-	args := this.Called()
-	return args.Error(0)
-}
-
 func (this MockRepo) AddRover(rover Rover, planetId int64) error {
 	args := this.Called()
 	return args.Error(0)

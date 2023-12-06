@@ -47,7 +47,8 @@ func (this *CreateAction) Random() (Rover, error) {
 		}
 	}
 
-	err = this.repo.SaveGame(randRover, randPlanet)
+	planetId, err := this.repo.AddPlanet(randPlanet)
+	err = this.repo.AddRover(randRover, planetId)
 	if err != nil {
 		return nil, err
 	}

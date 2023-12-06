@@ -15,7 +15,8 @@ func TestRandomCreationDoesNotPanic(t *testing.T) {
 		}
 	}()
 	repo := new(MockRepo)
-	repo.On("SaveGame").Return(nil)
+	repo.On("AddPlanet").Return(nil)
+	repo.On("AddRover").Return(nil)
 	action := create.For(repo)
 
 	for i := 0; i < 25; i++ {

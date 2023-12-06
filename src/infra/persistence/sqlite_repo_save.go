@@ -10,14 +10,6 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func (r *SQLiteRepository) SaveGame(rover Rover, planet Planet) error {
-	planetId, err := r.AddPlanet(planet)
-	if err != nil {
-		return err
-	}
-	return r.AddRover(rover, planetId)
-}
-
 func (r *SQLiteRepository) AddPlanet(planet Planet) (int64, error) {
 	planetAsBytes, err := json.Marshal(MapToPersistencePlanet(planet))
 	if err != nil {

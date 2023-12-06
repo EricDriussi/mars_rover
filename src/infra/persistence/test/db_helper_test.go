@@ -43,6 +43,20 @@ func saveGame(db *sql.DB, rover Rover, planet Planet) error {
 	return err
 }
 
+func savePlanet(db *sql.DB, planet Planet) (int64, error) {
+	planetAsBytes, err := json.Marshal(MapToPersistencePlanet(planet))
+	if err != nil {
+		return 0, err
+	}
+
+	planetInsertResult, err := db.Exec("INSERT INTO "+PlanetsTable+" (planet) VALUES (?)",
+		string(planetAsBytes))
+	if err != nil {
+		return 0, err
+	}
+	return planetInsertResult.LastInsertId()
+}
+
 func getLastPersistedRover(db *sql.DB, planet Planet) (Rover, error) {
 	rows, err := db.Query("SELECT * FROM " + RoversTable)
 	defer func(rows *sql.Rows) {
