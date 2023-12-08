@@ -7,16 +7,16 @@ import (
 	. "mars_rover/src/domain/rover"
 )
 
-type MockRepo struct {
+type MockAction struct {
 	Mock
 }
 
-func (this *MockRepo) Random() (Rover, error) {
+func (this *MockAction) Random() (Rover, error) {
 	args := this.Called()
 	return args.Get(0).(Rover), args.Error(1)
 }
 
-func (this *MockRepo) MoveSequence(roverId UUID, commands string) MovementResult {
+func (this *MockAction) MoveSequence(roverId UUID, commands string) MovementResult {
 	args := this.Called()
 	return args.Get(0).(MovementResult)
 }
