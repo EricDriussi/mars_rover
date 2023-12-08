@@ -36,8 +36,12 @@ func randomGameHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	action := create.For(repository)
-	jsonResponse, err := RandomGame(*action)
-	sendResponse(w, jsonResponse, err)
+	responseDTO, err := RandomGame(*action)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	sendResponse(w, responseDTO)
 }
 
 func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
@@ -59,11 +63,16 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	moveAction := move.For(repository)
-	jsonResponse, err := MoveRover(*moveAction, request)
-	sendResponse(w, jsonResponse, err)
+	responseDTO, err := MoveRover(*moveAction, request)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	sendResponse(w, responseDTO)
 }
 
-func sendResponse(w http.ResponseWriter, jsonResponse []byte, err error) {
+func sendResponse(w http.ResponseWriter, responseDTO any) {
+	jsonResponse, err := json.Marshal(responseDTO)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

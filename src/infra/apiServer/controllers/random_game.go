@@ -1,22 +1,21 @@
 package controllers
 
 import (
-	"encoding/json"
 	. "mars_rover/src/action/create"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/infra/apiServer/dto"
 )
 
-func RandomGame(action CreateAction) ([]byte, error) {
+func RandomGame(action CreateAction) (CreateResponseDTO, error) {
 	curiosity, err := action.Random()
 	if err != nil {
-		return nil, err
+		return CreateResponseDTO{}, err
 	}
 
 	coordinate := curiosity.Coordinate()
 	planetMap := curiosity.Map()
-	response := CreateResponseDTO{
+	return CreateResponseDTO{
 		Rover: RoverDTO{
 			Id: curiosity.Id().String(),
 			Coordinate: CoordinateDTO{
@@ -30,9 +29,7 @@ func RandomGame(action CreateAction) ([]byte, error) {
 			Height:    planetMap.Height(),
 			Obstacles: mapDomainToDTOObstacles(planetMap.Obstacles()),
 		},
-	}
-
-	return json.Marshal(response)
+	}, nil
 }
 
 func mapDomainToDTOObstacles(obstacles Obstacles) []ObstacleDTO {
