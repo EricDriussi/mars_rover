@@ -1,6 +1,7 @@
 package godModRover_test
 
 import (
+	"github.com/google/uuid"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle"
 	rock "mars_rover/src/domain/obstacle/smallRock"
@@ -20,7 +21,7 @@ func TestIgnoresCollisionMovingForward(t *testing.T) {
 	obstacleAhead := rock.In(*obstacleCoordinate)
 	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&obstacleAhead})
 
-	testRover := godModRover.LandFacing(North{}, *initialCoordinate, testPlanetWithObstacles)
+	testRover := godModRover.LandFacing(uuid.New(), North{}, *initialCoordinate, testPlanetWithObstacles)
 
 	err := testRover.MoveForward()
 
@@ -35,7 +36,7 @@ func TestIgnoresCollisionMovingBackwards(t *testing.T) {
 	obstacleBehind := rock.In(*obstacleCoordinate)
 	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&obstacleBehind})
 
-	testRover := godModRover.LandFacing(North{}, *initialCoordinate, testPlanetWithObstacles)
+	testRover := godModRover.LandFacing(uuid.New(), North{}, *initialCoordinate, testPlanetWithObstacles)
 
 	err := testRover.MoveBackward()
 

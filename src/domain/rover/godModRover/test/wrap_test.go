@@ -1,6 +1,7 @@
 package godModRover_test
 
 import (
+	"github.com/google/uuid"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle"
@@ -50,11 +51,7 @@ func TestDoesNotWrapMovingForward(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover := godModRover.LandFacing(
-				testCase.direction,
-				*testCase.initialCoordinate,
-				testPlanetWithoutObstacles,
-			)
+			testRover := godModRover.LandFacing(uuid.New(), testCase.direction, *testCase.initialCoordinate, testPlanetWithoutObstacles)
 
 			err := testRover.MoveForward()
 
@@ -101,11 +98,7 @@ func TestDoesNotWrapMovingBackwards(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover := godModRover.LandFacing(
-				testCase.direction,
-				*testCase.initialCoordinate,
-				testPlanetWithoutObstacles,
-			)
+			testRover := godModRover.LandFacing(uuid.New(), testCase.direction, *testCase.initialCoordinate, testPlanetWithoutObstacles)
 
 			err := testRover.MoveBackward()
 

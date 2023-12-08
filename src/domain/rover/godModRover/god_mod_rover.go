@@ -1,7 +1,6 @@
 package godModRover
 
 import (
-	"github.com/google/uuid"
 	. "github.com/google/uuid"
 	"mars_rover/src/domain/coordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
@@ -18,19 +17,9 @@ type GodModRover struct {
 	direction  Direction
 }
 
-func Land(coordinate AbsoluteCoordinate, planet Planet) *GodModRover {
+func LandFacing(id UUID, direction Direction, coordinate AbsoluteCoordinate, planet Planet) *GodModRover {
 	return &GodModRover{
-		id:         uuid.New(),
-		planetMap:  *planetMap.OfPlanet(planet),
-		coordinate: coordinate,
-		direction:  North{},
-	}
-}
-
-// TODO.LM: should be 4 separate constructors: LandFacing{North, East, South, West}
-func LandFacing(direction Direction, coordinate AbsoluteCoordinate, planet Planet) *GodModRover {
-	return &GodModRover{
-		id:         uuid.New(),
+		id:         id,
 		planetMap:  *planetMap.OfPlanet(planet),
 		coordinate: coordinate,
 		direction:  direction,

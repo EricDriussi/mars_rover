@@ -29,7 +29,7 @@ func MapToDomainRover(roverEntity RoverEntity, planet Planet) (Rover, error) {
 
 	var rover Rover
 	if roverEntity.GodMod {
-		rover = godModRover.LandFacing(direction, *coordinate, planet)
+		rover = godModRover.LandFacing(roverEntity.ID, direction, *coordinate, planet)
 	} else {
 		rover, err = wrappingCollidingRover.LandFacing(direction, *coordinate, planet)
 		if err != nil {
