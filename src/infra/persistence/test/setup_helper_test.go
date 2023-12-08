@@ -53,6 +53,7 @@ func assertPlanetsAreEqual(t *testing.T, testPlanet Planet, foundPlanet Planet) 
 }
 
 func assertRoversAreEqual(t *testing.T, foundRover Rover, testRover Rover) {
+	assert.Equal(t, testRover.Id(), foundRover.Id())
 	assert.Equal(t, testRover.Coordinate(), foundRover.Coordinate())
 	assert.Equal(t, testRover.Direction().CardinalPoint(), foundRover.Direction().CardinalPoint())
 	assert.Equal(t, testRover.Map(), foundRover.Map())

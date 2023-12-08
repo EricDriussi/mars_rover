@@ -13,6 +13,7 @@ func MapToPersistenceRover(rover Rover) RoverEntity {
 	coordinate := rover.Coordinate()
 	roverMap := rover.Map()
 	return RoverEntity{
+		ID:         rover.Id(),
 		Coordinate: mapToPersistenceCoordinate(coordinate),
 		Direction:  rover.Direction().CardinalPoint(),
 		PlanetMap: MapEntity{
