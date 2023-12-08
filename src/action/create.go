@@ -15,7 +15,7 @@ import (
 	"math/rand"
 )
 
-func (this *Action) Random() (Rover, error) {
+func (this *LaxAction) Random() (Rover, error) {
 	randNum := rand.Intn(19) + 4
 	randSize, err := size.Square(randNum)
 	if err != nil {

@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func (this *Action) MoveSequence(roverId UUID, commands string) MovementResult {
+func (this *LaxAction) MoveSequence(roverId UUID, commands string) MovementResult {
 	rover, err := this.repo.GetRover(roverId)
 	if err != nil {
 		return MovementResult{Error: err}
@@ -28,7 +28,7 @@ func (this *Action) MoveSequence(roverId UUID, commands string) MovementResult {
 	return MovementResult{Rover: rover, MovementErrors: movementErrors}
 }
 
-func (this *Action) MoveSequenceAborting(rover Rover, commands string) (Rover, error) {
+func (this *LaxAction) MoveSequenceAborting(rover Rover, commands string) (Rover, error) {
 	if rover == nil {
 		return nil, errors.New("unexpected error, got nil rover")
 	}

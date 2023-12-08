@@ -7,7 +7,7 @@ import (
 	. "mars_rover/src/infra/apiServer/dto"
 )
 
-func RandomGame(action Action) (CreateResponseDTO, error) {
+func RandomGame(action LaxAction) (CreateResponseDTO, error) {
 	curiosity, err := action.Random()
 	if err != nil {
 		return CreateResponseDTO{}, err

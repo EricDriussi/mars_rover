@@ -14,7 +14,7 @@ import (
 	"sync"
 )
 
-var act *Action
+var act *LaxAction
 
 func RunOn(port string, wg *sync.WaitGroup) {
 	defer wg.Done()
