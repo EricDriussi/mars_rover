@@ -11,7 +11,7 @@ type MoveRequest struct {
 	Id       string `json:"id"`
 }
 
-func MoveRover(action LaxAction, request MoveRequest) (MovementResponseDTO, error) {
+func MoveRover(action Action, request MoveRequest) (MovementResponseDTO, error) {
 	roverId, err := uuid.Parse(request.Id)
 	if err != nil {
 		return MovementResponseDTO{}, err

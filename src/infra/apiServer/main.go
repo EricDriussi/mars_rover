@@ -36,7 +36,7 @@ func randomGameHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseDTO, err := RandomGame(*act)
+	responseDTO, err := RandomGame(act)
 	if err != nil {
 		sendInternalServerError(w, err.Error())
 		return
@@ -62,7 +62,7 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseDTO, err := MoveRover(*act, request)
+	responseDTO, err := MoveRover(act, request)
 	if err != nil {
 		sendInternalServerError(w, err.Error())
 		return
