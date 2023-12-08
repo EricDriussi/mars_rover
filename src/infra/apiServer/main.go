@@ -31,50 +31,50 @@ func RunOn(port string, wg *sync.WaitGroup) {
 
 func randomGameHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
-		http.Error(w, "Invalid method", http.StatusBadRequest)
+		sendBadRequest(w, "Invalid method")
 		return
 	}
 
 	action := create.For(repository)
 	responseDTO, err := RandomGame(*action)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		sendInternalServerError(w, err.Error())
 		return
 	}
-	sendResponse(w, responseDTO)
+	sendOkResponse(w, responseDTO)
 }
 
 func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
-		http.Error(w, "Invalid method", http.StatusBadRequest)
+		sendBadRequest(w, "Invalid method")
 		return
 	}
 
 	var request MoveRequest
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		sendBadRequest(w, "Invalid request body")
 		return
 	}
 	_, err = uuid.Parse(request.Id)
 	if err != nil {
-		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		sendBadRequest(w, "Invalid ID")
 		return
 	}
 
 	moveAction := move.For(repository)
 	responseDTO, err := MoveRover(*moveAction, request)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		sendInternalServerError(w, err.Error())
 		return
 	}
-	sendResponse(w, responseDTO)
+	sendOkResponse(w, responseDTO)
 }
 
-func sendResponse(w http.ResponseWriter, responseDTO any) {
+func sendOkResponse(w http.ResponseWriter, responseDTO any) {
 	jsonResponse, err := json.Marshal(responseDTO)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		sendInternalServerError(w, err.Error())
 		return
 	}
 
@@ -83,7 +83,15 @@ func sendResponse(w http.ResponseWriter, responseDTO any) {
 	w.WriteHeader(http.StatusOK)
 	_, err = w.Write(jsonResponse)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		sendInternalServerError(w, err.Error())
 		return
 	}
+}
+
+func sendBadRequest(w http.ResponseWriter, msg string) {
+	http.Error(w, msg, http.StatusBadRequest)
+}
+
+func sendInternalServerError(w http.ResponseWriter, msg string) {
+	http.Error(w, msg, http.StatusInternalServerError)
 }
