@@ -18,7 +18,7 @@ func MoveRover(action Action, request MoveRequest) (MovementResponseDTO, error) 
 	}
 	movementResult := action.MoveSequence(roverId, request.Commands)
 	if movementResult.Error != nil {
-		return MovementResponseDTO{}, err
+		return MovementResponseDTO{}, movementResult.Error
 	}
 
 	updatedRover := movementResult.Rover
