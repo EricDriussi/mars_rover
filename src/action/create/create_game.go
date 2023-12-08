@@ -1,6 +1,7 @@
 package create
 
 import (
+	"github.com/google/uuid"
 	. "mars_rover/src/domain"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
@@ -41,7 +42,7 @@ func (this *CreateAction) Random() (Rover, error) {
 	var randRover Rover
 	couldNotLand := true
 	for couldNotLand {
-		randRover, err = wrappingCollidingRover.LandFacing(randomDirection(), randomCoordinateWithin(*randSize), randPlanet)
+		randRover, err = wrappingCollidingRover.LandFacing(uuid.New(), randomDirection(), randomCoordinateWithin(*randSize), randPlanet)
 		if err == nil {
 			couldNotLand = false
 		}

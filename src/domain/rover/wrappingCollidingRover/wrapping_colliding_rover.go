@@ -2,7 +2,6 @@ package wrappingCollidingRover
 
 import (
 	"errors"
-	"github.com/google/uuid"
 	. "github.com/google/uuid"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/planet"
@@ -21,7 +20,7 @@ type WrappingCollidingRover struct {
 	gps        GPS
 }
 
-func Land(coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRover, error) {
+func LandFacing(id UUID, direction Direction, coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRover, error) {
 	mapOfPlanet := planetMap.OfPlanet(planet)
 	if mapOfPlanet.HasObstacleIn(coordinate) {
 		return nil, errors.New("cannot land on obstacle")
@@ -30,26 +29,7 @@ func Land(coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRover
 		return nil, errors.New("cannot land out of planet")
 	}
 	newRover := &WrappingCollidingRover{
-		id:         uuid.New(),
-		planetMap:  *mapOfPlanet,
-		coordinate: coordinate,
-		direction:  North{},
-	}
-	newRover.gps = gps.Bind(newRover)
-	return newRover, nil
-}
-
-// TODO.LM: should be 4 separate constructors: LandFacing{North, East, South, West}
-func LandFacing(direction Direction, coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRover, error) {
-	mapOfPlanet := planetMap.OfPlanet(planet)
-	if mapOfPlanet.HasObstacleIn(coordinate) {
-		return nil, errors.New("cannot land on obstacle")
-	}
-	if mapOfPlanet.IsOutOfBounds(coordinate) {
-		return nil, errors.New("cannot land out of planet")
-	}
-	newRover := &WrappingCollidingRover{
-		id:         uuid.New(),
+		id:         id,
 		planetMap:  *mapOfPlanet,
 		coordinate: coordinate,
 		direction:  direction,

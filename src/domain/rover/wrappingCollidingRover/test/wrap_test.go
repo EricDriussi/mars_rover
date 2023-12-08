@@ -1,6 +1,7 @@
 package wrappingCollidingRover_test
 
 import (
+	"github.com/google/uuid"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle"
@@ -50,11 +51,7 @@ func TestWrapsMovingForward(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := wrappingCollidingRover.LandFacing(
-				testCase.direction,
-				*testCase.initialCoordinate,
-				testPlanetWithoutObstacles,
-			)
+			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.direction, *testCase.initialCoordinate, testPlanetWithoutObstacles)
 
 			err := testRover.MoveForward()
 
@@ -101,11 +98,7 @@ func TestWrapsMovingBackwards(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := wrappingCollidingRover.LandFacing(
-				testCase.direction,
-				*testCase.initialCoordinate,
-				testPlanetWithoutObstacles,
-			)
+			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.direction, *testCase.initialCoordinate, testPlanetWithoutObstacles)
 
 			err := testRover.MoveBackward()
 

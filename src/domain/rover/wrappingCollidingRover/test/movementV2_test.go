@@ -1,6 +1,7 @@
 package wrappingCollidingRover_test
 
 import (
+	"github.com/google/uuid"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle"
@@ -47,7 +48,7 @@ func TestMovesForwardV2(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			coordinate := absoluteCoordinate.From(5, 5)
-			testRover, _ := wrappingCollidingRover.LandFacing(testCase.initialDirection, *coordinate, testPlanetWithoutObstacles)
+			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanetWithoutObstacles)
 
 			err := testRover.MoveForward()
 			assert.Nil(t, err)
@@ -93,7 +94,7 @@ func TestMovesBackwardV2(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			coordinate := absoluteCoordinate.From(5, 5)
-			testRover, _ := wrappingCollidingRover.LandFacing(testCase.initialDirection, *coordinate, testPlanetWithoutObstacles)
+			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanetWithoutObstacles)
 
 			err := testRover.MoveBackward()
 			assert.Nil(t, err)
@@ -139,7 +140,7 @@ func TestTurnsRightV2(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := wrappingCollidingRover.LandFacing(testCase.initialDirection, *coord, testPlanetWithoutObstacles)
+			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coord, testPlanetWithoutObstacles)
 
 			testRover.TurnRight()
 
@@ -183,7 +184,7 @@ func TestTurnsLeftV2(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := wrappingCollidingRover.LandFacing(testCase.initialDirection, *coord, testPlanetWithoutObstacles)
+			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coord, testPlanetWithoutObstacles)
 
 			testRover.TurnLeft()
 

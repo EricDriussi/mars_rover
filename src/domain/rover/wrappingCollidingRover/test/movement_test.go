@@ -1,6 +1,7 @@
 package wrappingCollidingRover_test
 
 import (
+	"github.com/google/uuid"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle"
@@ -47,7 +48,7 @@ func TestMovesForward(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			coordinate := absoluteCoordinate.From(5, 5)
-			testRover, _ := wrappingCollidingRover.LandFacing(testCase.initialDirection, *coordinate, testPlanetWithoutObstacles)
+			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanetWithoutObstacles)
 
 			err := testRover.MoveForward()
 
@@ -91,7 +92,7 @@ func TestMovesBackward(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			coordinate := absoluteCoordinate.From(5, 5)
-			testRover, _ := wrappingCollidingRover.LandFacing(testCase.initialDirection, *coordinate, testPlanetWithoutObstacles)
+			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanetWithoutObstacles)
 
 			err := testRover.MoveBackward()
 
@@ -135,7 +136,7 @@ func TestTurnsRight(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := wrappingCollidingRover.LandFacing(testCase.initialDirection, *coord, testPlanetWithoutObstacles)
+			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coord, testPlanetWithoutObstacles)
 
 			testRover.TurnRight()
 
@@ -179,7 +180,7 @@ func TestTurnsLeft(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := wrappingCollidingRover.LandFacing(testCase.initialDirection, *coord, testPlanetWithoutObstacles)
+			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coord, testPlanetWithoutObstacles)
 
 			testRover.TurnLeft()
 

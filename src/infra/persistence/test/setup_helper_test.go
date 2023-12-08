@@ -10,26 +10,28 @@ import (
 	. "mars_rover/src/domain/planet"
 	"mars_rover/src/domain/planet/rockyPlanet"
 	. "mars_rover/src/domain/rover"
-	"mars_rover/src/domain/rover/direction"
+	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/godModRover"
 	"mars_rover/src/domain/rover/wrappingCollidingRover"
 	s "mars_rover/src/domain/size"
 	"testing"
 )
 
-// TODO: Do something with these hardcoded values
+// TODO: Do something with these hardcoded values and error handling
 
 func setupWrappingRoverOnRockyPlanet() (Rover, Planet) {
 	rovCoord := absoluteCoordinate.From(0, 0)
 	testPlanet := setupRockyPlanet()
-	testRover, _ := wrappingCollidingRover.Land(*rovCoord, testPlanet)
+	aDirection := North{}
+	testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), aDirection, *rovCoord, testPlanet)
 	return testRover, testPlanet
 }
 
 func setupGodModRoverOnRockyPlanet() (Rover, Planet) {
 	rovCoord := absoluteCoordinate.From(1, 1)
 	testPlanet := setupRockyPlanet()
-	testRover := godModRover.LandFacing(uuid.New(), direction.North{}, *rovCoord, testPlanet)
+	aDirection := North{}
+	testRover := godModRover.LandFacing(uuid.New(), aDirection, *rovCoord, testPlanet)
 	return testRover, testPlanet
 }
 
