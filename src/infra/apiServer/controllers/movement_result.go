@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/google/uuid"
-	. "mars_rover/src/action/move"
+	. "mars_rover/src/action"
 	. "mars_rover/src/infra/apiServer/dto"
 )
 

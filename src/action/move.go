@@ -1,23 +1,12 @@
-package move
+package action
 
 import (
 	"errors"
 	"fmt"
 	. "github.com/google/uuid"
-	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/rover"
 	"strings"
 )
-
-type Action struct {
-	repo Repository
-}
-
-func For(repo Repository) *Action {
-	return &Action{
-		repo: repo,
-	}
-}
 
 func (this *Action) MoveSequence(roverId UUID, commands string) MovementResult {
 	rover, err := this.repo.GetRover(roverId)

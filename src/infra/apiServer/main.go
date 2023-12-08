@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"log"
-	"mars_rover/src/action/create"
-	"mars_rover/src/action/move"
+	"mars_rover/src/action"
+	. "mars_rover/src/action"
 	. "mars_rover/src/infra/apiServer/controllers"
 	. "mars_rover/src/infra/persistence"
 	"net/http"
@@ -14,11 +14,12 @@ import (
 	"sync"
 )
 
-var repository *SQLiteRepository
+var act *Action
 
 func RunOn(port string, wg *sync.WaitGroup) {
 	defer wg.Done()
-	repository = InitFS()
+	// TODO.LM: Only one action being used by multiple controllers: is that OK?
+	act = action.For(InitFS())
 
 	apiServer := http.NewServeMux()
 	// TODO: add load game endpoint
@@ -35,8 +36,7 @@ func randomGameHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	action := create.For(repository)
-	responseDTO, err := RandomGame(*action)
+	responseDTO, err := RandomGame(*act)
 	if err != nil {
 		sendInternalServerError(w, err.Error())
 		return
@@ -62,8 +62,7 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	moveAction := move.For(repository)
-	responseDTO, err := MoveRover(*moveAction, request)
+	responseDTO, err := MoveRover(*act, request)
 	if err != nil {
 		sendInternalServerError(w, err.Error())
 		return

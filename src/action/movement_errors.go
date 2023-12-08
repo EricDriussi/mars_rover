@@ -1,8 +1,15 @@
-package move
+package action
 
 import (
 	"fmt"
+	. "mars_rover/src/domain/rover"
 )
+
+type MovementResult struct {
+	Rover          Rover
+	MovementErrors *MovementErrors
+	Error          error
+}
 
 type MovementErrors struct {
 	errors []MovementError

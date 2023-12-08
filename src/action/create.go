@@ -1,8 +1,7 @@
-package create
+package action
 
 import (
 	"github.com/google/uuid"
-	. "mars_rover/src/domain"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle"
@@ -16,18 +15,7 @@ import (
 	"math/rand"
 )
 
-// TODO: should there be only one action?
-type CreateAction struct {
-	repo Repository
-}
-
-func For(repo Repository) *CreateAction {
-	return &CreateAction{
-		repo: repo,
-	}
-}
-
-func (this *CreateAction) Random() (Rover, error) {
+func (this *Action) Random() (Rover, error) {
 	randNum := rand.Intn(19) + 4
 	randSize, err := size.Square(randNum)
 	if err != nil {

@@ -1,8 +1,8 @@
-package move_test
+package action_test
 
 import (
 	"errors"
-	"mars_rover/src/action/move"
+	"mars_rover/src/action"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/infra/persistence/test"
 	"testing"
@@ -12,12 +12,12 @@ import (
 
 func TestDoesNotAbortASingleSuccessfulMovementCommand(t *testing.T) {
 	repo := new(MockRepo)
-	moveUseCase := move.For(repo)
+	act := action.For(repo)
 	curiosity := new(MockRover)
 	repo.On("UpdateRover").Return(nil)
 	curiosity.On("MoveForward").Return(nil)
 
-	_, err := moveUseCase.MoveSequenceAborting(curiosity, "f")
+	_, err := act.MoveSequenceAborting(curiosity, "f")
 
 	curiosity.AssertCalled(t, "MoveForward")
 	assert.Nil(t, err)
@@ -25,12 +25,12 @@ func TestDoesNotAbortASingleSuccessfulMovementCommand(t *testing.T) {
 
 func TestDoesNotAbortASingleRotationCommand(t *testing.T) {
 	repo := new(MockRepo)
-	moveUseCase := move.For(repo)
+	act := action.For(repo)
 	curiosity := new(MockRover)
 	repo.On("UpdateRover").Return(nil)
 	curiosity.On("TurnRight").Return()
 
-	_, err := moveUseCase.MoveSequenceAborting(curiosity, "r")
+	_, err := act.MoveSequenceAborting(curiosity, "r")
 
 	curiosity.AssertCalled(t, "TurnRight")
 	assert.Nil(t, err)
@@ -38,13 +38,13 @@ func TestDoesNotAbortASingleRotationCommand(t *testing.T) {
 
 func TestAbortsASingleFailedMovementCommand(t *testing.T) {
 	repo := new(MockRepo)
-	moveUseCase := move.For(repo)
+	act := action.For(repo)
 	curiosity := new(MockRover)
 	repo.On("UpdateRover").Return(nil)
 	movementBlockedError := "movement blocked"
 	curiosity.On("MoveForward").Return(errors.New(movementBlockedError))
 
-	_, err := moveUseCase.MoveSequenceAborting(curiosity, "f")
+	_, err := act.MoveSequenceAborting(curiosity, "f")
 
 	curiosity.AssertCalled(t, "MoveForward")
 	assert.Error(t, err)
@@ -53,11 +53,11 @@ func TestAbortsASingleFailedMovementCommand(t *testing.T) {
 
 func TestAbortsASingleUnknownCommand(t *testing.T) {
 	repo := new(MockRepo)
-	moveUseCase := move.For(repo)
+	act := action.For(repo)
 	curiosity := new(MockRover)
 	repo.On("UpdateRover").Return(nil)
 
-	_, err := moveUseCase.MoveSequenceAborting(curiosity, "X")
+	_, err := act.MoveSequenceAborting(curiosity, "X")
 
 	curiosity.AssertNotCalled(t, "TurnRight")
 	curiosity.AssertNotCalled(t, "TurnLeft")
@@ -69,7 +69,7 @@ func TestAbortsASingleUnknownCommand(t *testing.T) {
 
 func TestDoesNotAbortMultipleKnownCommands(t *testing.T) {
 	repo := new(MockRepo)
-	moveUseCase := move.For(repo)
+	act := action.For(repo)
 	curiosity := new(MockRover)
 	curiosity.On("TurnRight").Return()
 	curiosity.On("TurnLeft").Return()
@@ -77,7 +77,7 @@ func TestDoesNotAbortMultipleKnownCommands(t *testing.T) {
 	curiosity.On("MoveBackward").Return(nil)
 	repo.On("UpdateRover").Return(nil)
 
-	_, err := moveUseCase.MoveSequenceAborting(curiosity, "rlfb")
+	_, err := act.MoveSequenceAborting(curiosity, "rlfb")
 
 	curiosity.AssertCalled(t, "TurnRight")
 	curiosity.AssertCalled(t, "TurnLeft")
@@ -88,7 +88,7 @@ func TestDoesNotAbortMultipleKnownCommands(t *testing.T) {
 
 func TestAbortsOnFirstFailure(t *testing.T) {
 	repo := new(MockRepo)
-	moveUseCase := move.For(repo)
+	act := action.For(repo)
 	curiosity := new(MockRover)
 	movementBlockedError := "movement blocked"
 	curiosity.On("MoveForward").Return(nil)
@@ -96,7 +96,7 @@ func TestAbortsOnFirstFailure(t *testing.T) {
 	curiosity.On("TurnRight").Return()
 	repo.On("UpdateRover").Return(nil)
 
-	_, err := moveUseCase.MoveSequenceAborting(curiosity, "fbr")
+	_, err := act.MoveSequenceAborting(curiosity, "fbr")
 
 	curiosity.AssertCalled(t, "MoveForward")
 	curiosity.AssertCalled(t, "MoveBackward")
@@ -106,13 +106,13 @@ func TestAbortsOnFirstFailure(t *testing.T) {
 
 func TestAbortsOnRepoError(t *testing.T) {
 	repo := new(MockRepo)
-	moveUseCase := move.For(repo)
+	act := action.For(repo)
 	curiosity := new(MockRover)
 	curiosity.On("MoveForward").Return(nil)
 	repoError := "repo error"
 	repo.On("UpdateRover").Return(errors.New(repoError))
 
-	_, err := moveUseCase.MoveSequenceAborting(curiosity, "f")
+	_, err := act.MoveSequenceAborting(curiosity, "f")
 
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), repoError)
@@ -120,9 +120,9 @@ func TestAbortsOnRepoError(t *testing.T) {
 
 func TestAbortsOnNilRover(t *testing.T) {
 	repo := new(MockRepo)
-	moveUseCase := move.For(repo)
+	act := action.For(repo)
 
-	_, err := moveUseCase.MoveSequenceAborting(nil, "f")
+	_, err := act.MoveSequenceAborting(nil, "f")
 
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "got nil rover")

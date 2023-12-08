@@ -1,13 +1,13 @@
 package controllers
 
 import (
-	. "mars_rover/src/action/create"
+	. "mars_rover/src/action"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/infra/apiServer/dto"
 )
 
-func RandomGame(action CreateAction) (CreateResponseDTO, error) {
+func RandomGame(action Action) (CreateResponseDTO, error) {
 	curiosity, err := action.Random()
 	if err != nil {
 		return CreateResponseDTO{}, err
