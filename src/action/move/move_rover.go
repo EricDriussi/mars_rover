@@ -19,7 +19,7 @@ func For(repo Repository) *Action {
 	}
 }
 
-func (this *Action) MoveSequenceById(roverId UUID, commands string) MovementResult {
+func (this *Action) MoveSequence(roverId UUID, commands string) MovementResult {
 	rover, err := this.repo.GetRover(roverId)
 	if err != nil {
 		return MovementResult{Error: err}
@@ -32,25 +32,6 @@ func (this *Action) MoveSequenceById(roverId UUID, commands string) MovementResu
 		}
 	}
 	err = this.repo.UpdateRover(rover)
-	if err != nil {
-		return MovementResult{Error: fmt.Errorf("couldn't save rover: %v", err)}
-	}
-
-	return MovementResult{Rover: rover, MovementErrors: movementErrors}
-}
-
-func (this *Action) MoveSequence(rover Rover, commands string) MovementResult {
-	if rover == nil {
-		return MovementResult{Error: errors.New("got nil rover")}
-	}
-	movementErrors := &MovementErrors{}
-	for _, cmd := range strings.ToLower(commands) {
-		err := mapCommandToMovement(rover, string(cmd))
-		if err != nil {
-			movementErrors.Add(string(cmd), err)
-		}
-	}
-	err := this.repo.UpdateRover(rover)
 	if err != nil {
 		return MovementResult{Error: fmt.Errorf("couldn't save rover: %v", err)}
 	}

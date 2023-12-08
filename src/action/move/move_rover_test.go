@@ -21,7 +21,7 @@ func TestHandlesASingleMovementCommand(t *testing.T) {
 	curiosity.On("MoveForward").Return(nil)
 	repo.On("UpdateRover").Return(nil)
 
-	movementResult := moveUseCase.MoveSequenceById(uuid.New(), "f")
+	movementResult := moveUseCase.MoveSequence(uuid.New(), "f")
 
 	curiosity.AssertCalled(t, "MoveForward")
 	assert.Nil(t, movementResult.Error)
@@ -36,7 +36,7 @@ func TestHandlesASingleTurningCommand(t *testing.T) {
 	curiosity.On("TurnRight").Return()
 	repo.On("UpdateRover").Return(nil)
 
-	movementResult := moveUseCase.MoveSequenceById(uuid.New(), "r")
+	movementResult := moveUseCase.MoveSequence(uuid.New(), "r")
 
 	curiosity.AssertCalled(t, "TurnRight")
 	assert.Nil(t, movementResult.Error)
@@ -52,7 +52,7 @@ func TestHandlesASingleFailedMovementCommand(t *testing.T) {
 	curiosity.On("MoveForward").Return(errors.New(movementBlockedError))
 	repo.On("UpdateRover").Return(nil)
 
-	movementResult := moveUseCase.MoveSequenceById(uuid.New(), "f")
+	movementResult := moveUseCase.MoveSequence(uuid.New(), "f")
 
 	curiosity.AssertCalled(t, "MoveForward")
 	assert.Len(t, movementResult.MovementErrors.List(), 1)
@@ -66,7 +66,7 @@ func TestHandlesASingleUnknownCommand(t *testing.T) {
 	repo.On("GetRover", Anything).Return(curiosity, nil)
 	repo.On("UpdateRover").Return(nil)
 
-	movementResult := moveUseCase.MoveSequenceById(uuid.New(), "X")
+	movementResult := moveUseCase.MoveSequence(uuid.New(), "X")
 
 	curiosity.AssertNotCalled(t, "TurnRight")
 	curiosity.AssertNotCalled(t, "TurnLeft")
@@ -87,7 +87,7 @@ func TestHandlesMultipleKnownCommands(t *testing.T) {
 	curiosity.On("MoveBackward").Return(nil)
 	repo.On("UpdateRover").Return(nil)
 
-	movementResult := moveUseCase.MoveSequenceById(uuid.New(), "rlfb")
+	movementResult := moveUseCase.MoveSequence(uuid.New(), "rlfb")
 
 	curiosity.AssertCalled(t, "TurnRight")
 	curiosity.AssertCalled(t, "TurnLeft")
@@ -107,7 +107,7 @@ func TestHandlesMultipleMovementErrors(t *testing.T) {
 	curiosity.On("MoveBackward").Return(errors.New(movementBlockedError))
 	repo.On("UpdateRover").Return(nil)
 
-	movementResult := moveUseCase.MoveSequenceById(uuid.New(), "fbXY")
+	movementResult := moveUseCase.MoveSequence(uuid.New(), "fbXY")
 
 	curiosity.AssertNotCalled(t, "TurnRight")
 	curiosity.AssertNotCalled(t, "TurnLeft")
@@ -131,7 +131,7 @@ func TestHandlesErrorsAndSuccessfulMovements(t *testing.T) {
 	curiosity.On("TurnLeft").Return()
 	repo.On("UpdateRover").Return(nil)
 
-	movementResult := moveUseCase.MoveSequenceById(uuid.New(), "bfXYl")
+	movementResult := moveUseCase.MoveSequence(uuid.New(), "bfXYl")
 
 	curiosity.AssertNotCalled(t, "TurnRight")
 	curiosity.AssertCalled(t, "TurnLeft")
@@ -152,7 +152,7 @@ func TestReportsRepoError(t *testing.T) {
 	repoError := "repo error"
 	repo.On("UpdateRover").Return(errors.New(repoError))
 
-	movementResult := moveUseCase.MoveSequenceById(uuid.New(), "f")
+	movementResult := moveUseCase.MoveSequence(uuid.New(), "f")
 
 	assert.Nil(t, movementResult.MovementErrors)
 	assert.NotNil(t, movementResult.Error)
@@ -166,7 +166,7 @@ func TestHandlesNonExistingRover(t *testing.T) {
 	repoError := "got nil rover"
 	repo.On("GetRover", Anything).Return(curiosity, errors.New(repoError))
 
-	movementResult := moveUseCase.MoveSequenceById(uuid.New(), "f")
+	movementResult := moveUseCase.MoveSequence(uuid.New(), "f")
 
 	assert.Nil(t, movementResult.MovementErrors)
 	assert.NotNil(t, movementResult.Error)

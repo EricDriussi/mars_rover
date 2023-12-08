@@ -3,12 +3,12 @@ package apiServer
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/google/uuid"
 	"log"
 	"mars_rover/src/action/create"
 	"mars_rover/src/action/move"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle/obstacles"
-	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/infra/apiServer/dto"
 	. "mars_rover/src/infra/persistence"
 	"net/http"
@@ -17,8 +17,6 @@ import (
 )
 
 var repository *SQLiteRepository
-
-var roversMap = make(map[string]Rover)
 
 func RunOn(port string, wg *sync.WaitGroup) {
 	defer wg.Done()
@@ -46,7 +44,6 @@ func randomGameHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	roversMap[curiosity.Id().String()] = curiosity
 	coordinate := curiosity.Coordinate()
 	m := curiosity.Map()
 	response := CreateResponseDTO{
@@ -119,14 +116,15 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rover, exists := roversMap[request.Id]
-	if !exists {
-		http.Error(w, "Rover not found", http.StatusBadRequest)
+	roverId, err := uuid.Parse(request.Id)
+	if err != nil {
+		http.Error(w, "Invalid rover ID", http.StatusBadRequest)
 		return
 	}
 
 	moveAction := move.For(repository)
-	movementResult := moveAction.MoveSequence(rover, request.Commands)
+	movementResult := moveAction.MoveSequence(roverId, request.Commands)
+
 	if movementResult.Error != nil {
 		http.Error(w, fmt.Sprintf("Unexpected error, aborting: %v", movementResult.Error.Error()), http.StatusInternalServerError)
 		return
