@@ -1,4 +1,4 @@
-package infra
+package mocks
 
 import (
 	. "github.com/google/uuid"

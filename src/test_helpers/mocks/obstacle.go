@@ -1,4 +1,4 @@
-package test
+package mocks
 
 import (
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"

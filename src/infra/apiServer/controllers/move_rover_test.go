@@ -5,13 +5,13 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	. "mars_rover/src/action"
-	. "mars_rover/src/action/test"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/domain/rover/direction"
 	. "mars_rover/src/infra/apiServer/controllers"
 	. "mars_rover/src/infra/apiServer/dto"
 	. "mars_rover/src/test_helpers"
+	. "mars_rover/src/test_helpers/mocks"
 	"testing"
 )
 

@@ -1,4 +1,4 @@
-package action
+package mocks
 
 import (
 	. "github.com/google/uuid"

@@ -5,9 +5,8 @@ import (
 	"github.com/google/uuid"
 	. "github.com/stretchr/testify/mock"
 	"mars_rover/src/action"
-	. "mars_rover/src/domain/rover"
-	. "mars_rover/src/infra/persistence/test"
 	. "mars_rover/src/test_helpers"
+	. "mars_rover/src/test_helpers/mocks"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

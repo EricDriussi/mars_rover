@@ -3,9 +3,9 @@ package rockyPlanet_test
 import (
 	. "mars_rover/src/domain/obstacle"
 	obs "mars_rover/src/domain/obstacle/obstacles"
-	. "mars_rover/src/domain/obstacle/test"
 	"mars_rover/src/domain/planet/rockyPlanet"
 	"mars_rover/src/domain/size"
+	. "mars_rover/src/test_helpers/mocks"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

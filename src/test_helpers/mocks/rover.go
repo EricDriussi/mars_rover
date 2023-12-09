@@ -1,4 +1,4 @@
-package rover
+package mocks
 
 import (
 	. "github.com/google/uuid"
