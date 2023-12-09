@@ -7,7 +7,7 @@ import (
 	"mars_rover/src/action"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/infra/persistence/test"
-	"strings"
+	. "mars_rover/src/test_helpers"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -56,7 +56,7 @@ func TestHandlesASingleFailedMovementCommand(t *testing.T) {
 
 	curiosity.AssertCalled(t, "MoveForward")
 	assert.Len(t, movementResult.MovementErrors.List(), 1)
-	assert.True(t, contains(movementResult.MovementErrors.AsStringArray(), movementBlockedError))
+	AssertContains(t, movementResult.MovementErrors.AsStringArray(), movementBlockedError)
 }
 
 func TestHandlesASingleUnknownCommand(t *testing.T) {
@@ -73,7 +73,7 @@ func TestHandlesASingleUnknownCommand(t *testing.T) {
 	curiosity.AssertNotCalled(t, "MoveForward")
 	curiosity.AssertNotCalled(t, "MoveBackward")
 	assert.Len(t, movementResult.MovementErrors.List(), 1)
-	assert.True(t, contains(movementResult.MovementErrors.AsStringArray(), "invalid command"))
+	AssertContains(t, movementResult.MovementErrors.AsStringArray(), "invalid command")
 }
 
 func TestHandlesMultipleKnownCommands(t *testing.T) {
@@ -171,15 +171,6 @@ func TestHandlesNonExistingRover(t *testing.T) {
 	assert.Nil(t, movementResult.MovementErrors)
 	assert.NotNil(t, movementResult.Error)
 	assert.Contains(t, movementResult.Error.Error(), repoError)
-}
-
-func contains(stringArray []string, str string) bool {
-	for _, s := range stringArray {
-		if strings.Contains(s, str) {
-			return true
-		}
-	}
-	return false
 }
 
 func assertHasNoMovementErrors(t *testing.T, result action.MovementResult) {

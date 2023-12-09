@@ -13,6 +13,8 @@ type MoveRequest struct {
 
 func MoveRover(action Action, request MoveRequest) (MovementResponseDTO, error) {
 	roverId, err := uuid.Parse(request.Id)
+	// TODO.LM: this validation would not happen if the uuid was wrapped
+	// It's already being validated in the calling controller
 	if err != nil {
 		return MovementResponseDTO{}, err
 	}
