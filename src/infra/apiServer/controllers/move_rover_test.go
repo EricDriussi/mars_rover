@@ -19,9 +19,8 @@ func TestBuildsAMovementResponseDTOWithRoverAndNoErrors(t *testing.T) {
 	aRover := aRover()
 	mockAction := new(MockAction)
 	mockAction.On("MoveSequence").Return(MovementResult{
-		Rover:          aRover,
-		MovementErrors: &MovementErrors{},
-		Error:          nil,
+		MovedRover: aRover,
+		Collisions: &Collisions{},
 	}, nil)
 
 	dto, err := MoveRover(mockAction, aMoveRequest())
@@ -35,16 +34,15 @@ func TestBuildsAMovementResponseDTOWithRoverAndNoErrors(t *testing.T) {
 
 func TestBuildsAMovementResponseDTOWithRoverAndMovementErrors(t *testing.T) {
 	aRover := aRover()
-	movementErrors := &MovementErrors{}
+	movementErrors := &Collisions{}
 	anError := "an error"
 	anotherError := "another error"
 	movementErrors.Add("aCommand", errors.New(anError))
 	movementErrors.Add("anotherCommand", errors.New(anotherError))
 	mockAction := new(MockAction)
 	mockAction.On("MoveSequence").Return(MovementResult{
-		Rover:          aRover,
-		MovementErrors: movementErrors,
-		Error:          nil,
+		MovedRover: aRover,
+		Collisions: movementErrors,
 	}, nil)
 
 	dto, err := MoveRover(mockAction, aMoveRequest())
@@ -62,10 +60,9 @@ func TestErrorsIfActionDoesNotSucceed(t *testing.T) {
 	errMsg := "an error message"
 	mockAction := new(MockAction)
 	mockAction.On("MoveSequence").Return(MovementResult{
-		Rover:          nil,
-		MovementErrors: &MovementErrors{},
-		Error:          errors.New(errMsg),
-	}, nil)
+		MovedRover: nil,
+		Collisions: &Collisions{},
+	}, errors.New(errMsg))
 
 	_, err := MoveRover(mockAction, aMoveRequest())
 

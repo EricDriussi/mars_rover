@@ -6,36 +6,35 @@ import (
 )
 
 type MovementResult struct {
-	Rover          Rover
-	MovementErrors *MovementErrors
-	Error          error
+	MovedRover Rover
+	Collisions *Collisions
 }
 
-type MovementErrors struct {
-	errors []MovementError
+type Collisions struct {
+	collisionList []Collision
 }
 
-func (this *MovementErrors) Add(command string, err error) {
-	this.errors = append(this.errors, MovementError{command: command, err: err})
+func (this *Collisions) Add(command string, err error) {
+	this.collisionList = append(this.collisionList, Collision{command: command, err: err})
 }
 
-func (this *MovementErrors) List() []MovementError {
-	return this.errors
+func (this *Collisions) List() []Collision {
+	return this.collisionList
 }
 
-func (this *MovementErrors) AsStringArray() []string {
-	var errors []string
-	for _, err := range this.errors {
-		errors = append(errors, err.AsString())
+func (this *Collisions) AsStringArray() []string {
+	var collisions []string
+	for _, collision := range this.collisionList {
+		collisions = append(collisions, collision.AsString())
 	}
-	return errors
+	return collisions
 }
 
-type MovementError struct {
+type Collision struct {
 	command string
 	err     error
 }
 
-func (this *MovementError) AsString() string {
+func (this *Collision) AsString() string {
 	return fmt.Sprintf("error executing command %v: %v", this.command, this.err)
 }

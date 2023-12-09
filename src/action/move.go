@@ -8,24 +8,31 @@ import (
 	"strings"
 )
 
-func (this *LaxAction) MoveSequence(roverId UUID, commands string) MovementResult {
+func (this *LaxAction) MoveSequence(roverId UUID, commands string) (MovementResult, error) {
 	rover, err := this.repo.GetRover(roverId)
 	if err != nil {
-		return MovementResult{Error: err}
+		return formattedError("couldn't find requested rover", err)
 	}
-	movementErrors := &MovementErrors{}
+
+	collisions := moveRover(rover, commands)
+
+	err = this.repo.UpdateRover(rover)
+	if err != nil {
+		return formattedError("couldn't save rover", err)
+	}
+
+	return MovementResult{MovedRover: rover, Collisions: collisions}, nil
+}
+
+func moveRover(rover Rover, commands string) *Collisions {
+	collisions := &Collisions{}
 	for _, cmd := range strings.ToLower(commands) {
 		err := mapCommandToMovement(rover, string(cmd))
 		if err != nil {
-			movementErrors.Add(string(cmd), err)
+			collisions.Add(string(cmd), err)
 		}
 	}
-	err = this.repo.UpdateRover(rover)
-	if err != nil {
-		return MovementResult{Error: fmt.Errorf("couldn't save rover: %v", err)}
-	}
-
-	return MovementResult{Rover: rover, MovementErrors: movementErrors}
+	return collisions
 }
 
 func (this *LaxAction) MoveSequenceAborting(rover Rover, commands string) (Rover, error) {
@@ -35,12 +42,12 @@ func (this *LaxAction) MoveSequenceAborting(rover Rover, commands string) (Rover
 	for _, cmd := range strings.ToLower(commands) {
 		err := mapCommandToMovement(rover, string(cmd))
 		if err != nil {
-			return rover, errors.New(fmt.Sprintf("aborting command '%v': %v", string(cmd), err))
+			return rover, fmt.Errorf("aborting command '%v': %v", string(cmd), err)
 		}
 	}
 	err := this.repo.UpdateRover(rover)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("unexpected error, couldn't save rover: %v", err))
+		return nil, fmt.Errorf("unexpected error, couldn't save rover: %v", err)
 	}
 	return rover, nil
 }
@@ -50,6 +57,7 @@ type (
 	Rotation func()
 )
 
+// TODO: this should go somewhere in the API controller
 func mapCommandToMovement(rover Rover, command string) error {
 	commandActions := map[string]interface{}{
 		"f": Movement(rover.MoveForward),
@@ -69,5 +77,10 @@ func mapCommandToMovement(rover Rover, command string) error {
 			return nil
 		}
 	}
+	// TODO: this error is not a collision, don't treat it as such
 	return errors.New("invalid command")
+}
+
+func formattedError(msg string, err error) (MovementResult, error) {
+	return MovementResult{}, fmt.Errorf("%v: %v", msg, err)
 }

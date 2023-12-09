@@ -20,10 +20,10 @@ func TestHandlesASingleMovementCommand(t *testing.T) {
 	curiosity.On("MoveForward").Return(nil)
 	repo.On("UpdateRover").Return(nil)
 
-	movementResult := act.MoveSequence(uuid.New(), "f")
+	movementResult, err := act.MoveSequence(uuid.New(), "f")
 
+	assert.Nil(t, err)
 	curiosity.AssertCalled(t, "MoveForward")
-	assert.Nil(t, movementResult.Error)
 	assertHasNoMovementErrors(t, movementResult)
 }
 
@@ -35,10 +35,10 @@ func TestHandlesASingleTurningCommand(t *testing.T) {
 	curiosity.On("TurnRight").Return()
 	repo.On("UpdateRover").Return(nil)
 
-	movementResult := act.MoveSequence(uuid.New(), "r")
+	movementResult, err := act.MoveSequence(uuid.New(), "r")
 
+	assert.Nil(t, err)
 	curiosity.AssertCalled(t, "TurnRight")
-	assert.Nil(t, movementResult.Error)
 	assertHasNoMovementErrors(t, movementResult)
 }
 
@@ -51,11 +51,12 @@ func TestHandlesASingleFailedMovementCommand(t *testing.T) {
 	curiosity.On("MoveForward").Return(errors.New(movementBlockedError))
 	repo.On("UpdateRover").Return(nil)
 
-	movementResult := act.MoveSequence(uuid.New(), "f")
+	movementResult, err := act.MoveSequence(uuid.New(), "f")
 
+	assert.Nil(t, err)
 	curiosity.AssertCalled(t, "MoveForward")
-	assert.Len(t, movementResult.MovementErrors.List(), 1)
-	AssertContains(t, movementResult.MovementErrors.AsStringArray(), movementBlockedError)
+	assert.Len(t, movementResult.Collisions.List(), 1)
+	AssertContains(t, movementResult.Collisions.AsStringArray(), movementBlockedError)
 }
 
 func TestHandlesASingleUnknownCommand(t *testing.T) {
@@ -65,14 +66,15 @@ func TestHandlesASingleUnknownCommand(t *testing.T) {
 	repo.On("GetRover", Anything).Return(curiosity, nil)
 	repo.On("UpdateRover").Return(nil)
 
-	movementResult := act.MoveSequence(uuid.New(), "X")
+	movementResult, err := act.MoveSequence(uuid.New(), "X")
 
+	assert.Nil(t, err)
 	curiosity.AssertNotCalled(t, "TurnRight")
 	curiosity.AssertNotCalled(t, "TurnLeft")
 	curiosity.AssertNotCalled(t, "MoveForward")
 	curiosity.AssertNotCalled(t, "MoveBackward")
-	assert.Len(t, movementResult.MovementErrors.List(), 1)
-	AssertContains(t, movementResult.MovementErrors.AsStringArray(), "invalid command")
+	assert.Len(t, movementResult.Collisions.List(), 1)
+	AssertContains(t, movementResult.Collisions.AsStringArray(), "invalid command")
 }
 
 func TestHandlesMultipleKnownCommands(t *testing.T) {
@@ -86,14 +88,14 @@ func TestHandlesMultipleKnownCommands(t *testing.T) {
 	curiosity.On("MoveBackward").Return(nil)
 	repo.On("UpdateRover").Return(nil)
 
-	movementResult := act.MoveSequence(uuid.New(), "rlfb")
+	movementResult, err := act.MoveSequence(uuid.New(), "rlfb")
 
+	assert.Nil(t, err)
 	curiosity.AssertCalled(t, "TurnRight")
 	curiosity.AssertCalled(t, "TurnLeft")
 	curiosity.AssertCalled(t, "MoveForward")
 	curiosity.AssertCalled(t, "MoveBackward")
-	assert.Nil(t, movementResult.Error)
-	assert.Nil(t, movementResult.MovementErrors.List())
+	assert.Nil(t, movementResult.Collisions.List())
 }
 
 func TestHandlesMultipleMovementErrors(t *testing.T) {
@@ -106,17 +108,18 @@ func TestHandlesMultipleMovementErrors(t *testing.T) {
 	curiosity.On("MoveBackward").Return(errors.New(movementBlockedError))
 	repo.On("UpdateRover").Return(nil)
 
-	movementResult := act.MoveSequence(uuid.New(), "fbXY")
+	movementResult, err := act.MoveSequence(uuid.New(), "fbXY")
 
+	assert.Nil(t, err)
 	curiosity.AssertNotCalled(t, "TurnRight")
 	curiosity.AssertNotCalled(t, "TurnLeft")
 	curiosity.AssertCalled(t, "MoveForward")
 	curiosity.AssertCalled(t, "MoveBackward")
-	assert.Len(t, movementResult.MovementErrors.List(), 4)
-	assert.Contains(t, movementResult.MovementErrors.AsStringArray()[0], movementBlockedError)
-	assert.Contains(t, movementResult.MovementErrors.AsStringArray()[1], movementBlockedError)
-	assert.Contains(t, movementResult.MovementErrors.AsStringArray()[2], "invalid command")
-	assert.Contains(t, movementResult.MovementErrors.AsStringArray()[3], "invalid command")
+	assert.Len(t, movementResult.Collisions.List(), 4)
+	assert.Contains(t, movementResult.Collisions.AsStringArray()[0], movementBlockedError)
+	assert.Contains(t, movementResult.Collisions.AsStringArray()[1], movementBlockedError)
+	assert.Contains(t, movementResult.Collisions.AsStringArray()[2], "invalid command")
+	assert.Contains(t, movementResult.Collisions.AsStringArray()[3], "invalid command")
 }
 
 func TestHandlesErrorsAndSuccessfulMovements(t *testing.T) {
@@ -130,16 +133,17 @@ func TestHandlesErrorsAndSuccessfulMovements(t *testing.T) {
 	curiosity.On("TurnLeft").Return()
 	repo.On("UpdateRover").Return(nil)
 
-	movementResult := act.MoveSequence(uuid.New(), "bfXYl")
+	movementResult, err := act.MoveSequence(uuid.New(), "bfXYl")
 
+	assert.Nil(t, err)
 	curiosity.AssertNotCalled(t, "TurnRight")
 	curiosity.AssertCalled(t, "TurnLeft")
 	curiosity.AssertCalled(t, "MoveForward")
 	curiosity.AssertCalled(t, "MoveBackward")
-	assert.Len(t, movementResult.MovementErrors.List(), 3)
-	assert.Contains(t, movementResult.MovementErrors.AsStringArray()[0], movementBlockedError)
-	assert.Contains(t, movementResult.MovementErrors.AsStringArray()[1], "invalid command")
-	assert.Contains(t, movementResult.MovementErrors.AsStringArray()[2], "invalid command")
+	assert.Len(t, movementResult.Collisions.List(), 3)
+	assert.Contains(t, movementResult.Collisions.AsStringArray()[0], movementBlockedError)
+	assert.Contains(t, movementResult.Collisions.AsStringArray()[1], "invalid command")
+	assert.Contains(t, movementResult.Collisions.AsStringArray()[2], "invalid command")
 }
 
 func TestReportsRepoError(t *testing.T) {
@@ -151,11 +155,11 @@ func TestReportsRepoError(t *testing.T) {
 	repoError := "repo error"
 	repo.On("UpdateRover").Return(errors.New(repoError))
 
-	movementResult := act.MoveSequence(uuid.New(), "f")
+	movementResult, err := act.MoveSequence(uuid.New(), "f")
 
-	assert.Nil(t, movementResult.MovementErrors)
-	assert.NotNil(t, movementResult.Error)
-	assert.Contains(t, movementResult.Error.Error(), repoError)
+	assert.Nil(t, movementResult.Collisions)
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), repoError)
 }
 
 func TestHandlesNonExistingRover(t *testing.T) {
@@ -165,14 +169,14 @@ func TestHandlesNonExistingRover(t *testing.T) {
 	repoError := "got nil rover"
 	repo.On("GetRover", Anything).Return(curiosity, errors.New(repoError))
 
-	movementResult := act.MoveSequence(uuid.New(), "f")
+	movementResult, err := act.MoveSequence(uuid.New(), "f")
 
-	assert.Nil(t, movementResult.MovementErrors)
-	assert.NotNil(t, movementResult.Error)
-	assert.Contains(t, movementResult.Error.Error(), repoError)
+	assert.Nil(t, movementResult.Collisions)
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), repoError)
 }
 
 func assertHasNoMovementErrors(t *testing.T, result action.MovementResult) {
-	hasErrors := result.MovementErrors != nil && len(result.MovementErrors.List()) > 0
+	hasErrors := result.Collisions != nil && len(result.Collisions.List()) > 0
 	assert.False(t, hasErrors)
 }

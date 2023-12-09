@@ -18,12 +18,12 @@ func MoveRover(action Action, request MoveRequest) (MovementResponseDTO, error) 
 	if err != nil {
 		return MovementResponseDTO{}, err
 	}
-	movementResult := action.MoveSequence(roverId, request.Commands)
-	if movementResult.Error != nil {
-		return MovementResponseDTO{}, movementResult.Error
+	movementResult, err := action.MoveSequence(roverId, request.Commands)
+	if err != nil {
+		return MovementResponseDTO{}, err
 	}
 
-	updatedRover := movementResult.Rover
+	updatedRover := movementResult.MovedRover
 	coordinate := updatedRover.Coordinate()
 	roverToReturn := RoverDTO{
 		Id: updatedRover.Id().String(),
@@ -39,7 +39,7 @@ func MoveRover(action Action, request MoveRequest) (MovementResponseDTO, error) 
 		// Decide in front end if paint all positions or just the last one
 		Rover: roverToReturn,
 		// TODO: these are not "Errors", they are collisions
-		Errors: movementResult.MovementErrors.AsStringArray(),
+		Errors: movementResult.Collisions.AsStringArray(),
 		// TODO: what about non-movement errors?
 	}, nil
 }

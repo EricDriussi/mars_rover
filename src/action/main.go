@@ -8,7 +8,11 @@ import (
 
 type Action interface {
 	Random() (Rover, error)
-	MoveSequence(roverId UUID, commands string) MovementResult
+	MoveSequence(roverId UUID, commands string) (MovementResult, error)
+	// TODO.LM: here I'm returning a result AND an error
+	// I understand this is strange to see, but it is in line with
+	// how error handling usually works in Go
+	// I'm not sure if this is better thant wrapping the error inside the MovementResult
 }
 
 type LaxAction struct {
