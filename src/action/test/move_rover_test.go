@@ -12,33 +12,19 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHandlesASingleMovementCommand(t *testing.T) {
+func TestHandlesASingleSuccessfulMovementCommand(t *testing.T) {
 	repo := new(MockRepo)
 	curiosity := new(MockRover)
 	act := action.For(repo)
 	repo.On("GetRover", Anything).Return(curiosity, nil)
 	curiosity.On("MoveForward").Return(nil)
 	repo.On("UpdateRover").Return(nil)
+	commands := action.Commands{action.Forward}
 
-	movementResult, err := act.MoveSequence(uuid.New(), "f")
+	movementResult, err := act.MoveSequence(uuid.New(), commands)
 
 	assert.Nil(t, err)
 	curiosity.AssertCalled(t, "MoveForward")
-	assertHasNoMovementErrors(t, movementResult)
-}
-
-func TestHandlesASingleTurningCommand(t *testing.T) {
-	repo := new(MockRepo)
-	curiosity := new(MockRover)
-	act := action.For(repo)
-	repo.On("GetRover", Anything).Return(curiosity, nil)
-	curiosity.On("TurnRight").Return()
-	repo.On("UpdateRover").Return(nil)
-
-	movementResult, err := act.MoveSequence(uuid.New(), "r")
-
-	assert.Nil(t, err)
-	curiosity.AssertCalled(t, "TurnRight")
 	assertHasNoMovementErrors(t, movementResult)
 }
 
@@ -50,8 +36,9 @@ func TestHandlesASingleFailedMovementCommand(t *testing.T) {
 	movementBlockedError := "movement blocked"
 	curiosity.On("MoveForward").Return(errors.New(movementBlockedError))
 	repo.On("UpdateRover").Return(nil)
+	commands := action.Commands{action.Forward}
 
-	movementResult, err := act.MoveSequence(uuid.New(), "f")
+	movementResult, err := act.MoveSequence(uuid.New(), commands)
 
 	assert.Nil(t, err)
 	curiosity.AssertCalled(t, "MoveForward")
@@ -59,70 +46,23 @@ func TestHandlesASingleFailedMovementCommand(t *testing.T) {
 	AssertContains(t, movementResult.Collisions.AsStringArray(), movementBlockedError)
 }
 
-func TestHandlesASingleUnknownCommand(t *testing.T) {
-	repo := new(MockRepo)
-	curiosity := new(MockRover)
-	act := action.For(repo)
-	repo.On("GetRover", Anything).Return(curiosity, nil)
-	repo.On("UpdateRover").Return(nil)
-
-	movementResult, err := act.MoveSequence(uuid.New(), "X")
-
-	assert.Nil(t, err)
-	curiosity.AssertNotCalled(t, "TurnRight")
-	curiosity.AssertNotCalled(t, "TurnLeft")
-	curiosity.AssertNotCalled(t, "MoveForward")
-	curiosity.AssertNotCalled(t, "MoveBackward")
-	assert.Len(t, movementResult.Collisions.List(), 1)
-	AssertContains(t, movementResult.Collisions.AsStringArray(), "invalid command")
-}
-
-func TestHandlesMultipleKnownCommands(t *testing.T) {
+func TestHandlesASingleTurningCommand(t *testing.T) {
 	repo := new(MockRepo)
 	curiosity := new(MockRover)
 	act := action.For(repo)
 	repo.On("GetRover", Anything).Return(curiosity, nil)
 	curiosity.On("TurnRight").Return()
-	curiosity.On("TurnLeft").Return()
-	curiosity.On("MoveForward").Return(nil)
-	curiosity.On("MoveBackward").Return(nil)
 	repo.On("UpdateRover").Return(nil)
+	commands := action.Commands{action.Right}
 
-	movementResult, err := act.MoveSequence(uuid.New(), "rlfb")
+	movementResult, err := act.MoveSequence(uuid.New(), commands)
 
 	assert.Nil(t, err)
 	curiosity.AssertCalled(t, "TurnRight")
-	curiosity.AssertCalled(t, "TurnLeft")
-	curiosity.AssertCalled(t, "MoveForward")
-	curiosity.AssertCalled(t, "MoveBackward")
-	assert.Nil(t, movementResult.Collisions.List())
+	assertHasNoMovementErrors(t, movementResult)
 }
 
-func TestHandlesMultipleMovementErrors(t *testing.T) {
-	repo := new(MockRepo)
-	curiosity := new(MockRover)
-	act := action.For(repo)
-	repo.On("GetRover", Anything).Return(curiosity, nil)
-	movementBlockedError := "movement blocked"
-	curiosity.On("MoveForward").Return(errors.New(movementBlockedError))
-	curiosity.On("MoveBackward").Return(errors.New(movementBlockedError))
-	repo.On("UpdateRover").Return(nil)
-
-	movementResult, err := act.MoveSequence(uuid.New(), "fbXY")
-
-	assert.Nil(t, err)
-	curiosity.AssertNotCalled(t, "TurnRight")
-	curiosity.AssertNotCalled(t, "TurnLeft")
-	curiosity.AssertCalled(t, "MoveForward")
-	curiosity.AssertCalled(t, "MoveBackward")
-	assert.Len(t, movementResult.Collisions.List(), 4)
-	assert.Contains(t, movementResult.Collisions.AsStringArray()[0], movementBlockedError)
-	assert.Contains(t, movementResult.Collisions.AsStringArray()[1], movementBlockedError)
-	assert.Contains(t, movementResult.Collisions.AsStringArray()[2], "invalid command")
-	assert.Contains(t, movementResult.Collisions.AsStringArray()[3], "invalid command")
-}
-
-func TestHandlesErrorsAndSuccessfulMovements(t *testing.T) {
+func TestHandlesACombinationOfSuccessfulAndUnsuccessfulCommands(t *testing.T) {
 	repo := new(MockRepo)
 	curiosity := new(MockRover)
 	act := action.For(repo)
@@ -132,21 +72,34 @@ func TestHandlesErrorsAndSuccessfulMovements(t *testing.T) {
 	curiosity.On("MoveForward").Return(errors.New(movementBlockedError))
 	curiosity.On("TurnLeft").Return()
 	repo.On("UpdateRover").Return(nil)
+	commands := action.Commands{action.Backward, action.Forward, action.Left}
 
-	movementResult, err := act.MoveSequence(uuid.New(), "bfXYl")
+	movementResult, err := act.MoveSequence(uuid.New(), commands)
 
 	assert.Nil(t, err)
 	curiosity.AssertNotCalled(t, "TurnRight")
 	curiosity.AssertCalled(t, "TurnLeft")
 	curiosity.AssertCalled(t, "MoveForward")
 	curiosity.AssertCalled(t, "MoveBackward")
-	assert.Len(t, movementResult.Collisions.List(), 3)
+	assert.Len(t, movementResult.Collisions.List(), 1)
 	assert.Contains(t, movementResult.Collisions.AsStringArray()[0], movementBlockedError)
-	assert.Contains(t, movementResult.Collisions.AsStringArray()[1], "invalid command")
-	assert.Contains(t, movementResult.Collisions.AsStringArray()[2], "invalid command")
 }
 
-func TestReportsRepoError(t *testing.T) {
+func TestReportsRepoErrorWhenGettingRover(t *testing.T) {
+	repo := new(MockRepo)
+	act := action.For(repo)
+	repoError := "repo error"
+	repo.On("GetRover", Anything).Return(new(MockRover), errors.New(repoError))
+	irrelevantCommand := action.Forward
+
+	movementResult, err := act.MoveSequence(uuid.New(), action.Commands{irrelevantCommand})
+
+	assert.Nil(t, movementResult.Collisions)
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), repoError)
+}
+
+func TestReportsRepoErrorWhenUpdatingRover(t *testing.T) {
 	repo := new(MockRepo)
 	curiosity := new(MockRover)
 	act := action.For(repo)
@@ -154,22 +107,9 @@ func TestReportsRepoError(t *testing.T) {
 	curiosity.On("MoveForward").Return(nil)
 	repoError := "repo error"
 	repo.On("UpdateRover").Return(errors.New(repoError))
+	irrelevantCommand := action.Forward
 
-	movementResult, err := act.MoveSequence(uuid.New(), "f")
-
-	assert.Nil(t, movementResult.Collisions)
-	assert.NotNil(t, err)
-	assert.Contains(t, err.Error(), repoError)
-}
-
-func TestHandlesNonExistingRover(t *testing.T) {
-	repo := new(MockRepo)
-	curiosity := new(MockRover)
-	act := action.For(repo)
-	repoError := "got nil rover"
-	repo.On("GetRover", Anything).Return(curiosity, errors.New(repoError))
-
-	movementResult, err := act.MoveSequence(uuid.New(), "f")
+	movementResult, err := act.MoveSequence(uuid.New(), action.Commands{irrelevantCommand})
 
 	assert.Nil(t, movementResult.Collisions)
 	assert.NotNil(t, err)

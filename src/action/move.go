@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func (this *LaxAction) MoveSequence(roverId UUID, commands string) (MovementResult, error) {
+func (this *LaxAction) MoveSequence(roverId UUID, commands Commands) (MovementResult, error) {
 	rover, err := this.repo.GetRover(roverId)
 	if err != nil {
 		return formattedError("couldn't find requested rover", err)
@@ -24,14 +24,32 @@ func (this *LaxAction) MoveSequence(roverId UUID, commands string) (MovementResu
 	return MovementResult{MovedRover: rover, Collisions: collisions}, nil
 }
 
-func moveRover(rover Rover, commands string) *Collisions {
+func moveRover(rover Rover, commands Commands) *Collisions {
+	commandToRoverFunctionMap := map[Command]interface{}{
+		Forward:  Movement(rover.MoveForward),
+		Backward: Movement(rover.MoveBackward),
+		Left:     Rotation(rover.TurnLeft),
+		Right:    Rotation(rover.TurnRight),
+	}
+
 	collisions := &Collisions{}
-	for _, cmd := range strings.ToLower(commands) {
-		err := mapCommandToMovement(rover, string(cmd))
+	var err error
+	for _, command := range commands {
+		action, doesMap := commandToRoverFunctionMap[command]
+		if doesMap {
+			switch action := action.(type) {
+			case Movement:
+				err = action()
+			case Rotation:
+				action()
+				err = nil
+			}
+		}
 		if err != nil {
-			collisions.Add(string(cmd), err)
+			collisions.Add(command, err)
 		}
 	}
+
 	return collisions
 }
 
@@ -42,7 +60,7 @@ func (this *LaxAction) MoveSequenceAborting(rover Rover, commands string) (Rover
 	for _, cmd := range strings.ToLower(commands) {
 		err := mapCommandToMovement(rover, string(cmd))
 		if err != nil {
-			return rover, fmt.Errorf("aborting command '%v': %v", string(cmd), err)
+			return rover, fmt.Errorf("aborting Command '%v': %v", string(cmd), err)
 		}
 	}
 	err := this.repo.UpdateRover(rover)
@@ -65,7 +83,7 @@ func mapCommandToMovement(rover Rover, command string) error {
 		"l": Rotation(rover.TurnLeft),
 		"r": Rotation(rover.TurnRight),
 	}
-	// if action := commandActions[command]; action != nil {}
+	// if action := commandActions[Command]; action != nil {}
 	// TODO.LM: not sure if ⬆️ is more readable than ⬇️ ¯\_(ツ)_/¯
 	// Go people like ⬆️ but I think that ⬇️ is easier to read if you come from other langs
 	if action, ok := commandActions[command]; ok {

@@ -37,8 +37,9 @@ func TestBuildsAMovementResponseDTOWithRoverAndMovementErrors(t *testing.T) {
 	movementErrors := &Collisions{}
 	anError := "an error"
 	anotherError := "another error"
-	movementErrors.Add("aCommand", errors.New(anError))
-	movementErrors.Add("anotherCommand", errors.New(anotherError))
+	irrelevantCommand := Forward
+	movementErrors.Add(irrelevantCommand, errors.New(anError))
+	movementErrors.Add(irrelevantCommand, errors.New(anotherError))
 	mockAction := new(MockAction)
 	mockAction.On("MoveSequence").Return(MovementResult{
 		MovedRover: aRover,

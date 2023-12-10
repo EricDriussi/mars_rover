@@ -8,7 +8,7 @@ import (
 
 type Action interface {
 	Random() (Rover, error)
-	MoveSequence(roverId UUID, commands string) (MovementResult, error)
+	MoveSequence(roverId UUID, commands Commands) (MovementResult, error)
 	// TODO.LM: here I'm returning a result AND an error
 	// I understand this is strange to see, but it is in line with
 	// how error handling usually works in Go

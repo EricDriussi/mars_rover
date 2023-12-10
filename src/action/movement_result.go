@@ -14,7 +14,7 @@ type Collisions struct {
 	collisionList []Collision
 }
 
-func (this *Collisions) Add(command string, err error) {
+func (this *Collisions) Add(command Command, err error) {
 	this.collisionList = append(this.collisionList, Collision{command: command, err: err})
 }
 
@@ -31,10 +31,10 @@ func (this *Collisions) AsStringArray() []string {
 }
 
 type Collision struct {
-	command string
+	command Command
 	err     error
 }
 
 func (this *Collision) AsString() string {
-	return fmt.Sprintf("error executing command %v: %v", this.command, this.err)
+	return fmt.Sprintf("error executing Command %v: %v", this.command.toString(), this.err)
 }

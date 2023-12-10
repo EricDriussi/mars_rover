@@ -16,7 +16,7 @@ func (this *MockAction) Random() (Rover, error) {
 	return args.Get(0).(Rover), args.Error(1)
 }
 
-func (this *MockAction) MoveSequence(roverId UUID, commands string) (MovementResult, error) {
+func (this *MockAction) MoveSequence(roverId UUID, commands Commands) (MovementResult, error) {
 	args := this.Called()
 	return args.Get(0).(MovementResult), args.Error(1)
 }
