@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/google/uuid"
 	. "mars_rover/src/action"
 	"mars_rover/src/action/command"
@@ -19,30 +20,34 @@ func MoveRover(action Action, request MoveRequest) (MovementResponseDTO, error) 
 	if err != nil {
 		return MovementResponseDTO{}, err
 	}
-	applicationCommands := command.From(request.Commands)
 	// TODO: test that if len(applicationCommands) != len(request.Commands) some commands where not valid and skipped
-	movementResult, err := action.MoveSequence(roverId, applicationCommands)
+	applicationCommands := command.FromString(request.Commands)
+	movementResults, err := action.MoveSequence(roverId, applicationCommands)
+	// TODO: this would send a 500 if the rover was not found, but it should be a 404
 	if err != nil {
 		return MovementResponseDTO{}, err
 	}
 
-	updatedRover := movementResult.MovedRover
-	coordinate := updatedRover.Coordinate()
-	roverToReturn := RoverDTO{
-		Id: updatedRover.Id().String(),
-		Coordinate: CoordinateDTO{
-			X: coordinate.X(),
-			Y: coordinate.Y(),
-		},
-		Direction: updatedRover.Direction().CardinalPoint(),
-	}
+	out := mapResultsToDTO(movementResults)
 
-	return MovementResponseDTO{
-		// TODO: returning the rover is not enough, should return a list of coordinates-directions since one command might fail but the rover can keep moving
-		// Decide in front end if paint all positions or just the last one
-		Rover: roverToReturn,
-		// TODO: these are not "Errors", they are collisions
-		Errors: movementResult.Collisions.AsStringArray(),
-		// TODO: what about non-movement errors?
-	}, nil
+	return out, nil
+}
+
+func mapResultsToDTO(results []MovementResult) MovementResponseDTO {
+	var out MovementResponseDTO
+	for _, result := range results {
+		issue := ""
+		if result.IssueDetected {
+			issue = fmt.Sprintf("unable to move on command '%v'.", result.Cmd.ToString())
+		}
+		out.Results = append(out.Results, SingleMovementDTO{
+			Issue: issue,
+			Coordinate: CoordinateDTO{
+				X: result.Coord.X(),
+				Y: result.Coord.Y(),
+			},
+			Direction: result.Dir.CardinalPoint(),
+		})
+	}
+	return out
 }

@@ -9,23 +9,23 @@ import (
 	"strings"
 )
 
-func (this *LaxAction) MoveSequence(roverId UUID, commands command.Commands) (MovementResult, error) {
+func (this *LaxAction) MoveSequence(roverId UUID, commands command.Commands) ([]MovementResult, error) {
 	rover, err := this.repo.GetRover(roverId)
 	if err != nil {
 		return formattedError("couldn't find requested rover", err)
 	}
 
-	collisions := moveRover(rover, commands)
+	movementResults := moveRover(rover, commands)
 
 	err = this.repo.UpdateRover(rover)
 	if err != nil {
 		return formattedError("couldn't save rover", err)
 	}
 
-	return MovementResult{MovedRover: rover, Collisions: collisions}, nil
+	return movementResults, nil
 }
 
-func moveRover(rover Rover, commands command.Commands) *Collisions {
+func moveRover(rover Rover, commands command.Commands) []MovementResult {
 	commandToRoverFunctionMap := map[command.Command]interface{}{
 		command.Forward:  Movement(rover.MoveForward),
 		command.Backward: Movement(rover.MoveBackward),
@@ -33,7 +33,7 @@ func moveRover(rover Rover, commands command.Commands) *Collisions {
 		command.Right:    Rotation(rover.TurnRight),
 	}
 
-	collisions := &Collisions{}
+	results := make([]MovementResult, 0, len(commands))
 	var err error
 	for _, cmd := range commands {
 		action, doesMap := commandToRoverFunctionMap[cmd]
@@ -46,12 +46,16 @@ func moveRover(rover Rover, commands command.Commands) *Collisions {
 				err = nil
 			}
 		}
-		if err != nil {
-			collisions.Add(cmd, err)
+		res := MovementResult{
+			Cmd:           cmd,
+			IssueDetected: err != nil,
+			Coord:         rover.Coordinate(),
+			Dir:           rover.Direction(),
 		}
+		results = append(results, res)
 	}
 
-	return collisions
+	return results
 }
 
 func (this *LaxAction) MoveSequenceAborting(rover Rover, commands string) (Rover, error) {
@@ -100,6 +104,6 @@ func mapCommandToMovement(rover Rover, command string) error {
 	return errors.New("invalid command")
 }
 
-func formattedError(msg string, err error) (MovementResult, error) {
-	return MovementResult{}, fmt.Errorf("%v: %v", msg, err)
+func formattedError(msg string, err error) ([]MovementResult, error) {
+	return []MovementResult{}, fmt.Errorf("%v: %v", msg, err)
 }

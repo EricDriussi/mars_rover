@@ -31,7 +31,7 @@ func commandFrom(char rune) (Command, error) {
 	return command, nil
 }
 
-func From(stringCommands string) Commands {
+func FromString(stringCommands string) Commands {
 	commands := make([]Command, 0, len(stringCommands))
 	for _, char := range strings.ToLower(stringCommands) {
 		command, err := commandFrom(char)

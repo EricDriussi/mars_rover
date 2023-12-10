@@ -27,7 +27,7 @@ func TestCommandsAreBuiltFromString(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			assert.Equal(t, testCase.expected, command.From(testCase.input))
+			assert.Equal(t, testCase.expected, command.FromString(testCase.input))
 		})
 	}
 }

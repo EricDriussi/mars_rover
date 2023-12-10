@@ -27,6 +27,11 @@ type CreateResponseDTO struct {
 }
 
 type MovementResponseDTO struct {
-	Rover  RoverDTO
-	Errors []string
+	Results []SingleMovementDTO
+}
+
+type SingleMovementDTO struct {
+	Issue      string
+	Coordinate CoordinateDTO
+	Direction  string
 }
