@@ -1,20 +1,20 @@
-package action_test
+package command_test
 
 import (
 	"github.com/stretchr/testify/assert"
-	"mars_rover/src/action"
-	. "mars_rover/src/action"
+	"mars_rover/src/action/command"
+	. "mars_rover/src/action/command"
 	"testing"
 )
 
-func TestFrom(t *testing.T) {
+func TestCommandsAreBuiltFromString(t *testing.T) {
 	testCases := []struct {
 		name     string
 		input    string
 		expected Commands
 	}{
 		{
-			name:     "parses valid commands",
+			name:     "containing valid commands",
 			input:    "fblr",
 			expected: Commands{Forward, Backward, Left, Right},
 		},
@@ -27,7 +27,7 @@ func TestFrom(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			assert.Equal(t, testCase.expected, action.ParseFrom(testCase.input))
+			assert.Equal(t, testCase.expected, command.From(testCase.input))
 		})
 	}
 }

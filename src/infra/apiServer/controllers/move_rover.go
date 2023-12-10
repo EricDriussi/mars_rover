@@ -3,7 +3,7 @@ package controllers
 import (
 	"github.com/google/uuid"
 	. "mars_rover/src/action"
-	act "mars_rover/src/action"
+	"mars_rover/src/action/command"
 	. "mars_rover/src/infra/apiServer/dto"
 )
 
@@ -19,7 +19,7 @@ func MoveRover(action Action, request MoveRequest) (MovementResponseDTO, error) 
 	if err != nil {
 		return MovementResponseDTO{}, err
 	}
-	applicationCommands := act.ParseFrom(request.Commands)
+	applicationCommands := command.From(request.Commands)
 	// TODO: test that if len(applicationCommands) != len(request.Commands) some commands where not valid and skipped
 	movementResult, err := action.MoveSequence(roverId, applicationCommands)
 	if err != nil {

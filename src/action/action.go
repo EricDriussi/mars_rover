@@ -2,13 +2,14 @@ package action
 
 import (
 	. "github.com/google/uuid"
+	"mars_rover/src/action/command"
 	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/rover"
 )
 
 type Action interface {
 	Random() (Rover, error)
-	MoveSequence(roverId UUID, commands Commands) (MovementResult, error)
+	MoveSequence(roverId UUID, commands command.Commands) (MovementResult, error)
 	// TODO.LM: here I'm returning a result AND an error
 	// I understand this is strange to see, but it is in line with
 	// how error handling usually works in Go

@@ -2,6 +2,7 @@ package action
 
 import (
 	"fmt"
+	"mars_rover/src/action/command"
 	. "mars_rover/src/domain/rover"
 )
 
@@ -14,7 +15,7 @@ type Collisions struct {
 	collisionList []Collision
 }
 
-func (this *Collisions) Add(command Command, err error) {
+func (this *Collisions) Add(command command.Command, err error) {
 	this.collisionList = append(this.collisionList, Collision{command: command, err: err})
 }
 
@@ -31,10 +32,10 @@ func (this *Collisions) AsStringArray() []string {
 }
 
 type Collision struct {
-	command Command
+	command command.Command
 	err     error
 }
 
 func (this *Collision) AsString() string {
-	return fmt.Sprintf("error executing Command %v: %v", this.command.toString(), this.err)
+	return fmt.Sprintf("error executing Command %v: %v", this.command.ToString(), this.err)
 }

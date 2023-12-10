@@ -4,11 +4,12 @@ import (
 	"errors"
 	"fmt"
 	. "github.com/google/uuid"
+	"mars_rover/src/action/command"
 	. "mars_rover/src/domain/rover"
 	"strings"
 )
 
-func (this *LaxAction) MoveSequence(roverId UUID, commands Commands) (MovementResult, error) {
+func (this *LaxAction) MoveSequence(roverId UUID, commands command.Commands) (MovementResult, error) {
 	rover, err := this.repo.GetRover(roverId)
 	if err != nil {
 		return formattedError("couldn't find requested rover", err)
@@ -24,18 +25,18 @@ func (this *LaxAction) MoveSequence(roverId UUID, commands Commands) (MovementRe
 	return MovementResult{MovedRover: rover, Collisions: collisions}, nil
 }
 
-func moveRover(rover Rover, commands Commands) *Collisions {
-	commandToRoverFunctionMap := map[Command]interface{}{
-		Forward:  Movement(rover.MoveForward),
-		Backward: Movement(rover.MoveBackward),
-		Left:     Rotation(rover.TurnLeft),
-		Right:    Rotation(rover.TurnRight),
+func moveRover(rover Rover, commands command.Commands) *Collisions {
+	commandToRoverFunctionMap := map[command.Command]interface{}{
+		command.Forward:  Movement(rover.MoveForward),
+		command.Backward: Movement(rover.MoveBackward),
+		command.Left:     Rotation(rover.TurnLeft),
+		command.Right:    Rotation(rover.TurnRight),
 	}
 
 	collisions := &Collisions{}
 	var err error
-	for _, command := range commands {
-		action, doesMap := commandToRoverFunctionMap[command]
+	for _, cmd := range commands {
+		action, doesMap := commandToRoverFunctionMap[cmd]
 		if doesMap {
 			switch action := action.(type) {
 			case Movement:
@@ -46,7 +47,7 @@ func moveRover(rover Rover, commands Commands) *Collisions {
 			}
 		}
 		if err != nil {
-			collisions.Add(command, err)
+			collisions.Add(cmd, err)
 		}
 	}
 

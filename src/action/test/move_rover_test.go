@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	. "github.com/stretchr/testify/mock"
 	"mars_rover/src/action"
+	"mars_rover/src/action/command"
 	. "mars_rover/src/test_helpers"
 	. "mars_rover/src/test_helpers/mocks"
 	"testing"
@@ -19,7 +20,7 @@ func TestHandlesASingleSuccessfulMovementCommand(t *testing.T) {
 	repo.On("GetRover", Anything).Return(curiosity, nil)
 	curiosity.On("MoveForward").Return(nil)
 	repo.On("UpdateRover").Return(nil)
-	commands := action.Commands{action.Forward}
+	commands := command.Commands{command.Forward}
 
 	movementResult, err := act.MoveSequence(uuid.New(), commands)
 
@@ -36,7 +37,7 @@ func TestHandlesASingleFailedMovementCommand(t *testing.T) {
 	movementBlockedError := "movement blocked"
 	curiosity.On("MoveForward").Return(errors.New(movementBlockedError))
 	repo.On("UpdateRover").Return(nil)
-	commands := action.Commands{action.Forward}
+	commands := command.Commands{command.Forward}
 
 	movementResult, err := act.MoveSequence(uuid.New(), commands)
 
@@ -53,7 +54,7 @@ func TestHandlesASingleTurningCommand(t *testing.T) {
 	repo.On("GetRover", Anything).Return(curiosity, nil)
 	curiosity.On("TurnRight").Return()
 	repo.On("UpdateRover").Return(nil)
-	commands := action.Commands{action.Right}
+	commands := command.Commands{command.Right}
 
 	movementResult, err := act.MoveSequence(uuid.New(), commands)
 
@@ -72,7 +73,7 @@ func TestHandlesACombinationOfSuccessfulAndUnsuccessfulCommands(t *testing.T) {
 	curiosity.On("MoveForward").Return(errors.New(movementBlockedError))
 	curiosity.On("TurnLeft").Return()
 	repo.On("UpdateRover").Return(nil)
-	commands := action.Commands{action.Backward, action.Forward, action.Left}
+	commands := command.Commands{command.Backward, command.Forward, command.Left}
 
 	movementResult, err := act.MoveSequence(uuid.New(), commands)
 
@@ -90,9 +91,9 @@ func TestReportsRepoErrorWhenGettingRover(t *testing.T) {
 	act := action.For(repo)
 	repoError := "repo error"
 	repo.On("GetRover", Anything).Return(new(MockRover), errors.New(repoError))
-	irrelevantCommand := action.Forward
+	irrelevantCommand := command.Forward
 
-	movementResult, err := act.MoveSequence(uuid.New(), action.Commands{irrelevantCommand})
+	movementResult, err := act.MoveSequence(uuid.New(), command.Commands{irrelevantCommand})
 
 	assert.Nil(t, movementResult.Collisions)
 	assert.NotNil(t, err)
@@ -107,9 +108,9 @@ func TestReportsRepoErrorWhenUpdatingRover(t *testing.T) {
 	curiosity.On("MoveForward").Return(nil)
 	repoError := "repo error"
 	repo.On("UpdateRover").Return(errors.New(repoError))
-	irrelevantCommand := action.Forward
+	irrelevantCommand := command.Forward
 
-	movementResult, err := act.MoveSequence(uuid.New(), action.Commands{irrelevantCommand})
+	movementResult, err := act.MoveSequence(uuid.New(), command.Commands{irrelevantCommand})
 
 	assert.Nil(t, movementResult.Collisions)
 	assert.NotNil(t, err)
