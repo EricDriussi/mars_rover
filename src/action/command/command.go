@@ -16,19 +16,19 @@ const (
 	Right
 )
 
-func commandFrom(char rune) (Command, error) {
-	var charToCommandMap = map[rune]Command{
-		'f': Forward,
-		'b': Backward,
-		'l': Left,
-		'r': Right,
+func (this Command) ToString() string {
+	var commandToCharMap = map[Command]rune{
+		Forward:  'f',
+		Backward: 'b',
+		Left:     'l',
+		Right:    'r',
 	}
 
-	command, doesMap := charToCommandMap[char]
+	char, doesMap := commandToCharMap[this]
 	if !doesMap {
-		return invalidCommand, fmt.Errorf("invalid Command: %c", char)
+		return "cannot stringify invalid Command"
 	}
-	return command, nil
+	return string(char)
 }
 
 func FromString(stringCommands string) Commands {
@@ -43,17 +43,17 @@ func FromString(stringCommands string) Commands {
 	return commands
 }
 
-func (this Command) ToString() string {
-	var commandToCharMap = map[Command]rune{
-		Forward:  'f',
-		Backward: 'b',
-		Left:     'l',
-		Right:    'r',
+func commandFrom(char rune) (Command, error) {
+	var charToCommandMap = map[rune]Command{
+		'f': Forward,
+		'b': Backward,
+		'l': Left,
+		'r': Right,
 	}
 
-	char, doesMap := commandToCharMap[this]
+	command, doesMap := charToCommandMap[char]
 	if !doesMap {
-		return "cannot stringify invalid Command"
+		return invalidCommand, fmt.Errorf("invalid Command: %c", char)
 	}
-	return string(char)
+	return command, nil
 }
