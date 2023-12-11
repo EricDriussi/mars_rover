@@ -9,17 +9,17 @@ import (
 	"strings"
 )
 
-func (this *LaxAction) MoveSequence(roverId UUID, commands command.Commands) ([]MovementResult, error) {
+func (this *LaxAction) MoveSequence(roverId UUID, commands command.Commands) ([]MovementResult, *ActionError) {
 	rover, err := this.repo.GetRover(roverId)
 	if err != nil {
-		return formattedError("couldn't find requested rover", err)
+		return nil, BuildNotFound(roverId, err)
 	}
 
 	movementResults := moveRover(rover, commands)
 
 	err = this.repo.UpdateRover(rover)
 	if err != nil {
-		return formattedError("couldn't save rover", err)
+		return nil, BuildNotUpdated(roverId, err)
 	}
 
 	return movementResults, nil
@@ -102,8 +102,4 @@ func mapCommandToMovement(rover Rover, command string) error {
 	}
 	// TODO: this error is not a collision, don't treat it as such
 	return errors.New("invalid command")
-}
-
-func formattedError(msg string, err error) ([]MovementResult, error) {
-	return []MovementResult{}, fmt.Errorf("%v: %v", msg, err)
 }
