@@ -101,8 +101,7 @@ func TestHandlesACombinationOfSuccessfulAndUnsuccessfulCommands(t *testing.T) {
 
 func TestReportsRepoErrorWhenGettingRover(t *testing.T) {
 	repo := new(MockRepo)
-	repoError := "repo error"
-	repo.On("GetRover", Anything).Return(new(MockRover), errors.New(repoError))
+	repo.On("GetRover", Anything).Return(new(MockRover), errors.New("whatever"))
 
 	act := action.For(repo)
 	irrelevantCommand := command.Forward
@@ -110,7 +109,7 @@ func TestReportsRepoErrorWhenGettingRover(t *testing.T) {
 
 	assert.Empty(t, movementResults)
 	assert.NotNil(t, err)
-	assert.Contains(t, err.Error(), repoError)
+	assert.Contains(t, err.Error(), "not found")
 }
 
 func TestReportsRepoErrorWhenUpdatingRover(t *testing.T) {
@@ -120,8 +119,7 @@ func TestReportsRepoErrorWhenUpdatingRover(t *testing.T) {
 	curiosity.On("MoveForward").Return(nil)
 	repo := new(MockRepo)
 	repo.On("GetRover", Anything).Return(curiosity, nil)
-	repoError := "repo error"
-	repo.On("UpdateRover").Return(errors.New(repoError))
+	repo.On("UpdateRover").Return(errors.New("whatever"))
 
 	act := action.For(repo)
 	irrelevantCommand := command.Forward
@@ -129,7 +127,7 @@ func TestReportsRepoErrorWhenUpdatingRover(t *testing.T) {
 
 	assert.Empty(t, movementResults)
 	assert.NotNil(t, err)
-	assert.Contains(t, err.Error(), repoError)
+	assert.Contains(t, err.Error(), "failed to update")
 }
 
 func assertEncounteredNoIssues(t *testing.T, result []action.MovementResult) {

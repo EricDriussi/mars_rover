@@ -19,5 +19,8 @@ func (this *MockAction) Random() (Rover, error) {
 
 func (this *MockAction) MoveSequence(roverId UUID, commands Commands) ([]MovementResult, *ActionError) {
 	args := this.Called()
+	if args.Get(1) == nil {
+		return args.Get(0).([]MovementResult), nil
+	}
 	return args.Get(0).([]MovementResult), args.Get(1).(*ActionError)
 }

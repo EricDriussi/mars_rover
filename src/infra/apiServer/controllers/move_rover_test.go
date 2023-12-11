@@ -80,13 +80,12 @@ func TestBuildsAMovementResponseDTOReportingMovementIssuesIfFound(t *testing.T) 
 
 func TestErrorsIfActionDoesNotSucceed(t *testing.T) {
 	mockAction := new(MockAction)
-	errMsg := "an error message"
-	mockAction.On("MoveSequence").Return([]MovementResult{}, errors.New(errMsg))
+	mockAction.On("MoveSequence").Return([]MovementResult{}, BuildNotUpdated(uuid.New(), errors.New("whatever")))
 
 	_, err := MoveRover(mockAction, aMoveRequest())
 
 	assert.NotNil(t, err)
-	assert.Equal(t, err.Error(), errMsg)
+	assert.Contains(t, err.Error(), "failed to update")
 }
 
 func aMoveRequest() MoveRequest {
