@@ -22,10 +22,10 @@ func MoveRover(action Action, request MoveRequest) (MovementResponseDTO, error) 
 	}
 	// TODO: test that if len(applicationCommands) != len(request.Commands) some commands where not valid and skipped
 	applicationCommands := command.FromString(request.Commands)
-	movementResults, err := action.MoveSequence(roverId, applicationCommands)
+	movementResults, actionErr := action.MoveSequence(roverId, applicationCommands)
 	// TODO: this would send a 500 if the rover was not found, but it should be a 404
-	if err != nil {
-		return MovementResponseDTO{}, err
+	if actionErr != nil {
+		return MovementResponseDTO{}, actionErr
 	}
 
 	out := mapResultsToDTO(movementResults)
