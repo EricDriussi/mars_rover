@@ -3,46 +3,50 @@ package controllers_test
 import (
 	"errors"
 	"github.com/google/uuid"
-	"github.com/stretchr/testify/assert"
+	. "github.com/stretchr/testify/mock"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	"mars_rover/src/domain/obstacle"
-	"mars_rover/src/domain/planet/rockyPlanet"
+	"mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/rover/direction"
-	"mars_rover/src/domain/rover/godModRover"
+	"mars_rover/src/domain/rover/planetMap"
 	"mars_rover/src/domain/size"
-	"mars_rover/src/infra/apiServer/controllers"
-	"mars_rover/src/test_helpers/mocks"
+	. "mars_rover/src/infra/apiServer/controllers"
+	. "mars_rover/src/test_helpers/mocks"
 	"testing"
 )
 
-func TestReturnsRoverDTO(t *testing.T) {
-	planetSize, _ := size.Square(2)
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []obstacle.Obstacle{})
-	coordinate := absoluteCoordinate.From(1, 1)
-	direction := North{}
-	testRover := godModRover.LandFacing(uuid.New(), direction, *coordinate, testPlanet)
-	mockAction := new(mocks.MockAction)
-	mockAction.On("Random").Return(testRover, nil)
+func TestSendsOkResponseWhenCreateRandomActionIsSuccessful(t *testing.T) {
+	testSize, _ := size.Square(10)
+	mockPlanet := new(MockPlanet)
+	mockPlanet.On("Size").Return(*testSize)
+	mockObstacle := new(MockObstacle)
+	mockObstacle.On("Occupies", Anything).Return(false)
+	mockObstacle.On("Coordinates").Return([]absoluteCoordinate.AbsoluteCoordinate{})
+	testObstacles := obstacles.FromList([]obstacle.Obstacle{mockObstacle})
+	mockPlanet.On("Obstacles").Return(*testObstacles)
+	mockRover := new(MockRover)
+	mockRover.On("Id").Return(uuid.New())
+	mockRover.On("Direction").Return(North{})
+	mockRover.On("Coordinate").Return(*absoluteCoordinate.From(1, 1))
+	mockRover.On("Map").Return(*planetMap.OfPlanet(mockPlanet))
+	mockAction := new(MockAction)
+	mockAction.On("Random").Return(mockRover, nil)
+	mockHandler := new(MockHTTPResponseHandler)
+	mockHandler.On("SendOk", Anything).Return()
 
-	dto, err := controllers.RandomGame(mockAction)
+	RandomGame(mockAction, mockHandler)
 
-	assert.Nil(t, err)
-	assert.Equal(t, dto.Rover.Id, testRover.Id().String())
-	assert.Equal(t, dto.Rover.Direction, testRover.Direction().CardinalPoint())
-	expectedCoordinate := testRover.Coordinate()
-	assert.Equal(t, dto.Rover.Coordinate.X, expectedCoordinate.X())
-	assert.Equal(t, dto.Rover.Coordinate.Y, expectedCoordinate.Y())
-	expectedPlanet := testPlanet.Size()
-	assert.Equal(t, dto.Planet.Width, expectedPlanet.Width())
-	assert.Equal(t, dto.Planet.Height, expectedPlanet.Height())
-	expectedObstacles := testPlanet.Obstacles()
-	assert.Equal(t, len(dto.Planet.Obstacles), len(expectedObstacles.List()))
+	mockHandler.AssertCalled(t, "SendOk", Anything)
 }
 
-func TestReturnsErrorWhenActionFails(t *testing.T) {
-	mockAction := new(mocks.MockAction)
-	mockAction.On("Random").Return(new(mocks.MockRover), errors.New("test error"))
+func TestSendsInternalServerErrorResponseWhenCreateRandomActionReportsAnError(t *testing.T) {
+	mockAction := new(MockAction)
+	mockRover := new(MockRover)
+	mockAction.On("Random").Return(mockRover, errors.New("test error"))
+	mockHandler := new(MockHTTPResponseHandler)
+	mockHandler.On("SendInternalServerError", Anything).Return()
 
-	_, err := controllers.RandomGame(mockAction)
-	assert.NotNil(t, err)
+	RandomGame(mockAction, mockHandler)
+
+	mockHandler.AssertCalled(t, "SendInternalServerError", Anything)
 }

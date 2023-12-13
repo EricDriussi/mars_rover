@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func TestSendsOkResponseWhenActionIsSuccessful(t *testing.T) {
+func TestSendsOkResponseWhenMovementActionIsSuccessful(t *testing.T) {
 	mockAction := new(MockAction)
 	mockAction.On("MoveSequence").Return([]action.MovementResult{}, nil)
 	mockHandler := new(MockHTTPResponseHandler)
