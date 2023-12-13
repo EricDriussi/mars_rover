@@ -34,5 +34,5 @@ func MoveRover(action Action, request MoveRequest, responseHandler HTTPResponseH
 		}
 	}
 
-	responseHandler.SendOk(dto.FromActionResult(movementResults))
+	responseHandler.SendOk(dto.FromMovementResult(movementResults))
 }

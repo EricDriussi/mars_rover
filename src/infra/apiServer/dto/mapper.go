@@ -3,9 +3,12 @@ package dto
 import (
 	"fmt"
 	. "mars_rover/src/action"
+	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/src/domain/obstacle/obstacles"
+	. "mars_rover/src/domain/rover"
 )
 
-func FromActionResult(movementResult []MovementResult) MovementResponseDTO {
+func FromMovementResult(movementResult []MovementResult) MovementResponseDTO {
 	var responseDTO MovementResponseDTO
 	for _, result := range movementResult {
 		issue := ""
@@ -22,4 +25,46 @@ func FromActionResult(movementResult []MovementResult) MovementResponseDTO {
 		})
 	}
 	return responseDTO
+}
+
+func FromDomainRover(rover Rover) CreateResponseDTO {
+	coordinate := rover.Coordinate()
+	planetMap := rover.Map()
+	return CreateResponseDTO{
+		Rover: RoverDTO{
+			Id: rover.Id().String(),
+			Coordinate: CoordinateDTO{
+				X: coordinate.X(),
+				Y: coordinate.Y(),
+			},
+			Direction: rover.Direction().CardinalPoint(),
+		},
+		Planet: PlanetDTO{
+			Width:     planetMap.Width(),
+			Height:    planetMap.Height(),
+			Obstacles: mapDomainToDTOObstacles(planetMap.Obstacles()),
+		},
+	}
+}
+
+func mapDomainToDTOObstacles(obstacles Obstacles) []ObstacleDTO {
+	var obstaclesDTO []ObstacleDTO
+	for _, obstacle := range obstacles.List() {
+		coordinates := obstacle.Coordinates()
+		obstaclesDTO = append(obstaclesDTO, ObstacleDTO{
+			Coordinate: mapDomainToDTOCoordinates(coordinates),
+		})
+	}
+	return obstaclesDTO
+}
+
+func mapDomainToDTOCoordinates(c []AbsoluteCoordinate) []CoordinateDTO {
+	var coordinatesDTO []CoordinateDTO
+	for _, coordinate := range c {
+		coordinatesDTO = append(coordinatesDTO, CoordinateDTO{
+			X: coordinate.X(),
+			Y: coordinate.Y(),
+		})
+	}
+	return coordinatesDTO
 }
