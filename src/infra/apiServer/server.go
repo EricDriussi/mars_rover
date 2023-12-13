@@ -64,10 +64,5 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responseDTO, err := MoveRover(act, request)
-	if err != nil {
-		responseHandler.SendInternalServerError(err.Error())
-		return
-	}
-	responseHandler.SendOk(responseDTO)
+	MoveRover(act, request, responseHandler)
 }
