@@ -38,7 +38,7 @@ export class GameHandler {
     #paintGame(gameData) {
         this.#canvasPainter.drawPlanet(gameData.Planet);
         this.#canvasPainter.drawObstacles(gameData.Planet.Obstacles);
-        this.#canvasPainter.drawRover(gameData.Rover);
+        this.#canvasPainter.drawRover(gameData.Rover.Direction, gameData.Rover.Coordinate);
     }
 
     async moveRover(commands) {
@@ -55,10 +55,20 @@ export class GameHandler {
         }
 
         const movementData = apiResult.value();
-        this.#clearCell(movementData.Rover.Coordinate);
-        this.#canvasPainter.drawRover(movementData.Rover);
-        this.#lastRoverPosition = movementData.Rover.Coordinate;
-        this.#logger.warning(movementData.Errors);
+        if (movementData.Results.length !== commands.length) {
+            this.#logger.warning("Invalid commands skipped!");
+        }
+        for (const result of movementData.Results) {
+            this.#clearCell(result.Coordinate);
+            this.#canvasPainter.drawRover(result.Direction, result.Coordinate);
+            this.#lastRoverPosition = result.Coordinate;
+            this.#logger.warning(result.Issue);
+            await this.#sleep(200);
+        }
+    }
+
+    #sleep(milliseconds) {
+        return new Promise(resolve => setTimeout(resolve, milliseconds));
     }
 
     #clearCell(coordinate) {

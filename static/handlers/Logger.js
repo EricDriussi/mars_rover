@@ -6,27 +6,24 @@ export class Logger {
     }
 
     error(errors) {
-        this.#render('error', errors);
+        this.#render('error', errors)
     }
 
     warning(warnings) {
-        this.#render('warn', warnings);
+        this.#render('warn', warnings)
     }
 
     #render(type, messages) {
-        const listId = `${type}-list`;
-        const boxId = `${type}-box`;
-
-        const messageList = this.#dom.getElementById(listId);
-        const messageBox = this.#dom.getElementById(boxId);
         if (!messages || messages.length === 0) {
-            this.#resetMessages(type);
             return;
         }
 
+        const messageList = this.#dom.getElementById(`${type}-list`);
+        const messageBox = this.#dom.getElementById(`${type}-box`);
         this.#paintMessages(messages, messageList);
         this.#reveal(messageBox);
     }
+
 
     resetLogMessages() {
         this.#resetMessages('error')

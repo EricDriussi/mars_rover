@@ -53,17 +53,25 @@ export class EventHandler {
         });
     }
 
+    // TODO.LM: this is here just to make manual testing easier
+    // it's untested and not part of the kata
     listenForEnterKey() {
-        this.#dom.getElementById('roverId').addEventListener('keydown', async (event) => {
-            if (event.key === 'Enter') {
-                await this.#window.loadGame();
-            }
-        });
+        const roverIdInput = this.#dom.getElementById('roverId');
+        if (roverIdInput) {
+            roverIdInput.addEventListener('keydown', async (event) => {
+                if (event.key === 'Enter') {
+                    await this.#window.loadGame();
+                }
+            });
+        }
 
-        this.#dom.getElementById('commands').addEventListener('keydown', async (event) => {
-            if (event.key === 'Enter') {
-                await this.#window.move();
-            }
-        });
+        const commandsInput = this.#dom.getElementById('commands');
+        if (commandsInput) {
+            commandsInput.addEventListener('keydown', async (event) => {
+                if (event.key === 'Enter') {
+                    await this.#window.move();
+                }
+            });
+        }
     }
 }

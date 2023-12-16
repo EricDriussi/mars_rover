@@ -18,7 +18,7 @@ describe('GameHandler should', () => {
 
     describe('when creating a new game', () => {
         it('use the canvas painter to draw the data obtained from the api wrapper', async () => {
-            const mockApiResponse = genericSuccessfulApiResponse();
+            const mockApiResponse = helper.creationApiResponse();
             ApiWrapper.postRandomGame.mockResolvedValue(mockApiResponse);
             StorageWrapper.setRoverId.mockResolvedValue();
 
@@ -26,11 +26,11 @@ describe('GameHandler should', () => {
 
             expect(mockCanvasPainter.drawPlanet).toHaveBeenCalledWith(mockApiResponse.value().Planet);
             expect(mockCanvasPainter.drawObstacles).toHaveBeenCalledWith(mockApiResponse.value().Planet.Obstacles);
-            expect(mockCanvasPainter.drawRover).toHaveBeenCalledWith(mockApiResponse.value().Rover);
+            expect(mockCanvasPainter.drawRover).toHaveBeenCalledWith(mockApiResponse.value().Rover.Direction, mockApiResponse.value().Rover.Coordinate);
         });
 
         it('use the info painter to draw the error obtained from the api wrapper', async () => {
-            const mockApiResponse = genericFailedApiResponse();
+            const mockApiResponse = helper.failedApiResponse();
             ApiWrapper.postRandomGame.mockResolvedValue(mockApiResponse);
 
             await gameHandler.randomGame();
@@ -41,15 +41,16 @@ describe('GameHandler should', () => {
 
     describe('when moving the rover', () => {
         it('use the canvas painter to draw the data obtained from the api wrapper', async () => {
-            const mockApiResponse = genericSuccessfulApiResponse();
-            ApiWrapper.postRandomGame.mockResolvedValue(mockApiResponse);
+            ApiWrapper.postRandomGame.mockResolvedValue(helper.creationApiResponse());
+            const mockApiResponse = helper.movementApiResponse();
             ApiWrapper.postMoveRover.mockResolvedValue(mockApiResponse);
 
             await gameHandler.randomGame();
-            await gameHandler.moveRover();
+            await gameHandler.moveRover("x");
 
-            expect(mockCanvasPainter.drawRover).toHaveBeenCalledWith(mockApiResponse.value().Rover);
-            expect(mockLogger.warning).toHaveBeenCalledWith(mockApiResponse.value().Errors);
+            const movementResult = mockApiResponse.value().Results[0];
+            expect(mockCanvasPainter.drawRover).toHaveBeenCalledWith(movementResult.Direction, movementResult.Coordinate);
+            expect(mockLogger.warning).toHaveBeenCalledWith(movementResult.Issue);
         });
 
         it('error when trying to move a rover before it is created', async () => {
@@ -60,7 +61,7 @@ describe('GameHandler should', () => {
         });
 
         it('use the info painter to draw the error obtained from the api wrapper', async () => {
-            const mockApiResponse = genericFailedApiResponse();
+            const mockApiResponse = helper.failedApiResponse();
             StorageWrapper.getRoverId.mockReturnValueOnce('aRoverId');
             ApiWrapper.postMoveRover.mockResolvedValue(mockApiResponse);
 
@@ -72,18 +73,18 @@ describe('GameHandler should', () => {
 
     describe('when loading a game', () => {
         it('use the canvas painter to draw the data obtained from the api wrapper', async () => {
-            const mockApiResponse = genericSuccessfulApiResponse();
+            const mockApiResponse = helper.creationApiResponse();
             ApiWrapper.getLoadGame.mockResolvedValue(mockApiResponse);
 
             await gameHandler.loadGame();
 
             expect(mockCanvasPainter.drawPlanet).toHaveBeenCalledWith(mockApiResponse.value().Planet);
             expect(mockCanvasPainter.drawObstacles).toHaveBeenCalledWith(mockApiResponse.value().Planet.Obstacles);
-            expect(mockCanvasPainter.drawRover).toHaveBeenCalledWith(mockApiResponse.value().Rover);
+            expect(mockCanvasPainter.drawRover).toHaveBeenCalledWith(mockApiResponse.value().Rover.Direction, mockApiResponse.value().Rover.Coordinate);
         });
 
         it('use the info painter to draw the error obtained from the api wrapper', async () => {
-            const mockApiResponse = genericFailedApiResponse();
+            const mockApiResponse = helper.failedApiResponse();
             ApiWrapper.getLoadGame.mockResolvedValue(mockApiResponse);
 
             await gameHandler.loadGame();
@@ -93,9 +94,6 @@ describe('GameHandler should', () => {
     });
 
     it('reset logs on every operation', async () => {
-        const mockApiResponse = genericFailedApiResponse();
-        ApiWrapper.getLoadGame.mockResolvedValue(mockApiResponse);
-
         await gameHandler.loadGame('123');
         await gameHandler.randomGame();
         await gameHandler.moveRover('321');
@@ -103,22 +101,3 @@ describe('GameHandler should', () => {
         expect(mockLogger.resetLogMessages).toHaveBeenCalledTimes(3);
     });
 });
-
-function genericSuccessfulApiResponse() {
-    return {
-        value: () => ({
-            Rover: {Id: 'aRoverId', Coordinate: {X: 1, Y: 2}},
-            Planet: "aPlanet",
-            Errors: "anError"
-        }),
-        isFailure: () => false,
-    };
-}
-
-function genericFailedApiResponse() {
-    return {
-        value: () => "sadface :(",
-        isFailure: () => true,
-    };
-}
-

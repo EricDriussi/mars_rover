@@ -9,6 +9,7 @@ import (
 	. "mars_rover/src/domain/rover/direction"
 )
 
+// TODO: one action per use case?
 type Action interface {
 	Random() (Rover, error)
 	MoveSequence(roverId UUID, commands Commands) ([]MovementResult, *ActionError)

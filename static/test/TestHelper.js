@@ -94,3 +94,35 @@ export function getElementFrom(mockDom, elementId) {
     return mockDom.window.document.getElementById(elementId);
 }
 
+export function creationApiResponse() {
+    return {
+        value: () => ({
+            Rover: {Id: 'aRoverId', Coordinate: {X: 1, Y: 2}},
+            Planet: "aPlanet",
+        }),
+        isFailure: () => false,
+    };
+}
+
+export function movementApiResponse() {
+    return {
+        value: () => ({
+            Results: [
+                {
+                    Issue: 'anIssue',
+                    Coordinate: {X: 1, Y: 2},
+                    Direction: 'N'
+                }
+            ],
+        }),
+        isFailure: () => false,
+    };
+}
+
+export function failedApiResponse() {
+    return {
+        value: () => "sadface :(",
+        isFailure: () => true,
+    };
+}
+

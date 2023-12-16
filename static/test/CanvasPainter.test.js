@@ -117,14 +117,14 @@ describe('CanvasPainter should', () => {
         const mockRover = helper.mockRover();
 
         it('painted red', () => {
-            canvasPainter.drawRover(mockRover);
+            canvasPainter.drawRover(mockRover.Direction, mockRover.Coordinate);
 
             expect(mockCanvas.getContext().fillStyle).toEqual('red');
             expect(mockCanvas.getContext().fill).toHaveBeenCalled();
         });
 
         it('at the right position', () => {
-            canvasPainter.drawRover(mockRover);
+            canvasPainter.drawRover(mockRover.Direction, mockRover.Coordinate);
 
             const roverXGridPosition = mockRover.Coordinate.X * cellSize;
             const roverYGridPosition = mockCanvas.height - (mockRover.Coordinate.Y + 1) * cellSize;
@@ -144,7 +144,7 @@ describe('CanvasPainter should', () => {
             ['W', Math.PI / 2],
         ])('facing %s', (direction, expectedRotation) => {
             const mockRover = helper.mockRoverFacing(direction);
-            canvasPainter.drawRover(mockRover);
+            canvasPainter.drawRover(mockRover.Direction, mockRover.Coordinate);
 
             expect(mockCanvas.getContext().rotate).toHaveBeenCalledWith(expectedRotation);
         });

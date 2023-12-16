@@ -38,13 +38,13 @@ export class CanvasPainter {
         this.#ctx.strokeRect(x, y, this.#cellSize, this.#cellSize);
     }
 
-    drawRover(rover) {
+    drawRover(direction, coordinate) {
         this.#ctx.fillStyle = 'red';
         this.#ctx.save();
         this.#ctx.beginPath();
 
-        this.#centerOnCell(rover);
-        this.#pointDirection(rover.Direction);
+        this.#centerOnCell(coordinate);
+        this.#pointDirection(direction);
         this.#drawTriangle();
 
         this.#ctx.restore();
@@ -84,9 +84,9 @@ export class CanvasPainter {
         this.#ctx.fillRect(roverXGridPosition, roverYGridPosition, this.#cellSize, this.#cellSize);
     }
 
-    #centerOnCell(rover) {
-        const roverXGridPosition = rover.Coordinate.X * this.#cellSize;
-        const roverYGridPosition = this.#canvas.height - (rover.Coordinate.Y + 1) * this.#cellSize;
+    #centerOnCell(coordinate) {
+        const roverXGridPosition = coordinate.X * this.#cellSize;
+        const roverYGridPosition = this.#canvas.height - (coordinate.Y + 1) * this.#cellSize;
         this.#ctx.translate(roverXGridPosition + this.#cellSize / 2, roverYGridPosition + this.#cellSize / 2);
     }
 

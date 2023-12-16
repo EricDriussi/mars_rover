@@ -1,7 +1,8 @@
-import {Logger} from '../handlers/Logger.js';
-import * as helper from "./TestHelper.js";
+import { Logger } from '../handlers/Logger.js';
+import * as helper from './TestHelper.js';
 
 describe('Logger should', () => {
+    const messages = ['Message 1', 'Message 2'];
     let mockDom;
     let logger;
 
@@ -12,27 +13,25 @@ describe('Logger should', () => {
     });
 
     describe.each([
-        ['for errors', 'error', 'error-list', 'error-box'],
-        ['for warnings', 'warning', 'warn-list', 'warn-box'],
-    ])('%s', (_, testedMethod, listId, boxId) => {
-        const messages = ['Message 1', 'Message 2'];
-
-        it('display messages box when messages are provided', () => {
-            logger[testedMethod](messages);
+        ['error', 'error-box', 'error-list'],
+        ['warning', 'warn-box', 'warn-list'],
+    ])('for %s messages', (messageType, boxId, listId) => {
+        it('display message box when messages are provided', () => {
+            logger[messageType](messages);
 
             const messageBox = helper.getElementFrom(mockDom, boxId);
             expect(isHidden(messageBox)).toBe(false);
         });
 
-        it('display messages box when a single message is provided', () => {
-            logger[testedMethod]('not an array');
+        it('display message box when a single message is provided', () => {
+            logger[messageType]('not an array');
 
             const messageBox = helper.getElementFrom(mockDom, boxId);
             expect(isHidden(messageBox)).toBe(false);
         });
 
         it('populate the message list', () => {
-            logger[testedMethod](messages);
+            logger[messageType](messages);
 
             const messageList = helper.getElementFrom(mockDom, listId);
             messages.forEach((message, index) => {
@@ -41,16 +40,8 @@ describe('Logger should', () => {
             });
         });
 
-        it('not display message box when no messages are provided', () => {
-            logger[testedMethod]([]);
-
-            const messageBox = helper.getElementFrom(mockDom, boxId);
-            expect(isHidden(messageBox)).toBe(true);
-        });
-
-        it('disregard old messages', () => {
-            logger[testedMethod](['Message 1', 'Message 2']);
-            logger[testedMethod]([]);
+        it('not display box when no messages are provided', () => {
+            logger[messageType]([]);
 
             const messageBox = helper.getElementFrom(mockDom, boxId);
             expect(isHidden(messageBox)).toBe(true);
@@ -65,7 +56,6 @@ describe('Logger should', () => {
         const warnBox = helper.getElementFrom(mockDom, 'warn-box');
         expect(isHidden(warnBox)).toBe(true);
     });
-
 });
 
 function isHidden(element) {
