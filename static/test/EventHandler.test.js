@@ -13,6 +13,11 @@ describe('EventListener should', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         mockDom = helper.mockDom();
+        // mockWindow = {
+        //     onload: jest.fn(),
+        //     loadGame: jest.fn(),
+        //     move: jest.fn(),
+        // };
         mockGameHandler = helper.mockGameHandler();
         eventHandler = new EventHandler(mockDom, mockWindow, mockGameHandler);
     });
@@ -20,7 +25,7 @@ describe('EventListener should', () => {
     it('call randomGame on reload if no roverId is found', () => {
         StorageWrapper.getRoverId.mockReturnValueOnce(null);
 
-        eventHandler.listenOnReload();
+        eventHandler.listenForPageReload();
         mockWindow.onload();
 
         expect(mockGameHandler.randomGame).toHaveBeenCalled();
@@ -31,7 +36,7 @@ describe('EventListener should', () => {
         const storedRoverId = 'mockedRoverId';
         StorageWrapper.getRoverId.mockReturnValueOnce(storedRoverId);
 
-        eventHandler.listenOnReload();
+        eventHandler.listenForPageReload();
         mockWindow.onload();
 
         expect(mockGameHandler.loadGame).toHaveBeenCalledWith(storedRoverId);
@@ -47,9 +52,9 @@ describe('EventListener should', () => {
         ['ArrowRight', 'r'],
         ['l', 'r'],
     ])(
-        'listen on keydown event with key %s',
+        'listen on keydown event with movement key %s',
         async (givenKey, expectedDirection) => {
-            eventHandler.listenOnKeyPress();
+            eventHandler.listenForMovementKeys();
 
             expect(mockDom.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
             // Hack to get the function from within the callback passed to addEventListener
@@ -60,7 +65,7 @@ describe('EventListener should', () => {
     );
 
     it('listen on keydown event and do nothing with unknown key', () => {
-        eventHandler.listenOnKeyPress();
+        eventHandler.listenForMovementKeys();
 
         expect(mockDom.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
         // Hack to get the function from within the callback passed to addEventListener
@@ -68,5 +73,47 @@ describe('EventListener should', () => {
         eventCallback({ key: 'wrong!' });
         expect(mockGameHandler.moveRover).not.toHaveBeenCalled();
 
+    });
+
+    it('listen on keydown event and do nothing if input field is focused', () => {
+        eventHandler.listenForMovementKeys();
+        Object.defineProperty(mockDom, 'activeElement', {
+            get: () => ({ tagName: 'INPUT' }),
+        });
+
+        expect(mockDom.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
+        // Hack to get the function from within the callback passed to addEventListener
+        const eventCallback = mockDom.addEventListener.mock.calls[0][1];
+        eventCallback({ key: 'wrong!' });
+        expect(mockGameHandler.moveRover).not.toHaveBeenCalled();
+
+    });
+
+    it('call function on Enter key press in input', async () => {
+        const mockRoverIdElement = {
+            addEventListener: jest.fn(),
+        };
+        const mockCommandsElement = {
+            addEventListener: jest.fn(),
+        };
+        mockDom.getElementById = jest.fn((id) => {
+            if (id === 'roverId') {
+                return mockRoverIdElement;
+            } else if (id === 'commands') {
+                return mockCommandsElement;
+            }
+        });
+        mockWindow.loadGame = jest.fn();
+        mockWindow.move = jest.fn();
+
+        eventHandler.listenForEnterKey();
+
+        // Hack to get the function from within the callback passed to addEventListener
+        const roverIdEventCallback = mockRoverIdElement.addEventListener.mock.calls[0][1];
+        roverIdEventCallback({ key: 'Enter' });
+        expect(mockWindow.loadGame).toHaveBeenCalled();
+        const commandsEventCallback = mockCommandsElement.addEventListener.mock.calls[0][1];
+        commandsEventCallback({ key: 'Enter' });
+        expect(mockWindow.move).toHaveBeenCalled();
     });
 });

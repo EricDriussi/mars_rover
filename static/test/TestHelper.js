@@ -81,9 +81,12 @@ export function mockDom() {
         '</div>' +
         '</body></html>'
     );
+
     Object.assign(dom, {
-        addEventListener: jest.fn()
+        addEventListener: jest.fn(),
+        activeElement: "whatever",
     });
+
     return dom;
 }
 

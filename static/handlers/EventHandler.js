@@ -11,7 +11,7 @@ export class EventHandler {
         this.#gameHandler = gameHandler;
     }
 
-    listenOnReload() {
+    listenForPageReload() {
         this.#window.onload = () => {
             const storedRoverId = StorageWrapper.getRoverId();
             if (storedRoverId === null) {
@@ -24,8 +24,12 @@ export class EventHandler {
         }
     }
 
-    listenOnKeyPress() {
-        this.#dom.addEventListener('keydown', async (event) => { // NOSONAR
+    listenForMovementKeys() {
+        this.#dom.addEventListener('keydown', async (event) => {
+            if (this.#dom.activeElement.tagName === 'INPUT') {
+                return;
+            }
+
             switch (event.key) {
                 case 'ArrowUp':
                 case 'k':
@@ -45,6 +49,20 @@ export class EventHandler {
                     break;
                 default:
                     break;
+            }
+        });
+    }
+
+    listenForEnterKey() {
+        this.#dom.getElementById('roverId').addEventListener('keydown', async (event) => {
+            if (event.key === 'Enter') {
+                await this.#window.loadGame();
+            }
+        });
+
+        this.#dom.getElementById('commands').addEventListener('keydown', async (event) => {
+            if (event.key === 'Enter') {
+                await this.#window.move();
             }
         });
     }

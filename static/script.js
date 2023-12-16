@@ -6,8 +6,9 @@ import {GameHandler} from "./handlers/GameHandler.js";
 const canvasPainter = new CanvasPainter(document.getElementById('canvas'), 20);
 const gameHandler = new GameHandler(canvasPainter, new Logger(document));
 const eventHandler = new EventHandler(document, window, gameHandler);
-eventHandler.listenOnReload();
-eventHandler.listenOnKeyPress();
+eventHandler.listenForPageReload();
+eventHandler.listenForMovementKeys();
+eventHandler.listenForEnterKey()
 
 window.newGame = function () {
     gameHandler.randomGame()
