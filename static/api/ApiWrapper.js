@@ -22,7 +22,8 @@ export class ApiWrapper {
 
     static async #unpackResponse(response) {
         if (!response.ok) {
-            return Result.failure(response.statusText);
+            const errMsg = await response.text();
+            return Result.failure(`${response.statusText}: ${errMsg}`);
         }
         return Result.success(await response.json());
     }

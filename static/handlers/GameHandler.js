@@ -62,7 +62,7 @@ export class GameHandler {
             this.#canvasPainter.drawRover(result.Direction, result.Coordinate);
             this.#lastRoverPosition = result.Coordinate;
             this.#logger.warning(result.Issue);
-            await this.#sleep(200);
+            await this.#sleep(100);
         }
     }
 
