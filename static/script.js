@@ -3,7 +3,7 @@ import {Logger} from "./handlers/Logger.js";
 import {EventHandler} from "./handlers/EventHandler.js";
 import {GameHandler} from "./handlers/GameHandler.js";
 
-const canvasPainter = new CanvasPainter(document.getElementById('canvas'), 20);
+const canvasPainter = new CanvasPainter(document.getElementById('canvas'), 20, 1);
 const gameHandler = new GameHandler(canvasPainter, new Logger(document));
 const eventHandler = new EventHandler(document, window, gameHandler);
 eventHandler.listenForPageReload();

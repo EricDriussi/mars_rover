@@ -6,13 +6,14 @@ describe('CanvasPainter should', () => {
     const mockPlanet = helper.mockPlanet(mockPlanetSize);
 
     const cellSize = 20;
+    const borderSize = 1;
     let canvasPainter;
     let mockCanvas;
 
     beforeEach(() => {
         jest.clearAllMocks();
         mockCanvas = helper.mockCanvas(helper.mockContext());
-        canvasPainter = new CanvasPainter(mockCanvas, cellSize);
+        canvasPainter = new CanvasPainter(mockCanvas, cellSize, borderSize);
     });
 
     describe('draw a planet', () => {
@@ -62,56 +63,24 @@ describe('CanvasPainter should', () => {
         it('at the right position', () => {
             canvasPainter.drawObstacles(obstacles);
 
-            const anExpectedXGridPosition = anObstacleXPosition * cellSize;
-            const anExpectedYGridPosition = mockCanvas.height - (anObstacleYPosition + 1) * cellSize;
+            const anExpectedXGridPosition = anObstacleXPosition * cellSize + borderSize;
+            const anExpectedYGridPosition = mockCanvas.height - (anObstacleYPosition + 1) * cellSize + borderSize;
             expect(mockCanvas.getContext().fillRect)
                 .toHaveBeenCalledWith(
                     anExpectedXGridPosition,
                     anExpectedYGridPosition,
-                    cellSize,
-                    cellSize);
-            const anotherExpectedXGridPosition = anotherObstacleXPosition * cellSize;
-            const anotherExpectedYGridPosition = mockCanvas.height - (anotherObstacleYPosition + 1) * cellSize;
+                    cellSize - borderSize * 2,
+                    cellSize - borderSize * 2);
+            const anotherExpectedXGridPosition = anotherObstacleXPosition * cellSize + borderSize;
+            const anotherExpectedYGridPosition = mockCanvas.height - (anotherObstacleYPosition + 1) * cellSize + borderSize;
             expect(mockCanvas.getContext().fillRect)
                 .toHaveBeenCalledWith(
                     anotherExpectedXGridPosition,
                     anotherExpectedYGridPosition,
-                    cellSize,
-                    cellSize);
+                    cellSize - borderSize * 2,
+                    cellSize - borderSize * 2);
         });
     })
-
-    describe('clear a cell given its grid position', () => {
-        const x = 1;
-        const y = 2;
-
-        it('painted white', () => {
-            canvasPainter.clearCell({x, y});
-
-            const xGridPosition = x * cellSize;
-            const yGridPosition = mockCanvas.height - (y + 1) * cellSize;
-            expect(mockCanvas.getContext().fillStyle).toEqual('white');
-            expect(mockCanvas.getContext().fillRect).toHaveBeenCalledWith(
-                xGridPosition,
-                yGridPosition,
-                cellSize,
-                cellSize);
-        });
-
-        it('with lightgray borders', () => {
-            canvasPainter.clearCell({x, y});
-
-            const xGridPosition = x * cellSize;
-            const yGridPosition = mockCanvas.height - (y + 1) * cellSize;
-            expect(mockCanvas.getContext().strokeStyle).toEqual('lightgrey');
-            expect(mockCanvas.getContext().strokeRect).toHaveBeenCalledWith(
-                xGridPosition,
-                yGridPosition,
-                cellSize,
-                cellSize);
-        });
-    });
-
 
     describe('draw a rover', () => {
         const mockRover = helper.mockRover();

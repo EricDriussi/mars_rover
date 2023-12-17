@@ -59,7 +59,6 @@ export class GameHandler {
             this.#logger.warning("Invalid commands skipped!");
         }
         for (const result of movementData.Results) {
-            this.#clearCell(result.Coordinate);
             this.#canvasPainter.drawRover(result.Direction, result.Coordinate);
             this.#lastRoverPosition = result.Coordinate;
             this.#logger.warning(result.Issue);
@@ -69,14 +68,6 @@ export class GameHandler {
 
     #sleep(milliseconds) {
         return new Promise(resolve => setTimeout(resolve, milliseconds));
-    }
-
-    #clearCell(coordinate) {
-        this.#canvasPainter.clearCell({
-            x: this.#lastRoverPosition.X,
-            y: this.#lastRoverPosition.Y
-        });
-        this.#canvasPainter.clearCell(coordinate);
     }
 }
 

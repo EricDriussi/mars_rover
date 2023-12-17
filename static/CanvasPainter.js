@@ -2,11 +2,13 @@ export class CanvasPainter {
     #canvas;
     #ctx;
     #cellSize;
+    #borderSize;
 
-    constructor(canvas, cellSize) {
+    constructor(canvas, cellSize, borderSize) {
         this.#canvas = canvas;
         this.#ctx = canvas.getContext('2d');
         this.#cellSize = cellSize;
+        this.#borderSize = borderSize
     }
 
     drawPlanet(planet) {
@@ -39,6 +41,7 @@ export class CanvasPainter {
     }
 
     drawRover(direction, coordinate) {
+        this.#clearCellsWithoutObstacles();
         this.#ctx.fillStyle = 'red';
         this.#ctx.save();
         this.#ctx.beginPath();
@@ -71,14 +74,6 @@ export class CanvasPainter {
         this.#ctx.closePath();
     }
 
-    clearCell({x, y}) {
-        const roverXGridPosition = x * this.#cellSize;
-        const roverYGridPosition = this.#canvas.height - (y + 1) * this.#cellSize;
-
-        this.#drawEmptyCell(roverXGridPosition, roverYGridPosition);
-        this.#drawCellBorder(roverXGridPosition, roverYGridPosition);
-    }
-
     #drawEmptyCell(roverXGridPosition, roverYGridPosition) {
         this.#ctx.fillStyle = 'white';
         this.#ctx.fillRect(roverXGridPosition, roverYGridPosition, this.#cellSize, this.#cellSize);
@@ -101,10 +96,34 @@ export class CanvasPainter {
 
     #drawObstacle(coordinate) {
         this.#ctx.fillRect(
-            coordinate.X * this.#cellSize,
-            this.#canvas.height - (coordinate.Y + 1) * this.#cellSize,
-            this.#cellSize,
-            this.#cellSize
+            coordinate.X * this.#cellSize + this.#borderSize,
+            this.#canvas.height - (coordinate.Y + 1) * this.#cellSize + this.#borderSize,
+            this.#cellSize - 2 * this.#borderSize,
+            this.#cellSize - 2 * this.#borderSize
         );
+    }
+
+    #clearCellsWithoutObstacles() {
+        const widthInCells = this.#canvas.width / this.#cellSize;
+        const heightInCells = this.#canvas.height / this.#cellSize;
+
+        for (let x = 0; x < widthInCells; x++) {
+            for (let y = 0; y < heightInCells; y++) {
+                this.#clearIfNotBlack(x, y);
+            }
+        }
+    }
+
+    #clearIfNotBlack(x, y) {
+        // Get the pixel data from the middle of the cell to avoid issues with borders
+        const pixelX = x * this.#cellSize + this.#cellSize / 2;
+        const pixelY = y * this.#cellSize + this.#cellSize / 2;
+        const pixelData = this.#ctx.getImageData(pixelX, pixelY, 1, 1).data;
+
+        const pixelIsNotBlack = pixelData[0] !== 0 || pixelData[1] !== 0 || pixelData[2] !== 0; // RGB
+        if (pixelIsNotBlack) {
+            this.#drawEmptyCell(x * this.#cellSize, y * this.#cellSize);
+            this.#drawCellBorder(x * this.#cellSize, y * this.#cellSize);
+        }
     }
 }
