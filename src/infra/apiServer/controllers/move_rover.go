@@ -22,6 +22,11 @@ func MoveRover(action Action, request MoveRequest, responseHandler HTTPResponseH
 		return
 	}
 	applicationCommands := command.FromString(request.Commands)
+	if len(applicationCommands) == 0 {
+		responseHandler.SendBadRequest("No valid commands provided")
+		return
+	}
+
 	movementResults, actionErr := action.MoveSequence(roverId, applicationCommands)
 	if actionErr != nil {
 		if actionErr.Type() == RoverNotFound {

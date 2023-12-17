@@ -21,6 +21,38 @@ func TestSendsOkResponseWhenMovementActionIsSuccessful(t *testing.T) {
 	mockHandler.AssertCalled(t, "SendOk", Anything)
 }
 
+func TestSendsBadRequestResponseWhenNoValidCommandsAreProvided(t *testing.T) {
+	mockAction := new(MockAction)
+	mockHandler := new(MockHTTPResponseHandler)
+	mockHandler.On("SendBadRequest", Anything).Return()
+	testCases := []struct {
+		name            string
+		invalidCommands string
+	}{
+		{
+			name:            "no commands",
+			invalidCommands: "",
+		},
+		{
+			name:            "invalid commands",
+			invalidCommands: "xxx",
+		},
+	}
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+		
+			MoveRover(mockAction,
+				MoveRequest{
+					Commands: testCase.invalidCommands,
+					Id:       uuid.New().String(),
+				},
+				mockHandler)
+
+			mockHandler.AssertCalled(t, "SendBadRequest", Anything)
+		})
+	}
+}
+
 func TestSendsBadRequestResponseWhenActionDoesNotFindRover(t *testing.T) {
 	notFoundError := action.BuildNotFound(uuid.New(), errors.New("whatever"))
 	mockAction := new(MockAction)
