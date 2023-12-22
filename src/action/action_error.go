@@ -12,7 +12,7 @@ const (
 	RoverNotUpdated
 )
 
-func (e ActionError) Type() ErrorType {
+func (e MovementError) Type() ErrorType {
 	if e.RoverNotFoundError != nil {
 		return RoverNotFound
 	}
@@ -40,12 +40,12 @@ func (e RoverNotUpdatedError) Error() string {
 	return fmt.Sprintf("failed to update rover with ID %s", e.ID)
 }
 
-type ActionError struct {
+type MovementError struct {
 	RoverNotFoundError *RoverNotFoundError
 	UpdateRoverError   *RoverNotUpdatedError
 }
 
-func (e ActionError) Error() string {
+func (e MovementError) Error() string {
 	if e.RoverNotFoundError != nil {
 		return e.RoverNotFoundError.Error()
 	}
@@ -55,8 +55,8 @@ func (e ActionError) Error() string {
 	return "unknown error"
 }
 
-func BuildNotFound(id UUID, err error) *ActionError {
-	return &ActionError{
+func BuildNotFound(id UUID, err error) *MovementError {
+	return &MovementError{
 		RoverNotFoundError: &RoverNotFoundError{
 			ID:  id,
 			Err: err,
@@ -64,8 +64,8 @@ func BuildNotFound(id UUID, err error) *ActionError {
 	}
 }
 
-func BuildNotUpdated(id UUID, err error) *ActionError {
-	return &ActionError{
+func BuildNotUpdated(id UUID, err error) *MovementError {
+	return &MovementError{
 		UpdateRoverError: &RoverNotUpdatedError{
 			ID:  id,
 			Err: err,

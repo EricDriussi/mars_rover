@@ -1,7 +1,7 @@
-package action_test
+package createRandom_test
 
 import (
-	"mars_rover/src/action"
+	"mars_rover/src/action/createRandom"
 	. "mars_rover/src/test_helpers/mocks"
 	"testing"
 
@@ -17,10 +17,10 @@ func TestRandomCreationDoesNotPanic(t *testing.T) {
 	repo := new(MockRepo)
 	repo.On("AddPlanet").Return(nil)
 	repo.On("AddRover").Return(nil)
-	act := action.For(repo)
+	act := createRandom.For(repo)
 
 	for i := 0; i < 25; i++ {
-		rover, err := act.Random()
+		rover, err := act.Create()
 		assert.Nil(t, err)
 		assert.NotNil(t, rover)
 	}

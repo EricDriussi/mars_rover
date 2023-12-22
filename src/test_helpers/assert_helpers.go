@@ -2,19 +2,33 @@ package test_helpers
 
 import (
 	"github.com/stretchr/testify/assert"
-	"strings"
+	"mars_rover/src/action"
+	. "mars_rover/src/action/command"
 	"testing"
 )
 
-func contains(stringArray []string, string string) bool {
-	for _, element := range stringArray {
-		if strings.Contains(element, string) {
+func AssertEncounteredNoIssues(t *testing.T, results []action.MovementResult) {
+	for _, result := range results {
+		assert.False(t, result.IssueDetected)
+	}
+}
+
+func AssertEncounteredAnIssue(t *testing.T, results []action.MovementResult) {
+	assert.True(t, containsAnIssue(results))
+}
+
+func containsAnIssue(results []action.MovementResult) bool {
+	for _, result := range results {
+		if result.IssueDetected {
 			return true
 		}
 	}
 	return false
 }
 
-func AssertContains(t *testing.T, stringArray []string, containedString string) bool {
-	return assert.True(t, contains(stringArray, containedString))
+func AssertContainsOrderedCommands(t *testing.T, movementResults []action.MovementResult, commands Commands) {
+	assert.Len(t, movementResults, len(commands))
+	for i, cmd := range commands {
+		assert.Equal(t, movementResults[i].Cmd.ToString(), cmd.ToString())
+	}
 }

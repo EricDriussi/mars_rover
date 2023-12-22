@@ -6,8 +6,8 @@ import (
 	. "mars_rover/src/infra/apiServer/responses"
 )
 
-func RandomGame(action Action, responseHandler HTTPResponseHandler) {
-	curiosity, err := action.Random()
+func RandomGame(action CreateRandomAction, responseHandler HTTPResponseHandler) {
+	curiosity, err := action.Create()
 	if err != nil {
 		responseHandler.SendInternalServerError(err.Error())
 		return

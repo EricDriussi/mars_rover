@@ -30,7 +30,7 @@ func TestSendsOkResponseWhenCreateRandomActionIsSuccessful(t *testing.T) {
 	mockRover.On("Coordinate").Return(*absoluteCoordinate.From(1, 1))
 	mockRover.On("Map").Return(*planetMap.OfPlanet(mockPlanet))
 	mockAction := new(MockAction)
-	mockAction.On("Random").Return(mockRover, nil)
+	mockAction.On("Create").Return(mockRover, nil)
 	mockHandler := new(MockHTTPResponseHandler)
 	mockHandler.On("SendOk", Anything).Return()
 
@@ -42,7 +42,7 @@ func TestSendsOkResponseWhenCreateRandomActionIsSuccessful(t *testing.T) {
 func TestSendsInternalServerErrorResponseWhenCreateRandomActionReportsAnError(t *testing.T) {
 	mockAction := new(MockAction)
 	mockRover := new(MockRover)
-	mockAction.On("Random").Return(mockRover, errors.New("test error"))
+	mockAction.On("Create").Return(mockRover, errors.New("test error"))
 	mockHandler := new(MockHTTPResponseHandler)
 	mockHandler.On("SendInternalServerError", Anything).Return()
 

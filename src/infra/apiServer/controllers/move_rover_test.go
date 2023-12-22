@@ -12,7 +12,7 @@ import (
 
 func TestSendsOkResponseWhenMovementActionIsSuccessful(t *testing.T) {
 	mockAction := new(MockAction)
-	mockAction.On("MoveSequence").Return([]action.MovementResult{}, nil)
+	mockAction.On("Move").Return([]action.MovementResult{}, nil)
 	mockHandler := new(MockHTTPResponseHandler)
 	mockHandler.On("SendOk", Anything).Return()
 
@@ -40,7 +40,7 @@ func TestSendsBadRequestResponseWhenNoValidCommandsAreProvided(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-		
+
 			MoveRover(mockAction,
 				MoveRequest{
 					Commands: testCase.invalidCommands,
@@ -56,7 +56,7 @@ func TestSendsBadRequestResponseWhenNoValidCommandsAreProvided(t *testing.T) {
 func TestSendsBadRequestResponseWhenActionDoesNotFindRover(t *testing.T) {
 	notFoundError := action.BuildNotFound(uuid.New(), errors.New("whatever"))
 	mockAction := new(MockAction)
-	mockAction.On("MoveSequence").Return([]action.MovementResult{}, notFoundError)
+	mockAction.On("Move").Return([]action.MovementResult{}, notFoundError)
 	mockHandler := new(MockHTTPResponseHandler)
 	mockHandler.On("SendBadRequest", Anything).Return()
 
@@ -68,7 +68,7 @@ func TestSendsBadRequestResponseWhenActionDoesNotFindRover(t *testing.T) {
 func TestSendsInternalServerErrorResponseWhenActionCannotUpdateRover(t *testing.T) {
 	notUpdatedError := action.BuildNotUpdated(uuid.New(), errors.New("whatever"))
 	mockAction := new(MockAction)
-	mockAction.On("MoveSequence").Return([]action.MovementResult{}, notUpdatedError)
+	mockAction.On("Move").Return([]action.MovementResult{}, notUpdatedError)
 	mockHandler := new(MockHTTPResponseHandler)
 	mockHandler.On("SendInternalServerError", Anything).Return()
 

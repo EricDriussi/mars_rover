@@ -13,7 +13,7 @@ type MoveRequest struct {
 	Id       string `json:"id"`
 }
 
-func MoveRover(action Action, request MoveRequest, responseHandler HTTPResponseHandler) {
+func MoveRover(action MoveAction, request MoveRequest, responseHandler HTTPResponseHandler) {
 	roverId, err := uuid.Parse(request.Id)
 	// TODO.LM: this validation would not happen if the uuid was wrapped
 	// It's already being validated in the calling controller
@@ -27,7 +27,7 @@ func MoveRover(action Action, request MoveRequest, responseHandler HTTPResponseH
 		return
 	}
 
-	movementResults, actionErr := action.MoveSequence(roverId, applicationCommands)
+	movementResults, actionErr := action.Move(roverId, applicationCommands)
 	if actionErr != nil {
 		if actionErr.Type() == RoverNotFound {
 			responseHandler.SendBadRequest(actionErr.Error())

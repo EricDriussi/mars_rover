@@ -1,7 +1,8 @@
-package action
+package createRandom
 
 import (
 	"github.com/google/uuid"
+	. "mars_rover/src/domain"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle"
@@ -15,7 +16,17 @@ import (
 	"math/rand"
 )
 
-func (this *LaxAction) Random() (Rover, error) {
+type SimpleRandomCreate struct {
+	repo Repository
+}
+
+func For(repo Repository) *SimpleRandomCreate {
+	return &SimpleRandomCreate{
+		repo: repo,
+	}
+}
+
+func (this *SimpleRandomCreate) Create() (Rover, error) {
 	randNum := rand.Intn(19) + 4
 	randSize, err := size.Square(randNum)
 	if err != nil {
