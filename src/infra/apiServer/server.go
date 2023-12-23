@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"log"
-	"mars_rover/src/action/createRandom"
-	"mars_rover/src/action/moveResilient"
+	"mars_rover/src/action/createRandom/simple"
+	"mars_rover/src/action/move/resilient"
 	. "mars_rover/src/infra/apiServer/controllers"
 	. "mars_rover/src/infra/apiServer/responses"
 	. "mars_rover/src/infra/persistence"
@@ -14,14 +14,14 @@ import (
 	"sync"
 )
 
-var movementAction *moveResilient.ResilientMover
-var creationAction *createRandom.SimpleRandomCreate
+var movementAction *resilient_mover.ResilientMover
+var creationAction *simple_random_creator.SimpleRandomCreate
 
 func RunOn(port string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	// TODO.LM: Only one action being used by multiple controllers: is that OK?
-	movementAction = moveResilient.For(InitFS())
-	creationAction = createRandom.For(InitFS())
+	movementAction = resilient_mover.For(InitFS())
+	creationAction = simple_random_creator.For(InitFS())
 
 	apiServer := http.NewServeMux()
 	// TODO: add load game endpoint

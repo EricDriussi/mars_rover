@@ -5,7 +5,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	. "github.com/stretchr/testify/mock"
 	. "mars_rover/src/action"
-	. "mars_rover/src/action/command"
+	. "mars_rover/src/action/move/command"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	"mars_rover/src/domain/obstacle"
 	"mars_rover/src/domain/obstacle/obstacles"

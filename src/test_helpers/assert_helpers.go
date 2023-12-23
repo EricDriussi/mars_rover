@@ -3,7 +3,7 @@ package test_helpers
 import (
 	"github.com/stretchr/testify/assert"
 	"mars_rover/src/action"
-	. "mars_rover/src/action/command"
+	. "mars_rover/src/action/move/command"
 	"testing"
 )
 

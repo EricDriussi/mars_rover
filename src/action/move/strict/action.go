@@ -1,9 +1,10 @@
-package moveStrict
+package strict_mover
 
 import (
 	. "github.com/google/uuid"
 	. "mars_rover/src/action"
-	"mars_rover/src/action/command"
+	. "mars_rover/src/action/move"
+	"mars_rover/src/action/move/command"
 	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/rover"
 )
@@ -21,14 +22,14 @@ func For(repo Repository) *StrictMover {
 func (this *StrictMover) Move(roverId UUID, commands command.Commands) ([]MovementResult, *MovementError) {
 	rover, err := this.repo.GetRover(roverId)
 	if err != nil {
-		return nil, BuildNotFound(roverId, err)
+		return nil, BuildNotFoundErr(roverId, err)
 	}
 
 	movementResults := moveRover(rover, commands)
 
 	err = this.repo.UpdateRover(rover)
 	if err != nil {
-		return nil, BuildNotUpdated(roverId, err)
+		return nil, BuildNotUpdatedErr(roverId, err)
 	}
 
 	return movementResults, nil

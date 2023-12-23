@@ -4,7 +4,8 @@ import (
 	. "github.com/google/uuid"
 	. "github.com/stretchr/testify/mock"
 	. "mars_rover/src/action"
-	. "mars_rover/src/action/command"
+	. "mars_rover/src/action/move"
+	. "mars_rover/src/action/move/command"
 	. "mars_rover/src/domain/rover"
 )
 

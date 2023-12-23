@@ -2,8 +2,7 @@ package command_test
 
 import (
 	"github.com/stretchr/testify/assert"
-	"mars_rover/src/action/command"
-	. "mars_rover/src/action/command"
+	. "mars_rover/src/action/move/command"
 	"testing"
 )
 
@@ -27,7 +26,7 @@ func TestCommandsAreBuiltFromString(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			assert.Equal(t, testCase.expected, command.FromString(testCase.input))
+			assert.Equal(t, testCase.expected, FromString(testCase.input))
 		})
 	}
 }

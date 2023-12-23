@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	. "github.com/stretchr/testify/mock"
 	"mars_rover/src/action"
+	"mars_rover/src/action/move"
 	. "mars_rover/src/infra/apiServer/controllers"
 	. "mars_rover/src/test_helpers/mocks"
 	"testing"
@@ -54,7 +55,7 @@ func TestSendsBadRequestResponseWhenNoValidCommandsAreProvided(t *testing.T) {
 }
 
 func TestSendsBadRequestResponseWhenActionDoesNotFindRover(t *testing.T) {
-	notFoundError := action.BuildNotFound(uuid.New(), errors.New("whatever"))
+	notFoundError := move.BuildNotFoundErr(uuid.New(), errors.New("whatever"))
 	mockAction := new(MockAction)
 	mockAction.On("Move").Return([]action.MovementResult{}, notFoundError)
 	mockHandler := new(MockHTTPResponseHandler)
@@ -66,7 +67,7 @@ func TestSendsBadRequestResponseWhenActionDoesNotFindRover(t *testing.T) {
 }
 
 func TestSendsInternalServerErrorResponseWhenActionCannotUpdateRover(t *testing.T) {
-	notUpdatedError := action.BuildNotUpdated(uuid.New(), errors.New("whatever"))
+	notUpdatedError := move.BuildNotUpdatedErr(uuid.New(), errors.New("whatever"))
 	mockAction := new(MockAction)
 	mockAction.On("Move").Return([]action.MovementResult{}, notUpdatedError)
 	mockHandler := new(MockHTTPResponseHandler)

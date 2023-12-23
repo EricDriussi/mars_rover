@@ -2,11 +2,16 @@ package action
 
 import (
 	. "github.com/google/uuid"
-	. "mars_rover/src/action/command"
+	. "mars_rover/src/action/move"
+	. "mars_rover/src/action/move/command"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/domain/rover/direction"
 )
+
+type CreateRandomAction interface {
+	Create() (Rover, error)
+}
 
 type MoveAction interface {
 	Move(roverId UUID, commands Commands) ([]MovementResult, *MovementError)
@@ -21,8 +26,4 @@ type MovementResult struct {
 	IssueDetected bool
 	Coord         AbsoluteCoordinate
 	Dir           Direction
-}
-
-type CreateRandomAction interface {
-	Create() (Rover, error)
 }

@@ -1,4 +1,4 @@
-package createRandom
+package simple_random_creator
 
 import (
 	"github.com/google/uuid"
