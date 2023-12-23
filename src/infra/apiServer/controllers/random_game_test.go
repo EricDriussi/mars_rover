@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/google/uuid"
 	. "github.com/stretchr/testify/mock"
+	random_creator "mars_rover/src/action/createRandom"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	"mars_rover/src/domain/obstacle"
 	"mars_rover/src/domain/obstacle/obstacles"
@@ -42,7 +43,8 @@ func TestSendsOkResponseWhenCreateRandomActionIsSuccessful(t *testing.T) {
 func TestSendsInternalServerErrorResponseWhenCreateRandomActionReportsAnError(t *testing.T) {
 	mockAction := new(MockAction)
 	mockRover := new(MockRover)
-	mockAction.On("Create").Return(mockRover, errors.New("test error"))
+	creationError := random_creator.BuildGameNotCreatedErr(errors.New("test error"))
+	mockAction.On("Create").Return(mockRover, creationError)
 	mockHandler := new(MockHTTPResponseHandler)
 	mockHandler.On("SendInternalServerError", Anything).Return()
 

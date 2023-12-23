@@ -2,6 +2,7 @@ package simple_random_creator
 
 import (
 	"github.com/google/uuid"
+	. "mars_rover/src/action/createRandom"
 	. "mars_rover/src/domain"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
@@ -26,16 +27,16 @@ func For(repo Repository) *SimpleRandomCreate {
 	}
 }
 
-func (this *SimpleRandomCreate) Create() (Rover, error) {
+func (this *SimpleRandomCreate) Create() (Rover, *CreationError) {
 	randNum := rand.Intn(19) + 4
 	randSize, err := size.Square(randNum)
 	if err != nil {
-		return nil, err
+		return nil, BuildGameNotCreatedErr(err)
 	}
 
 	randPlanet, err := rockyPlanet.Create(randomColor(), *randSize, randomObstaclesWithin(*randSize))
 	if err != nil {
-		return nil, err
+		return nil, BuildGameNotCreatedErr(err)
 	}
 
 	var randRover Rover
@@ -48,9 +49,12 @@ func (this *SimpleRandomCreate) Create() (Rover, error) {
 	}
 
 	planetId, err := this.repo.AddPlanet(randPlanet)
+	if err != nil {
+		return nil, BuildPlanetNotPersistedErr(err)
+	}
 	err = this.repo.AddRover(randRover, planetId)
 	if err != nil {
-		return nil, err
+		return nil, BuildRoverNotPersistedErr(randRover.Id(), err)
 	}
 	return randRover, nil
 }

@@ -2,6 +2,7 @@ package action
 
 import (
 	. "github.com/google/uuid"
+	. "mars_rover/src/action/createRandom"
 	. "mars_rover/src/action/move"
 	. "mars_rover/src/action/move/command"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
@@ -10,7 +11,7 @@ import (
 )
 
 type CreateRandomAction interface {
-	Create() (Rover, error)
+	Create() (Rover, *CreationError)
 }
 
 type MoveAction interface {

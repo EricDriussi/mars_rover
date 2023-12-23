@@ -7,9 +7,9 @@ import (
 )
 
 func RandomGame(action CreateRandomAction, responseHandler HTTPResponseHandler) {
-	curiosity, err := action.Create()
-	if err != nil {
-		responseHandler.SendInternalServerError(err.Error())
+	curiosity, actionErr := action.Create()
+	if actionErr != nil {
+		responseHandler.SendInternalServerError(actionErr.Error())
 		return
 	}
 
