@@ -19,7 +19,7 @@ describe('ApiWrapper should', () => {
         json: jest.fn()
     };
 
-    describe('when calling the simple game endpoint', () => {
+    describe('when calling the game creation endpoint', () => {
         const expectedFetchParams = RequestBuilder.randomGameRequest();
         it('fetch and unpack the response', async () => {
             global.fetch.mockResolvedValue(errorFreeResponse);

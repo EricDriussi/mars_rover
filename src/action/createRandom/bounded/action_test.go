@@ -1,7 +1,7 @@
-package simple_random_creator_test
+package bounded_random_creator_test
 
 import (
-	random_creator "mars_rover/src/action/createRandom/simple"
+	random_creator "mars_rover/src/action/createRandom/bounded"
 	. "mars_rover/src/test_helpers/mocks"
 	"testing"
 
@@ -17,7 +17,7 @@ func TestRandomCreationDoesNotPanic(t *testing.T) {
 	repo := new(MockRepo)
 	repo.On("AddPlanet").Return(nil)
 	repo.On("AddRover").Return(nil)
-	act := random_creator.For(repo)
+	act := random_creator.With(repo)
 
 	for i := 0; i < 25; i++ {
 		rover, err := act.Create()

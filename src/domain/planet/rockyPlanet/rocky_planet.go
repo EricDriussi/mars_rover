@@ -16,6 +16,8 @@ type RockyPlanet struct {
 
 // TODO: should not take an empty list, that would be an EmptyPlanet,
 // hide behind a factory?
+// TODO.LM: color is here just as an example of why you might want to
+// decouple map from planet, but it's not used for anything
 func Create(color string, size Size, obstacles []Obstacle) (*RockyPlanet, error) {
 	obstacleList := obs.FromList(obstacles)
 	if obstacleList.IsAnyBeyond(size) {

@@ -1,4 +1,4 @@
-package simple_random_creator
+package bounded_random_creator
 
 import (
 	"github.com/google/uuid"
@@ -17,17 +17,17 @@ import (
 	"math/rand"
 )
 
-type SimpleRandomCreate struct {
+type BoundedRandomCreator struct {
 	repo Repository
 }
 
-func For(repo Repository) *SimpleRandomCreate {
-	return &SimpleRandomCreate{
+func With(repo Repository) *BoundedRandomCreator {
+	return &BoundedRandomCreator{
 		repo: repo,
 	}
 }
 
-func (this *SimpleRandomCreate) Create() (Rover, *CreationError) {
+func (this *BoundedRandomCreator) Create() (Rover, *CreationError) {
 	randNum := rand.Intn(19) + 4
 	randSize, err := size.Square(randNum)
 	if err != nil {
