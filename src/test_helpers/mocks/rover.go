@@ -4,6 +4,7 @@ import (
 	. "github.com/google/uuid"
 	. "github.com/stretchr/testify/mock"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover/direction"
 	. "mars_rover/src/domain/rover/planetMap"
 )
@@ -48,4 +49,13 @@ func (this *MockRover) Direction() Direction {
 func (this *MockRover) Map() Map {
 	args := this.Called()
 	return args.Get(0).(Map)
+}
+
+func RoverIn(planet Planet, coord AbsoluteCoordinate) *MockRover {
+	mockRover := new(MockRover)
+	mockRover.On("Id").Return(New())
+	mockRover.On("Direction").Return(North{})
+	mockRover.On("Coordinate").Return(coord)
+	mockRover.On("Map").Return(*OfPlanet(planet))
+	return mockRover
 }
