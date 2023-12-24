@@ -25,7 +25,7 @@ func TestSendsOkResponseWhenCreateRandomActionIsSuccessful(t *testing.T) {
 }
 
 func TestSendsInternalServerErrorResponseWhenCreateRandomActionReportsAnError(t *testing.T) {
-	creationError := GameNotCreatedErr(errors.New("test error"))
+	creationError := GameNotPersistedErr(errors.New("test error"))
 	mockRover := new(MockRover)
 	mockAction := new(MockAction)
 	mockAction.On("Create").Return(mockRover, creationError)

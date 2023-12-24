@@ -5,14 +5,10 @@ import (
 )
 
 type CreationError struct {
-	GameNotCreatedError   *GameNotCreatedError
 	GameNotPersistedError *GameNotPersistedError
 }
 
 func (e CreationError) Error() string {
-	if e.GameNotCreatedError != nil {
-		return e.GameNotCreatedError.Error()
-	}
 	if e.GameNotPersistedError != nil {
 		return e.GameNotPersistedError.Error()
 	}
@@ -20,21 +16,10 @@ func (e CreationError) Error() string {
 }
 
 func (e CreationError) Type() ErrorType {
-	if e.GameNotCreatedError != nil {
-		return GameNotCreated
-	}
 	if e.GameNotPersistedError != nil {
 		return GameNotPersisted
 	}
 	return -1
-}
-
-func GameNotCreatedErr(err error) *CreationError {
-	return &CreationError{
-		GameNotCreatedError: &GameNotCreatedError{
-			Err: err,
-		},
-	}
 }
 
 func GameNotPersistedErr(err error) *CreationError {

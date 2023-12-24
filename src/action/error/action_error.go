@@ -11,7 +11,6 @@ type ErrorType int
 const (
 	RoverNotFound ErrorType = iota
 	RoverNotUpdated
-	GameNotCreated
 	GameNotPersisted
 )
 
@@ -31,14 +30,6 @@ type RoverNotUpdatedError struct {
 
 func (e RoverNotUpdatedError) Error() string {
 	return fmt.Sprintf("failed to update rover with ID %s", e.ID)
-}
-
-type GameNotCreatedError struct {
-	Err error
-}
-
-func (e GameNotCreatedError) Error() string {
-	return fmt.Sprintf("could not create game: %s", e.Err.Error())
 }
 
 type GameNotPersistedError struct {
