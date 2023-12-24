@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"log"
+	. "mars_rover/src/action"
 	"mars_rover/src/action/createRandom/simple"
 	"mars_rover/src/action/move/resilient"
 	. "mars_rover/src/infra/apiServer/controllers"
@@ -14,12 +15,11 @@ import (
 	"sync"
 )
 
-var movementAction *resilient_mover.ResilientMover
-var creationAction *simple_random_creator.SimpleRandomCreate
+var movementAction MoveAction
+var creationAction CreateRandomAction
 
 func RunOn(port string, wg *sync.WaitGroup) {
 	defer wg.Done()
-	// TODO.LM: Only one action being used by multiple controllers: is that OK?
 	movementAction = resilient_mover.For(InitFS())
 	creationAction = simple_random_creator.For(InitFS())
 

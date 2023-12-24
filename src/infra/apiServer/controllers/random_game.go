@@ -7,12 +7,11 @@ import (
 )
 
 func RandomGame(action CreateRandomAction, responseHandler HTTPResponseHandler) {
-	curiosity, actionErr := action.Create()
+	rover, actionErr := action.Create()
 	if actionErr != nil {
 		responseHandler.SendInternalServerError(actionErr.Error())
 		return
 	}
 
-	responseHandler.SendOk(dto.FromDomainRover(curiosity))
-	return
+	responseHandler.SendOk(dto.FromDomainRover(rover))
 }
