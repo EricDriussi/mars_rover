@@ -19,5 +19,8 @@ func (this *Size) Width() int {
 
 func (this *Size) Height() int {
 	return this.height
+}
 
+func (this *Size) Area() int {
+	return this.width * this.height
 }

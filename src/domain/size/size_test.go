@@ -44,3 +44,11 @@ func TestGetWidthAndHeight(t *testing.T) {
 	assert.Equal(t, dimension, testSize.Width())
 	assert.Equal(t, dimension, testSize.Height())
 }
+
+func TestCalculatesArea(t *testing.T) {
+	dimension := 5
+	testSize, err := size.Square(dimension)
+	assert.Nil(t, err)
+
+	assert.Equal(t, dimension*dimension, testSize.Area())
+}

@@ -65,8 +65,7 @@ func (this *BoundedRandomCreator) loopUntilPlanetCreated(size Size) Planet {
 
 func (this *BoundedRandomCreator) randomObstaclesWithin(size Size) []Obstacle {
 	var obstacles []Obstacle
-	area := size.Width() * size.Height()
-	amountOfObstacles := rand.Intn(area - 1)
+	amountOfObstacles := rand.Intn(size.Area() - 1)
 	for i := 0; i < amountOfObstacles; i++ {
 		smallRock := rock.In(randomCoordinateWithin(size))
 		obstacles = append(obstacles, &smallRock)
