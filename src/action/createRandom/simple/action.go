@@ -31,12 +31,12 @@ func (this *SimpleRandomCreate) Create() (Rover, *CreationError) {
 	randNum := rand.Intn(19) + 4
 	randSize, err := size.Square(randNum)
 	if err != nil {
-		return nil, BuildGameNotCreatedErr(err)
+		return nil, GameNotCreatedErr(err)
 	}
 
 	randPlanet, err := rockyPlanet.Create(randomColor(), *randSize, randomObstaclesWithin(*randSize))
 	if err != nil {
-		return nil, BuildGameNotCreatedErr(err)
+		return nil, GameNotCreatedErr(err)
 	}
 
 	var randRover Rover
@@ -50,11 +50,11 @@ func (this *SimpleRandomCreate) Create() (Rover, *CreationError) {
 
 	planetId, err := this.repo.AddPlanet(randPlanet)
 	if err != nil {
-		return nil, BuildPlanetNotPersistedErr(err)
+		return nil, GameNotPersistedErr(err)
 	}
 	err = this.repo.AddRover(randRover, planetId)
 	if err != nil {
-		return nil, BuildRoverNotPersistedErr(randRover.Id(), err)
+		return nil, GameNotPersistedErr(err)
 	}
 	return randRover, nil
 }

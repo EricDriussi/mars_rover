@@ -8,13 +8,11 @@ import (
 type ErrorType int
 
 // TODO: do these belong to the repo??
-// is GameNotCreated the only real action error?
 const (
 	RoverNotFound ErrorType = iota
 	RoverNotUpdated
-	RoverNotPersisted
-	PlanetNotPersisted
 	GameNotCreated
+	GameNotPersisted
 )
 
 type RoverNotFoundError struct {
@@ -35,27 +33,18 @@ func (e RoverNotUpdatedError) Error() string {
 	return fmt.Sprintf("failed to update rover with ID %s", e.ID)
 }
 
-type RoverNotPersistedError struct {
-	ID  UUID
-	Err error
-}
-
-func (e RoverNotPersistedError) Error() string {
-	return fmt.Sprintf("rover with ID %s could not be saved", e.ID)
-}
-
-type PlanetNotPersistedError struct {
-	Err error
-}
-
-func (e PlanetNotPersistedError) Error() string {
-	return "could not save planet"
-}
-
 type GameNotCreatedError struct {
 	Err error
 }
 
 func (e GameNotCreatedError) Error() string {
-	return "could not create game"
+	return fmt.Sprintf("could not create game: %s", e.Err.Error())
+}
+
+type GameNotPersistedError struct {
+	Err error
+}
+
+func (e GameNotPersistedError) Error() string {
+	return fmt.Sprintf("could not persist game: %s", e.Err.Error())
 }
