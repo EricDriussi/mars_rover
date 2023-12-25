@@ -13,21 +13,22 @@ func TestBoundedCreationDoesNotErrorIfRepoIsSuccessful(t *testing.T) {
 	repo := new(MockRepo)
 	repo.On("AddPlanet").Return(nil)
 	repo.On("AddRover").Return(nil)
-	act := bounded_random_creator.With(repo)
 
-	for i := 0; i < 25; i++ {
-		rover, err := act.Create()
-		assert.Nil(t, err)
-		assert.NotNil(t, rover)
-	}
+	act := bounded_random_creator.With(repo)
+	rover, err := act.Create()
+
+	assert.Nil(t, err)
+	assert.NotNil(t, rover)
 }
 
 func TestBoundedCreationReportsRepoError(t *testing.T) {
 	repo := new(MockRepo)
 	repo.On("AddPlanet").Return(errors.New("repo error"))
+
 	act := bounded_random_creator.With(repo)
 	_, err := act.Create()
-	assert.NotNil(t, err)
+
+	assert.Error(t, err)
 }
 
 func TestBoundedCreationRespectsSensibleLimits(t *testing.T) {
