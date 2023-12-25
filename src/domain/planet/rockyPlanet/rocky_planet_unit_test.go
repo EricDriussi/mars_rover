@@ -37,3 +37,10 @@ func TestCannotCreateIfOneMockObstacleIsOutOfBounds(t *testing.T) {
 	// asserting calls would depend on order of obstacle iteration
 	assert.Error(t, err)
 }
+
+func TestCannotCreateIfSizeTooSmall(t *testing.T) {
+	sizeLimit, _ := size.Square(1)
+	_, err := rockyPlanet.Create("testColor", *sizeLimit, []Obstacle{})
+
+	assert.Error(t, err)
+}

@@ -19,6 +19,9 @@ type RockyPlanet struct {
 // TODO.LM: color is here just as an example of why you might want to
 // decouple map from planet, but it's not used for anything
 func Create(color string, size Size, obstacles []Obstacle) (*RockyPlanet, error) {
+	if size.Area() < 2 {
+		return nil, errors.New("size too small") // rover + 1 obstacle would not fit
+	}
 	obstacleList := obs.FromList(obstacles)
 	if obstacleList.IsAnyBeyond(size) {
 		return nil, errors.New("an obstacle was set outside of the planet :c")
