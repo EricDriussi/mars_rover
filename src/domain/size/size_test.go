@@ -8,6 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const sqrtOfMaxInt = 3037000500
+
 func TestSquareDoesNotAllowNegativeValues(t *testing.T) {
 	testCases := []struct {
 		name string
@@ -30,10 +32,17 @@ func TestSquareDoesNotAllowNegativeValues(t *testing.T) {
 	}
 }
 
-func TestSquareAllowsRandomPositiveValues(t *testing.T) {
-	testSize, err := size.Square(rand.Int())
+func TestSquareAllowsRandomPositiveValuesWithingLimits(t *testing.T) {
+	testSize, err := size.Square(rand.Intn(sqrtOfMaxInt))
 	assert.Nil(t, err)
 	assert.NotNil(t, testSize)
+}
+
+func TestDefaultsToSqrtOfMaxIntWhenGivenALargerValue(t *testing.T) {
+	testSize, err := size.Square(sqrtOfMaxInt + 1)
+	assert.Nil(t, err)
+	assert.Equal(t, sqrtOfMaxInt, testSize.Width())
+	assert.Equal(t, sqrtOfMaxInt, testSize.Height())
 }
 
 func TestGetWidthAndHeight(t *testing.T) {
