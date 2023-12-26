@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 	"log"
 	. "mars_rover/src/action"
-	"mars_rover/src/action/createRandom/bounded"
+	boundedRandomCreator "mars_rover/src/action/createRandom/bounded"
 	"mars_rover/src/action/move/resilient"
 	. "mars_rover/src/infra/apiServer/controllers"
 	. "mars_rover/src/infra/apiServer/responses"
@@ -21,7 +21,7 @@ var creationAction CreateRandomAction
 func RunOn(port string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	movementAction = resilient_mover.For(InitFS())
-	creationAction = bounded_random_creator.With(InitFS())
+	creationAction = boundedRandomCreator.With(InitFS())
 
 	apiServer := http.NewServeMux()
 	// TODO: add load game endpoint

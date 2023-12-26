@@ -1,8 +1,8 @@
-package simple_random_creator_test
+package simpleRandomCreator_test
 
 import (
 	"errors"
-	"mars_rover/src/action/createRandom/simple"
+	simpleRandomCreator "mars_rover/src/action/createRandom/simple"
 	. "mars_rover/src/test_helpers/mocks"
 	"testing"
 
@@ -14,7 +14,7 @@ func TestSimpleCreationDoesNotErrorIfRepoIsSuccessful(t *testing.T) {
 	repo.On("AddPlanet").Return(nil)
 	repo.On("AddRover").Return(nil)
 
-	act := simple_random_creator.With(repo)
+	act := simpleRandomCreator.With(repo)
 	rover, err := act.Create()
 
 	assert.Nil(t, err)
@@ -25,7 +25,7 @@ func TestSimpleCreationReportsRepoError(t *testing.T) {
 	repo := new(MockRepo)
 	repo.On("AddPlanet").Return(errors.New("repo error"))
 
-	act := simple_random_creator.With(repo)
+	act := simpleRandomCreator.With(repo)
 	_, err := act.Create()
 
 	assert.Error(t, err)

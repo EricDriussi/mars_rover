@@ -1,4 +1,4 @@
-package bounded_random_creator
+package boundedRandomCreator
 
 import (
 	"errors"
@@ -21,6 +21,12 @@ import (
 	"math/rand"
 )
 
+const (
+	MinSize      = 4
+	MaxSize      = 20
+	MinObstacles = 3
+)
+
 type BoundedRandomCreator struct {
 	repo         Repository
 	minSize      int
@@ -31,9 +37,9 @@ type BoundedRandomCreator struct {
 func With(repo Repository) *BoundedRandomCreator {
 	return &BoundedRandomCreator{
 		repo:         repo,
-		minSize:      4,
-		maxSize:      20,
-		minObstacles: 3,
+		minSize:      MinSize,
+		maxSize:      MaxSize,
+		minObstacles: MinObstacles,
 	}
 }
 

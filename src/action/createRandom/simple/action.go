@@ -1,4 +1,4 @@
-package simple_random_creator
+package simpleRandomCreator
 
 import (
 	"errors"
