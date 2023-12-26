@@ -5,7 +5,8 @@ import (
 	"github.com/google/uuid"
 	. "github.com/stretchr/testify/mock"
 	"mars_rover/src/action"
-	"mars_rover/src/action/move"
+	. "mars_rover/src/action/move"
+	"mars_rover/src/infra/apiServer/controllers"
 	. "mars_rover/src/infra/apiServer/controllers"
 	. "mars_rover/src/test_helpers/mocks"
 	"testing"
@@ -17,7 +18,7 @@ func TestSendsOkResponseWhenMovementActionIsSuccessful(t *testing.T) {
 	mockHandler := new(MockHTTPResponseHandler)
 	mockHandler.On("SendOk", Anything).Return()
 
-	MoveRover(mockAction, aMoveRequest(), mockHandler)
+	controllers.MoveRover(mockAction, aMoveRequest(), mockHandler)
 
 	mockHandler.AssertCalled(t, "SendOk", Anything)
 }
@@ -41,13 +42,12 @@ func TestSendsBadRequestResponseWhenNoValidCommandsAreProvided(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
+			testRequest := MoveRequest{
+				Commands: testCase.invalidCommands,
+				Id:       uuid.New().String(),
+			}
 
-			MoveRover(mockAction,
-				MoveRequest{
-					Commands: testCase.invalidCommands,
-					Id:       uuid.New().String(),
-				},
-				mockHandler)
+			controllers.MoveRover(mockAction, testRequest, mockHandler)
 
 			mockHandler.AssertCalled(t, "SendBadRequest", Anything)
 		})
@@ -55,25 +55,25 @@ func TestSendsBadRequestResponseWhenNoValidCommandsAreProvided(t *testing.T) {
 }
 
 func TestSendsBadRequestResponseWhenActionDoesNotFindRover(t *testing.T) {
-	notFoundError := move.BuildNotFoundErr(uuid.New(), errors.New("whatever"))
+	notFoundError := BuildNotFoundErr(uuid.New(), errors.New("whatever"))
 	mockAction := new(MockAction)
 	mockAction.On("Move").Return([]action.MovementResult{}, notFoundError)
 	mockHandler := new(MockHTTPResponseHandler)
 	mockHandler.On("SendBadRequest", Anything).Return()
 
-	MoveRover(mockAction, aMoveRequest(), mockHandler)
+	controllers.MoveRover(mockAction, aMoveRequest(), mockHandler)
 
 	mockHandler.AssertCalled(t, "SendBadRequest", Anything)
 }
 
 func TestSendsInternalServerErrorResponseWhenActionCannotUpdateRover(t *testing.T) {
-	notUpdatedError := move.BuildNotUpdatedErr(uuid.New(), errors.New("whatever"))
+	notUpdatedError := BuildNotUpdatedErr(uuid.New(), errors.New("whatever"))
 	mockAction := new(MockAction)
 	mockAction.On("Move").Return([]action.MovementResult{}, notUpdatedError)
 	mockHandler := new(MockHTTPResponseHandler)
 	mockHandler.On("SendInternalServerError", Anything).Return()
 
-	MoveRover(mockAction, aMoveRequest(), mockHandler)
+	controllers.MoveRover(mockAction, aMoveRequest(), mockHandler)
 
 	mockHandler.AssertCalled(t, "SendInternalServerError", Anything)
 }

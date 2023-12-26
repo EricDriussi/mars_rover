@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 	"log"
 	. "mars_rover/src/action"
-	boundedRandomCreator "mars_rover/src/action/createRandom/bounded"
+	"mars_rover/src/action/createRandom/bounded"
 	"mars_rover/src/action/move/resilient"
 	. "mars_rover/src/infra/apiServer/controllers"
 	. "mars_rover/src/infra/apiServer/responses"

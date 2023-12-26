@@ -5,7 +5,7 @@ import (
 	. "github.com/stretchr/testify/mock"
 	. "mars_rover/src/action/createRandom"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
-	. "mars_rover/src/infra/apiServer/controllers"
+	"mars_rover/src/infra/apiServer/controllers"
 	"mars_rover/src/test_helpers/mocks"
 	. "mars_rover/src/test_helpers/mocks"
 	"testing"
@@ -19,7 +19,7 @@ func TestSendsOkResponseWhenCreateRandomActionIsSuccessful(t *testing.T) {
 	mockHandler := new(MockHTTPResponseHandler)
 	mockHandler.On("SendOk", Anything).Return()
 
-	RandomGame(mockAction, mockHandler)
+	controllers.RandomGame(mockAction, mockHandler)
 
 	mockHandler.AssertCalled(t, "SendOk", Anything)
 }
@@ -32,7 +32,7 @@ func TestSendsInternalServerErrorResponseWhenCreateRandomActionReportsAnError(t 
 	mockHandler := new(MockHTTPResponseHandler)
 	mockHandler.On("SendInternalServerError", Anything).Return()
 
-	RandomGame(mockAction, mockHandler)
+	controllers.RandomGame(mockAction, mockHandler)
 
 	mockHandler.AssertCalled(t, "SendInternalServerError", Anything)
 }

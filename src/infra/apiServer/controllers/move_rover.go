@@ -4,6 +4,7 @@ import (
 	"github.com/google/uuid"
 	. "mars_rover/src/action"
 	. "mars_rover/src/action/error"
+	"mars_rover/src/action/move"
 	"mars_rover/src/action/move/command"
 	"mars_rover/src/infra/apiServer/dto"
 	. "mars_rover/src/infra/apiServer/responses"
@@ -30,15 +31,18 @@ func MoveRover(action MoveAction, request MoveRequest, responseHandler HTTPRespo
 
 	movementResults, actionErr := action.Move(roverId, applicationCommands)
 	if actionErr != nil {
-		if actionErr.Type() == RoverNotFound {
-			responseHandler.SendBadRequest(actionErr.Error())
-			return
-		}
-		if actionErr.Type() == RoverNotUpdated {
-			responseHandler.SendInternalServerError(actionErr.Error())
-			return
-		}
+		sendResponseBasedOnErrorType(actionErr, responseHandler)
+		return
 	}
 
 	responseHandler.SendOk(dto.FromMovementResult(movementResults))
+}
+
+func sendResponseBasedOnErrorType(actionErr *move.MovementError, responseHandler HTTPResponseHandler) {
+	if actionErr.Type() == RoverNotFound {
+		responseHandler.SendBadRequest(actionErr.Error())
+	}
+	if actionErr.Type() == RoverNotUpdated {
+		responseHandler.SendInternalServerError(actionErr.Error())
+	}
 }
