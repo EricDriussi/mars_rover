@@ -120,7 +120,7 @@ func assertCreateDTOContainsPlanetData(t *testing.T, createResponseDTO CreateRes
 
 func assertSameCoordinates(t *testing.T, createResponseDTO []ObstacleDTO, obst Obstacles) {
 	for i, obs := range obst.List() {
-		coordinateDTOS := createResponseDTO[i].Coordinate
+		coordinateDTOS := createResponseDTO[i]
 		for j, coord := range obs.Coordinates() {
 			assert.Equal(t, coordinateDTOS[j].X, coord.X())
 			assert.Equal(t, coordinateDTOS[j].Y, coord.Y())

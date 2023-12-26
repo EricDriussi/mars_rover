@@ -11,9 +11,7 @@ type RoverDTO struct {
 	Direction  string
 }
 
-type ObstacleDTO struct {
-	Coordinate []CoordinateDTO
-}
+type ObstacleDTO []CoordinateDTO
 
 type PlanetDTO struct {
 	Width     int

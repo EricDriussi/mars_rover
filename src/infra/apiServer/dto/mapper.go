@@ -62,9 +62,7 @@ func mapDomainToDTOObstacles(obstacles Obstacles) []ObstacleDTO {
 	var obstaclesDTO []ObstacleDTO
 	for _, obstacle := range obstacles.List() {
 		coordinates := obstacle.Coordinates()
-		obstaclesDTO = append(obstaclesDTO, ObstacleDTO{
-			Coordinate: mapDomainToDTOCoordinates(coordinates),
-		})
+		obstaclesDTO = append(obstaclesDTO, mapDomainToDTOCoordinates(coordinates))
 	}
 	return obstaclesDTO
 }
