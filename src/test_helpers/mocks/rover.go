@@ -52,10 +52,22 @@ func (this *MockRover) Map() Map {
 }
 
 func RoverIn(planet Planet, coord AbsoluteCoordinate) *MockRover {
+	mockRover := LandedRover(coord)
+	mockRover.On("Map").Return(*OfPlanet(planet))
+	return mockRover
+}
+
+func LandedRover(coord AbsoluteCoordinate) *MockRover {
 	mockRover := new(MockRover)
 	mockRover.On("Id").Return(New())
 	mockRover.On("Direction").Return(North{})
 	mockRover.On("Coordinate").Return(coord)
-	mockRover.On("Map").Return(*OfPlanet(planet))
 	return mockRover
+}
+
+func MakeAlwaysSuccessful(mockRover *MockRover) {
+	mockRover.On("MoveForward").Return(nil)
+	mockRover.On("MoveBackward").Return(nil)
+	mockRover.On("TurnLeft").Return()
+	mockRover.On("TurnRight").Return()
 }

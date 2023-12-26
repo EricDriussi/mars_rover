@@ -20,7 +20,7 @@ var creationAction CreateRandomAction
 
 func RunOn(port string, wg *sync.WaitGroup) {
 	defer wg.Done()
-	movementAction = resilient_mover.For(InitFS())
+	movementAction = resilient_mover.With(InitFS())
 	creationAction = boundedRandomCreator.With(InitFS())
 
 	apiServer := http.NewServeMux()

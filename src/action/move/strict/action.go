@@ -3,7 +3,7 @@ package strict_mover
 import (
 	. "github.com/google/uuid"
 	. "mars_rover/src/action/move"
-	"mars_rover/src/action/move/command"
+	. "mars_rover/src/action/move/command"
 	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/rover"
 )
@@ -12,13 +12,13 @@ type StrictMover struct {
 	repo Repository
 }
 
-func For(repo Repository) *StrictMover {
+func With(repo Repository) *StrictMover {
 	return &StrictMover{
 		repo: repo,
 	}
 }
 
-func (this *StrictMover) Move(roverId UUID, commands command.Commands) ([]MovementResult, *MovementError) {
+func (this *StrictMover) Move(roverId UUID, commands Commands) ([]MovementResult, *MovementError) {
 	rover, err := this.repo.GetRover(roverId)
 	if err != nil {
 		return nil, BuildNotFoundErr()
@@ -39,40 +39,47 @@ type (
 	Rotation func()
 )
 
-func moveRover(rover Rover, commands command.Commands) []MovementResult {
-	commandToRoverFunctionMap := map[command.Command]interface{}{
-		command.Forward:  Movement(rover.MoveForward),
-		command.Backward: Movement(rover.MoveBackward),
-		command.Left:     Rotation(rover.TurnLeft),
-		command.Right:    Rotation(rover.TurnRight),
+func moveRover(rover Rover, commands Commands) []MovementResult {
+	commandToRoverFunctionMap := map[Command]interface{}{
+		Forward:  Movement(rover.MoveForward),
+		Backward: Movement(rover.MoveBackward),
+		Left:     Rotation(rover.TurnLeft),
+		Right:    Rotation(rover.TurnRight),
 	}
 
 	results := make([]MovementResult, 0, len(commands))
-	var err error
 	for _, cmd := range commands {
-		action, doesMap := commandToRoverFunctionMap[cmd]
-		if doesMap {
-			switch action := action.(type) {
-			case Movement:
-				err = action()
-				break
-			case Rotation:
-				action()
-				break
-			}
+		roverAction, ok := commandToRoverFunctionMap[cmd]
+		if !ok {
+			continue
 		}
+		err := execute(roverAction)
 		movementIssue := err != nil
-		res := MovementResult{
-			Cmd:           cmd,
-			IssueDetected: movementIssue,
-			Coord:         rover.Coordinate(),
-			Dir:           rover.Direction(),
-		}
-		results = append(results, res)
+		results = append(results, buildMovementResult(rover, cmd, movementIssue))
 		if movementIssue {
 			break
 		}
 	}
 
 	return results
+}
+
+func execute(roverAction interface{}) error {
+	switch roverAction := roverAction.(type) {
+	case Movement:
+		return roverAction()
+	case Rotation:
+		roverAction()
+		return nil
+	}
+	return nil
+}
+
+func buildMovementResult(rover Rover, cmd Command, movementIssue bool) MovementResult {
+	return MovementResult{
+		Cmd:           cmd,
+		IssueDetected: movementIssue,
+		Coord:         rover.Coordinate(),
+		Dir:           rover.Direction(),
+	}
 }

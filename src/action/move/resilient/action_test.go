@@ -7,8 +7,8 @@ import (
 	. "mars_rover/src/action/move/command"
 	"mars_rover/src/action/move/resilient"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
-	. "mars_rover/src/domain/rover/direction"
 	. "mars_rover/src/test_helpers"
+	"mars_rover/src/test_helpers/mocks"
 	. "mars_rover/src/test_helpers/mocks"
 	"testing"
 
@@ -16,95 +16,79 @@ import (
 )
 
 func TestHandlesASingleSuccessfulMovementCommand(t *testing.T) {
-	curiosity := new(MockRover)
-	curiosity.On("Coordinate").Return(*absoluteCoordinate.From(1, 1))
-	curiosity.On("Direction").Return(North{})
-	curiosity.On("MoveForward").Return(nil)
+	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
+	mocks.MakeAlwaysSuccessful(testRover)
 	repo := new(MockRepo)
-	repo.On("GetRover", Anything).Return(curiosity, nil)
+	repo.On("GetRover", Anything).Return(testRover, nil)
 	repo.On("UpdateRover").Return(nil)
 
-	act := resilient_mover.For(repo)
+	act := resilient_mover.With(repo)
 	commands := Commands{Forward}
 	movementResults, err := act.Move(uuid.New(), commands)
 
 	assert.Nil(t, err)
-	curiosity.AssertCalled(t, "MoveForward")
+	testRover.AssertCalled(t, "MoveForward")
 	AssertEncounteredNoIssues(t, movementResults)
 }
 
 func TestHandlesASingleFailedMovementCommand(t *testing.T) {
-	curiosity := new(MockRover)
-	curiosity.On("Coordinate").Return(*absoluteCoordinate.From(1, 1))
-	curiosity.On("Direction").Return(North{})
-	curiosity.On("MoveForward").Return(errors.New("an error"))
+	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
+	testRover.On("MoveForward").Return(errors.New("an error"))
 	repo := new(MockRepo)
-	repo.On("GetRover", Anything).Return(curiosity, nil)
+	repo.On("GetRover", Anything).Return(testRover, nil)
 	repo.On("UpdateRover").Return(nil)
 
-	act := resilient_mover.For(repo)
+	act := resilient_mover.With(repo)
 	commands := Commands{Forward}
 	movementResults, err := act.Move(uuid.New(), commands)
 
 	assert.Nil(t, err)
-	curiosity.AssertCalled(t, "MoveForward")
+	testRover.AssertCalled(t, "MoveForward")
 	AssertEncounteredAnIssue(t, movementResults)
 }
 
 func TestHandlesASingleTurningCommand(t *testing.T) {
-	curiosity := new(MockRover)
-	curiosity.On("Coordinate").Return(*absoluteCoordinate.From(1, 1))
-	curiosity.On("Direction").Return(North{})
-	curiosity.On("TurnRight").Return()
+	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
+	mocks.MakeAlwaysSuccessful(testRover)
 	repo := new(MockRepo)
-	repo.On("GetRover", Anything).Return(curiosity, nil)
+	repo.On("GetRover", Anything).Return(testRover, nil)
 	repo.On("UpdateRover").Return(nil)
 
-	act := resilient_mover.For(repo)
+	act := resilient_mover.With(repo)
 	commands := Commands{Right}
 	movementResults, err := act.Move(uuid.New(), commands)
 
 	assert.Nil(t, err)
-	curiosity.AssertCalled(t, "TurnRight")
+	testRover.AssertCalled(t, "TurnRight")
 	AssertEncounteredNoIssues(t, movementResults)
 }
 
-func TestCallsRoverBasedOnSuccessfulCommandsWithGivenSequence(t *testing.T) {
-	curiosity := new(MockRover)
-	curiosity.On("Coordinate").Return(*absoluteCoordinate.From(1, 1))
-	curiosity.On("Direction").Return(North{})
-	curiosity.On("MoveBackward").Return(nil)
-	curiosity.On("MoveForward").Return(nil)
-	curiosity.On("TurnLeft").Return()
-	curiosity.On("TurnRight").Return()
+func TestCallsRoverBasedOnSuccessfulCommandsInGivenSequence(t *testing.T) {
+	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
+	mocks.MakeAlwaysSuccessful(testRover)
 	repo := new(MockRepo)
-	repo.On("GetRover", Anything).Return(curiosity, nil)
+	repo.On("GetRover", Anything).Return(testRover, nil)
 	repo.On("UpdateRover").Return(nil)
 
-	act := resilient_mover.For(repo)
+	act := resilient_mover.With(repo)
 	commands := Commands{Backward, Forward, Left, Right}
 	_, err := act.Move(uuid.New(), commands)
 
 	assert.Nil(t, err)
-	curiosity.AssertCalled(t, "MoveBackward")
-	curiosity.AssertCalled(t, "MoveForward")
-	curiosity.AssertCalled(t, "TurnLeft")
-	curiosity.AssertCalled(t, "TurnRight")
+	testRover.AssertCalled(t, "MoveBackward")
+	testRover.AssertCalled(t, "MoveForward")
+	testRover.AssertCalled(t, "TurnLeft")
+	testRover.AssertCalled(t, "TurnRight")
 }
 
-func TestReportsRoverMovementBasedOnSuccessfulCommandsWithGivenSequence(t *testing.T) {
-	curiosity := new(MockRover)
-	curiosity.On("Coordinate").Return(*absoluteCoordinate.From(1, 1))
-	curiosity.On("Direction").Return(North{})
-	curiosity.On("MoveBackward").Return(nil)
-	curiosity.On("MoveForward").Return(nil)
-	curiosity.On("TurnLeft").Return()
-	curiosity.On("TurnRight").Return()
+func TestReportsRoverMovementBasedOnSuccessfulCommandsInGivenSequence(t *testing.T) {
+	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
+	mocks.MakeAlwaysSuccessful(testRover)
 	repo := new(MockRepo)
-	repo.On("GetRover", Anything).Return(curiosity, nil)
+	repo.On("GetRover", Anything).Return(testRover, nil)
 	repo.On("UpdateRover").Return(nil)
 
-	act := resilient_mover.For(repo)
+	act := resilient_mover.With(repo)
 	commands := Commands{Backward, Forward, Left, Right}
 	movementResults, err := act.Move(uuid.New(), commands)
 
@@ -114,42 +98,38 @@ func TestReportsRoverMovementBasedOnSuccessfulCommandsWithGivenSequence(t *testi
 	AssertEncounteredNoIssues(t, movementResults)
 }
 
-func TestCallsRoverBasedOnSuccessfulAndFailedCommandsWithGivenSequence(t *testing.T) {
-	curiosity := new(MockRover)
-	curiosity.On("Coordinate").Return(*absoluteCoordinate.From(1, 1))
-	curiosity.On("Direction").Return(North{})
-	curiosity.On("MoveBackward").Return(nil)
-	curiosity.On("MoveForward").Return(errors.New("movement blocked"))
-	curiosity.On("TurnLeft").Return()
-	curiosity.On("TurnRight").Return()
+func TestCallsRoverBasedOnSuccessfulAndFailedCommandsInGivenSequence(t *testing.T) {
+	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
+	testRover.On("MoveBackward").Return(nil)
+	testRover.On("MoveForward").Return(errors.New("movement blocked"))
+	testRover.On("TurnLeft").Return()
+	testRover.On("TurnRight").Return()
 	repo := new(MockRepo)
-	repo.On("GetRover", Anything).Return(curiosity, nil)
+	repo.On("GetRover", Anything).Return(testRover, nil)
 	repo.On("UpdateRover").Return(nil)
 
-	act := resilient_mover.For(repo)
+	act := resilient_mover.With(repo)
 	commands := Commands{Backward, Forward, Left, Right}
 	_, err := act.Move(uuid.New(), commands)
 
 	assert.Nil(t, err)
-	curiosity.AssertCalled(t, "MoveBackward")
-	curiosity.AssertCalled(t, "MoveForward")
-	curiosity.AssertCalled(t, "TurnLeft")
-	curiosity.AssertCalled(t, "TurnRight")
+	testRover.AssertCalled(t, "MoveBackward")
+	testRover.AssertCalled(t, "MoveForward")
+	testRover.AssertCalled(t, "TurnLeft")
+	testRover.AssertCalled(t, "TurnRight")
 }
 
-func TestReportsRoverMovementBasedOnSuccessfulAndFailedCommandsWithGivenSequence(t *testing.T) {
-	curiosity := new(MockRover)
-	curiosity.On("Coordinate").Return(*absoluteCoordinate.From(1, 1))
-	curiosity.On("Direction").Return(North{})
-	curiosity.On("MoveBackward").Return(nil)
-	curiosity.On("MoveForward").Return(errors.New("movement blocked"))
-	curiosity.On("TurnLeft").Return()
-	curiosity.On("TurnRight").Return()
+func TestReportsRoverMovementBasedOnSuccessfulAndFailedCommandsInGivenSequence(t *testing.T) {
+	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
+	testRover.On("MoveBackward").Return(nil)
+	testRover.On("MoveForward").Return(errors.New("movement blocked"))
+	testRover.On("TurnLeft").Return()
+	testRover.On("TurnRight").Return()
 	repo := new(MockRepo)
-	repo.On("GetRover", Anything).Return(curiosity, nil)
+	repo.On("GetRover", Anything).Return(testRover, nil)
 	repo.On("UpdateRover").Return(nil)
 
-	act := resilient_mover.For(repo)
+	act := resilient_mover.With(repo)
 	commands := Commands{Backward, Forward, Left, Right}
 	movementResults, err := act.Move(uuid.New(), commands)
 
@@ -163,7 +143,7 @@ func TestReportsRepoErrorWhenGettingRover(t *testing.T) {
 	repo := new(MockRepo)
 	repo.On("GetRover", Anything).Return(new(MockRover), errors.New("whatever"))
 
-	act := resilient_mover.For(repo)
+	act := resilient_mover.With(repo)
 	irrelevantCommand := Forward
 	movementResults, err := act.Move(uuid.New(), Commands{irrelevantCommand})
 
@@ -173,15 +153,13 @@ func TestReportsRepoErrorWhenGettingRover(t *testing.T) {
 }
 
 func TestReportsRepoErrorWhenUpdatingRover(t *testing.T) {
-	curiosity := new(MockRover)
-	curiosity.On("Coordinate").Return(*absoluteCoordinate.From(1, 1))
-	curiosity.On("Direction").Return(North{})
-	curiosity.On("MoveForward").Return(nil)
+	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
+	mocks.MakeAlwaysSuccessful(testRover)
 	repo := new(MockRepo)
-	repo.On("GetRover", Anything).Return(curiosity, nil)
+	repo.On("GetRover", Anything).Return(testRover, nil)
 	repo.On("UpdateRover").Return(errors.New("whatever"))
 
-	act := resilient_mover.For(repo)
+	act := resilient_mover.With(repo)
 	irrelevantCommand := Forward
 	movementResults, err := act.Move(uuid.New(), Commands{irrelevantCommand})
 
