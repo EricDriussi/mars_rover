@@ -6,44 +6,55 @@ import (
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/rover"
+	. "mars_rover/src/domain/rover/planetMap"
 )
 
 func FromMovementResult(movementResult []MovementResult) MovementResponseDTO {
 	var responseDTO MovementResponseDTO
 	for _, result := range movementResult {
-		issue := ""
-		if result.IssueDetected {
-			issue = fmt.Sprintf("unable to move on command '%v'.", result.Cmd.String())
-		}
-		responseDTO.Results = append(responseDTO.Results, SingleMovementDTO{
-			Issue: issue,
-			Coordinate: CoordinateDTO{
-				X: result.Coord.X(),
-				Y: result.Coord.Y(),
-			},
-			Direction: result.Dir.CardinalPoint(),
-		})
+		issue := issueFrom(result)
+		responseDTO.Results = append(responseDTO.Results, singleMovementDTOFrom(issue, result))
 	}
 	return responseDTO
 }
 
+func issueFrom(result MovementResult) string {
+	if result.IssueDetected {
+		return fmt.Sprintf("unable to move on command '%v'.", result.Cmd.String())
+	}
+	return ""
+}
+
+func singleMovementDTOFrom(issue string, result MovementResult) SingleMovementDTO {
+	return SingleMovementDTO{
+		Issue:      issue,
+		Coordinate: coordinateDTOFrom(result.Coord),
+		Direction:  result.Dir.CardinalPoint(),
+	}
+}
+
 func FromDomainRover(rover Rover) CreateResponseDTO {
-	coordinate := rover.Coordinate()
 	planetMap := rover.Map()
 	return CreateResponseDTO{
-		Rover: RoverDTO{
-			Id: rover.Id().String(),
-			Coordinate: CoordinateDTO{
-				X: coordinate.X(),
-				Y: coordinate.Y(),
-			},
-			Direction: rover.Direction().CardinalPoint(),
-		},
-		Planet: PlanetDTO{
-			Width:     planetMap.Width(),
-			Height:    planetMap.Height(),
-			Obstacles: mapDomainToDTOObstacles(planetMap.Obstacles()),
-		},
+		Rover:  roverDTOFrom(rover),
+		Planet: planetDTOFrom(planetMap),
+	}
+}
+
+func planetDTOFrom(planetMap Map) PlanetDTO {
+	return PlanetDTO{
+		Width:     planetMap.Width(),
+		Height:    planetMap.Height(),
+		Obstacles: mapDomainToDTOObstacles(planetMap.Obstacles()),
+	}
+}
+
+func roverDTOFrom(rover Rover) RoverDTO {
+	coordinate := rover.Coordinate()
+	return RoverDTO{
+		Id:         rover.Id().String(),
+		Coordinate: coordinateDTOFrom(coordinate),
+		Direction:  rover.Direction().CardinalPoint(),
 	}
 }
 
@@ -58,13 +69,17 @@ func mapDomainToDTOObstacles(obstacles Obstacles) []ObstacleDTO {
 	return obstaclesDTO
 }
 
-func mapDomainToDTOCoordinates(c []AbsoluteCoordinate) []CoordinateDTO {
+func mapDomainToDTOCoordinates(coord []AbsoluteCoordinate) []CoordinateDTO {
 	var coordinatesDTO []CoordinateDTO
-	for _, coordinate := range c {
-		coordinatesDTO = append(coordinatesDTO, CoordinateDTO{
-			X: coordinate.X(),
-			Y: coordinate.Y(),
-		})
+	for _, coordinate := range coord {
+		coordinatesDTO = append(coordinatesDTO, coordinateDTOFrom(coordinate))
 	}
 	return coordinatesDTO
+}
+
+func coordinateDTOFrom(coordinate AbsoluteCoordinate) CoordinateDTO {
+	return CoordinateDTO{
+		X: coordinate.X(),
+		Y: coordinate.Y(),
+	}
 }
