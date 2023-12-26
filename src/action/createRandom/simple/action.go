@@ -22,17 +22,17 @@ import (
 	"github.com/google/uuid"
 )
 
-type BoundedRandomCreator struct {
+type SimpleRandomCreator struct {
 	repo Repository
 }
 
-func With(repo Repository) *BoundedRandomCreator {
-	return &BoundedRandomCreator{
+func With(repo Repository) *SimpleRandomCreator {
+	return &SimpleRandomCreator{
 		repo: repo,
 	}
 }
 
-func (this *BoundedRandomCreator) Create() (Rover, *CreationError) {
+func (this *SimpleRandomCreator) Create() (Rover, *CreationError) {
 	randPlanet := this.loopUntilPlanetCreated()
 	randRover := this.loopUntilRoverLanded(randPlanet)
 
@@ -47,20 +47,20 @@ func (this *BoundedRandomCreator) Create() (Rover, *CreationError) {
 	return randRover, nil
 }
 
-func (this *BoundedRandomCreator) loopUntilPlanetCreated() *RockyPlanet {
+func (this *SimpleRandomCreator) loopUntilPlanetCreated() *RockyPlanet {
 	return loopUntilNoError(func() (*RockyPlanet, error) {
 		validSize := *this.loopUntilValidSize()
 		return rockyPlanet.Create(randomColor(), validSize, this.randomObstaclesWithin(validSize))
 	})
 }
 
-func (this *BoundedRandomCreator) loopUntilValidSize() *Size {
+func (this *SimpleRandomCreator) loopUntilValidSize() *Size {
 	return loopUntilNoError(func() (*Size, error) {
 		return size.Square(rand.Intn(420)) // could be left unbound, but tests would take too long ¯\_(ツ)_/¯
 	})
 }
 
-func (this *BoundedRandomCreator) randomObstaclesWithin(size Size) []Obstacle {
+func (this *SimpleRandomCreator) randomObstaclesWithin(size Size) []Obstacle {
 	var obstacles []Obstacle
 	amountOfObstacles := rand.Intn(size.Area() - 1) // leave at least a blank space for the rover
 	for i := 0; i < amountOfObstacles; i++ {
@@ -79,7 +79,7 @@ func randomColor() string {
 	return colors[rand.Intn(len(colors))]
 }
 
-func (this *BoundedRandomCreator) loopUntilRoverLanded(planet Planet) Rover {
+func (this *SimpleRandomCreator) loopUntilRoverLanded(planet Planet) Rover {
 	return loopUntilNoError(func() (*WrappingCollidingRover, error) {
 		return wrappingCollidingRover.LandFacing(uuid.New(), randomDirection(), randomCoordinateWithin(planet.Size()), planet)
 	})
