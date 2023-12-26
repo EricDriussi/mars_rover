@@ -60,13 +60,10 @@ func (this *BoundedRandomCreator) loopUntilPlanetCreated() *RockyPlanet {
 }
 
 func (this *BoundedRandomCreator) loopUntilValidSize() *Size {
-	var randSize *Size
-	err := errors.New("not created yet")
-	for err != nil {
-		randNumWithingLimits := rand.Intn(this.maxSize-this.minSize) + this.minSize
-		randSize, err = size.Square(randNumWithingLimits)
-	}
-	return randSize
+	return loopUntilNoError(func() (*Size, error) {
+		randNumWithinLimits := rand.Intn(this.maxSize-this.minSize) + this.minSize
+		return size.Square(randNumWithinLimits)
+	})
 }
 
 func (this *BoundedRandomCreator) randomObstaclesWithin(size Size) []Obstacle {
@@ -90,12 +87,9 @@ func randomColor() string {
 }
 
 func (this *BoundedRandomCreator) loopUntilRoverLanded(planet Planet) Rover {
-	var randRover Rover
-	err := errors.New("not created yet")
-	for err != nil {
-		randRover, err = wrappingCollidingRover.LandFacing(uuid.New(), randomDirection(), randomCoordinateWithin(planet.Size()), planet)
-	}
-	return randRover
+	return loopUntilNoError(func() (*WrappingCollidingRover, error) {
+		return wrappingCollidingRover.LandFacing(uuid.New(), randomDirection(), randomCoordinateWithin(planet.Size()), planet)
+	})
 }
 
 func randomCoordinateWithin(size Size) AbsoluteCoordinate {
