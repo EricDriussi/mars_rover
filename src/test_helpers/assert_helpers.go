@@ -29,6 +29,6 @@ func containsAnIssue(results []action.MovementResult) bool {
 func AssertContainsOrderedCommands(t *testing.T, movementResults []action.MovementResult, commands Commands) {
 	assert.Len(t, movementResults, len(commands))
 	for i, cmd := range commands {
-		assert.Equal(t, movementResults[i].Cmd.ToString(), cmd.ToString())
+		assert.Equal(t, movementResults[i].Cmd.String(), cmd.String())
 	}
 }

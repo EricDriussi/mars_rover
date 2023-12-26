@@ -45,7 +45,7 @@ func TestBuildsAMovementResponseDTOFromMovementResultWithMovementIssues(t *testi
 	movementResponseDTO := dto.FromMovementResult([]MovementResult{resultWithIssues})
 
 	singleMovementDTO := movementResponseDTO.Results[0]
-	assert.Contains(t, singleMovementDTO.Issue, resultWithIssues.Cmd.ToString())
+	assert.Contains(t, singleMovementDTO.Issue, resultWithIssues.Cmd.String())
 	assert.Equal(t, singleMovementDTO.Coordinate.X, resultWithIssues.Coord.X())
 	assert.Equal(t, singleMovementDTO.Coordinate.Y, resultWithIssues.Coord.Y())
 	assert.Equal(t, singleMovementDTO.Direction, resultWithIssues.Dir.CardinalPoint())
@@ -70,7 +70,7 @@ func TestBuildsAMovementResponseDTOFromMultipleMovementResults(t *testing.T) {
 	noIssuesMovementDTO := movementResponseDTO.Results[0]
 	assert.Empty(t, noIssuesMovementDTO.Issue)
 	movementDTOWithIssue := movementResponseDTO.Results[1]
-	assert.Contains(t, movementDTOWithIssue.Issue, resultWithIssues.Cmd.ToString())
+	assert.Contains(t, movementDTOWithIssue.Issue, resultWithIssues.Cmd.String())
 }
 
 func TestBuildsACreateResponseDTOFromARover(t *testing.T) {

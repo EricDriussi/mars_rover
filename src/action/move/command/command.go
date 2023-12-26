@@ -1,14 +1,12 @@
 package command
 
 import (
-	"fmt"
-	"strings"
+	. "strings"
 )
 
 type Commands []Command
 type Command int
 
-const invalidCommand Command = -1
 const (
 	Forward Command = iota
 	Backward
@@ -16,7 +14,7 @@ const (
 	Right
 )
 
-func (this Command) ToString() string {
+func (this Command) String() string {
 	var commandToCharMap = map[Command]rune{
 		Forward:  'f',
 		Backward: 'b',
@@ -24,26 +22,30 @@ func (this Command) ToString() string {
 		Right:    'r',
 	}
 
-	char, doesMap := commandToCharMap[this]
-	if !doesMap {
-		return "cannot stringify invalid Command"
+	char, ok := commandToCharMap[this]
+	if !ok {
+		return "?"
 	}
 	return string(char)
 }
 
 func FromString(stringCommands string) Commands {
-	commands := make([]Command, 0, len(stringCommands))
-	for _, char := range strings.ToLower(stringCommands) {
-		command, err := commandFrom(char)
-		if err != nil {
-			continue
-		}
-		commands = append(commands, command)
+	commands := make(Commands, 0, len(stringCommands))
+	for _, char := range ToLower(stringCommands) {
+		commands = appendIfValid(char, commands)
 	}
 	return commands
 }
 
-func commandFrom(char rune) (Command, error) {
+func appendIfValid(char rune, commands Commands) Commands {
+	command := commandFrom(char)
+	if command != nil {
+		commands = append(commands, *command)
+	}
+	return commands
+}
+
+func commandFrom(char rune) *Command {
 	var charToCommandMap = map[rune]Command{
 		'f': Forward,
 		'b': Backward,
@@ -51,9 +53,9 @@ func commandFrom(char rune) (Command, error) {
 		'r': Right,
 	}
 
-	command, doesMap := charToCommandMap[char]
-	if !doesMap {
-		return invalidCommand, fmt.Errorf("invalid Command: %c", char)
+	command, ok := charToCommandMap[char]
+	if !ok {
+		return nil
 	}
-	return command, nil
+	return &command
 }

@@ -13,7 +13,7 @@ func FromMovementResult(movementResult []MovementResult) MovementResponseDTO {
 	for _, result := range movementResult {
 		issue := ""
 		if result.IssueDetected {
-			issue = fmt.Sprintf("unable to move on command '%v'.", result.Cmd.ToString())
+			issue = fmt.Sprintf("unable to move on command '%v'.", result.Cmd.String())
 		}
 		responseDTO.Results = append(responseDTO.Results, SingleMovementDTO{
 			Issue: issue,

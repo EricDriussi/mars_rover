@@ -30,3 +30,43 @@ func TestCommandsAreBuiltFromString(t *testing.T) {
 		})
 	}
 }
+
+func TestCommandsArePrintedAsStrings(t *testing.T) {
+	testCases := []struct {
+		name     string
+		command  Command
+		expected string
+	}{
+		{
+			name:     "forward",
+			command:  Forward,
+			expected: "f",
+		},
+		{
+			name:     "backward",
+			command:  Backward,
+			expected: "b",
+		},
+		{
+			name:     "left",
+			command:  Left,
+			expected: "l",
+		},
+		{
+			name:     "right",
+			command:  Right,
+			expected: "r",
+		},
+		{
+			name:     "unknown",
+			command:  Command(999),
+			expected: "?",
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			assert.Equal(t, testCase.expected, testCase.command.String())
+		})
+	}
+}
