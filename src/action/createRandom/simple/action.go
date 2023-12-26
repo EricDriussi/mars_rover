@@ -56,7 +56,7 @@ func (this *SimpleRandomCreator) loopUntilPlanetCreated() *RockyPlanet {
 
 func (this *SimpleRandomCreator) loopUntilValidSize() *Size {
 	return loopUntilNoError(func() (*Size, error) {
-		return size.Square(rand.Intn(420)) // could be left unbound, but tests would take too long ¯\_(ツ)_/¯
+		return size.Square(rand.Intn(420)) // number has no meaning: could be left unbound, but tests would take too long ¯\_(ツ)_/¯
 	})
 }
 

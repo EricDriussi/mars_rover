@@ -4,6 +4,8 @@ import (
 	"errors"
 	"mars_rover/src/action/createRandom/bounded"
 	. "mars_rover/src/action/createRandom/bounded"
+	. "mars_rover/src/domain/obstacle/obstacles"
+	. "mars_rover/src/domain/rover/planetMap"
 	. "mars_rover/src/test_helpers/mocks"
 	"testing"
 
@@ -38,19 +40,27 @@ func TestBoundedCreationRespectsSensibleLimits(t *testing.T) {
 	repo.On("AddRover").Return(nil)
 	act := boundedRandomCreator.With(repo)
 
-	// since there is a lot of randomness involved, we run the test a bunch of times
+	// since there is a lot of randomness involved, we create the game a bunch of times
 	for i := 0; i < 25; i++ {
 		rover, err := act.Create()
 		assert.Nil(t, err)
 
 		planetMap := rover.Map()
-		assert.GreaterOrEqual(t, planetMap.Width(), MinSize)
-		assert.GreaterOrEqual(t, planetMap.Height(), MinSize)
-		assert.LessOrEqual(t, planetMap.Width(), MaxSize)
-		assert.LessOrEqual(t, planetMap.Height(), MaxSize)
+		assertPlanetMapIsWithin(t, planetMap)
 		obstacles := planetMap.Obstacles()
-		assert.GreaterOrEqual(t, len(obstacles.List()), MinObstacles)
-		halfTheArea := planetMap.Width() * planetMap.Height() / 2
-		assert.LessOrEqual(t, len(obstacles.List()), halfTheArea)
+		assertObstacleAmountIsWithinMinAndHalfTheArea(t, obstacles, planetMap)
 	}
+}
+
+func assertObstacleAmountIsWithinMinAndHalfTheArea(t *testing.T, obstacles Obstacles, planetMap Map) {
+	assert.GreaterOrEqual(t, len(obstacles.List()), MinObstacles)
+	halfTheArea := planetMap.Width() * planetMap.Height() / 2
+	assert.LessOrEqual(t, len(obstacles.List()), halfTheArea)
+}
+
+func assertPlanetMapIsWithin(t *testing.T, planetMap Map) {
+	assert.GreaterOrEqual(t, planetMap.Width(), MinSize)
+	assert.LessOrEqual(t, planetMap.Width(), MaxSize)
+	assert.GreaterOrEqual(t, planetMap.Height(), MinSize)
+	assert.LessOrEqual(t, planetMap.Height(), MaxSize)
 }

@@ -75,8 +75,8 @@ func (this *BoundedRandomCreator) loopUntilValidSize() *Size {
 func (this *BoundedRandomCreator) randomObstaclesWithin(size Size) []Obstacle {
 	var obstacles []Obstacle
 	halfTheArea := size.Area() / 2
-	betweenMinAndHalfTheArea := rand.Intn(halfTheArea-this.minObstacles) + this.minObstacles
-	for i := 0; i < betweenMinAndHalfTheArea; i++ {
+	betweenMinObstaclesAndHalfTheArea := rand.Intn(halfTheArea-this.minObstacles) + this.minObstacles
+	for i := 0; i < betweenMinObstaclesAndHalfTheArea; i++ {
 		smallRock := rock.In(randomCoordinateWithin(size))
 		obstacles = append(obstacles, &smallRock)
 	}
