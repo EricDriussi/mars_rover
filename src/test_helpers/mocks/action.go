@@ -3,7 +3,6 @@ package mocks
 import (
 	. "github.com/google/uuid"
 	. "github.com/stretchr/testify/mock"
-	. "mars_rover/src/action"
 	. "mars_rover/src/action/createRandom"
 	. "mars_rover/src/action/move"
 	. "mars_rover/src/action/move/command"

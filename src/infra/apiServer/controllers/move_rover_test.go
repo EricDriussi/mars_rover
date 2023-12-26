@@ -3,7 +3,6 @@ package controllers_test
 import (
 	"github.com/google/uuid"
 	. "github.com/stretchr/testify/mock"
-	"mars_rover/src/action"
 	. "mars_rover/src/action/move"
 	"mars_rover/src/infra/apiServer/controllers"
 	. "mars_rover/src/infra/apiServer/controllers"
@@ -13,7 +12,7 @@ import (
 
 func TestSendsOkResponseWhenMovementActionIsSuccessful(t *testing.T) {
 	mockAction := new(MockAction)
-	mockAction.On("Move").Return([]action.MovementResult{}, nil)
+	mockAction.On("Move").Return([]MovementResult{}, nil)
 	mockHandler := new(MockHTTPResponseHandler)
 	mockHandler.On("SendOk", Anything).Return()
 
@@ -56,7 +55,7 @@ func TestSendsBadRequestResponseWhenNoValidCommandsAreProvided(t *testing.T) {
 func TestSendsBadRequestResponseWhenActionDoesNotFindRover(t *testing.T) {
 	notFoundError := BuildNotFoundErr()
 	mockAction := new(MockAction)
-	mockAction.On("Move").Return([]action.MovementResult{}, notFoundError)
+	mockAction.On("Move").Return([]MovementResult{}, notFoundError)
 	mockHandler := new(MockHTTPResponseHandler)
 	mockHandler.On("SendBadRequest", Anything).Return()
 
@@ -68,7 +67,7 @@ func TestSendsBadRequestResponseWhenActionDoesNotFindRover(t *testing.T) {
 func TestSendsInternalServerErrorResponseWhenActionCannotUpdateRover(t *testing.T) {
 	notUpdatedError := BuildNotUpdatedErr()
 	mockAction := new(MockAction)
-	mockAction.On("Move").Return([]action.MovementResult{}, notUpdatedError)
+	mockAction.On("Move").Return([]MovementResult{}, notUpdatedError)
 	mockHandler := new(MockHTTPResponseHandler)
 	mockHandler.On("SendInternalServerError", Anything).Return()
 

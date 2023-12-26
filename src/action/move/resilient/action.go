@@ -2,7 +2,6 @@ package resilient_mover
 
 import (
 	. "github.com/google/uuid"
-	. "mars_rover/src/action"
 	. "mars_rover/src/action/move"
 	"mars_rover/src/action/move/command"
 	. "mars_rover/src/domain"
