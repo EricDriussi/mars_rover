@@ -1,31 +1,30 @@
-package random_creator
+package randomCreator
 
 import (
-	. "mars_rover/src/action/error"
+	"fmt"
+)
+
+type errorType int
+
+const (
+	gameNotPersisted errorType = iota
 )
 
 type CreationError struct {
-	GameNotPersistedError *GameNotPersistedError
+	errType errorType
+	errMsg  string
 }
 
 func (e CreationError) Error() string {
-	if e.GameNotPersistedError != nil {
-		return e.GameNotPersistedError.Error()
+	if e.errType == gameNotPersisted {
+		return fmt.Sprintf("could not persist game: %s", e.errMsg)
 	}
 	return "unknown error"
 }
 
-func (e CreationError) Type() ErrorType {
-	if e.GameNotPersistedError != nil {
-		return GameNotPersisted
-	}
-	return -1
-}
-
-func GameNotPersistedErr(err error) *CreationError {
+func BuildGameNotPersistedErr(err error) *CreationError {
 	return &CreationError{
-		GameNotPersistedError: &GameNotPersistedError{
-			Err: err,
-		},
+		errType: gameNotPersisted,
+		errMsg:  err.Error(),
 	}
 }

@@ -1,49 +1,48 @@
 package move
 
 import (
+	"fmt"
 	. "github.com/google/uuid"
-	. "mars_rover/src/action/error"
+)
+
+type errorType int
+
+const (
+	roverNotFound errorType = iota
+	roverNotUpdated
 )
 
 type MovementError struct {
-	RoverNotFoundError *RoverNotFoundError
-	UpdateRoverError   *RoverNotUpdatedError
+	ID      UUID
+	errType errorType
 }
 
 func (e MovementError) Error() string {
-	if e.RoverNotFoundError != nil {
-		return e.RoverNotFoundError.Error()
+	if e.errType == roverNotFound {
+		return fmt.Sprintf("rover with ID %s not found", e.ID)
 	}
-	if e.UpdateRoverError != nil {
-		return e.UpdateRoverError.Error()
+	if e.errType == roverNotUpdated {
+		return fmt.Sprintf("failed to update rover with ID %s", e.ID)
 	}
-	return "unknown error"
+	return "unknown movement error"
 }
 
-func (e MovementError) Type() ErrorType {
-	if e.RoverNotFoundError != nil {
-		return RoverNotFound
-	}
-	if e.UpdateRoverError != nil {
-		return RoverNotUpdated
-	}
-	return -1
+func (e MovementError) IsNotFound() bool {
+	return e.errType == roverNotFound
 }
 
-func BuildNotFoundErr(id UUID, err error) *MovementError {
+func (e MovementError) IsNotUpdated() bool {
+	return e.errType == roverNotUpdated
+}
+
+func BuildNotFoundErr() *MovementError {
 	return &MovementError{
-		RoverNotFoundError: &RoverNotFoundError{
-			ID:  id,
-			Err: err,
-		},
+		errType: roverNotFound,
 	}
 }
 
-func BuildNotUpdatedErr(id UUID, err error) *MovementError {
+func BuildNotUpdatedErr() *MovementError {
 	return &MovementError{
-		UpdateRoverError: &RoverNotUpdatedError{
-			ID:  id,
-			Err: err,
-		},
+		errType: roverNotUpdated,
 	}
 }

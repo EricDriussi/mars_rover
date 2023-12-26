@@ -22,14 +22,14 @@ func For(repo Repository) *StrictMover {
 func (this *StrictMover) Move(roverId UUID, commands command.Commands) ([]MovementResult, *MovementError) {
 	rover, err := this.repo.GetRover(roverId)
 	if err != nil {
-		return nil, BuildNotFoundErr(roverId, err)
+		return nil, BuildNotFoundErr()
 	}
 
 	movementResults := moveRover(rover, commands)
 
 	err = this.repo.UpdateRover(rover)
 	if err != nil {
-		return nil, BuildNotUpdatedErr(roverId, err)
+		return nil, BuildNotUpdatedErr()
 	}
 
 	return movementResults, nil
