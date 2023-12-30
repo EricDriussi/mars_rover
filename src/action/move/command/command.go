@@ -1,11 +1,13 @@
 package command
 
 import (
+	. "mars_rover/src/domain/rover"
 	. "strings"
 )
 
 type Commands []Command
 type Command int
+type RoverMovementFunc func() error
 
 const (
 	Forward Command = iota
@@ -50,4 +52,19 @@ func appendIfValid(char rune, commands Commands) Commands {
 		commands = append(commands, command)
 	}
 	return commands
+}
+
+func (this Command) MapToRoverMovementFunction(rover Rover) RoverMovementFunc {
+	return map[Command]interface{}{
+		Forward:  RoverMovementFunc(rover.MoveForward),
+		Backward: RoverMovementFunc(rover.MoveBackward),
+		Left: RoverMovementFunc(func() error {
+			rover.TurnLeft()
+			return nil
+		}),
+		Right: RoverMovementFunc(func() error {
+			rover.TurnRight()
+			return nil
+		}),
+	}[this].(RoverMovementFunc)
 }
