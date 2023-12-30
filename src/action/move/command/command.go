@@ -5,19 +5,24 @@ import (
 	. "strings"
 )
 
+type Command interface {
+	MapToRoverMovementFunction(rover Rover) RoverMovementFunc
+	String() string
+}
+
 type Commands []Command
-type Command int
+type BasicCommand int
 type RoverMovementFunc func() error
 
 const (
-	Forward Command = iota
+	Forward BasicCommand = iota
 	Backward
 	Left
 	Right
 )
 
-func (this Command) String() string {
-	var commandToCharMap = map[Command]rune{
+func (this BasicCommand) String() string {
+	var commandToCharMap = map[BasicCommand]rune{
 		Forward:  'f',
 		Backward: 'b',
 		Left:     'l',
@@ -40,7 +45,7 @@ func FromString(stringCommands string) Commands {
 }
 
 func appendIfValid(char rune, commands Commands) Commands {
-	var charToCommandMap = map[rune]Command{
+	var charToCommandMap = map[rune]BasicCommand{
 		'f': Forward,
 		'b': Backward,
 		'l': Left,
@@ -54,10 +59,14 @@ func appendIfValid(char rune, commands Commands) Commands {
 	return commands
 }
 
-func (this Command) MapToRoverMovementFunction(rover Rover) RoverMovementFunc {
-	return map[Command]interface{}{
-		Forward:  RoverMovementFunc(rover.MoveForward),
-		Backward: RoverMovementFunc(rover.MoveBackward),
+func (this BasicCommand) MapToRoverMovementFunction(rover Rover) RoverMovementFunc {
+	return map[BasicCommand]interface{}{
+		Forward: RoverMovementFunc(func() error {
+			return rover.MoveForward()
+		}),
+		Backward: RoverMovementFunc(func() error {
+			return rover.MoveBackward()
+		}),
 		Left: RoverMovementFunc(func() error {
 			rover.TurnLeft()
 			return nil

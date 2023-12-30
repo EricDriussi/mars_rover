@@ -3,6 +3,8 @@ package command_test
 import (
 	"github.com/stretchr/testify/assert"
 	. "mars_rover/src/action/move/command"
+	"mars_rover/src/test_helpers/mocks"
+	. "mars_rover/src/test_helpers/mocks"
 	"testing"
 )
 
@@ -34,7 +36,7 @@ func TestCommandsAreBuiltFromString(t *testing.T) {
 func TestCommandsArePrintedAsStrings(t *testing.T) {
 	testCases := []struct {
 		name     string
-		command  Command
+		command  BasicCommand
 		expected string
 	}{
 		{
@@ -59,7 +61,7 @@ func TestCommandsArePrintedAsStrings(t *testing.T) {
 		},
 		{
 			name:     "unknown",
-			command:  Command(999),
+			command:  BasicCommand(999),
 			expected: "?",
 		},
 	}
@@ -67,6 +69,46 @@ func TestCommandsArePrintedAsStrings(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			assert.Equal(t, testCase.expected, testCase.command.String())
+		})
+	}
+}
+
+func TestCommandsAreMappedToRoverMovementFunction(t *testing.T) {
+	testRover := new(MockRover)
+	mocks.MakeAlwaysSuccessful(testRover)
+	testCases := []struct {
+		name                  string
+		roverFunction         RoverMovementFunc
+		expectedRoverFunction string
+	}{
+		{
+			name:                  "forward",
+			roverFunction:         Forward.MapToRoverMovementFunction(testRover),
+			expectedRoverFunction: "MoveForward",
+		},
+		{
+			name:                  "backward",
+			roverFunction:         Backward.MapToRoverMovementFunction(testRover),
+			expectedRoverFunction: "MoveBackward",
+		},
+		{
+			name:                  "left",
+			roverFunction:         Left.MapToRoverMovementFunction(testRover),
+			expectedRoverFunction: "TurnLeft",
+		},
+		{
+			name:                  "right",
+			roverFunction:         Right.MapToRoverMovementFunction(testRover),
+			expectedRoverFunction: "TurnRight",
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			err := testCase.roverFunction()
+			assert.Nil(t, err)
+
+			testRover.AssertCalled(t, testCase.expectedRoverFunction)
 		})
 	}
 }
