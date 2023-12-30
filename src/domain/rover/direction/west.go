@@ -20,9 +20,9 @@ func (this West) DirectionOnTheRight() Direction {
 }
 
 func (this West) RelativeCoordinateAhead() RelativeCoordinate {
-	return *relativeCoordinate.New(-1, 0)
+	return *relativeCoordinate.Orthogonal(-1, 0)
 }
 
 func (this West) RelativeCoordinateBehind() RelativeCoordinate {
-	return *relativeCoordinate.New(1, 0)
+	return *relativeCoordinate.Orthogonal(1, 0)
 }

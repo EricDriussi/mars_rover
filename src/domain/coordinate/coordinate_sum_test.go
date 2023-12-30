@@ -20,22 +20,22 @@ func TestSumsRelative(t *testing.T) {
 	}{
 		{
 			name:               "relative up",
-			relativeCoordinate: relativeCoordinate.New(0, 1),
+			relativeCoordinate: relativeCoordinate.Orthogonal(0, 1),
 			expected:           absoluteCoordinate.From(1, 2),
 		},
 		{
 			name:               "relative right",
-			relativeCoordinate: relativeCoordinate.New(1, 0),
+			relativeCoordinate: relativeCoordinate.Orthogonal(1, 0),
 			expected:           absoluteCoordinate.From(2, 1),
 		},
 		{
 			name:               "relative down",
-			relativeCoordinate: relativeCoordinate.New(0, -1),
+			relativeCoordinate: relativeCoordinate.Orthogonal(0, -1),
 			expected:           absoluteCoordinate.From(1, 0),
 		},
 		{
 			name:               "relative left",
-			relativeCoordinate: relativeCoordinate.New(-1, 0),
+			relativeCoordinate: relativeCoordinate.Orthogonal(-1, 0),
 			expected:           absoluteCoordinate.From(0, 1),
 		},
 	}

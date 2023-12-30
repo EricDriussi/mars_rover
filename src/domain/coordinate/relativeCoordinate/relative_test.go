@@ -8,7 +8,7 @@ import (
 )
 
 func TestRelativeFromOrthogonal(t *testing.T) {
-	notRelative := relativeCoordinate.New(0, 0)
+	notRelative := relativeCoordinate.Orthogonal(0, 0)
 	testCases := []struct {
 		name string
 		x, y int
@@ -36,7 +36,7 @@ func TestRelativeFromOrthogonal(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			coord := relativeCoordinate.New(testCase.x, testCase.y)
+			coord := relativeCoordinate.Orthogonal(testCase.x, testCase.y)
 			areTheSame := coord.X() == notRelative.X() && coord.Y() == notRelative.Y()
 			assert.False(t, areTheSame)
 		})
@@ -44,7 +44,7 @@ func TestRelativeFromOrthogonal(t *testing.T) {
 }
 
 func TestRelativeFromNonOrthogonal(t *testing.T) {
-	notRelative := relativeCoordinate.New(0, 0)
+	notRelative := relativeCoordinate.Orthogonal(0, 0)
 	testCases := []struct {
 		name string
 		x, y int
@@ -72,7 +72,7 @@ func TestRelativeFromNonOrthogonal(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			coord := relativeCoordinate.New(testCase.x, testCase.y)
+			coord := relativeCoordinate.Orthogonal(testCase.x, testCase.y)
 			areTheSame := coord.X() == notRelative.X() && coord.Y() == notRelative.Y()
 			assert.True(t, areTheSame)
 		})

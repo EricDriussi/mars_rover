@@ -9,6 +9,7 @@ import (
 )
 
 type CreateRandomAction interface {
+	// TODO: Also return planet (color)?
 	Create() (Rover, *CreationError)
 }
 

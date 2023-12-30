@@ -4,12 +4,11 @@ type RelativeCoordinate struct {
 	x, y int
 }
 
-func New(x, y int) *RelativeCoordinate {
+func Orthogonal(x, y int) *RelativeCoordinate {
 	step := 1
 	if isOrthogonal(x, y) {
 		return &RelativeCoordinate{x * step, y * step}
 	}
-	// TODO.LM: should this return an error?
 	return &RelativeCoordinate{0, 0}
 }
 
