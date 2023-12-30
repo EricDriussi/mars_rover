@@ -1,6 +1,7 @@
 package mocks
 
 import (
+	"github.com/google/uuid"
 	. "github.com/google/uuid"
 	. "github.com/stretchr/testify/mock"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
@@ -59,7 +60,7 @@ func RoverIn(planet Planet, coord AbsoluteCoordinate) *MockRover {
 
 func LandedRover(coord AbsoluteCoordinate) *MockRover {
 	mockRover := new(MockRover)
-	mockRover.On("Id").Return(New())
+	mockRover.On("Id").Return(uuid.New())
 	mockRover.On("Direction").Return(North{})
 	mockRover.On("Coordinate").Return(coord)
 	return mockRover

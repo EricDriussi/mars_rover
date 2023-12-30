@@ -5,14 +5,13 @@ import (
 	. "strings"
 )
 
+type RoverMovementFunc func() error
 type Command interface {
 	MapToRoverMovementFunction(rover Rover) RoverMovementFunc
 	String() string
 }
-
 type Commands []Command
 type BasicCommand int
-type RoverMovementFunc func() error
 
 const (
 	Forward BasicCommand = iota
@@ -69,11 +68,11 @@ func (this BasicCommand) MapToRoverMovementFunction(rover Rover) RoverMovementFu
 		}),
 		Left: RoverMovementFunc(func() error {
 			rover.TurnLeft()
-			return nil
+			return nil // TODO.LM: rotations can't error, this is just done to simplify both types of movement into a single Go type (RoverMovementFunc)
 		}),
 		Right: RoverMovementFunc(func() error {
 			rover.TurnRight()
-			return nil
+			return nil // TODO.LM: rotations can't error, this is just done to simplify both types of movement into a single Go type (RoverMovementFunc)
 		}),
 	}[this].(RoverMovementFunc)
 }

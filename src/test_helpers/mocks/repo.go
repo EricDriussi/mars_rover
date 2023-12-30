@@ -35,3 +35,12 @@ func (this MockRepo) GetPlanet(roverId UUID) (Planet, error) {
 	args := this.Called()
 	return args.Get(0).(Planet), args.Error(1)
 }
+
+func SuccessfulRepoFor(rover Rover) *MockRepo {
+	repo := new(MockRepo)
+	repo.On("GetRover", Anything).Return(rover, nil)
+	repo.On("UpdateRover").Return(nil)
+	repo.On("AddRover").Return(nil)
+	repo.On("AddPlanet").Return(nil)
+	return repo
+}

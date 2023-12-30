@@ -15,126 +15,110 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHandlesASingleSuccessfulMovementCommand(t *testing.T) {
+func TestMovementResultsContainNoIssueIfRoverReportsNoError(t *testing.T) {
 	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
-	mocks.MakeAlwaysSuccessful(testRover)
-	repo := new(MockRepo)
-	repo.On("GetRover", Anything).Return(testRover, nil)
-	repo.On("UpdateRover").Return(nil)
+	repo := mocks.SuccessfulRepoFor(testRover)
+	command := new(MockCommand)
+	command.On("MapToRoverMovementFunction", testRover).Return(SuccessfulRoverFunc())
+	commands := Commands{command}
 
 	act := resilient_mover.With(repo)
-	commands := Commands{Forward}
 	movementResults, err := act.Move(uuid.New(), commands)
 
 	assert.Nil(t, err)
-	testRover.AssertCalled(t, "MoveForward")
 	AssertEncounteredNoIssues(t, movementResults)
 }
 
-func TestHandlesASingleFailedMovementCommand(t *testing.T) {
+func TestMovementResultsContainAnIssueIfRoverReportsAnError(t *testing.T) {
 	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
-	testRover.On("MoveForward").Return(errors.New("an error"))
-	repo := new(MockRepo)
-	repo.On("GetRover", Anything).Return(testRover, nil)
-	repo.On("UpdateRover").Return(nil)
+	repo := mocks.SuccessfulRepoFor(testRover)
+	command := new(MockCommand)
+	command.On("MapToRoverMovementFunction", testRover).Return(FailedRoverFunc())
+	commands := Commands{command}
 
 	act := resilient_mover.With(repo)
-	commands := Commands{Forward}
 	movementResults, err := act.Move(uuid.New(), commands)
 
 	assert.Nil(t, err)
-	testRover.AssertCalled(t, "MoveForward")
 	AssertEncounteredAnIssue(t, movementResults)
 }
 
-func TestHandlesASingleTurningCommand(t *testing.T) {
+func TestOnlyCallsRoverForGivenCommands(t *testing.T) {
 	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
 	mocks.MakeAlwaysSuccessful(testRover)
-	repo := new(MockRepo)
-	repo.On("GetRover", Anything).Return(testRover, nil)
-	repo.On("UpdateRover").Return(nil)
+	repo := mocks.SuccessfulRepoFor(testRover)
+	firstCommand := new(MockCommand)
+	firstCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveBackward))
+	secondCommand := new(MockCommand)
+	secondCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveForward))
+	commands := Commands{firstCommand, secondCommand}
 
 	act := resilient_mover.With(repo)
-	commands := Commands{Right}
-	movementResults, err := act.Move(uuid.New(), commands)
-
-	assert.Nil(t, err)
-	testRover.AssertCalled(t, "TurnRight")
-	AssertEncounteredNoIssues(t, movementResults)
-}
-
-func TestCallsRoverBasedOnSuccessfulCommandsInGivenSequence(t *testing.T) {
-	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
-	mocks.MakeAlwaysSuccessful(testRover)
-	repo := new(MockRepo)
-	repo.On("GetRover", Anything).Return(testRover, nil)
-	repo.On("UpdateRover").Return(nil)
-
-	act := resilient_mover.With(repo)
-	commands := Commands{Backward, Forward, Left, Right}
 	_, err := act.Move(uuid.New(), commands)
 
 	assert.Nil(t, err)
 	testRover.AssertCalled(t, "MoveBackward")
 	testRover.AssertCalled(t, "MoveForward")
-	testRover.AssertCalled(t, "TurnLeft")
-	testRover.AssertCalled(t, "TurnRight")
+	testRover.AssertNotCalled(t, "TurnLeft")
+	testRover.AssertNotCalled(t, "TurnRight")
 }
 
-func TestReportsRoverMovementBasedOnSuccessfulCommandsInGivenSequence(t *testing.T) {
+func TestReportsResultsBasedOnGivenCommandsOrder(t *testing.T) {
 	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
 	mocks.MakeAlwaysSuccessful(testRover)
-	repo := new(MockRepo)
-	repo.On("GetRover", Anything).Return(testRover, nil)
-	repo.On("UpdateRover").Return(nil)
+	repo := mocks.SuccessfulRepoFor(testRover)
+	firstCommand := new(MockCommand)
+	firstCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveBackward))
+	secondCommand := new(MockCommand)
+	secondCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveForward))
+	commands := Commands{firstCommand, secondCommand}
 
 	act := resilient_mover.With(repo)
-	commands := Commands{Backward, Forward, Left, Right}
 	movementResults, err := act.Move(uuid.New(), commands)
 
 	assert.Nil(t, err)
-	assert.Len(t, movementResults, len(commands))
 	AssertContainsOrderedCommands(t, movementResults, commands)
 	AssertEncounteredNoIssues(t, movementResults)
 }
 
-func TestCallsRoverBasedOnSuccessfulAndFailedCommandsInGivenSequence(t *testing.T) {
+func TestKeepsCallingRoverForGivenCommandsEvenWhenSomeFail(t *testing.T) {
 	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
 	testRover.On("MoveBackward").Return(nil)
 	testRover.On("MoveForward").Return(errors.New("movement blocked"))
-	testRover.On("TurnLeft").Return()
-	testRover.On("TurnRight").Return()
-	repo := new(MockRepo)
-	repo.On("GetRover", Anything).Return(testRover, nil)
-	repo.On("UpdateRover").Return(nil)
+	repo := mocks.SuccessfulRepoFor(testRover)
+	firstCommand := new(MockCommand)
+	firstCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveBackward))
+	failedCommand := new(MockCommand)
+	failedCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveForward))
+	thirdCommand := new(MockCommand)
+	thirdCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveBackward))
+	commands := Commands{firstCommand, failedCommand, thirdCommand}
 
 	act := resilient_mover.With(repo)
-	commands := Commands{Backward, Forward, Left, Right}
 	_, err := act.Move(uuid.New(), commands)
 
 	assert.Nil(t, err)
-	testRover.AssertCalled(t, "MoveBackward")
+	testRover.AssertNumberOfCalls(t, "MoveBackward", 2)
 	testRover.AssertCalled(t, "MoveForward")
-	testRover.AssertCalled(t, "TurnLeft")
-	testRover.AssertCalled(t, "TurnRight")
 }
 
-func TestReportsRoverMovementBasedOnSuccessfulAndFailedCommandsInGivenSequence(t *testing.T) {
+func TestReportsResultsBasedOnGivenCommandsOrderWhenSomeFail(t *testing.T) {
 	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
 	testRover.On("MoveBackward").Return(nil)
 	testRover.On("MoveForward").Return(errors.New("movement blocked"))
-	testRover.On("TurnLeft").Return()
-	testRover.On("TurnRight").Return()
-	repo := new(MockRepo)
-	repo.On("GetRover", Anything).Return(testRover, nil)
-	repo.On("UpdateRover").Return(nil)
+	repo := mocks.SuccessfulRepoFor(testRover)
+	firstCommand := new(MockCommand)
+	firstCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveBackward))
+	failedCommand := new(MockCommand)
+	failedCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveForward))
+	thirdCommand := new(MockCommand)
+	thirdCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveBackward))
+	commands := Commands{firstCommand, failedCommand, thirdCommand}
 
 	act := resilient_mover.With(repo)
-	commands := Commands{Backward, Forward, Left, Right}
 	movementResults, err := act.Move(uuid.New(), commands)
 
 	assert.Nil(t, err)
-	assert.Len(t, movementResults, len(commands))
 	AssertContainsOrderedCommands(t, movementResults, commands)
 	AssertEncounteredAnIssue(t, movementResults)
 }
@@ -142,10 +126,10 @@ func TestReportsRoverMovementBasedOnSuccessfulAndFailedCommandsInGivenSequence(t
 func TestReportsRepoErrorWhenGettingRover(t *testing.T) {
 	repo := new(MockRepo)
 	repo.On("GetRover", Anything).Return(new(MockRover), errors.New("whatever"))
+	commands := Commands{new(MockCommand)}
 
 	act := resilient_mover.With(repo)
-	irrelevantCommand := Forward
-	movementResults, err := act.Move(uuid.New(), Commands{irrelevantCommand})
+	movementResults, err := act.Move(uuid.New(), commands)
 
 	assert.Empty(t, movementResults)
 	assert.NotNil(t, err)
@@ -154,14 +138,15 @@ func TestReportsRepoErrorWhenGettingRover(t *testing.T) {
 
 func TestReportsRepoErrorWhenUpdatingRover(t *testing.T) {
 	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
-	mocks.MakeAlwaysSuccessful(testRover)
 	repo := new(MockRepo)
 	repo.On("GetRover", Anything).Return(testRover, nil)
 	repo.On("UpdateRover").Return(errors.New("whatever"))
+	irrelevantCommand := new(MockCommand)
+	irrelevantCommand.On("MapToRoverMovementFunction", testRover).Return(SuccessfulRoverFunc())
+	commands := Commands{irrelevantCommand}
 
 	act := resilient_mover.With(repo)
-	irrelevantCommand := Forward
-	movementResults, err := act.Move(uuid.New(), Commands{irrelevantCommand})
+	movementResults, err := act.Move(uuid.New(), commands)
 
 	assert.Empty(t, movementResults)
 	assert.NotNil(t, err)
