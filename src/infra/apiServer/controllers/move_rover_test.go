@@ -53,7 +53,7 @@ func TestSendsBadRequestResponseWhenNoValidCommandsAreProvided(t *testing.T) {
 }
 
 func TestSendsBadRequestResponseWhenActionDoesNotFindRover(t *testing.T) {
-	notFoundError := BuildNotFoundErr()
+	notFoundError := NotFoundErr()
 	mockAction := new(MockAction)
 	mockAction.On("Move").Return([]MovementResult{}, notFoundError)
 	mockHandler := new(MockHTTPResponseHandler)
@@ -65,7 +65,7 @@ func TestSendsBadRequestResponseWhenActionDoesNotFindRover(t *testing.T) {
 }
 
 func TestSendsInternalServerErrorResponseWhenActionCannotUpdateRover(t *testing.T) {
-	notUpdatedError := BuildNotUpdatedErr()
+	notUpdatedError := NotUpdatedErr()
 	mockAction := new(MockAction)
 	mockAction.On("Move").Return([]MovementResult{}, notUpdatedError)
 	mockHandler := new(MockHTTPResponseHandler)

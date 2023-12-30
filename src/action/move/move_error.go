@@ -35,13 +35,13 @@ func (e MovementError) IsNotUpdated() bool {
 	return e.errType == roverNotUpdated
 }
 
-func BuildNotFoundErr() *MovementError {
+func NotFoundErr() *MovementError {
 	return &MovementError{
 		errType: roverNotFound,
 	}
 }
 
-func BuildNotUpdatedErr() *MovementError {
+func NotUpdatedErr() *MovementError {
 	return &MovementError{
 		errType: roverNotUpdated,
 	}

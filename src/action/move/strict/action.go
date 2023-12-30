@@ -21,14 +21,14 @@ func With(repo Repository) *StrictMover {
 func (this *StrictMover) Move(roverId UUID, commands Commands) ([]MovementResult, *MovementError) {
 	rover, err := this.repo.GetRover(roverId)
 	if err != nil {
-		return nil, BuildNotFoundErr()
+		return nil, NotFoundErr()
 	}
 
 	movementResults := moveRover(rover, commands)
 
 	err = this.repo.UpdateRover(rover)
 	if err != nil {
-		return nil, BuildNotUpdatedErr()
+		return nil, NotUpdatedErr()
 	}
 
 	return movementResults, nil
@@ -53,14 +53,14 @@ func moveRover(rover Rover, commands Commands) []MovementResult {
 		if !ok {
 			continue
 		}
+
 		err := execute(roverAction)
-		movementIssue := err != nil
-		results = append(results, buildMovementResult(rover, cmd, movementIssue))
-		if movementIssue {
+		if err != nil {
+			results = append(results, buildMovementFail(rover, cmd))
 			break
 		}
+		results = append(results, buildMovementSuccess(rover, cmd))
 	}
-
 	return results
 }
 
@@ -75,10 +75,18 @@ func execute(roverAction interface{}) error {
 	return nil
 }
 
-func buildMovementResult(rover Rover, cmd Command, movementIssue bool) MovementResult {
+func buildMovementSuccess(rover Rover, cmd Command) MovementResult {
+	return buildMovementResult(rover, cmd, false)
+}
+
+func buildMovementFail(rover Rover, cmd Command) MovementResult {
+	return buildMovementResult(rover, cmd, true)
+}
+
+func buildMovementResult(rover Rover, cmd Command, hadIssue bool) MovementResult {
 	return MovementResult{
 		Cmd:           cmd,
-		IssueDetected: movementIssue,
+		IssueDetected: hadIssue,
 		Coord:         rover.Coordinate(),
 		Dir:           rover.Direction(),
 	}

@@ -22,7 +22,7 @@ func (e CreationError) Error() string {
 	return "unknown error"
 }
 
-func BuildGameNotPersistedErr(err error) *CreationError {
+func GameNotPersistedErr(err error) *CreationError {
 	return &CreationError{
 		errType: gameNotPersisted,
 		errMsg:  err.Error(),

@@ -38,14 +38,6 @@ func FromString(stringCommands string) Commands {
 }
 
 func appendIfValid(char rune, commands Commands) Commands {
-	command := commandFrom(char)
-	if command != nil {
-		commands = append(commands, *command)
-	}
-	return commands
-}
-
-func commandFrom(char rune) *Command {
 	var charToCommandMap = map[rune]Command{
 		'f': Forward,
 		'b': Backward,
@@ -54,8 +46,8 @@ func commandFrom(char rune) *Command {
 	}
 
 	command, ok := charToCommandMap[char]
-	if !ok {
-		return nil
+	if ok {
+		commands = append(commands, command)
 	}
-	return &command
+	return commands
 }
