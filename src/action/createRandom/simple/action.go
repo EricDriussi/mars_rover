@@ -19,7 +19,7 @@ import (
 	. "mars_rover/src/domain/size"
 	"math/rand"
 
-	"github.com/google/uuid"
+	"mars_rover/src/domain/rover/uuid"
 )
 
 type SimpleRandomCreator struct {

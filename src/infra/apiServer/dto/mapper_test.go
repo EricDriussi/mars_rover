@@ -1,7 +1,6 @@
 package dto_test
 
 import (
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	. "github.com/stretchr/testify/mock"
 	. "mars_rover/src/action/move"
@@ -12,6 +11,7 @@ import (
 	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover/direction"
+	"mars_rover/src/domain/rover/uuid"
 	"mars_rover/src/domain/rover/wrappingCollidingRover"
 	. "mars_rover/src/domain/rover/wrappingCollidingRover"
 	"mars_rover/src/domain/size"

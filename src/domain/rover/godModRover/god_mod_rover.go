@@ -1,13 +1,13 @@
 package godModRover
 
 import (
-	. "github.com/google/uuid"
 	"mars_rover/src/domain/coordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/planetMap"
 	. "mars_rover/src/domain/rover/planetMap"
+	. "mars_rover/src/domain/rover/uuid"
 )
 
 type GodModRover struct {

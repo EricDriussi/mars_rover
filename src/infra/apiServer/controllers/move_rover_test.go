@@ -1,9 +1,9 @@
 package controllers_test
 
 import (
-	"github.com/google/uuid"
 	. "github.com/stretchr/testify/mock"
 	. "mars_rover/src/action/move"
+	"mars_rover/src/domain/rover/uuid"
 	"mars_rover/src/infra/apiServer/controllers"
 	. "mars_rover/src/infra/apiServer/controllers"
 	. "mars_rover/src/test_helpers/mocks"

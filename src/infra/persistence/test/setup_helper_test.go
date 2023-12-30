@@ -1,7 +1,6 @@
 package infra_test
 
 import (
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle"
@@ -12,6 +11,7 @@ import (
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/godModRover"
+	"mars_rover/src/domain/rover/uuid"
 	"mars_rover/src/domain/rover/wrappingCollidingRover"
 	s "mars_rover/src/domain/size"
 	"testing"

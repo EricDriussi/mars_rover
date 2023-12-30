@@ -1,10 +1,10 @@
 package mocks
 
 import (
-	. "github.com/google/uuid"
 	. "github.com/stretchr/testify/mock"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
+	. "mars_rover/src/domain/rover/uuid"
 )
 
 type MockRepo struct {

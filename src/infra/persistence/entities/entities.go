@@ -1,7 +1,7 @@
 package entities
 
 import (
-	. "github.com/google/uuid"
+	. "mars_rover/src/domain/rover/uuid"
 )
 
 type RoverEntity struct {

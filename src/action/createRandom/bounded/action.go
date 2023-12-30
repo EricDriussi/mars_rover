@@ -2,7 +2,6 @@ package boundedRandomCreator
 
 import (
 	"errors"
-	"github.com/google/uuid"
 	. "mars_rover/src/action/createRandom"
 	. "mars_rover/src/domain"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
@@ -14,6 +13,7 @@ import (
 	. "mars_rover/src/domain/planet/rockyPlanet"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/domain/rover/direction"
+	"mars_rover/src/domain/rover/uuid"
 	"mars_rover/src/domain/rover/wrappingCollidingRover"
 	. "mars_rover/src/domain/rover/wrappingCollidingRover"
 	"mars_rover/src/domain/size"

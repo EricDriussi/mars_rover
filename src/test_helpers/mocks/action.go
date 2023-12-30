@@ -1,12 +1,12 @@
 package mocks
 
 import (
-	. "github.com/google/uuid"
 	. "github.com/stretchr/testify/mock"
 	. "mars_rover/src/action/createRandom"
 	. "mars_rover/src/action/move"
 	. "mars_rover/src/action/move/command"
 	. "mars_rover/src/domain/rover"
+	. "mars_rover/src/domain/rover/uuid"
 )
 
 type MockAction struct {

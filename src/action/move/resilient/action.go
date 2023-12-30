@@ -1,11 +1,11 @@
 package resilient_mover
 
 import (
-	. "github.com/google/uuid"
 	. "mars_rover/src/action/move"
 	. "mars_rover/src/action/move/command"
 	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/rover"
+	. "mars_rover/src/domain/rover/uuid"
 )
 
 type ResilientMover struct {

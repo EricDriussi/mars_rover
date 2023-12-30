@@ -2,7 +2,7 @@ package move
 
 import (
 	"fmt"
-	. "github.com/google/uuid"
+	. "mars_rover/src/domain/rover/uuid"
 )
 
 type errorType int

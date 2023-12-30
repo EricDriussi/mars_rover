@@ -2,12 +2,12 @@ package strict_mover_test
 
 import (
 	"errors"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	. "github.com/stretchr/testify/mock"
 	. "mars_rover/src/action/move/command"
 	"mars_rover/src/action/move/strict"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
+	"mars_rover/src/domain/rover/uuid"
 	. "mars_rover/src/test_helpers"
 	"mars_rover/src/test_helpers/mocks"
 	. "mars_rover/src/test_helpers/mocks"

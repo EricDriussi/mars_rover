@@ -3,9 +3,9 @@ package persistence
 import (
 	"encoding/json"
 	"errors"
-	. "github.com/google/uuid"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
+	. "mars_rover/src/domain/rover/uuid"
 	. "mars_rover/src/infra/persistence/entities"
 	. "mars_rover/src/infra/persistence/mappers"
 
