@@ -18,10 +18,10 @@ type MovementError struct {
 }
 
 func (e MovementError) Error() string {
-	if e.errType == roverNotFound {
+	if e.IsNotFound() {
 		return fmt.Sprintf("rover with ID %s not found", e.ID)
 	}
-	if e.errType == roverNotUpdated {
+	if e.IsNotUpdated() {
 		return fmt.Sprintf("failed to update rover with ID %s", e.ID)
 	}
 	return "unknown movement error"

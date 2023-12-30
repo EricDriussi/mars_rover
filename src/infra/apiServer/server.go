@@ -3,7 +3,6 @@ package apiServer
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/google/uuid"
 	"log"
 	. "mars_rover/src/action"
 	"mars_rover/src/action/createRandom/bounded"
@@ -53,11 +52,6 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
 		responseHandler.SendBadRequest("Invalid request body")
-		return
-	}
-	_, err = uuid.Parse(request.Id)
-	if err != nil {
-		responseHandler.SendBadRequest("Invalid ID")
 		return
 	}
 

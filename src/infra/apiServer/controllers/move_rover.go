@@ -3,7 +3,6 @@ package controllers
 import (
 	"github.com/google/uuid"
 	. "mars_rover/src/action"
-	//. "mars_rover/src/action/error"
 	. "mars_rover/src/action/move"
 	"mars_rover/src/action/move/command"
 	"mars_rover/src/infra/apiServer/dto"
@@ -17,10 +16,8 @@ type MoveRequest struct {
 
 func MoveRover(action MoveAction, request MoveRequest, responseHandler HTTPResponseHandler) {
 	roverId, err := uuid.Parse(request.Id)
-	// TODO.LM: this validation would not happen if the uuid was wrapped
-	// It's already being validated in the calling controller
 	if err != nil {
-		responseHandler.SendInternalServerError(err.Error())
+		responseHandler.SendBadRequest("Invalid ID")
 		return
 	}
 	applicationCommands := command.FromString(request.Commands)

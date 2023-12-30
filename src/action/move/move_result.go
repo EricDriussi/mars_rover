@@ -15,14 +15,14 @@ type MovementResult struct {
 }
 
 func BuildSuccessfulMovementResult(rover Rover, cmd Command) MovementResult {
-	return BuildMovementResult(rover, cmd, false)
+	return buildMovementResult(rover, cmd, false)
 }
 
 func BuildFailedMovementResult(rover Rover, cmd Command) MovementResult {
-	return BuildMovementResult(rover, cmd, true)
+	return buildMovementResult(rover, cmd, true)
 }
 
-func BuildMovementResult(rover Rover, cmd Command, hadIssue bool) MovementResult {
+func buildMovementResult(rover Rover, cmd Command, hadIssue bool) MovementResult {
 	return MovementResult{
 		Cmd:           cmd,
 		IssueDetected: hadIssue,
