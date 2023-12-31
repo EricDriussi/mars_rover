@@ -7,10 +7,9 @@ import (
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle"
+	"mars_rover/src/domain/obstacle/obstacles"
 	rock "mars_rover/src/domain/obstacle/smallRock"
 	. "mars_rover/src/domain/planet"
-	"mars_rover/src/domain/planet/rockyPlanet"
-	. "mars_rover/src/domain/planet/rockyPlanet"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/wrappingCollidingRover"
@@ -34,7 +33,7 @@ func With(repo Repository) *SimpleRandomCreator {
 
 func (this *SimpleRandomCreator) Create() (Rover, *CreationError) {
 	randPlanet := this.loopUntilPlanetCreated()
-	randRover := this.loopUntilRoverLanded(randPlanet)
+	randRover := loopUntilRoverLanded(randPlanet)
 
 	planetId, err := this.repo.AddPlanet(randPlanet)
 	if err != nil {
@@ -47,10 +46,10 @@ func (this *SimpleRandomCreator) Create() (Rover, *CreationError) {
 	return randRover, nil
 }
 
-func (this *SimpleRandomCreator) loopUntilPlanetCreated() *RockyPlanet {
-	return loopUntilNoError(func() (*RockyPlanet, error) {
+func (this *SimpleRandomCreator) loopUntilPlanetCreated() Planet {
+	return loopUntilNoError(func() (Planet, error) {
 		validSize := *this.loopUntilValidSize()
-		return rockyPlanet.Create(randomColor(), validSize, this.randomObstaclesWithin(validSize))
+		return CreatePlanet(randomColor(), validSize, *obstacles.FromList(this.randomObstaclesWithin(validSize)))
 	})
 }
 
@@ -61,13 +60,13 @@ func (this *SimpleRandomCreator) loopUntilValidSize() *Size {
 }
 
 func (this *SimpleRandomCreator) randomObstaclesWithin(size Size) []Obstacle {
-	var obstacles []Obstacle
+	var list []Obstacle
 	amountOfObstacles := rand.Intn(size.Area() - 1) // leave at least a blank space for the rover
 	for i := 0; i < amountOfObstacles; i++ {
 		smallRock := rock.In(randomCoordinateWithin(size))
-		obstacles = append(obstacles, &smallRock)
+		list = append(list, &smallRock)
 	}
-	return obstacles
+	return list
 }
 
 func randomColor() string {
@@ -79,7 +78,7 @@ func randomColor() string {
 	return colors[rand.Intn(len(colors))]
 }
 
-func (this *SimpleRandomCreator) loopUntilRoverLanded(planet Planet) Rover {
+func loopUntilRoverLanded(planet Planet) Rover {
 	return loopUntilNoError(func() (*WrappingCollidingRover, error) {
 		return wrappingCollidingRover.LandFacing(uuid.New(), randomDirection(), randomCoordinateWithin(planet.Size()), planet)
 	})
@@ -99,7 +98,7 @@ func randomDirection() Direction {
 	return directions[rand.Intn(len(directions))]
 }
 
-func loopUntilNoError[T *RockyPlanet | *Size | *WrappingCollidingRover](create func() (T, error)) T {
+func loopUntilNoError[T interface{}](create func() (T, error)) T {
 	var t T
 	err := errors.New("not created")
 	for err != nil {
