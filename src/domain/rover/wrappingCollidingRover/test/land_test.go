@@ -44,7 +44,8 @@ func TestCannotLandOnObstacle(t *testing.T) {
 func TestCannotLandOutOfPlanet(t *testing.T) {
 	planetSize, _ := size.Square(2)
 	coordinate := absoluteCoordinate.From(4, 3)
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{})
+	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
+	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
 	aDirection := North{}
 
 	testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), aDirection, *coordinate, testPlanet)

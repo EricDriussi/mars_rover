@@ -4,6 +4,7 @@ import (
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle"
+	"mars_rover/src/domain/obstacle/smallRock"
 	"mars_rover/src/domain/planet/rockyPlanet"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/godModRover"
@@ -16,7 +17,8 @@ import (
 
 func TestDoesNotWrapMovingForward(t *testing.T) {
 	planetSize, _ := size.Square(3)
-	testPlanetWithoutObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{})
+	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
+	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
 	testCases := []struct {
 		name               string
 		direction          Direction
@@ -51,7 +53,7 @@ func TestDoesNotWrapMovingForward(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover := godModRover.LandFacing(uuid.New(), testCase.direction, *testCase.initialCoordinate, testPlanetWithoutObstacles)
+			testRover := godModRover.LandFacing(uuid.New(), testCase.direction, *testCase.initialCoordinate, testPlanet)
 
 			err := testRover.MoveForward()
 
@@ -63,7 +65,8 @@ func TestDoesNotWrapMovingForward(t *testing.T) {
 
 func TestDoesNotWrapMovingBackwards(t *testing.T) {
 	planetSize, _ := size.Square(3)
-	testPlanetWithoutObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{})
+	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
+	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
 	testCases := []struct {
 		name               string
 		direction          Direction
@@ -98,7 +101,7 @@ func TestDoesNotWrapMovingBackwards(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover := godModRover.LandFacing(uuid.New(), testCase.direction, *testCase.initialCoordinate, testPlanetWithoutObstacles)
+			testRover := godModRover.LandFacing(uuid.New(), testCase.direction, *testCase.initialCoordinate, testPlanet)
 
 			err := testRover.MoveBackward()
 

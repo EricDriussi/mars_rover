@@ -14,7 +14,9 @@ import (
 
 func TestGetsSize(t *testing.T) {
 	sizeLimit, _ := size.Square(5)
-	planet, _ := rockyPlanet.Create("testColor", *sizeLimit, []Obstacle{})
+	obstacle := new(MockObstacle)
+	obstacle.On("IsBeyond", Anything).Return(false)
+	planet, _ := rockyPlanet.Create("testColor", *sizeLimit, []Obstacle{obstacle})
 
 	assert.Equal(t, *sizeLimit, planet.Size())
 }

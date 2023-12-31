@@ -12,6 +12,7 @@ type BigRock struct {
 }
 
 func In(coordinates []AbsoluteCoordinate) BigRock {
+	//TODO: if len(coordinates) < 2 then small rock?
 	return BigRock{*coord.New(coordinates)}
 }
 
