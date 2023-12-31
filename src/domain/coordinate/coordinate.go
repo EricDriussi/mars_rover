@@ -11,6 +11,6 @@ type Coordinate interface {
 	Y() int
 }
 
-func SumOf(coordinateOne AbsoluteCoordinate, coordinateTwo RelativeCoordinate) *AbsoluteCoordinate {
-	return absoluteCoordinate.From(coordinateOne.X()+coordinateTwo.X(), coordinateOne.Y()+coordinateTwo.Y())
+func SumOf(coordinate AbsoluteCoordinate, relative RelativeCoordinate) *AbsoluteCoordinate {
+	return absoluteCoordinate.From(coordinate.X()+relative.X(), coordinate.Y()+relative.Y())
 }

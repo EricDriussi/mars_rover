@@ -12,37 +12,36 @@ import (
 )
 
 func TestSumsRelative(t *testing.T) {
-	absCoord := absoluteCoordinate.From(1, 1)
+	baseCoordinate := absoluteCoordinate.From(1, 1)
 	testCases := []struct {
-		name               string
-		relativeCoordinate *RelativeCoordinate
-		expected           *AbsoluteCoordinate
+		name     string
+		relative *RelativeCoordinate
+		expected *AbsoluteCoordinate
 	}{
 		{
-			name:               "relative up",
-			relativeCoordinate: relativeCoordinate.Orthogonal(0, 1),
-			expected:           absoluteCoordinate.From(1, 2),
+			name:     "relative up",
+			relative: relativeCoordinate.Orthogonal(0, 1),
+			expected: absoluteCoordinate.From(1, 2),
 		},
 		{
-			name:               "relative right",
-			relativeCoordinate: relativeCoordinate.Orthogonal(1, 0),
-			expected:           absoluteCoordinate.From(2, 1),
+			name:     "relative right",
+			relative: relativeCoordinate.Orthogonal(1, 0),
+			expected: absoluteCoordinate.From(2, 1),
 		},
 		{
-			name:               "relative down",
-			relativeCoordinate: relativeCoordinate.Orthogonal(0, -1),
-			expected:           absoluteCoordinate.From(1, 0),
+			name:     "relative down",
+			relative: relativeCoordinate.Orthogonal(0, -1),
+			expected: absoluteCoordinate.From(1, 0),
 		},
 		{
-			name:               "relative left",
-			relativeCoordinate: relativeCoordinate.Orthogonal(-1, 0),
-			expected:           absoluteCoordinate.From(0, 1),
+			name:     "relative left",
+			relative: relativeCoordinate.Orthogonal(-1, 0),
+			expected: absoluteCoordinate.From(0, 1),
 		},
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			resultOfSum := coordinate.SumOf(*absCoord, *testCase.relativeCoordinate)
-			assert.Equal(t, resultOfSum, testCase.expected)
+			assert.Equal(t, coordinate.SumOf(*baseCoordinate, *testCase.relative), testCase.expected)
 		})
 	}
 }
