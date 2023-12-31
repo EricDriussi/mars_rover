@@ -10,12 +10,26 @@ type Coordinates struct {
 }
 
 func New(list ...AbsoluteCoordinate) *Coordinates {
-	return &Coordinates{list}
+	return &Coordinates{filterUnique(list)}
+}
+
+func filterUnique(list []AbsoluteCoordinate) []AbsoluteCoordinate {
+	uniqueList := make([]AbsoluteCoordinate, 0)
+	for _, coordinate := range list {
+		if !contains(uniqueList, coordinate) {
+			uniqueList = append(uniqueList, coordinate)
+		}
+	}
+	return uniqueList
 }
 
 func (this *Coordinates) Contain(coordinate AbsoluteCoordinate) bool {
-	for _, containedCoordinate := range this.list {
-		if coordinate.Equals(containedCoordinate) {
+	return contains(this.list, coordinate)
+}
+
+func contains(list []AbsoluteCoordinate, coordinate AbsoluteCoordinate) bool {
+	for _, containedCoordinate := range list {
+		if containedCoordinate.Equals(coordinate) {
 			return true
 		}
 	}

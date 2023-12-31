@@ -11,6 +11,16 @@ import (
 	"testing"
 )
 
+func TestFiltersOutDuplicateCoordinates(t *testing.T) {
+	coords := coordinates.New(
+		*absoluteCoordinate.Build(1, 1),
+		*absoluteCoordinate.Build(1, 1),
+		*absoluteCoordinate.Build(1, 3),
+	)
+
+	assert.Len(t, coords.List(), 2)
+}
+
 func TestAreWithinLimit(t *testing.T) {
 	sizeLimit, _ := size.Square(4)
 	coords := coordinates.New(
