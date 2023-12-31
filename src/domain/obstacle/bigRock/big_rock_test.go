@@ -10,21 +10,74 @@ import (
 	"testing"
 )
 
+func TestBuildsWithTwoOrMoreCoordinates(t *testing.T) {
+	testCases := []struct {
+		name        string
+		coordinates []AbsoluteCoordinate
+	}{
+		{
+			name: "two coordinates",
+			coordinates: []AbsoluteCoordinate{
+				*absoluteCoordinate.Build(1, 1),
+				*absoluteCoordinate.Build(1, 2),
+			},
+		},
+		{
+			name: "three coordinates",
+			coordinates: []AbsoluteCoordinate{
+				*absoluteCoordinate.Build(1, 1),
+				*absoluteCoordinate.Build(1, 2),
+				*absoluteCoordinate.Build(1, 3),
+			},
+		},
+	}
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			_, err := bigRock.In(testCase.coordinates...)
+			assert.Nil(t, err)
+		})
+	}
+}
+
+func TestDoesNotBuildWithLessThanTwoCoordinates(t *testing.T) {
+	testCases := []struct {
+		name        string
+		coordinates []AbsoluteCoordinate
+	}{
+		{
+			name:        "no coordinates",
+			coordinates: []AbsoluteCoordinate{},
+		},
+		{
+			name: "one coordinate",
+			coordinates: []AbsoluteCoordinate{
+				*absoluteCoordinate.Build(1, 1),
+			},
+		},
+	}
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			_, err := bigRock.In(testCase.coordinates...)
+			assert.NotNil(t, err)
+		})
+	}
+}
+
 func TestIsWithinLimit(t *testing.T) {
 	sizeLimit, _ := size.Square(4)
-	coordinates := []AbsoluteCoordinate{
-		*absoluteCoordinate.Build(1, 1),
-		*absoluteCoordinate.Build(1, 2),
-		*absoluteCoordinate.Build(1, 3),
-	}
-
-	rock := bigRock.In(coordinates)
+	rock, err := bigRock.In(
+		*Build(1, 1),
+		*Build(1, 2),
+		*Build(1, 3),
+	)
+	assert.Nil(t, err)
 
 	assert.False(t, rock.IsBeyond(*sizeLimit))
 }
 
 func TestIsBeyondLimit(t *testing.T) {
 	sizeLimit, _ := size.Square(3)
+	coordinateWithinLimit := absoluteCoordinate.Build(1, 1)
 	testCases := []struct {
 		name       string
 		coordinate *AbsoluteCoordinate
@@ -44,29 +97,37 @@ func TestIsBeyondLimit(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			rock := bigRock.In([]AbsoluteCoordinate{*testCase.coordinate})
+			rock, err := bigRock.In(*coordinateWithinLimit, *testCase.coordinate)
+			assert.Nil(t, err)
 			assert.True(t, rock.IsBeyond(*sizeLimit))
 		})
 	}
 }
 
-func TestOccupiesAGivenRandomCoordinate(t *testing.T) {
-	testCoordinate := absoluteCoordinate.Build(rand.Int(), rand.Int())
-	rock := bigRock.In([]AbsoluteCoordinate{*testCoordinate})
+func TestOccupiesItsCoordinates(t *testing.T) {
+	coordinate1 := absoluteCoordinate.Build(rand.Int(), rand.Int())
+	coordinate2 := absoluteCoordinate.Build(rand.Int(), rand.Int())
+	rock, err := bigRock.In(*coordinate1, *coordinate2)
+	assert.Nil(t, err)
 
-	assert.True(t, rock.Occupies(*testCoordinate))
+	assert.True(t, rock.Occupies(*coordinate1))
+	assert.True(t, rock.Occupies(*coordinate2))
 }
 
-func TestDoesNotOccupyADifferentCoordinate(t *testing.T) {
-	testCoordinate := absoluteCoordinate.Build(1, 1)
-	rock := bigRock.In([]AbsoluteCoordinate{*testCoordinate})
+func TestDoesNotOccupyAnExternalCoordinate(t *testing.T) {
+	rock, err := bigRock.In(
+		*absoluteCoordinate.Build(1, 1),
+		*absoluteCoordinate.Build(1, 2),
+	)
+	assert.Nil(t, err)
 
-	assert.False(t, rock.Occupies(*absoluteCoordinate.Build(1, 2)))
+	assert.False(t, rock.Occupies(*absoluteCoordinate.Build(1, 3)))
 }
 
-func TestGetCoordinates(t *testing.T) {
-	testCoordinate := []AbsoluteCoordinate{*absoluteCoordinate.Build(2, 1)}
-	rock := bigRock.In(testCoordinate)
+func TestListsOccupiedCoordinates(t *testing.T) {
+	testCoordinate := []AbsoluteCoordinate{*absoluteCoordinate.Build(2, 1), *absoluteCoordinate.Build(2, 2)}
+	rock, err := bigRock.In(testCoordinate...)
+	assert.Nil(t, err)
 
 	assert.Equal(t, rock.Coordinates(), testCoordinate)
 }

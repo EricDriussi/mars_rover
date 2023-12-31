@@ -71,14 +71,17 @@ func MapToDomainPlanet(planetEntity PlanetEntity) (Planet, error) {
 	if err != nil {
 		return nil, err
 	}
-	obstacles := mapToDomainObstacles(planetEntity.Obstacles)
+	obstacles, err := mapToDomainObstacles(planetEntity.Obstacles)
+	if err != nil {
+		return nil, err
+	}
 	if len(obstacles.List()) == 0 {
 		return emptyPlanet.Create(color, *size)
 	}
 	return planetWithObstacles.Create(color, *size, obstacles.List())
 }
 
-func mapToDomainObstacles(obstacles []ObstacleEntity) Obstacles {
+func mapToDomainObstacles(obstacles []ObstacleEntity) (*Obstacles, error) {
 	list := make([]Obstacle, 0, len(obstacles))
 	for _, obstacle := range obstacles {
 		coordinates := mapToDomainCoordinates(obstacle.Coordinates)
@@ -86,11 +89,14 @@ func mapToDomainObstacles(obstacles []ObstacleEntity) Obstacles {
 			rock := smallRock.In(coordinates[0])
 			list = append(list, &rock)
 		} else {
-			rock := bigRock.In(coordinates)
-			list = append(list, &rock)
+			rock, err := bigRock.In(coordinates...)
+			if err != nil {
+				return nil, err
+			}
+			list = append(list, rock)
 		}
 	}
-	return *obstaclesModule.FromList(list)
+	return obstaclesModule.FromList(list), nil
 }
 
 func mapToDomainCoordinates(coordinates []CoordinateEntity) []AbsoluteCoordinate {

@@ -41,8 +41,8 @@ func setupRockyPlanet() Planet {
 	testSmallRock := smallRock.In(*smallCoord)
 	bigCoord1 := absoluteCoordinate.Build(2, 2)
 	bigCoord2 := absoluteCoordinate.Build(2, 3)
-	testBigRock := bigRock.In([]absoluteCoordinate.AbsoluteCoordinate{*bigCoord1, *bigCoord2})
-	testPlanet, _ := planetWithObstacles.Create("testColor", *size, []Obstacle{&testSmallRock, &testBigRock})
+	testBigRock, _ := bigRock.In(*bigCoord1, *bigCoord2)
+	testPlanet, _ := planetWithObstacles.Create("testColor", *size, []Obstacle{&testSmallRock, testBigRock})
 	return testPlanet
 }
 
