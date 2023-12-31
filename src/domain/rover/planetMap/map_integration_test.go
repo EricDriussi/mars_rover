@@ -77,7 +77,7 @@ func getRandomCoordinateExcluding(planetSize Size, exclude AbsoluteCoordinate) A
 	for {
 		randomCoordinate := absoluteCoordinate.From(rand.Intn(planetSize.Width()), rand.Intn(planetSize.Height()))
 
-		coordinateIsNotExcluded := !randomCoordinate.Equals(&exclude)
+		coordinateIsNotExcluded := !randomCoordinate.Equals(exclude)
 		if coordinateIsNotExcluded {
 			return *randomCoordinate
 		}

@@ -15,7 +15,7 @@ func New(coordinate []AbsoluteCoordinate) *Coordinates {
 
 func (this *Coordinates) Contain(coordinate AbsoluteCoordinate) bool {
 	for _, occupiedCoordinate := range this.list {
-		if coordinate.Equals(&occupiedCoordinate) {
+		if coordinate.Equals(occupiedCoordinate) {
 			return true
 		}
 	}

@@ -8,8 +8,8 @@ func From(x, y int) *AbsoluteCoordinate {
 	return &AbsoluteCoordinate{x, y}
 }
 
-func (this *AbsoluteCoordinate) Equals(other *AbsoluteCoordinate) bool {
-	return this.x == other.X() && this.y == other.Y()
+func (this *AbsoluteCoordinate) Equals(other AbsoluteCoordinate) bool {
+	return this.X() == other.X() && this.Y() == other.Y()
 }
 
 func (this *AbsoluteCoordinate) X() int {

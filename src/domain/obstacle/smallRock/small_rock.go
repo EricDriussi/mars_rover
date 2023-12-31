@@ -14,7 +14,7 @@ func In(coordinate AbsoluteCoordinate) SmallRock {
 }
 
 func (this *SmallRock) Occupies(coordinate AbsoluteCoordinate) bool {
-	return this.coordinate.Equals(&coordinate)
+	return this.coordinate.Equals(coordinate)
 }
 
 func (this *SmallRock) IsBeyond(size Size) bool {

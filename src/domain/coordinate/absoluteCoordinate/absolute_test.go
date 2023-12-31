@@ -12,8 +12,7 @@ func TestEqualsBasedOnValues(t *testing.T) {
 	aCoordinate := absoluteCoordinate.From(1, 1)
 	anEqualCoordinate := absoluteCoordinate.From(1, 1)
 
-	areTheSame := aCoordinate.Equals(anEqualCoordinate)
-	assert.True(t, areTheSame)
+	assert.True(t, aCoordinate.Equals(*anEqualCoordinate))
 }
 
 func TestNotEqualsBasedOnValues(t *testing.T) {
@@ -23,22 +22,21 @@ func TestNotEqualsBasedOnValues(t *testing.T) {
 		differentCoordinate *AbsoluteCoordinate
 	}{
 		{
-			name:                "neither X nor Y can differ",
+			name:                "both coordinates are different",
 			differentCoordinate: absoluteCoordinate.From(2, 2),
 		},
 		{
-			name:                "X cannot differ",
+			name:                "X is different",
 			differentCoordinate: absoluteCoordinate.From(2, 1),
 		},
 		{
-			name:                "Y cannot differ",
+			name:                "Y is different",
 			differentCoordinate: absoluteCoordinate.From(1, 2),
 		},
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			areTheSame := aCoordinate.Equals(testCase.differentCoordinate)
-			assert.False(t, areTheSame)
+			assert.False(t, aCoordinate.Equals(*testCase.differentCoordinate))
 		})
 	}
 }
