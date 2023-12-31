@@ -5,7 +5,7 @@ import (
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle"
 	"mars_rover/src/domain/obstacle/smallRock"
-	"mars_rover/src/domain/planet/rockyPlanet"
+	"mars_rover/src/domain/planet/planetWithObstacles"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/uuid"
 	"mars_rover/src/domain/rover/wrappingCollidingRover"
@@ -19,7 +19,7 @@ import (
 func TestCalculatesAhead(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 
 	testCases := []struct {
 		name               string
@@ -64,7 +64,7 @@ func TestCalculatesAhead(t *testing.T) {
 func TestCalculatesBehind(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 
 	testCases := []struct {
 		name               string
@@ -109,7 +109,7 @@ func TestCalculatesBehind(t *testing.T) {
 func TestCalculatesWrappingAhead(t *testing.T) {
 	planetSize, _ := size.Square(4)
 	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 	testCases := []struct {
 		name               string
 		direction          Direction
@@ -157,7 +157,7 @@ func TestCalculatesWrappingAhead(t *testing.T) {
 func TestCalculatesWrappingBehind(t *testing.T) {
 	planetSize, _ := size.Square(4)
 	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 	testCases := []struct {
 		name               string
 		direction          Direction

@@ -5,7 +5,7 @@ import (
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle"
 	"mars_rover/src/domain/obstacle/smallRock"
-	"mars_rover/src/domain/planet/rockyPlanet"
+	"mars_rover/src/domain/planet/planetWithObstacles"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/godModRover"
 	"mars_rover/src/domain/rover/uuid"
@@ -19,7 +19,7 @@ import (
 func TestMovesForward(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 
 	testCases := []struct {
 		name               string
@@ -65,7 +65,7 @@ func TestMovesBackward(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
 	// TODO: all these "A, _ := ..." should be using assert.Nil on the error
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 
 	testCases := []struct {
 		name               string
@@ -110,7 +110,7 @@ func TestMovesBackward(t *testing.T) {
 func TestTurnsRight(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 	coord := absoluteCoordinate.From(5, 5)
 
 	testCases := []struct {
@@ -155,7 +155,7 @@ func TestTurnsRight(t *testing.T) {
 func TestTurnsLeft(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 	coord := absoluteCoordinate.From(5, 5)
 
 	testCases := []struct {

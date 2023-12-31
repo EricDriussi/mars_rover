@@ -11,7 +11,7 @@ import (
 	"mars_rover/src/domain/obstacle/smallRock"
 	. "mars_rover/src/domain/planet"
 	"mars_rover/src/domain/planet/emptyPlanet"
-	"mars_rover/src/domain/planet/rockyPlanet"
+	"mars_rover/src/domain/planet/planetWithObstacles"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/godModRover"
@@ -75,7 +75,7 @@ func MapToDomainPlanet(planetEntity PlanetEntity) (Planet, error) {
 	if len(obstacles.List()) == 0 {
 		return emptyPlanet.Create(color, *size)
 	}
-	return rockyPlanet.Create(color, *size, obstacles.List())
+	return planetWithObstacles.Create(color, *size, obstacles.List())
 }
 
 func mapToDomainObstacles(obstacles []ObstacleEntity) Obstacles {

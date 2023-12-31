@@ -5,7 +5,7 @@ import (
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle"
 	"mars_rover/src/domain/obstacle/smallRock"
-	"mars_rover/src/domain/planet/rockyPlanet"
+	"mars_rover/src/domain/planet/planetWithObstacles"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/uuid"
 	"mars_rover/src/domain/rover/wrappingCollidingRover"
@@ -18,7 +18,7 @@ import (
 func TestMovesForwardOnce(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 
 	testCases := []struct {
 		name               string
@@ -63,7 +63,7 @@ func TestMovesForwardOnce(t *testing.T) {
 func TestMovesForwardMultipleTimes(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 
 	testCases := []struct {
 		name               string
@@ -110,7 +110,7 @@ func TestMovesForwardMultipleTimes(t *testing.T) {
 func TestMovesBackwardOnce(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 
 	testCases := []struct {
 		name               string
@@ -155,7 +155,7 @@ func TestMovesBackwardOnce(t *testing.T) {
 func TestMovesBackwardMultipleTimes(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 
 	testCases := []struct {
 		name               string
@@ -202,7 +202,7 @@ func TestMovesBackwardMultipleTimes(t *testing.T) {
 func TestTurnsRight(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 	coord := absoluteCoordinate.From(5, 5)
 
 	testCases := []struct {
@@ -247,7 +247,7 @@ func TestTurnsRight(t *testing.T) {
 func TestTurnsLeft(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 	coord := absoluteCoordinate.From(5, 5)
 
 	testCases := []struct {

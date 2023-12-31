@@ -1,4 +1,4 @@
-package rockyPlanet
+package planetWithObstacles
 
 import (
 	"errors"
@@ -8,13 +8,13 @@ import (
 	. "mars_rover/src/domain/size"
 )
 
-type RockyPlanet struct {
+type PlanetWithObstacles struct {
 	color     string
 	size      Size
 	obstacles Obstacles
 }
 
-func Create(color string, size Size, obstacles []Obstacle) (*RockyPlanet, error) {
+func Create(color string, size Size, obstacles []Obstacle) (*PlanetWithObstacles, error) {
 	if len(obstacles) < 1 {
 		return nil, errors.New("cannot create rocky planet without obstacles")
 	}
@@ -26,17 +26,17 @@ func Create(color string, size Size, obstacles []Obstacle) (*RockyPlanet, error)
 		return nil, errors.New("an obstacle was set outside of the planet :c")
 	}
 
-	return &RockyPlanet{color, size, *obstacleList}, nil
+	return &PlanetWithObstacles{color, size, *obstacleList}, nil
 }
 
-func (this *RockyPlanet) Size() Size {
+func (this *PlanetWithObstacles) Size() Size {
 	return this.size
 }
 
-func (this *RockyPlanet) Obstacles() Obstacles {
+func (this *PlanetWithObstacles) Obstacles() Obstacles {
 	return this.obstacles
 }
 
-func (this *RockyPlanet) Color() string {
+func (this *PlanetWithObstacles) Color() string {
 	return this.color
 }

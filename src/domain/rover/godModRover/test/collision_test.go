@@ -4,7 +4,7 @@ import (
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle"
 	rock "mars_rover/src/domain/obstacle/smallRock"
-	"mars_rover/src/domain/planet/rockyPlanet"
+	"mars_rover/src/domain/planet/planetWithObstacles"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/godModRover"
 	"mars_rover/src/domain/rover/uuid"
@@ -19,7 +19,7 @@ func TestIgnoresCollisionMovingForward(t *testing.T) {
 	initialCoordinate := absoluteCoordinate.From(5, 5)
 	obstacleCoordinate := absoluteCoordinate.From(5, 6)
 	obstacleAhead := rock.In(*obstacleCoordinate)
-	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&obstacleAhead})
+	testPlanetWithObstacles, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&obstacleAhead})
 	aDirection := North{}
 
 	testRover := godModRover.LandFacing(uuid.New(), aDirection, *initialCoordinate, testPlanetWithObstacles)
@@ -35,7 +35,7 @@ func TestIgnoresCollisionMovingBackwards(t *testing.T) {
 	initialCoordinate := absoluteCoordinate.From(5, 5)
 	obstacleCoordinate := absoluteCoordinate.From(5, 4)
 	obstacleBehind := rock.In(*obstacleCoordinate)
-	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&obstacleBehind})
+	testPlanetWithObstacles, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&obstacleBehind})
 	aDirection := North{}
 
 	testRover := godModRover.LandFacing(uuid.New(), aDirection, *initialCoordinate, testPlanetWithObstacles)

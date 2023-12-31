@@ -4,7 +4,7 @@ import (
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle"
 	"mars_rover/src/domain/obstacle/smallRock"
-	"mars_rover/src/domain/planet/rockyPlanet"
+	"mars_rover/src/domain/planet/planetWithObstacles"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/godModRover"
 	"mars_rover/src/domain/rover/uuid"
@@ -17,7 +17,7 @@ import (
 func TestLandsOnFreeSpotFacingGivenDirection(t *testing.T) {
 	planetSize, _ := size.Square(2)
 	rock := smallRock.In(*absoluteCoordinate.From(1, 2))
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 	coordinate := absoluteCoordinate.From(1, 1)
 	direction := North{}
 
@@ -31,7 +31,7 @@ func TestCanLandOnObstacle(t *testing.T) {
 	planetSize, _ := size.Square(2)
 	coordinate := absoluteCoordinate.From(1, 1)
 	rock := smallRock.In(*coordinate)
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 	direction := North{}
 
 	testRover := godModRover.LandFacing(uuid.New(), direction, *coordinate, testPlanet)
@@ -44,7 +44,7 @@ func TestCannotLandOutOfPlanet(t *testing.T) {
 	planetSize, _ := size.Square(2)
 	coordinate := absoluteCoordinate.From(4, 3)
 	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
-	testPlanet, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 	direction := North{}
 
 	testRover := godModRover.LandFacing(uuid.New(), direction, *coordinate, testPlanet)

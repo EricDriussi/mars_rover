@@ -4,7 +4,7 @@ import (
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/obstacle"
 	rock "mars_rover/src/domain/obstacle/smallRock"
-	"mars_rover/src/domain/planet/rockyPlanet"
+	"mars_rover/src/domain/planet/planetWithObstacles"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/uuid"
 	"mars_rover/src/domain/rover/wrappingCollidingRover"
@@ -18,7 +18,7 @@ func TestAvoidsCollisionMovingForward(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	coordinate := absoluteCoordinate.From(5, 5)
 	obstacleAhead := rock.In(*absoluteCoordinate.From(5, 6))
-	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&obstacleAhead})
+	testPlanetWithObstacles, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&obstacleAhead})
 	aDirection := North{}
 
 	testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), aDirection, *coordinate, testPlanetWithObstacles)
@@ -34,7 +34,7 @@ func TestAvoidsCollisionWrappingForward(t *testing.T) {
 	planetSize, _ := size.Square(6)
 	coordinate := absoluteCoordinate.From(3, 5)
 	obstacleAhead := rock.In(*absoluteCoordinate.From(3, 0))
-	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&obstacleAhead})
+	testPlanetWithObstacles, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&obstacleAhead})
 	aDirection := North{}
 
 	testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), aDirection, *coordinate, testPlanetWithObstacles)
@@ -50,7 +50,7 @@ func TestAvoidsCollisionMovingBackwards(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	coordinate := absoluteCoordinate.From(5, 5)
 	obstacleBehind := rock.In(*absoluteCoordinate.From(5, 4))
-	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&obstacleBehind})
+	testPlanetWithObstacles, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&obstacleBehind})
 	aDirection := North{}
 
 	testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), aDirection, *coordinate, testPlanetWithObstacles)
@@ -66,7 +66,7 @@ func TestAvoidsCollisionWrappingBackwards(t *testing.T) {
 	planetSize, _ := size.Square(6)
 	coordinate := absoluteCoordinate.From(3, 0)
 	obstacleBehind := rock.In(*absoluteCoordinate.From(3, 5))
-	testPlanetWithObstacles, _ := rockyPlanet.Create("testColor", *planetSize, []Obstacle{&obstacleBehind})
+	testPlanetWithObstacles, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&obstacleBehind})
 	aDirection := North{}
 
 	testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), aDirection, *coordinate, testPlanetWithObstacles)

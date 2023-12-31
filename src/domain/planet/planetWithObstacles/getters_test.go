@@ -1,9 +1,9 @@
-package rockyPlanet_test
+package planetWithObstacles_test
 
 import (
 	. "mars_rover/src/domain/obstacle"
 	obs "mars_rover/src/domain/obstacle/obstacles"
-	"mars_rover/src/domain/planet/rockyPlanet"
+	"mars_rover/src/domain/planet/planetWithObstacles"
 	"mars_rover/src/domain/size"
 	. "mars_rover/src/test_helpers/mocks"
 	"testing"
@@ -16,7 +16,7 @@ func TestGetsSize(t *testing.T) {
 	sizeLimit, _ := size.Square(5)
 	obstacle := new(MockObstacle)
 	obstacle.On("IsBeyond", Anything).Return(false)
-	planet, _ := rockyPlanet.Create("testColor", *sizeLimit, []Obstacle{obstacle})
+	planet, _ := planetWithObstacles.Create("testColor", *sizeLimit, []Obstacle{obstacle})
 
 	assert.Equal(t, *sizeLimit, planet.Size())
 }
@@ -28,7 +28,7 @@ func TestGetsObstacles(t *testing.T) {
 	obstacles := []Obstacle{obstacleOne, obstacleTwo}
 	obstacleOne.On("IsBeyond", Anything).Return(false)
 	obstacleTwo.On("IsBeyond", Anything).Return(false)
-	planet, _ := rockyPlanet.Create("testColor", *sizeLimit, obstacles)
+	planet, _ := planetWithObstacles.Create("testColor", *sizeLimit, obstacles)
 
 	assert.Equal(t, *obs.FromList(obstacles), planet.Obstacles())
 }
@@ -41,7 +41,7 @@ func TestGetsColor(t *testing.T) {
 	obstacleOne.On("IsBeyond", Anything).Return(false)
 	obstacleTwo.On("IsBeyond", Anything).Return(false)
 	color := "aColor"
-	planet, _ := rockyPlanet.Create(color, *sizeLimit, obstacles)
+	planet, _ := planetWithObstacles.Create(color, *sizeLimit, obstacles)
 
 	assert.Equal(t, color, planet.Color())
 }

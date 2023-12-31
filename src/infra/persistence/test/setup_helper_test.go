@@ -7,7 +7,7 @@ import (
 	"mars_rover/src/domain/obstacle/bigRock"
 	"mars_rover/src/domain/obstacle/smallRock"
 	. "mars_rover/src/domain/planet"
-	"mars_rover/src/domain/planet/rockyPlanet"
+	"mars_rover/src/domain/planet/planetWithObstacles"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/godModRover"
@@ -42,7 +42,7 @@ func setupRockyPlanet() Planet {
 	bigCoord1 := absoluteCoordinate.From(2, 2)
 	bigCoord2 := absoluteCoordinate.From(2, 3)
 	testBigRock := bigRock.In([]absoluteCoordinate.AbsoluteCoordinate{*bigCoord1, *bigCoord2})
-	testPlanet, _ := rockyPlanet.Create("testColor", *size, []Obstacle{&testSmallRock, &testBigRock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *size, []Obstacle{&testSmallRock, &testBigRock})
 	return testPlanet
 }
 
