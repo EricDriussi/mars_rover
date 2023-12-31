@@ -18,7 +18,7 @@ import (
 func TestWrapsMovingForward(t *testing.T) {
 	planetSize, _ := size.Square(4)
 	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
 	testCases := []struct {
 		name               string
 		direction          Direction
@@ -66,7 +66,7 @@ func TestWrapsMovingForward(t *testing.T) {
 func TestWrapsMovingBackwards(t *testing.T) {
 	planetSize, _ := size.Square(4)
 	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
 	testCases := []struct {
 		name               string
 		direction          Direction

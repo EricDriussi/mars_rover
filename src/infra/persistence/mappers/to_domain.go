@@ -87,7 +87,7 @@ func mapToDomainObstacles(obstacles []ObstacleEntity) (*Obstacles, error) {
 		coordinates := mapToDomainCoordinates(obstacle.Coordinates)
 		if len(coordinates) <= 1 {
 			rock := smallRock.In(coordinates[0])
-			list = append(list, &rock)
+			list = append(list, rock)
 		} else {
 			rock, err := bigRock.In(coordinates...)
 			if err != nil {

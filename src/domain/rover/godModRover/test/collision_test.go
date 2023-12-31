@@ -19,7 +19,7 @@ func TestIgnoresCollisionMovingForward(t *testing.T) {
 	initialCoordinate := absoluteCoordinate.Build(5, 5)
 	obstacleCoordinate := absoluteCoordinate.Build(5, 6)
 	obstacleAhead := rock.In(*obstacleCoordinate)
-	testPlanetWithObstacles, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&obstacleAhead})
+	testPlanetWithObstacles, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{obstacleAhead})
 	aDirection := North{}
 
 	testRover := godModRover.LandFacing(uuid.New(), aDirection, *initialCoordinate, testPlanetWithObstacles)
@@ -35,7 +35,7 @@ func TestIgnoresCollisionMovingBackwards(t *testing.T) {
 	initialCoordinate := absoluteCoordinate.Build(5, 5)
 	obstacleCoordinate := absoluteCoordinate.Build(5, 4)
 	obstacleBehind := rock.In(*obstacleCoordinate)
-	testPlanetWithObstacles, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&obstacleBehind})
+	testPlanetWithObstacles, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{obstacleBehind})
 	aDirection := North{}
 
 	testRover := godModRover.LandFacing(uuid.New(), aDirection, *initialCoordinate, testPlanetWithObstacles)

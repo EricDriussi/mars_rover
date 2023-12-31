@@ -28,7 +28,7 @@ func TestIsBeyondLimit(t *testing.T) {
 	sizeLimit, _ := size.Square(3)
 	testCases := []struct {
 		name string
-		rock SmallRock
+		rock *SmallRock
 	}{
 		{
 			name: "both out of bounds",

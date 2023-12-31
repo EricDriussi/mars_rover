@@ -18,7 +18,7 @@ import (
 func TestDoesNotWrapMovingForward(t *testing.T) {
 	planetSize, _ := size.Square(3)
 	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
 	testCases := []struct {
 		name               string
 		direction          Direction
@@ -66,7 +66,7 @@ func TestDoesNotWrapMovingForward(t *testing.T) {
 func TestDoesNotWrapMovingBackwards(t *testing.T) {
 	planetSize, _ := size.Square(3)
 	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
 	testCases := []struct {
 		name               string
 		direction          Direction

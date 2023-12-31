@@ -70,7 +70,7 @@ func (this *BoundedRandomCreator) randomObstaclesWithin(size Size) []Obstacle {
 	betweenMinObstaclesAndHalfTheArea := rand.Intn(halfTheArea-this.minObstacles) + this.minObstacles
 	for i := 0; i < betweenMinObstaclesAndHalfTheArea; i++ {
 		smallRock := rock.In(RandomCoordinateWithin(size))
-		list = append(list, &smallRock)
+		list = append(list, smallRock)
 	}
 	return list
 }

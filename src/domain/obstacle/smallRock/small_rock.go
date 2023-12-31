@@ -9,8 +9,8 @@ type SmallRock struct {
 	coordinate AbsoluteCoordinate
 }
 
-func In(coordinate AbsoluteCoordinate) SmallRock {
-	return SmallRock{coordinate}
+func In(coordinate AbsoluteCoordinate) *SmallRock {
+	return &SmallRock{coordinate}
 }
 
 func (this *SmallRock) Occupies(coordinate AbsoluteCoordinate) bool {

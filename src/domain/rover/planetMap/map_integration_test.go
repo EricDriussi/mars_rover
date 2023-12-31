@@ -53,7 +53,7 @@ func createPlanetWithObstacleIn(x, y int) Planet {
 	planetSize, _ := size.Square(y + 2)
 	obstacleCoordinate := absoluteCoordinate.Build(x, y)
 	planetObstacle := rock.In(*obstacleCoordinate)
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&planetObstacle})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{planetObstacle})
 	return testPlanet
 }
 
@@ -66,7 +66,7 @@ func createPlanetWithRandomObstaclesNotIn(planetSize Size, exclude AbsoluteCoord
 	for i := 0; i < numObstacles; i++ {
 		randomCoordinate := getRandomCoordinateExcluding(planetSize, exclude)
 		smallRock := rock.In(randomCoordinate)
-		obstacles = append(obstacles, &smallRock)
+		obstacles = append(obstacles, smallRock)
 	}
 
 	testPlanet, _ := planetWithObstacles.Create("testColor", planetSize, obstacles)

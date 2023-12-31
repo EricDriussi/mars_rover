@@ -56,7 +56,7 @@ func (this *SimpleRandomCreator) randomObstaclesWithin(size Size) []Obstacle {
 	amountOfObstacles := rand.Intn(size.Area() - 1) // leave at least a blank space for the rover
 	for i := 0; i < amountOfObstacles; i++ {
 		smallRock := rock.In(RandomCoordinateWithin(size))
-		list = append(list, &smallRock)
+		list = append(list, smallRock)
 	}
 	return list
 }

@@ -17,7 +17,7 @@ import (
 func TestLandsOnFreeSpotFacingGivenDirection(t *testing.T) {
 	planetSize, _ := size.Square(2)
 	rock := smallRock.In(*absoluteCoordinate.Build(1, 2))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
 	coordinate := absoluteCoordinate.Build(1, 1)
 	direction := North{}
 
@@ -31,7 +31,7 @@ func TestCanLandOnObstacle(t *testing.T) {
 	planetSize, _ := size.Square(2)
 	coordinate := absoluteCoordinate.Build(1, 1)
 	rock := smallRock.In(*coordinate)
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
 	direction := North{}
 
 	testRover := godModRover.LandFacing(uuid.New(), direction, *coordinate, testPlanet)
@@ -44,7 +44,7 @@ func TestCannotLandOutOfPlanet(t *testing.T) {
 	planetSize, _ := size.Square(2)
 	coordinate := absoluteCoordinate.Build(4, 3)
 	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
 	direction := North{}
 
 	testRover := godModRover.LandFacing(uuid.New(), direction, *coordinate, testPlanet)

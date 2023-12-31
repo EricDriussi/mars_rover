@@ -19,7 +19,7 @@ import (
 func TestCalculatesAhead(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
 
 	testCases := []struct {
 		name               string
@@ -64,7 +64,7 @@ func TestCalculatesAhead(t *testing.T) {
 func TestCalculatesBehind(t *testing.T) {
 	planetSize, _ := size.Square(10)
 	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
 
 	testCases := []struct {
 		name               string
@@ -109,7 +109,7 @@ func TestCalculatesBehind(t *testing.T) {
 func TestCalculatesWrappingAhead(t *testing.T) {
 	planetSize, _ := size.Square(4)
 	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
 	testCases := []struct {
 		name               string
 		direction          Direction
@@ -157,7 +157,7 @@ func TestCalculatesWrappingAhead(t *testing.T) {
 func TestCalculatesWrappingBehind(t *testing.T) {
 	planetSize, _ := size.Square(4)
 	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
+	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
 	testCases := []struct {
 		name               string
 		direction          Direction
