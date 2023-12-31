@@ -16,8 +16,8 @@ import (
 
 func TestIgnoresCollisionMovingForward(t *testing.T) {
 	planetSize, _ := size.Square(10)
-	initialCoordinate := absoluteCoordinate.From(5, 5)
-	obstacleCoordinate := absoluteCoordinate.From(5, 6)
+	initialCoordinate := absoluteCoordinate.Build(5, 5)
+	obstacleCoordinate := absoluteCoordinate.Build(5, 6)
 	obstacleAhead := rock.In(*obstacleCoordinate)
 	testPlanetWithObstacles, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&obstacleAhead})
 	aDirection := North{}
@@ -32,8 +32,8 @@ func TestIgnoresCollisionMovingForward(t *testing.T) {
 
 func TestIgnoresCollisionMovingBackwards(t *testing.T) {
 	planetSize, _ := size.Square(10)
-	initialCoordinate := absoluteCoordinate.From(5, 5)
-	obstacleCoordinate := absoluteCoordinate.From(5, 4)
+	initialCoordinate := absoluteCoordinate.Build(5, 5)
+	obstacleCoordinate := absoluteCoordinate.Build(5, 4)
 	obstacleBehind := rock.In(*obstacleCoordinate)
 	testPlanetWithObstacles, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&obstacleBehind})
 	aDirection := North{}

@@ -17,7 +17,7 @@ import (
 
 func TestDoesNotWrapMovingForward(t *testing.T) {
 	planetSize, _ := size.Square(3)
-	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
+	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
 	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 	testCases := []struct {
 		name               string
@@ -28,26 +28,26 @@ func TestDoesNotWrapMovingForward(t *testing.T) {
 		{
 			name:               "facing north",
 			direction:          &North{},
-			initialCoordinate:  absoluteCoordinate.From(2, 3),
-			expectedCoordinate: absoluteCoordinate.From(2, 4),
+			initialCoordinate:  absoluteCoordinate.Build(2, 3),
+			expectedCoordinate: absoluteCoordinate.Build(2, 4),
 		},
 		{
 			name:               "facing east",
 			direction:          &East{},
-			initialCoordinate:  absoluteCoordinate.From(3, 2),
-			expectedCoordinate: absoluteCoordinate.From(4, 2),
+			initialCoordinate:  absoluteCoordinate.Build(3, 2),
+			expectedCoordinate: absoluteCoordinate.Build(4, 2),
 		},
 		{
 			name:               "facing south",
 			direction:          &South{},
-			initialCoordinate:  absoluteCoordinate.From(2, 0),
-			expectedCoordinate: absoluteCoordinate.From(2, -1),
+			initialCoordinate:  absoluteCoordinate.Build(2, 0),
+			expectedCoordinate: absoluteCoordinate.Build(2, -1),
 		},
 		{
 			name:               "facing west",
 			direction:          &West{},
-			initialCoordinate:  absoluteCoordinate.From(0, 2),
-			expectedCoordinate: absoluteCoordinate.From(-1, 2),
+			initialCoordinate:  absoluteCoordinate.Build(0, 2),
+			expectedCoordinate: absoluteCoordinate.Build(-1, 2),
 		},
 	}
 
@@ -65,7 +65,7 @@ func TestDoesNotWrapMovingForward(t *testing.T) {
 
 func TestDoesNotWrapMovingBackwards(t *testing.T) {
 	planetSize, _ := size.Square(3)
-	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
+	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
 	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 	testCases := []struct {
 		name               string
@@ -76,26 +76,26 @@ func TestDoesNotWrapMovingBackwards(t *testing.T) {
 		{
 			name:               "facing north",
 			direction:          &North{},
-			initialCoordinate:  absoluteCoordinate.From(2, 0),
-			expectedCoordinate: absoluteCoordinate.From(2, -1),
+			initialCoordinate:  absoluteCoordinate.Build(2, 0),
+			expectedCoordinate: absoluteCoordinate.Build(2, -1),
 		},
 		{
 			name:               "facing east",
 			direction:          &East{},
-			initialCoordinate:  absoluteCoordinate.From(0, 2),
-			expectedCoordinate: absoluteCoordinate.From(-1, 2),
+			initialCoordinate:  absoluteCoordinate.Build(0, 2),
+			expectedCoordinate: absoluteCoordinate.Build(-1, 2),
 		},
 		{
 			name:               "facing south",
 			direction:          &South{},
-			initialCoordinate:  absoluteCoordinate.From(2, 3),
-			expectedCoordinate: absoluteCoordinate.From(2, 4),
+			initialCoordinate:  absoluteCoordinate.Build(2, 3),
+			expectedCoordinate: absoluteCoordinate.Build(2, 4),
 		},
 		{
 			name:               "facing west",
 			direction:          &West{},
-			initialCoordinate:  absoluteCoordinate.From(3, 2),
-			expectedCoordinate: absoluteCoordinate.From(4, 2),
+			initialCoordinate:  absoluteCoordinate.Build(3, 2),
+			expectedCoordinate: absoluteCoordinate.Build(4, 2),
 		},
 	}
 

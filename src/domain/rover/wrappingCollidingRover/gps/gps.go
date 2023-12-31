@@ -46,7 +46,7 @@ func isOutOfBounds(coordinate AbsoluteCoordinate, planetMap Map) bool {
 }
 
 func wrapAround(coordinate AbsoluteCoordinate, planetMap Map) AbsoluteCoordinate {
-	return *absoluteCoordinate.From(
+	return *absoluteCoordinate.Build(
 		// Planet size starts at 1, rover movement starts at 0
 		wrap(coordinate.X(), planetMap.Width()-1),
 		wrap(coordinate.Y(), planetMap.Height()-1),

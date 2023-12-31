@@ -30,7 +30,7 @@ func LoopUntilRoverLanded(planet Planet) Rover {
 }
 
 func RandomCoordinateWithin(size Size) AbsoluteCoordinate {
-	return *absoluteCoordinate.From(rand.Intn(size.Width()), rand.Intn(size.Height()))
+	return *absoluteCoordinate.Build(rand.Intn(size.Width()), rand.Intn(size.Height()))
 }
 
 func RandomDirection() Direction {

@@ -25,7 +25,7 @@ func MapToDomainRover(roverEntity RoverEntity, planet Planet) (Rover, error) {
 	if err != nil {
 		return nil, err
 	}
-	coordinate := absoluteCoordinate.From(roverEntity.Coordinate.X, roverEntity.Coordinate.Y)
+	coordinate := absoluteCoordinate.Build(roverEntity.Coordinate.X, roverEntity.Coordinate.Y)
 
 	var rover Rover
 	if roverEntity.GodMod {
@@ -96,7 +96,7 @@ func mapToDomainObstacles(obstacles []ObstacleEntity) Obstacles {
 func mapToDomainCoordinates(coordinates []CoordinateEntity) []AbsoluteCoordinate {
 	list := make([]AbsoluteCoordinate, 0, len(coordinates))
 	for _, coordinate := range coordinates {
-		list = append(list, *absoluteCoordinate.From(coordinate.X, coordinate.Y))
+		list = append(list, *absoluteCoordinate.Build(coordinate.X, coordinate.Y))
 	}
 	return list
 }

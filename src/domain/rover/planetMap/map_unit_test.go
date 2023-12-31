@@ -53,8 +53,8 @@ func TestIsOutOfBoundsWithMock(t *testing.T) {
 	mockPlanet.On("Size").Return(*planetSize)
 	testMap := planetMap.OfPlanet(mockPlanet)
 
-	assert.False(t, testMap.IsOutOfBounds(*absoluteCoordinate.From(0, 0)))
-	assert.False(t, testMap.IsOutOfBounds(*absoluteCoordinate.From(4, 4)))
-	assert.True(t, testMap.IsOutOfBounds(*absoluteCoordinate.From(6, 6)))
-	assert.True(t, testMap.IsOutOfBounds(*absoluteCoordinate.From(-1, -1)))
+	assert.False(t, testMap.IsOutOfBounds(*absoluteCoordinate.Build(0, 0)))
+	assert.False(t, testMap.IsOutOfBounds(*absoluteCoordinate.Build(4, 4)))
+	assert.True(t, testMap.IsOutOfBounds(*absoluteCoordinate.Build(6, 6)))
+	assert.True(t, testMap.IsOutOfBounds(*absoluteCoordinate.Build(-1, -1)))
 }

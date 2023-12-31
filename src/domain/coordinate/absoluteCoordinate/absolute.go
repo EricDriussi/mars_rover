@@ -4,7 +4,7 @@ type AbsoluteCoordinate struct {
 	x, y int
 }
 
-func From(x, y int) *AbsoluteCoordinate {
+func Build(x, y int) *AbsoluteCoordinate {
 	return &AbsoluteCoordinate{x, y}
 }
 

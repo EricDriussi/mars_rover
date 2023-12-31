@@ -15,7 +15,7 @@ import (
 )
 
 func TestMovementResultsContainNoIssueIfRoverReportsNoError(t *testing.T) {
-	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
+	testRover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
 	repo := mocks.SuccessfulRepoFor(testRover)
 	command := new(MockCommand)
 	command.On("MapToRoverMovementFunction", testRover).Return(SuccessfulRoverFunc())
@@ -29,7 +29,7 @@ func TestMovementResultsContainNoIssueIfRoverReportsNoError(t *testing.T) {
 }
 
 func TestMovementResultsContainAnIssueIfRoverReportsAnError(t *testing.T) {
-	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
+	testRover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
 	repo := mocks.SuccessfulRepoFor(testRover)
 	command := new(MockCommand)
 	command.On("MapToRoverMovementFunction", testRover).Return(FailedRoverFunc())
@@ -43,7 +43,7 @@ func TestMovementResultsContainAnIssueIfRoverReportsAnError(t *testing.T) {
 }
 
 func TestOnlyCallsRoverForGivenCommands(t *testing.T) {
-	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
+	testRover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
 	mocks.MakeAlwaysSuccessful(testRover)
 	repo := mocks.SuccessfulRepoFor(testRover)
 	firstCommand := new(MockCommand)
@@ -63,7 +63,7 @@ func TestOnlyCallsRoverForGivenCommands(t *testing.T) {
 }
 
 func TestReportsResultsBasedOnGivenCommandsOrder(t *testing.T) {
-	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
+	testRover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
 	mocks.MakeAlwaysSuccessful(testRover)
 	repo := mocks.SuccessfulRepoFor(testRover)
 	firstCommand := new(MockCommand)
@@ -81,7 +81,7 @@ func TestReportsResultsBasedOnGivenCommandsOrder(t *testing.T) {
 }
 
 func TestStopsCallingRoverForGivenCommandsOnceOneFails(t *testing.T) {
-	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
+	testRover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
 	testRover.On("MoveBackward").Return(nil)
 	testRover.On("MoveForward").Return(errors.New("movement blocked"))
 	repo := mocks.SuccessfulRepoFor(testRover)
@@ -115,7 +115,7 @@ func TestReportsRepoErrorWhenGettingRover(t *testing.T) {
 }
 
 func TestReportsRepoErrorWhenUpdatingRover(t *testing.T) {
-	testRover := mocks.LandedRover(*absoluteCoordinate.From(1, 1))
+	testRover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
 	repo := new(MockRepo)
 	repo.On("GetRover", Anything).Return(testRover, nil)
 	repo.On("UpdateRover").Return(errors.New("whatever"))

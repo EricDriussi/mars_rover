@@ -9,29 +9,29 @@ import (
 )
 
 func TestEqualsBasedOnValues(t *testing.T) {
-	aCoordinate := absoluteCoordinate.From(1, 1)
-	anEqualCoordinate := absoluteCoordinate.From(1, 1)
+	aCoordinate := absoluteCoordinate.Build(1, 1)
+	anEqualCoordinate := absoluteCoordinate.Build(1, 1)
 
 	assert.True(t, aCoordinate.Equals(*anEqualCoordinate))
 }
 
 func TestNotEqualsBasedOnValues(t *testing.T) {
-	aCoordinate := absoluteCoordinate.From(1, 1)
+	aCoordinate := absoluteCoordinate.Build(1, 1)
 	testCases := []struct {
 		name                string
 		differentCoordinate *AbsoluteCoordinate
 	}{
 		{
 			name:                "both coordinates are different",
-			differentCoordinate: absoluteCoordinate.From(2, 2),
+			differentCoordinate: absoluteCoordinate.Build(2, 2),
 		},
 		{
 			name:                "X is different",
-			differentCoordinate: absoluteCoordinate.From(2, 1),
+			differentCoordinate: absoluteCoordinate.Build(2, 1),
 		},
 		{
 			name:                "Y is different",
-			differentCoordinate: absoluteCoordinate.From(1, 2),
+			differentCoordinate: absoluteCoordinate.Build(1, 2),
 		},
 	}
 	for _, testCase := range testCases {

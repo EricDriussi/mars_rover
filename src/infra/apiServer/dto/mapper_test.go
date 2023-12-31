@@ -25,7 +25,7 @@ func TestBuildsAMovementResponseDTOFromMovementResultWithNoMovementIssues(t *tes
 	resultWithIssues := MovementResult{
 		Cmd:           Forward,
 		IssueDetected: false,
-		Coord:         *absoluteCoordinate.From(1, 1),
+		Coord:         *absoluteCoordinate.Build(1, 1),
 		Dir:           North{},
 	}
 
@@ -40,7 +40,7 @@ func TestBuildsAMovementResponseDTOFromMovementResultWithMovementIssues(t *testi
 	resultWithIssues := MovementResult{
 		Cmd:           Forward,
 		IssueDetected: true,
-		Coord:         *absoluteCoordinate.From(1, 1),
+		Coord:         *absoluteCoordinate.Build(1, 1),
 		Dir:           North{},
 	}
 
@@ -61,13 +61,13 @@ func TestBuildsAMovementResponseDTOFromMultipleMovementResults(t *testing.T) {
 	resultWithNoIssues := MovementResult{
 		Cmd:           Forward,
 		IssueDetected: false,
-		Coord:         *absoluteCoordinate.From(1, 1),
+		Coord:         *absoluteCoordinate.Build(1, 1),
 		Dir:           North{},
 	}
 	resultWithIssues := MovementResult{
 		Cmd:           Forward,
 		IssueDetected: true,
-		Coord:         *absoluteCoordinate.From(1, 1),
+		Coord:         *absoluteCoordinate.Build(1, 1),
 		Dir:           North{},
 	}
 
@@ -88,7 +88,7 @@ func TestBuildsACreateResponseDTOFromARover(t *testing.T) {
 	mockObstacle.On("Coordinates").Return([]absoluteCoordinate.AbsoluteCoordinate{})
 	testObstacles := obstacles.FromList([]obstacle.Obstacle{mockObstacle})
 	mockPlanet.On("Obstacles").Return(*testObstacles)
-	testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), North{}, *absoluteCoordinate.From(1, 1), mockPlanet)
+	testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), North{}, *absoluteCoordinate.Build(1, 1), mockPlanet)
 
 	createResponseDTO := dto.FromDomainRover(testRover)
 

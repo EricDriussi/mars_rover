@@ -16,8 +16,7 @@ func TestIsWithinLimit(t *testing.T) {
 
 	for x := 0; x <= sizeLimit.Width(); x++ {
 		for y := 0; y <= sizeLimit.Height(); y++ {
-			testCoordinate := absoluteCoordinate.From(x, y)
-			rock := smallRock.In(*testCoordinate)
+			rock := smallRock.In(*absoluteCoordinate.Build(x, y))
 
 			assert.False(t, rock.IsBeyond(*sizeLimit))
 		}
@@ -32,15 +31,15 @@ func TestIsBeyondLimit(t *testing.T) {
 	}{
 		{
 			name:       "both out of bounds",
-			coordinate: absoluteCoordinate.From(4, 4),
+			coordinate: absoluteCoordinate.Build(4, 4),
 		},
 		{
 			name:       "X out of bounds",
-			coordinate: absoluteCoordinate.From(4, 3),
+			coordinate: absoluteCoordinate.Build(4, 3),
 		},
 		{
 			name:       "Y out of bounds",
-			coordinate: absoluteCoordinate.From(3, 4),
+			coordinate: absoluteCoordinate.Build(3, 4),
 		},
 	}
 	for _, testCase := range testCases {
@@ -52,21 +51,21 @@ func TestIsBeyondLimit(t *testing.T) {
 }
 
 func TestOccupiesAGivenRandomCoordinate(t *testing.T) {
-	testCoordinate := absoluteCoordinate.From(rand.Int(), rand.Int())
+	testCoordinate := absoluteCoordinate.Build(rand.Int(), rand.Int())
 	rock := smallRock.In(*testCoordinate)
 
 	assert.True(t, rock.Occupies(*testCoordinate))
 }
 
 func TestDoesNotOccupyADifferentCoordinate(t *testing.T) {
-	testCoordinate := absoluteCoordinate.From(1, 1)
+	testCoordinate := absoluteCoordinate.Build(1, 1)
 	rock := smallRock.In(*testCoordinate)
 
-	assert.False(t, rock.Occupies(*absoluteCoordinate.From(1, 2)))
+	assert.False(t, rock.Occupies(*absoluteCoordinate.Build(1, 2)))
 }
 
 func TestGetCoordinates(t *testing.T) {
-	testCoordinate := absoluteCoordinate.From(2, 1)
+	testCoordinate := absoluteCoordinate.Build(2, 1)
 	rock := smallRock.In(*testCoordinate)
 
 	assert.Equal(t, rock.Coordinates(), []AbsoluteCoordinate{*testCoordinate})

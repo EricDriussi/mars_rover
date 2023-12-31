@@ -20,7 +20,7 @@ import (
 // TODO: Do something with these hardcoded values and error handling
 
 func setupWrappingRoverOnRockyPlanet() (Rover, Planet) {
-	rovCoord := absoluteCoordinate.From(0, 0)
+	rovCoord := absoluteCoordinate.Build(0, 0)
 	testPlanet := setupRockyPlanet()
 	aDirection := North{}
 	testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), aDirection, *rovCoord, testPlanet)
@@ -28,7 +28,7 @@ func setupWrappingRoverOnRockyPlanet() (Rover, Planet) {
 }
 
 func setupGodModRoverOnRockyPlanet() (Rover, Planet) {
-	rovCoord := absoluteCoordinate.From(1, 1)
+	rovCoord := absoluteCoordinate.Build(1, 1)
 	testPlanet := setupRockyPlanet()
 	aDirection := North{}
 	testRover := godModRover.LandFacing(uuid.New(), aDirection, *rovCoord, testPlanet)
@@ -37,10 +37,10 @@ func setupGodModRoverOnRockyPlanet() (Rover, Planet) {
 
 func setupRockyPlanet() Planet {
 	size, _ := s.Square(10)
-	smallCoord := absoluteCoordinate.From(1, 1)
+	smallCoord := absoluteCoordinate.Build(1, 1)
 	testSmallRock := smallRock.In(*smallCoord)
-	bigCoord1 := absoluteCoordinate.From(2, 2)
-	bigCoord2 := absoluteCoordinate.From(2, 3)
+	bigCoord1 := absoluteCoordinate.Build(2, 2)
+	bigCoord2 := absoluteCoordinate.Build(2, 3)
 	testBigRock := bigRock.In([]absoluteCoordinate.AbsoluteCoordinate{*bigCoord1, *bigCoord2})
 	testPlanet, _ := planetWithObstacles.Create("testColor", *size, []Obstacle{&testSmallRock, &testBigRock})
 	return testPlanet

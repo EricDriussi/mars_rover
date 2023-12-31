@@ -22,7 +22,7 @@ func TestReportsCollision(t *testing.T) {
 	y := 3
 	testPlanet := createPlanetWithObstacleIn(x, y)
 	testMap := planetMap.OfPlanet(testPlanet)
-	obstacleCoordinate := absoluteCoordinate.From(x, y)
+	obstacleCoordinate := absoluteCoordinate.Build(x, y)
 
 	didCollide := testMap.HasObstacleIn(*obstacleCoordinate)
 
@@ -37,7 +37,7 @@ func TestReportsNOCollision(t *testing.T) {
 			name := fmt.Sprintf("no collision in %d, %d", x, y)
 
 			t.Run(name, func(t *testing.T) {
-				testCoordinate := absoluteCoordinate.From(x, y)
+				testCoordinate := absoluteCoordinate.Build(x, y)
 				testPlanet := createPlanetWithRandomObstaclesNotIn(*planetSize, *testCoordinate)
 
 				testMap := planetMap.OfPlanet(testPlanet)
@@ -51,7 +51,7 @@ func TestReportsNOCollision(t *testing.T) {
 
 func createPlanetWithObstacleIn(x, y int) Planet {
 	planetSize, _ := size.Square(y + 2)
-	obstacleCoordinate := absoluteCoordinate.From(x, y)
+	obstacleCoordinate := absoluteCoordinate.Build(x, y)
 	planetObstacle := rock.In(*obstacleCoordinate)
 	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&planetObstacle})
 	return testPlanet
@@ -75,7 +75,7 @@ func createPlanetWithRandomObstaclesNotIn(planetSize Size, exclude AbsoluteCoord
 
 func getRandomCoordinateExcluding(planetSize Size, exclude AbsoluteCoordinate) AbsoluteCoordinate {
 	for {
-		randomCoordinate := absoluteCoordinate.From(rand.Intn(planetSize.Width()), rand.Intn(planetSize.Height()))
+		randomCoordinate := absoluteCoordinate.Build(rand.Intn(planetSize.Width()), rand.Intn(planetSize.Height()))
 
 		coordinateIsNotExcluded := !randomCoordinate.Equals(exclude)
 		if coordinateIsNotExcluded {

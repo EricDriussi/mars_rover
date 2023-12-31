@@ -18,7 +18,7 @@ import (
 
 func TestCalculatesAhead(t *testing.T) {
 	planetSize, _ := size.Square(10)
-	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
+	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
 	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 
 	testCases := []struct {
@@ -29,28 +29,28 @@ func TestCalculatesAhead(t *testing.T) {
 		{
 			name:               "facing north",
 			initialDirection:   &North{},
-			expectedCoordinate: absoluteCoordinate.From(5, 6),
+			expectedCoordinate: absoluteCoordinate.Build(5, 6),
 		},
 		{
 			name:               "facing east",
 			initialDirection:   &East{},
-			expectedCoordinate: absoluteCoordinate.From(6, 5),
+			expectedCoordinate: absoluteCoordinate.Build(6, 5),
 		},
 		{
 			name:               "facing south",
 			initialDirection:   &South{},
-			expectedCoordinate: absoluteCoordinate.From(5, 4),
+			expectedCoordinate: absoluteCoordinate.Build(5, 4),
 		},
 		{
 			name:               "facing west",
 			initialDirection:   &West{},
-			expectedCoordinate: absoluteCoordinate.From(4, 5),
+			expectedCoordinate: absoluteCoordinate.Build(4, 5),
 		},
 	}
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			coordinate := absoluteCoordinate.From(5, 5)
+			coordinate := absoluteCoordinate.Build(5, 5)
 			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
 
 			GPS := gps.Bind(testRover)
@@ -63,7 +63,7 @@ func TestCalculatesAhead(t *testing.T) {
 
 func TestCalculatesBehind(t *testing.T) {
 	planetSize, _ := size.Square(10)
-	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
+	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
 	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 
 	testCases := []struct {
@@ -74,28 +74,28 @@ func TestCalculatesBehind(t *testing.T) {
 		{
 			name:               "facing north",
 			initialDirection:   &North{},
-			expectedCoordinate: absoluteCoordinate.From(5, 4),
+			expectedCoordinate: absoluteCoordinate.Build(5, 4),
 		},
 		{
 			name:               "facing east",
 			initialDirection:   &East{},
-			expectedCoordinate: absoluteCoordinate.From(4, 5),
+			expectedCoordinate: absoluteCoordinate.Build(4, 5),
 		},
 		{
 			name:               "facing south",
 			initialDirection:   &South{},
-			expectedCoordinate: absoluteCoordinate.From(5, 6),
+			expectedCoordinate: absoluteCoordinate.Build(5, 6),
 		},
 		{
 			name:               "facing west",
 			initialDirection:   &West{},
-			expectedCoordinate: absoluteCoordinate.From(6, 5),
+			expectedCoordinate: absoluteCoordinate.Build(6, 5),
 		},
 	}
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			coordinate := absoluteCoordinate.From(5, 5)
+			coordinate := absoluteCoordinate.Build(5, 5)
 			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
 
 			GPS := gps.Bind(testRover)
@@ -108,7 +108,7 @@ func TestCalculatesBehind(t *testing.T) {
 
 func TestCalculatesWrappingAhead(t *testing.T) {
 	planetSize, _ := size.Square(4)
-	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
+	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
 	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 	testCases := []struct {
 		name               string
@@ -119,26 +119,26 @@ func TestCalculatesWrappingAhead(t *testing.T) {
 		{
 			name:               "facing north",
 			direction:          &North{},
-			initialCoordinate:  absoluteCoordinate.From(2, 3),
-			expectedCoordinate: absoluteCoordinate.From(2, 0),
+			initialCoordinate:  absoluteCoordinate.Build(2, 3),
+			expectedCoordinate: absoluteCoordinate.Build(2, 0),
 		},
 		{
 			name:               "facing east",
 			direction:          &East{},
-			initialCoordinate:  absoluteCoordinate.From(3, 2),
-			expectedCoordinate: absoluteCoordinate.From(0, 2),
+			initialCoordinate:  absoluteCoordinate.Build(3, 2),
+			expectedCoordinate: absoluteCoordinate.Build(0, 2),
 		},
 		{
 			name:               "facing south",
 			direction:          &South{},
-			initialCoordinate:  absoluteCoordinate.From(2, 0),
-			expectedCoordinate: absoluteCoordinate.From(2, 3),
+			initialCoordinate:  absoluteCoordinate.Build(2, 0),
+			expectedCoordinate: absoluteCoordinate.Build(2, 3),
 		},
 		{
 			name:               "facing west",
 			direction:          &West{},
-			initialCoordinate:  absoluteCoordinate.From(0, 2),
-			expectedCoordinate: absoluteCoordinate.From(3, 2),
+			initialCoordinate:  absoluteCoordinate.Build(0, 2),
+			expectedCoordinate: absoluteCoordinate.Build(3, 2),
 		},
 	}
 
@@ -156,7 +156,7 @@ func TestCalculatesWrappingAhead(t *testing.T) {
 
 func TestCalculatesWrappingBehind(t *testing.T) {
 	planetSize, _ := size.Square(4)
-	rock := smallRock.In(*absoluteCoordinate.From(1, 1))
+	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
 	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{&rock})
 	testCases := []struct {
 		name               string
@@ -167,26 +167,26 @@ func TestCalculatesWrappingBehind(t *testing.T) {
 		{
 			name:               "facing north",
 			direction:          &North{},
-			initialCoordinate:  absoluteCoordinate.From(2, 0),
-			expectedCoordinate: absoluteCoordinate.From(2, 3),
+			initialCoordinate:  absoluteCoordinate.Build(2, 0),
+			expectedCoordinate: absoluteCoordinate.Build(2, 3),
 		},
 		{
 			name:               "facing east",
 			direction:          &East{},
-			initialCoordinate:  absoluteCoordinate.From(0, 2),
-			expectedCoordinate: absoluteCoordinate.From(3, 2),
+			initialCoordinate:  absoluteCoordinate.Build(0, 2),
+			expectedCoordinate: absoluteCoordinate.Build(3, 2),
 		},
 		{
 			name:               "facing south",
 			direction:          &South{},
-			initialCoordinate:  absoluteCoordinate.From(2, 3),
-			expectedCoordinate: absoluteCoordinate.From(2, 0),
+			initialCoordinate:  absoluteCoordinate.Build(2, 3),
+			expectedCoordinate: absoluteCoordinate.Build(2, 0),
 		},
 		{
 			name:               "facing west",
 			direction:          &West{},
-			initialCoordinate:  absoluteCoordinate.From(3, 2),
-			expectedCoordinate: absoluteCoordinate.From(0, 2),
+			initialCoordinate:  absoluteCoordinate.Build(3, 2),
+			expectedCoordinate: absoluteCoordinate.Build(0, 2),
 		},
 	}
 

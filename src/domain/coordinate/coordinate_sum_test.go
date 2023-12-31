@@ -12,7 +12,7 @@ import (
 )
 
 func TestSumsRelative(t *testing.T) {
-	baseCoordinate := absoluteCoordinate.From(1, 1)
+	baseCoordinate := absoluteCoordinate.Build(1, 1)
 	testCases := []struct {
 		name     string
 		relative *RelativeCoordinate
@@ -21,22 +21,22 @@ func TestSumsRelative(t *testing.T) {
 		{
 			name:     "relative up",
 			relative: relativeCoordinate.Up(),
-			expected: absoluteCoordinate.From(1, 2),
+			expected: absoluteCoordinate.Build(1, 2),
 		},
 		{
 			name:     "relative right",
 			relative: relativeCoordinate.Right(),
-			expected: absoluteCoordinate.From(2, 1),
+			expected: absoluteCoordinate.Build(2, 1),
 		},
 		{
 			name:     "relative down",
 			relative: relativeCoordinate.Down(),
-			expected: absoluteCoordinate.From(1, 0),
+			expected: absoluteCoordinate.Build(1, 0),
 		},
 		{
 			name:     "relative left",
 			relative: relativeCoordinate.Left(),
-			expected: absoluteCoordinate.From(0, 1),
+			expected: absoluteCoordinate.Build(0, 1),
 		},
 	}
 	for _, testCase := range testCases {
