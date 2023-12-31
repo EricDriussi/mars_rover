@@ -13,7 +13,7 @@ type BigRock struct {
 
 func In(coordinates []AbsoluteCoordinate) BigRock {
 	//TODO: if len(coordinates) < 2 then small rock?
-	return BigRock{*coord.New(coordinates)}
+	return BigRock{*coord.New(coordinates...)}
 }
 
 func (this *BigRock) Occupies(coordinate AbsoluteCoordinate) bool {
@@ -21,7 +21,7 @@ func (this *BigRock) Occupies(coordinate AbsoluteCoordinate) bool {
 }
 
 func (this *BigRock) IsBeyond(size Size) bool {
-	return this.coordinates.GoBeyond(size)
+	return this.coordinates.Overflow(size)
 }
 
 func (this *BigRock) Coordinates() []AbsoluteCoordinate {

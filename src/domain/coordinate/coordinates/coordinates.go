@@ -9,22 +9,22 @@ type Coordinates struct {
 	list []AbsoluteCoordinate
 }
 
-func New(coordinate []AbsoluteCoordinate) *Coordinates {
-	return &Coordinates{coordinate}
+func New(list ...AbsoluteCoordinate) *Coordinates {
+	return &Coordinates{list}
 }
 
 func (this *Coordinates) Contain(coordinate AbsoluteCoordinate) bool {
-	for _, occupiedCoordinate := range this.list {
-		if coordinate.Equals(occupiedCoordinate) {
+	for _, containedCoordinate := range this.list {
+		if coordinate.Equals(containedCoordinate) {
 			return true
 		}
 	}
 	return false
 }
 
-func (this *Coordinates) GoBeyond(size Size) bool {
-	for _, occupiedCoordinate := range this.list {
-		if occupiedCoordinate.X() > size.Width() || occupiedCoordinate.Y() > size.Height() {
+func (this *Coordinates) Overflow(size Size) bool {
+	for _, coordinate := range this.list {
+		if coordinate.X() > size.Width() || coordinate.Y() > size.Height() {
 			return true
 		}
 	}

@@ -1,69 +1,70 @@
-package coordinates
+package coordinates_test
 
 import (
 	"github.com/stretchr/testify/assert"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
+	"mars_rover/src/domain/coordinate/coordinates"
+	. "mars_rover/src/domain/coordinate/coordinates"
 	"mars_rover/src/domain/size"
 	"math/rand"
 	"testing"
 )
 
-func TestIsWithinLimit(t *testing.T) {
+func TestAreWithinLimit(t *testing.T) {
 	sizeLimit, _ := size.Square(4)
-	coordinates := New([]AbsoluteCoordinate{
+	coords := coordinates.New(
 		*absoluteCoordinate.From(1, 1),
 		*absoluteCoordinate.From(1, 2),
 		*absoluteCoordinate.From(1, 3),
-	})
+	)
 
-	assert.False(t, coordinates.GoBeyond(*sizeLimit))
+	assert.False(t, coords.Overflow(*sizeLimit))
 }
 
-func TestIsBeyondLimit(t *testing.T) {
+func TestAreBeyondLimit(t *testing.T) {
 	sizeLimit, _ := size.Square(3)
 	testCases := []struct {
-		name       string
-		coordinate *AbsoluteCoordinate
+		name        string
+		coordinates *Coordinates
 	}{
 		{
-			name:       "both out of bounds",
-			coordinate: absoluteCoordinate.From(4, 4),
+			name:        "both out of bounds",
+			coordinates: coordinates.New(*absoluteCoordinate.From(4, 4)),
 		},
 		{
-			name:       "X out of bounds",
-			coordinate: absoluteCoordinate.From(4, 3),
+			name:        "X out of bounds",
+			coordinates: coordinates.New(*absoluteCoordinate.From(4, 3)),
 		},
 		{
-			name:       "Y out of bounds",
-			coordinate: absoluteCoordinate.From(3, 4),
+			name:        "Y out of bounds",
+			coordinates: coordinates.New(*absoluteCoordinate.From(3, 4)),
 		},
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			coordinates := New([]AbsoluteCoordinate{*testCase.coordinate})
-			assert.True(t, coordinates.GoBeyond(*sizeLimit))
+			assert.True(t, testCase.coordinates.Overflow(*sizeLimit))
 		})
 	}
 }
 
-func TestOccupiesAGivenRandomCoordinate(t *testing.T) {
+func TestOccupiesAnIncludedCoordinate(t *testing.T) {
 	testCoordinate := absoluteCoordinate.From(rand.Int(), rand.Int())
-	coordinates := New([]AbsoluteCoordinate{*testCoordinate})
+	coords := New(*testCoordinate)
 
-	assert.True(t, coordinates.Contain(*testCoordinate))
+	assert.True(t, coords.Contain(*testCoordinate))
 }
 
-func TestDoesNotOccupyADifferentCoordinate(t *testing.T) {
+func TestDoesNotOccupyANotIncludedCoordinate(t *testing.T) {
 	testCoordinate := absoluteCoordinate.From(1, 1)
-	coordinates := New([]AbsoluteCoordinate{*testCoordinate})
+	coords := New(*testCoordinate)
 
-	assert.False(t, coordinates.Contain(*absoluteCoordinate.From(1, 2)))
+	assert.False(t, coords.Contain(*absoluteCoordinate.From(1, 2)))
 }
 
-func TestGetsList(t *testing.T) {
-	testCoordinates := []AbsoluteCoordinate{*From(1, 1)}
-	coordinates := New(testCoordinates)
+func TestListsContainedCoordinates(t *testing.T) {
+	testCoordinate := absoluteCoordinate.From(rand.Int(), rand.Int())
+	coords := New(*testCoordinate)
 
-	assert.Equal(t, testCoordinates, coordinates.List())
+	assert.Equal(t, []AbsoluteCoordinate{*testCoordinate}, coords.List())
 }
