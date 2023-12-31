@@ -1,15 +1,29 @@
 package relativeCoordinate
 
+const step = 1 // this should probably be a config var
+
 type RelativeCoordinate struct {
 	x, y int
 }
 
-func Orthogonal(x, y int) *RelativeCoordinate {
-	step := 1
-	if isOrthogonal(x, y) {
-		return &RelativeCoordinate{x * step, y * step}
-	}
-	return &RelativeCoordinate{0, 0}
+func Up() *RelativeCoordinate {
+	return build(0, 1)
+}
+
+func Right() *RelativeCoordinate {
+	return build(1, 0)
+}
+
+func Down() *RelativeCoordinate {
+	return build(0, -1)
+}
+
+func Left() *RelativeCoordinate {
+	return build(-1, 0)
+}
+
+func build(x, y int) *RelativeCoordinate {
+	return &RelativeCoordinate{x * step, y * step}
 }
 
 func (this *RelativeCoordinate) X() int {
@@ -18,18 +32,4 @@ func (this *RelativeCoordinate) X() int {
 
 func (this *RelativeCoordinate) Y() int {
 	return this.y
-}
-
-func isOrthogonal(x, y int) bool {
-	if x == 0 && isAdjacent(y) {
-		return true
-	}
-	if y == 0 && isAdjacent(x) {
-		return true
-	}
-	return false
-}
-
-func isAdjacent(num int) bool {
-	return num == 1 || num == -1
 }
