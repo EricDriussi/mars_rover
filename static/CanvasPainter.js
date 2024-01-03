@@ -88,7 +88,7 @@ export class CanvasPainter {
     drawObstacles(obstacles) {
         this.#ctx.fillStyle = 'black';
         obstacles.forEach(obstacle => {
-            obstacle.Coordinate.forEach(coordinate => {
+            obstacle.forEach(coordinate => {
                 this.#drawObstacle(coordinate);
             });
         });
