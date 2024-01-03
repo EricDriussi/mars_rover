@@ -4,6 +4,8 @@ import (
 	"errors"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
+	"mars_rover/src/domain/obstacle"
+	. "mars_rover/src/domain/obstacle"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/domain/rover/direction"
@@ -26,12 +28,27 @@ func RandomColor() string {
 
 func LoopUntilRoverLanded(planet Planet) Rover {
 	return LoopUntilNoError(func() (*WrappingCollidingRover, error) {
-		return wrappingCollidingRover.LandFacing(uuid.New(), RandomDirection(), RandomCoordinateWithin(planet.Size()), planet)
+		return wrappingCollidingRover.LandFacing(uuid.New(), RandomDirection(), randomCoordinateWithin(planet.Size()), planet)
 	})
 }
 
-func RandomCoordinateWithin(size Size) AbsoluteCoordinate {
+func randomCoordinateWithin(size Size) AbsoluteCoordinate {
 	return *absoluteCoordinate.Build(rand.Intn(size.Width()), rand.Intn(size.Height()))
+}
+
+func LoopUntilValidObstacle(size Size) Obstacle {
+	return LoopUntilNoError(func() (Obstacle, error) {
+		return obstacle.CreateObstacle(randomCoordinatesWithin(size, obstacle.MaxAmountOfCoords())...)
+	})
+}
+
+func randomCoordinatesWithin(size Size, maxObstacleSize int) []AbsoluteCoordinate {
+	betweenOneAndMaxObstacleSize := rand.Intn(maxObstacleSize-1) + 1
+	var coords []AbsoluteCoordinate
+	for i := 0; i < betweenOneAndMaxObstacleSize; i++ {
+		coords = append(coords, randomCoordinateWithin(size))
+	}
+	return coords
 }
 
 func RandomDirection() Direction {

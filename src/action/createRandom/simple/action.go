@@ -5,7 +5,6 @@ import (
 	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/obstacle"
 	"mars_rover/src/domain/obstacle/obstacles"
-	rock "mars_rover/src/domain/obstacle/smallRock"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
 	"mars_rover/src/domain/size"
@@ -47,16 +46,15 @@ func (this *SimpleRandomCreator) loopUntilPlanetCreated() Planet {
 
 func (this *SimpleRandomCreator) loopUntilValidSize() *Size {
 	return LoopUntilNoError(func() (*Size, error) {
-		return size.Square(rand.Intn(420)) // number has no meaning: could be left unbound, but tests would take too long ¯\_(ツ)_/¯
+		return size.Square(rand.Intn(420) + 1) // 420 has no meaning: could be left unbound, but tests would take too long ¯\_(ツ)_/¯
 	})
 }
 
 func (this *SimpleRandomCreator) randomObstaclesWithin(size Size) []Obstacle {
 	var list []Obstacle
-	amountOfObstacles := rand.Intn(size.Area() - 1) // leave at least a blank space for the rover
+	amountOfObstacles := rand.Intn(size.Area()) - 1 // leave at least a blank space for the rover
 	for i := 0; i < amountOfObstacles; i++ {
-		smallRock := rock.In(RandomCoordinateWithin(size))
-		list = append(list, smallRock)
+		list = append(list, LoopUntilValidObstacle(size))
 	}
 	return list
 }

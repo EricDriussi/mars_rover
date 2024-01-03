@@ -9,6 +9,7 @@ type SmallRock struct {
 	coordinate AbsoluteCoordinate
 }
 
+// TODO: check usages in tests -> use factory?
 func In(coordinate AbsoluteCoordinate) *SmallRock {
 	return &SmallRock{coordinate}
 }

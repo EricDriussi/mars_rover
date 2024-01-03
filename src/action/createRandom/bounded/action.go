@@ -5,7 +5,6 @@ import (
 	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/obstacle"
 	"mars_rover/src/domain/obstacle/obstacles"
-	rock "mars_rover/src/domain/obstacle/smallRock"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
 	"mars_rover/src/domain/size"
@@ -69,8 +68,7 @@ func (this *BoundedRandomCreator) randomObstaclesWithin(size Size) []Obstacle {
 	halfTheArea := size.Area() / 2
 	betweenMinObstaclesAndHalfTheArea := rand.Intn(halfTheArea-this.minObstacles) + this.minObstacles
 	for i := 0; i < betweenMinObstaclesAndHalfTheArea; i++ {
-		smallRock := rock.In(RandomCoordinateWithin(size))
-		list = append(list, smallRock)
+		list = append(list, LoopUntilValidObstacle(size))
 	}
 	return list
 }
