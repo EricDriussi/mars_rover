@@ -14,6 +14,7 @@ import (
 	"math/rand"
 )
 
+// TODO: test these functions?
 func RandomColor() string {
 	colors := []string{
 		"red",

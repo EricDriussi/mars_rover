@@ -11,7 +11,8 @@ describe('ApiWrapper should', () => {
     const errorResponse = {
         ok: false,
         statusText: 'Bad Request',
-        json: jest.fn()
+        json: jest.fn(),
+        text: jest.fn()
     };
 
     const errorFreeResponse = {
