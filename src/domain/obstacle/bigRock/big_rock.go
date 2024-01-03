@@ -18,6 +18,7 @@ type BigRock struct {
 	coordinates Coordinates
 }
 
+// TODO: should only accept contiguous coordinates!
 func In(occupiedCoordinates ...AbsoluteCoordinate) (*BigRock, error) {
 	coords := coordinates.New(occupiedCoordinates...)
 	if len(coords.List()) < MinSize {
