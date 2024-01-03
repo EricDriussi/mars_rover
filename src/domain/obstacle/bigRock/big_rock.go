@@ -8,14 +8,23 @@ import (
 	. "mars_rover/src/domain/size"
 )
 
+// TODO.LM: this should be set by config
+const (
+	MinSize = 2
+	MaxSize = 5
+)
+
 type BigRock struct {
 	coordinates Coordinates
 }
 
 func In(occupiedCoordinates ...AbsoluteCoordinate) (*BigRock, error) {
 	coords := coordinates.New(occupiedCoordinates...)
-	if len(coords.List()) < 2 {
+	if len(coords.List()) < MinSize {
 		return nil, errors.New("cannot create big rock with less than 2 coordinates")
+	}
+	if len(coords.List()) > MaxSize {
+		return nil, errors.New("cannot create big rock with more than 5 coordinates")
 	}
 	return &BigRock{*coords}, nil
 }

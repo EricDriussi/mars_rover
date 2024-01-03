@@ -19,3 +19,7 @@ func CreateObstacle(coordinates ...AbsoluteCoordinate) (Obstacle, error) {
 	}
 	return bigRock.In(coordinates...)
 }
+
+func MaxAmountOfCoords() int {
+	return bigRock.MaxSize
+}
