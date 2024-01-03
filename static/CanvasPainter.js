@@ -86,12 +86,23 @@ export class CanvasPainter {
     }
 
     drawObstacles(obstacles) {
-        this.#ctx.fillStyle = 'black';
         obstacles.forEach(obstacle => {
+            this.#ctx.fillStyle = this.#randomColorBlackGreenOrBlue();
             obstacle.forEach(coordinate => {
                 this.#drawObstacle(coordinate);
             });
         });
+    }
+
+    #randomColorBlackGreenOrBlue() {
+        const random = Math.random();
+        if (random < 0.33) {
+            return 'black';
+        } else if (random < 0.66) {
+            return 'green';
+        } else {
+            return 'blue';
+        }
     }
 
     #drawObstacle(coordinate) {
@@ -121,7 +132,9 @@ export class CanvasPainter {
         const pixelData = this.#ctx.getImageData(pixelX, pixelY, 1, 1).data;
 
         const pixelIsNotBlack = pixelData[0] !== 0 || pixelData[1] !== 0 || pixelData[2] !== 0; // RGB
-        if (pixelIsNotBlack) {
+        const pixelIsNotBlue = pixelData[0] !== 0 || pixelData[1] !== 0 || pixelData[2] !== 255; // RGB
+        const pixelIsNotGreen = pixelData[0] !== 0 || pixelData[1] !== 255 || pixelData[2] !== 0; // RGB
+        if (pixelIsNotBlack && pixelIsNotBlue && pixelIsNotGreen) {
             this.#drawEmptyCell(x * this.#cellSize, y * this.#cellSize);
             this.#drawCellBorder(x * this.#cellSize, y * this.#cellSize);
         }
