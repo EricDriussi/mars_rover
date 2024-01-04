@@ -87,7 +87,12 @@ export class CanvasPainter {
 
     drawObstacles(obstacles) {
         obstacles.forEach(obstacle => {
-            this.#ctx.fillStyle = this.#randomColorBlackGreenOrBlue();
+            const isSmall = obstacle.length === 1;
+            if (isSmall) {
+                this.#ctx.fillStyle = this.#randomColorBlackGreenOrBlue()
+            } else {
+                this.#ctx.fillStyle = 'black'
+            }
             obstacle.forEach(coordinate => {
                 this.#drawObstacle(coordinate);
             });
@@ -96,12 +101,22 @@ export class CanvasPainter {
 
     #randomColorBlackGreenOrBlue() {
         const random = Math.random();
-        if (random < 0.33) {
-            return 'black';
-        } else if (random < 0.66) {
+        if (random < 0.1) {
             return 'green';
-        } else {
+        } else if (random < 0.2) {
             return 'blue';
+        } else if (random < 0.3) {
+            return 'yellow';
+        } else if (random < 0.4) {
+            return 'orange';
+        } else if (random < 0.5) {
+            return 'purple';
+        } else if (random < 0.6) {
+            return 'pink';
+        } else if (random < 0.7) {
+            return 'brown';
+        } else {
+            return 'gray';
         }
     }
 
@@ -120,23 +135,25 @@ export class CanvasPainter {
 
         for (let x = 0; x < widthInCells; x++) {
             for (let y = 0; y < heightInCells; y++) {
-                this.#clearIfNotBlack(x, y);
+                this.#clearIfRedOrWhite(x, y);
             }
         }
     }
 
-    #clearIfNotBlack(x, y) {
-        // Get the pixel data from the middle of the cell to avoid issues with borders
+    #clearIfRedOrWhite(x, y) {
         const pixelX = x * this.#cellSize + this.#cellSize / 2;
         const pixelY = y * this.#cellSize + this.#cellSize / 2;
         const pixelData = this.#ctx.getImageData(pixelX, pixelY, 1, 1).data;
 
-        const pixelIsNotBlack = pixelData[0] !== 0 || pixelData[1] !== 0 || pixelData[2] !== 0; // RGB
-        const pixelIsNotBlue = pixelData[0] !== 0 || pixelData[1] !== 0 || pixelData[2] !== 255; // RGB
-        const pixelIsNotGreen = pixelData[0] !== 0 || pixelData[1] !== 255 || pixelData[2] !== 0; // RGB
-        if (pixelIsNotBlack && pixelIsNotBlue && pixelIsNotGreen) {
+        if (this.#isRedOrWhite(pixelData)) {
             this.#drawEmptyCell(x * this.#cellSize, y * this.#cellSize);
             this.#drawCellBorder(x * this.#cellSize, y * this.#cellSize);
         }
+    }
+
+    #isRedOrWhite(pixelData) {
+        const pixelIsRed = pixelData[0] === 255 && pixelData[1] === 0 && pixelData[2] === 0;
+        const pixelIsWhite = pixelData[0] === 255 && pixelData[1] === 255 && pixelData[2] === 255;
+        return pixelIsRed || pixelIsWhite;
     }
 }
