@@ -68,7 +68,22 @@ func (this *BoundedRandomCreator) randomObstaclesWithin(size Size) []Obstacle {
 	halfTheArea := size.Area() / 2
 	betweenMinObstaclesAndHalfTheArea := rand.Intn(halfTheArea-this.minObstacles) + this.minObstacles
 	for i := 0; i < betweenMinObstaclesAndHalfTheArea; i++ {
-		list = append(list, LoopUntilValidObstacle(size))
+		obstacle := LoopUntilValidObstacle(size)
+		if coordinatesNotTaken(list, obstacle) {
+			list = append(list, obstacle)
+		}
 	}
 	return list
+}
+
+// TODO: this should be done by the planet
+func coordinatesNotTaken(list []Obstacle, obstacle Obstacle) bool {
+	for _, presentObstacle := range list {
+		for _, coordinate := range presentObstacle.Coordinates() {
+			if obstacle.Occupies(coordinate) {
+				return false
+			}
+		}
+	}
+	return true
 }
