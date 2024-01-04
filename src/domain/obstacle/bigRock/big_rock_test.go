@@ -107,15 +107,11 @@ func TestIsWithinLimit(t *testing.T) {
 
 func TestIsBeyondLimit(t *testing.T) {
 	sizeLimit, _ := size.Square(3)
-	coordinateWithinLimit := absoluteCoordinate.Build(1, 1)
+	coordinateWithinLimit := absoluteCoordinate.Build(3, 3)
 	testCases := []struct {
 		name       string
 		coordinate *AbsoluteCoordinate
 	}{
-		{
-			name:       "both out of bounds",
-			coordinate: absoluteCoordinate.Build(4, 4),
-		},
 		{
 			name:       "X out of bounds",
 			coordinate: absoluteCoordinate.Build(4, 3),
@@ -135,8 +131,10 @@ func TestIsBeyondLimit(t *testing.T) {
 }
 
 func TestOccupiesItsCoordinates(t *testing.T) {
-	coordinate1 := absoluteCoordinate.Build(rand.Int(), rand.Int())
-	coordinate2 := absoluteCoordinate.Build(rand.Int(), rand.Int())
+	x := rand.Int()
+	y := rand.Int()
+	coordinate1 := absoluteCoordinate.Build(x, y)
+	coordinate2 := absoluteCoordinate.Build(x, y+1)
 	rock, err := bigRock.In(*coordinate1, *coordinate2)
 	assert.Nil(t, err)
 

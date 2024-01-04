@@ -19,3 +19,11 @@ func (this *AbsoluteCoordinate) X() int {
 func (this *AbsoluteCoordinate) Y() int {
 	return this.y
 }
+
+func (this *AbsoluteCoordinate) IsAdjacentTo(coordinate AbsoluteCoordinate) bool {
+	sameX := this.X() == coordinate.X()
+	sameY := this.Y() == coordinate.Y()
+	adjacentY := this.Y() == coordinate.Y()+1 || this.Y() == coordinate.Y()-1
+	adjacentX := this.X() == coordinate.X()+1 || this.X() == coordinate.X()-1
+	return sameX && adjacentY || sameY && adjacentX
+}

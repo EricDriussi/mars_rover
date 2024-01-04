@@ -40,3 +40,29 @@ func TestNotEqualsBasedOnValues(t *testing.T) {
 		})
 	}
 }
+
+func TestIsAdjacentTo(t *testing.T) {
+	aCoordinate := absoluteCoordinate.Build(1, 1)
+	testCases := []struct {
+		name                  string
+		adjacentCoordinate    *AbsoluteCoordinate
+		nonAdjacentCoordinate *AbsoluteCoordinate
+	}{
+		{
+			name:                  "X is adjacent",
+			adjacentCoordinate:    absoluteCoordinate.Build(2, 1),
+			nonAdjacentCoordinate: absoluteCoordinate.Build(3, 1),
+		},
+		{
+			name:                  "Y is adjacent",
+			adjacentCoordinate:    absoluteCoordinate.Build(1, 2),
+			nonAdjacentCoordinate: absoluteCoordinate.Build(1, 3),
+		},
+	}
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			assert.True(t, aCoordinate.IsAdjacentTo(*testCase.adjacentCoordinate))
+			assert.False(t, aCoordinate.IsAdjacentTo(*testCase.nonAdjacentCoordinate))
+		})
+	}
+}

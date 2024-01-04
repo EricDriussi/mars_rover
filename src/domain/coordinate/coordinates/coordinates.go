@@ -1,16 +1,21 @@
 package coordinates
 
 import (
+	"errors"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/size"
+	"sort"
 )
 
 type Coordinates struct {
 	list []AbsoluteCoordinate
 }
 
-func New(list ...AbsoluteCoordinate) *Coordinates {
-	return &Coordinates{filterUnique(list)}
+func New(list ...AbsoluteCoordinate) (*Coordinates, error) {
+	if len(list) == 0 {
+		return nil, errors.New("cannot create Coordinates with empty coordinate list")
+	}
+	return &Coordinates{filterUnique(list)}, nil
 }
 
 func filterUnique(list []AbsoluteCoordinate) []AbsoluteCoordinate {
@@ -47,4 +52,34 @@ func (this *Coordinates) Overflow(size Size) bool {
 
 func (this *Coordinates) List() []AbsoluteCoordinate {
 	return this.list
+}
+
+func (this *Coordinates) Contiguous() bool {
+	if len(this.list) <= 1 {
+		return true
+	}
+	return areAllAdjacent(this.list)
+}
+
+func areAllAdjacent(coordinates []AbsoluteCoordinate) bool {
+	sortedCoords := make([]AbsoluteCoordinate, len(coordinates))
+	copy(sortedCoords, coordinates)
+	sort.Slice(sortedCoords, sortCoordinates(sortedCoords))
+	for i := 0; i < len(sortedCoords)-1; i++ {
+		currentCoordinate := sortedCoords[i]
+		nextCoordinate := sortedCoords[i+1]
+		if !currentCoordinate.IsAdjacentTo(nextCoordinate) {
+			return false
+		}
+	}
+	return true
+}
+
+func sortCoordinates(coordinates []AbsoluteCoordinate) func(i int, j int) bool {
+	return func(i, j int) bool {
+		if coordinates[i].X() != coordinates[j].X() {
+			return coordinates[i].X() < coordinates[j].X()
+		}
+		return coordinates[i].Y() < coordinates[j].Y()
+	}
 }

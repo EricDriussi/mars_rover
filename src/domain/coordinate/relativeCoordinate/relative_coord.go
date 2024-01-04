@@ -1,6 +1,6 @@
 package relativeCoordinate
 
-const step = 1 // this should probably be a config var
+const step = 1 // TODO.LM: this should be set by config
 
 type RelativeCoordinate struct {
 	x, y int

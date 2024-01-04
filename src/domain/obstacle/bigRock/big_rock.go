@@ -18,14 +18,19 @@ type BigRock struct {
 	coordinates Coordinates
 }
 
-// TODO: should only accept contiguous coordinates!
 func In(occupiedCoordinates ...AbsoluteCoordinate) (*BigRock, error) {
-	coords := coordinates.New(occupiedCoordinates...)
+	coords, err := coordinates.New(occupiedCoordinates...)
+	if err != nil {
+		return nil, err
+	}
 	if len(coords.List()) < MinSize {
 		return nil, errors.New("cannot create big rock with less than 2 coordinates")
 	}
 	if len(coords.List()) > MaxSize {
 		return nil, errors.New("cannot create big rock with more than 5 coordinates")
+	}
+	if !coords.Contiguous() {
+		return nil, errors.New("cannot create big rock with non-contiguous coordinates")
 	}
 	return &BigRock{*coords}, nil
 }
