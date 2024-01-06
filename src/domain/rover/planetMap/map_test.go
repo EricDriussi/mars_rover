@@ -3,7 +3,6 @@ package planetMap_test
 import (
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
-	. "mars_rover/src/domain/obstacle"
 	"mars_rover/src/domain/obstacle/obstacles"
 	"mars_rover/src/domain/rover/planetMap"
 	"mars_rover/src/domain/size"
@@ -15,41 +14,33 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func TestReportsCollisionWithMock(t *testing.T) {
+func TestReportsThatObstacleIsInGivenCoordinate(t *testing.T) {
 	mockObstacle := new(MockObstacle)
 	mockPlanet := new(MockPlanet)
-	mockPlanet.On("Obstacles").Return(*obstacles.FromList([]Obstacle{mockObstacle}))
+	mockPlanet.On("Obstacles").Return(*obstacles.FromList(mockObstacle))
 	mockPlanet.On("Size").Return(Size{})
-	testMap := planetMap.OfPlanet(mockPlanet)
-
 	mockObstacle.On("Occupies", mock.Anything).Return(true)
-
-	didCollide := testMap.HasObstacleIn(AbsoluteCoordinate{})
-
-	mockObstacle.AssertCalled(t, "Occupies", mock.Anything)
-	assert.True(t, didCollide)
-}
-
-func TestReportsNoCollisionWithMock(t *testing.T) {
-	mockObstacle := new(MockObstacle)
-	mockPlanet := new(MockPlanet)
-	mockPlanet.On("Obstacles").Return(*obstacles.FromList([]Obstacle{mockObstacle}))
-	mockPlanet.On("Size").Return(Size{})
 	testMap := planetMap.OfPlanet(mockPlanet)
 
-	mockObstacle.On("Occupies", mock.Anything).Return(false)
-
-	didCollide := testMap.HasObstacleIn(AbsoluteCoordinate{})
-
-	mockObstacle.AssertCalled(t, "Occupies", mock.Anything)
-	assert.False(t, didCollide)
+	assert.True(t, testMap.HasObstacleIn(AbsoluteCoordinate{}))
 }
 
-func TestIsOutOfBoundsWithMock(t *testing.T) {
+func TestReportsThatObstacleIsNotInGivenCoordinate(t *testing.T) {
+	mockObstacle := new(MockObstacle)
+	mockPlanet := new(MockPlanet)
+	mockPlanet.On("Obstacles").Return(*obstacles.FromList(mockObstacle))
+	mockPlanet.On("Size").Return(Size{})
+	mockObstacle.On("Occupies", mock.Anything).Return(false)
+	testMap := planetMap.OfPlanet(mockPlanet)
+
+	assert.False(t, testMap.HasObstacleIn(AbsoluteCoordinate{}))
+}
+
+func TestReportsCoordinateAsOutOfBoundsWhenOutsideThePlanet(t *testing.T) {
 	planetSize, err := size.Square(5)
 	assert.Nil(t, err)
 	mockPlanet := new(MockPlanet)
-	mockPlanet.On("Obstacles").Return(*obstacles.FromList([]Obstacle{}))
+	mockPlanet.On("Obstacles").Return(*obstacles.FromList())
 	mockPlanet.On("Size").Return(*planetSize)
 	testMap := planetMap.OfPlanet(mockPlanet)
 

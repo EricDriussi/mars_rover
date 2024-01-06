@@ -3,24 +3,19 @@ package gps_test
 import (
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
-	. "mars_rover/src/domain/obstacle"
-	"mars_rover/src/domain/obstacle/smallRock"
-	"mars_rover/src/domain/planet/planetWithObstacles"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/uuid"
 	"mars_rover/src/domain/rover/wrappingCollidingRover"
 	"mars_rover/src/domain/rover/wrappingCollidingRover/gps"
-	"mars_rover/src/domain/size"
+	. "mars_rover/src/test_helpers"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCalculatesAhead(t *testing.T) {
-	planetSize, _ := size.Square(10)
-	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
-
+	testPlanet := SetupEmptyTestPlanetOfSize(t, 10)
+	coordinate := absoluteCoordinate.Build(5, 5)
 	testCases := []struct {
 		name               string
 		initialDirection   Direction
@@ -50,8 +45,8 @@ func TestCalculatesAhead(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			coordinate := absoluteCoordinate.Build(5, 5)
-			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
+			testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
+			assert.Nil(t, err)
 
 			GPS := gps.Bind(testRover)
 			calculatedCoordinates := GPS.Ahead()
@@ -62,10 +57,8 @@ func TestCalculatesAhead(t *testing.T) {
 }
 
 func TestCalculatesBehind(t *testing.T) {
-	planetSize, _ := size.Square(10)
-	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
-
+	testPlanet := SetupEmptyTestPlanetOfSize(t, 10)
+	coordinate := absoluteCoordinate.Build(5, 5)
 	testCases := []struct {
 		name               string
 		initialDirection   Direction
@@ -95,8 +88,8 @@ func TestCalculatesBehind(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			coordinate := absoluteCoordinate.Build(5, 5)
-			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
+			testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
+			assert.Nil(t, err)
 
 			GPS := gps.Bind(testRover)
 			calculatedCoordinates := GPS.Behind()
@@ -107,9 +100,7 @@ func TestCalculatesBehind(t *testing.T) {
 }
 
 func TestCalculatesWrappingAhead(t *testing.T) {
-	planetSize, _ := size.Square(4)
-	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
+	testPlanet := SetupEmptyTestPlanetOfSize(t, 4)
 	testCases := []struct {
 		name               string
 		direction          Direction
@@ -144,7 +135,8 @@ func TestCalculatesWrappingAhead(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.direction, *testCase.initialCoordinate, testPlanet)
+			testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), testCase.direction, *testCase.initialCoordinate, testPlanet)
+			assert.Nil(t, err)
 
 			GPS := gps.Bind(testRover)
 			calculatedCoordinates := GPS.Ahead()
@@ -155,9 +147,7 @@ func TestCalculatesWrappingAhead(t *testing.T) {
 }
 
 func TestCalculatesWrappingBehind(t *testing.T) {
-	planetSize, _ := size.Square(4)
-	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
+	testPlanet := SetupEmptyTestPlanetOfSize(t, 4)
 	testCases := []struct {
 		name               string
 		direction          Direction
@@ -192,7 +182,8 @@ func TestCalculatesWrappingBehind(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.direction, *testCase.initialCoordinate, testPlanet)
+			testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), testCase.direction, *testCase.initialCoordinate, testPlanet)
+			assert.Nil(t, err)
 
 			GPS := gps.Bind(testRover)
 			calculatedCoordinates := GPS.Behind()

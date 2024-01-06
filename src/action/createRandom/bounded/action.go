@@ -5,6 +5,7 @@ import (
 	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/obstacle"
 	"mars_rover/src/domain/obstacle/obstacles"
+	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
 	"mars_rover/src/domain/size"
@@ -52,7 +53,7 @@ func (this *BoundedRandomCreator) Create() (Rover, *CreationError) {
 func (this *BoundedRandomCreator) loopUntilPlanetCreated() Planet {
 	return LoopUntilNoError(func() (Planet, error) {
 		validSize := *this.loopUntilValidSize()
-		return CreatePlanet(RandomColor(), validSize, *obstacles.FromList(this.randomObstaclesWithin(validSize)))
+		return CreatePlanet(RandomColor(), validSize, this.randomObstaclesWithin(validSize))
 	})
 }
 
@@ -63,23 +64,24 @@ func (this *BoundedRandomCreator) loopUntilValidSize() *Size {
 	})
 }
 
-func (this *BoundedRandomCreator) randomObstaclesWithin(size Size) []Obstacle {
-	var list []Obstacle
+func (this *BoundedRandomCreator) randomObstaclesWithin(size Size) Obstacles {
+	list := obstacles.FromList()
 	halfTheArea := size.Area() / 2
 	betweenMinObstaclesAndHalfTheArea := rand.Intn(halfTheArea-this.minObstacles) + this.minObstacles
 	for i := 0; i < betweenMinObstaclesAndHalfTheArea; i++ {
 		obstacle := LoopUntilValidObstacle(size)
-		if coordinatesNotTaken(list, obstacle) {
-			list = append(list, obstacle)
+		if coordinatesNotTaken(*list, obstacle) {
+			list.Add(obstacle)
 		}
 	}
-	return list
+	return *list
 }
 
 // TODO: this should be done by the planet
-func coordinatesNotTaken(list []Obstacle, obstacle Obstacle) bool {
-	for _, presentObstacle := range list {
-		for _, coordinate := range presentObstacle.Coordinates() {
+func coordinatesNotTaken(list Obstacles, obstacle Obstacle) bool {
+	for _, presentObstacle := range list.List() {
+		coordinates := presentObstacle.Coordinates()
+		for _, coordinate := range coordinates.List() {
 			if obstacle.Occupies(coordinate) {
 				return false
 			}

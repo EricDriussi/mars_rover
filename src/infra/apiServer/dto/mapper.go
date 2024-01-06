@@ -4,6 +4,7 @@ import (
 	"fmt"
 	. "mars_rover/src/action/move"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/src/domain/coordinate/coordinates"
 	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/domain/rover/planetMap"
@@ -67,9 +68,9 @@ func mapDomainToDTOObstacles(obstacles Obstacles) []ObstacleDTO {
 	return obstaclesDTO
 }
 
-func mapDomainToDTOCoordinates(coord []AbsoluteCoordinate) []CoordinateDTO {
+func mapDomainToDTOCoordinates(coord Coordinates) []CoordinateDTO {
 	var coordinatesDTO []CoordinateDTO
-	for _, coordinate := range coord {
+	for _, coordinate := range coord.List() {
 		coordinatesDTO = append(coordinatesDTO, coordinateDTOFrom(coordinate))
 	}
 	return coordinatesDTO

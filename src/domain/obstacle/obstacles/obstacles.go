@@ -10,7 +10,7 @@ type Obstacles struct {
 	list []Obstacle
 }
 
-func FromList(list []Obstacle) *Obstacles {
+func FromList(list ...Obstacle) *Obstacles {
 	return &Obstacles{list}
 }
 
@@ -34,4 +34,12 @@ func (this *Obstacles) IsAnyBeyond(size Size) bool {
 		}
 	}
 	return false
+}
+
+func (this *Obstacles) Amount() int {
+	return len(this.list)
+}
+
+func (this *Obstacles) Add(obstacle Obstacle) {
+	this.list = append(this.list, obstacle)
 }

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
+	"mars_rover/src/domain/coordinate/coordinates"
 	"mars_rover/src/domain/obstacle"
 	. "mars_rover/src/domain/obstacle"
 	. "mars_rover/src/domain/planet"
@@ -38,7 +39,11 @@ func randomCoordinateWithin(size Size) AbsoluteCoordinate {
 
 func LoopUntilValidObstacle(size Size) Obstacle {
 	return LoopUntilNoError(func() (Obstacle, error) {
-		return obstacle.CreateObstacle(randomCoordinatesWithin(size, obstacle.MaxAmountOfCoords())...)
+		coords, err := coordinates.New(randomCoordinatesWithin(size, obstacle.MaxAmountOfCoords())...)
+		if err != nil {
+			panic(err) // TODO: find a better way
+		}
+		return obstacle.CreateObstacle(*coords)
 	})
 }
 

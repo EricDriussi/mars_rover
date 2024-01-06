@@ -12,7 +12,7 @@ import (
 func TestUpdatesRover(t *testing.T) {
 	testCases := []struct {
 		name      string
-		setupFunc func() (Rover, Planet)
+		setupFunc func(t *testing.T) (Rover, Planet)
 	}{
 		{
 			name:      "wrapping rover on rocky planet",
@@ -26,7 +26,7 @@ func TestUpdatesRover(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			db, repo := InitMem()
-			testRover, testPlanet := testCase.setupFunc()
+			testRover, testPlanet := testCase.setupFunc(t)
 			err := saveGame(db, testRover, testPlanet)
 			assert.Nil(t, err)
 

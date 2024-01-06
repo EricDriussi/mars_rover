@@ -6,7 +6,7 @@ import (
 	. "mars_rover/src/action/move"
 	. "mars_rover/src/action/move/command"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
-	"mars_rover/src/domain/obstacle"
+	"mars_rover/src/domain/coordinate/coordinates"
 	"mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/planet"
@@ -85,8 +85,9 @@ func TestBuildsACreateResponseDTOFromARover(t *testing.T) {
 	mockPlanet.On("Size").Return(*testSize)
 	mockObstacle := new(MockObstacle)
 	mockObstacle.On("Occupies", Anything).Return(false)
-	mockObstacle.On("Coordinates").Return([]absoluteCoordinate.AbsoluteCoordinate{})
-	testObstacles := obstacles.FromList([]obstacle.Obstacle{mockObstacle})
+	coords, _ := coordinates.New(*absoluteCoordinate.Build(1, 1))
+	mockObstacle.On("Coordinates").Return(*coords)
+	testObstacles := obstacles.FromList(mockObstacle)
 	mockPlanet.On("Obstacles").Return(*testObstacles)
 	testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), North{}, *absoluteCoordinate.Build(1, 1), mockPlanet)
 
@@ -121,7 +122,8 @@ func assertCreateDTOContainsPlanetData(t *testing.T, createResponseDTO CreateRes
 func assertSameCoordinates(t *testing.T, createResponseDTO []ObstacleDTO, obst Obstacles) {
 	for i, obs := range obst.List() {
 		coordinateDTOS := createResponseDTO[i]
-		for j, coord := range obs.Coordinates() {
+		coordinates := obs.Coordinates()
+		for j, coord := range coordinates.List() {
 			assert.Equal(t, coordinateDTOS[j].X, coord.X())
 			assert.Equal(t, coordinateDTOS[j].Y, coord.Y())
 		}

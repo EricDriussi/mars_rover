@@ -32,15 +32,6 @@ func (this *Coordinates) Contain(coordinate AbsoluteCoordinate) bool {
 	return contains(this.list, coordinate)
 }
 
-func contains(list []AbsoluteCoordinate, coordinate AbsoluteCoordinate) bool {
-	for _, containedCoordinate := range list {
-		if containedCoordinate.Equals(coordinate) {
-			return true
-		}
-	}
-	return false
-}
-
 func (this *Coordinates) Overflow(size Size) bool {
 	for _, coordinate := range this.list {
 		if coordinate.X() > size.Width() || coordinate.Y() > size.Height() {
@@ -54,11 +45,32 @@ func (this *Coordinates) List() []AbsoluteCoordinate {
 	return this.list
 }
 
-func (this *Coordinates) Contiguous() bool {
+func (this *Coordinates) First() AbsoluteCoordinate {
+	return this.list[0]
+}
+
+func (this *Coordinates) HasOnlyOne() bool {
+	return len(this.list) == 1
+}
+
+func (this *Coordinates) Amount() int {
+	return len(this.list)
+}
+
+func (this *Coordinates) AreContiguous() bool {
 	if len(this.list) <= 1 {
 		return true
 	}
 	return areAllAdjacent(this.list)
+}
+
+func contains(list []AbsoluteCoordinate, coordinate AbsoluteCoordinate) bool {
+	for _, containedCoordinate := range list {
+		if containedCoordinate.Equals(coordinate) {
+			return true
+		}
+	}
+	return false
 }
 
 func areAllAdjacent(coordinates []AbsoluteCoordinate) bool {

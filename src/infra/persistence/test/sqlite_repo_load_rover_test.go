@@ -13,7 +13,7 @@ import (
 func TestLoadsRover(t *testing.T) {
 	testCases := []struct {
 		name      string
-		setupFunc func() (Rover, Planet)
+		setupFunc func(t *testing.T) (Rover, Planet)
 	}{
 		{
 			name:      "wrapping rover",
@@ -27,7 +27,7 @@ func TestLoadsRover(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			db, repo := InitMem()
-			testRover, testPlanet := testCase.setupFunc()
+			testRover, testPlanet := testCase.setupFunc(t)
 			err := saveGame(db, testRover, testPlanet)
 			assert.Nil(t, err)
 
@@ -42,7 +42,7 @@ func TestLoadsRover(t *testing.T) {
 func TestDoesNotLoadRover(t *testing.T) {
 	testCases := []struct {
 		name      string
-		setupFunc func() (Rover, Planet)
+		setupFunc func(t *testing.T) (Rover, Planet)
 	}{
 		{
 			name:      "wrapping rover",
@@ -56,7 +56,7 @@ func TestDoesNotLoadRover(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			db, repo := InitMem()
-			testRover, testPlanet := testCase.setupFunc()
+			testRover, testPlanet := testCase.setupFunc(t)
 			err := saveGame(db, testRover, testPlanet)
 			assert.Nil(t, err)
 

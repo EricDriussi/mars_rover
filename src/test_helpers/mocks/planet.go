@@ -1,7 +1,6 @@
 package mocks
 
 import (
-	"mars_rover/src/domain/obstacle"
 	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/size"
 
@@ -31,7 +30,7 @@ func PlanetWithNoObstaclesOfSize(size int) *MockPlanet {
 	mockPlanet := new(MockPlanet)
 	testSize, _ := Square(size)
 	mockPlanet.On("Size").Return(*testSize)
-	testObstacles := FromList([]obstacle.Obstacle{})
+	testObstacles := FromList()
 	mockPlanet.On("Obstacles").Return(*testObstacles)
 	return mockPlanet
 }

@@ -22,7 +22,14 @@ func TestFiltersOutDuplicateCoordinates(t *testing.T) {
 	assert.Len(t, coords.List(), 2)
 }
 
-func TestAreWithinLimit(t *testing.T) {
+func TestDoesNotCreateWithNoCoordinates(t *testing.T) {
+	coords, err := coordinates.New()
+
+	assert.Nil(t, coords)
+	assert.Error(t, err)
+}
+
+func TestAllCoordinatesAreWithinLimit(t *testing.T) {
 	sizeLimit, _ := size.Square(4)
 	coords, err := coordinates.New(
 		*absoluteCoordinate.Build(1, 1),
@@ -34,14 +41,7 @@ func TestAreWithinLimit(t *testing.T) {
 	assert.False(t, coords.Overflow(*sizeLimit))
 }
 
-func TestDoesNotCreateWithEmptyList(t *testing.T) {
-	coords, err := coordinates.New()
-
-	assert.Nil(t, coords)
-	assert.Error(t, err)
-}
-
-func TestAreBeyondLimit(t *testing.T) {
+func TestSomeCoordinatesAreBeyondLimit(t *testing.T) {
 	sizeLimit, _ := size.Square(3)
 	testCases := []struct {
 		name       string
@@ -69,31 +69,24 @@ func TestAreBeyondLimit(t *testing.T) {
 	}
 }
 
-func TestOccupiesAnIncludedCoordinate(t *testing.T) {
-	testCoordinate := absoluteCoordinate.Build(rand.Int(), rand.Int())
-	coords, err := New(*testCoordinate)
+func TestAnyCoordinateOccupiesAGivenCoordinate(t *testing.T) {
+	x := rand.Int()
+	y := rand.Int()
+	aCoordinate := absoluteCoordinate.Build(x, y)
+	coords, err := New(*aCoordinate)
 
 	assert.Nil(t, err)
-	assert.True(t, coords.Contain(*testCoordinate))
+	assert.True(t, coords.Contain(*absoluteCoordinate.Build(x, y)))
 }
 
-func TestDoesNotOccupyANotIncludedCoordinate(t *testing.T) {
-	testCoordinate := absoluteCoordinate.Build(1, 1)
-	coords, err := New(*testCoordinate)
+func TestNoCoordinateOccupiesAGivenCoordinate(t *testing.T) {
+	coords, err := New(*absoluteCoordinate.Build(1, 1))
 
 	assert.Nil(t, err)
 	assert.False(t, coords.Contain(*absoluteCoordinate.Build(1, 2)))
 }
 
-func TestListsContainedCoordinates(t *testing.T) {
-	testCoordinate := absoluteCoordinate.Build(rand.Int(), rand.Int())
-	coords, err := New(*testCoordinate)
-
-	assert.Nil(t, err)
-	assert.Equal(t, []AbsoluteCoordinate{*testCoordinate}, coords.List())
-}
-
-func TestDeterminesIfContiguous(t *testing.T) {
+func TestDeterminesIfAllCoordinatesAreContiguous(t *testing.T) {
 	coords, err := New(
 		*absoluteCoordinate.Build(1, 1),
 		*absoluteCoordinate.Build(3, 3),
@@ -103,15 +96,15 @@ func TestDeterminesIfContiguous(t *testing.T) {
 	)
 
 	assert.Nil(t, err)
-	assert.True(t, coords.Contiguous())
+	assert.True(t, coords.AreContiguous())
 }
 
-func TestDeterminesIfNotContiguous(t *testing.T) {
+func TestDeterminesIfAnyCoordinateIsNonContiguous(t *testing.T) {
 	coords, err := New(
 		*absoluteCoordinate.Build(1, 1),
 		*absoluteCoordinate.Build(1, 3),
 	)
 
 	assert.Nil(t, err)
-	assert.False(t, coords.Contiguous())
+	assert.False(t, coords.AreContiguous())
 }

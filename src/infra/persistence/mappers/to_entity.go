@@ -2,6 +2,7 @@ package mappers
 
 import (
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/src/domain/coordinate/coordinates"
 	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
@@ -42,9 +43,9 @@ func mapToPersistenceCoordinate(coordinate AbsoluteCoordinate) CoordinateEntity 
 	}
 }
 
-func mapToPersistenceCoordinates(coordinates []AbsoluteCoordinate) []CoordinateEntity {
-	coords := make([]CoordinateEntity, len(coordinates))
-	for i, c := range coordinates {
+func mapToPersistenceCoordinates(coordinates Coordinates) []CoordinateEntity {
+	coords := make([]CoordinateEntity, coordinates.Amount())
+	for i, c := range coordinates.List() {
 		coords[i] = mapToPersistenceCoordinate(c)
 	}
 	return coords

@@ -12,7 +12,7 @@ import (
 func TestAddsPlanet(t *testing.T) {
 	testCases := []struct {
 		name      string
-		setupFunc func() (Rover, Planet)
+		setupFunc func(t *testing.T) (Rover, Planet)
 	}{
 		{
 			name:      "wrapping rover on rocky planet",
@@ -26,7 +26,7 @@ func TestAddsPlanet(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			db, repo := InitMem()
-			_, testPlanet := testCase.setupFunc()
+			_, testPlanet := testCase.setupFunc(t)
 
 			_, err := repo.AddPlanet(testPlanet)
 
@@ -40,7 +40,7 @@ func TestAddsPlanet(t *testing.T) {
 func TestAddsRover(t *testing.T) {
 	testCases := []struct {
 		name      string
-		setupFunc func() (Rover, Planet)
+		setupFunc func(t *testing.T) (Rover, Planet)
 	}{
 		{
 			name:      "wrapping rover on rocky planet",
@@ -54,7 +54,7 @@ func TestAddsRover(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			db, repo := InitMem()
-			testRover, testPlanet := testCase.setupFunc()
+			testRover, testPlanet := testCase.setupFunc(t)
 
 			planetId, err := savePlanet(db, testPlanet)
 			assert.Nil(t, err)

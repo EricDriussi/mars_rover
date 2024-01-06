@@ -3,9 +3,9 @@ package infra_test
 import (
 	"github.com/stretchr/testify/assert"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
-	. "mars_rover/src/domain/obstacle"
-	"mars_rover/src/domain/obstacle/bigRock"
-	"mars_rover/src/domain/obstacle/smallRock"
+	"mars_rover/src/domain/coordinate/coordinates"
+	"mars_rover/src/domain/obstacle"
+	obs "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/planet"
 	"mars_rover/src/domain/planet/planetWithObstacles"
 	. "mars_rover/src/domain/rover"
@@ -19,30 +19,37 @@ import (
 
 // TODO: Do something with these hardcoded values and error handling
 
-func setupWrappingRoverOnRockyPlanet() (Rover, Planet) {
+func setupWrappingRoverOnRockyPlanet(t *testing.T) (Rover, Planet) {
 	rovCoord := absoluteCoordinate.Build(0, 0)
-	testPlanet := setupRockyPlanet()
+	testPlanet := setupPlanet(t)
 	aDirection := North{}
-	testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), aDirection, *rovCoord, testPlanet)
+	testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), aDirection, *rovCoord, testPlanet)
+	assert.Nil(t, err)
 	return testRover, testPlanet
 }
 
-func setupGodModRoverOnRockyPlanet() (Rover, Planet) {
+func setupGodModRoverOnRockyPlanet(t *testing.T) (Rover, Planet) {
 	rovCoord := absoluteCoordinate.Build(1, 1)
-	testPlanet := setupRockyPlanet()
+	testPlanet := setupPlanet(t)
 	aDirection := North{}
 	testRover := godModRover.LandFacing(uuid.New(), aDirection, *rovCoord, testPlanet)
 	return testRover, testPlanet
 }
 
-func setupRockyPlanet() Planet {
-	size, _ := s.Square(10)
-	smallCoord := absoluteCoordinate.Build(1, 1)
-	testSmallRock := smallRock.In(*smallCoord)
-	bigCoord1 := absoluteCoordinate.Build(2, 2)
-	bigCoord2 := absoluteCoordinate.Build(2, 3)
-	testBigRock, _ := bigRock.In(*bigCoord1, *bigCoord2)
-	testPlanet, _ := planetWithObstacles.Create("testColor", *size, []Obstacle{testSmallRock, testBigRock})
+func setupPlanet(t *testing.T) Planet {
+	size, err := s.Square(10)
+	assert.Nil(t, err)
+	smallCoords, err := coordinates.New(*absoluteCoordinate.Build(1, 1))
+	assert.Nil(t, err)
+	testSmall, err := obstacle.CreateObstacle(*smallCoords)
+	assert.Nil(t, err)
+	bigCoords, err := coordinates.New(*absoluteCoordinate.Build(2, 2), *absoluteCoordinate.Build(2, 3))
+	assert.Nil(t, err)
+	testBig, err := obstacle.CreateObstacle(*bigCoords)
+	assert.Nil(t, err)
+	obstacles := obs.FromList(testSmall, testBig)
+	testPlanet, err := planetWithObstacles.Create("testColor", *size, *obstacles)
+	assert.Nil(t, err)
 	return testPlanet
 }
 

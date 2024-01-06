@@ -4,6 +4,7 @@ import (
 	"errors"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
+	"mars_rover/src/domain/coordinate/coordinates"
 	. "mars_rover/src/domain/obstacle"
 	. "mars_rover/src/domain/obstacle/obstacles"
 	obstaclesModule "mars_rover/src/domain/obstacle/obstacles"
@@ -76,19 +77,23 @@ func MapToDomainPlanet(planetEntity PlanetEntity) (Planet, error) {
 	if len(obstacles.List()) == 0 {
 		return emptyPlanet.Create(color, *size)
 	}
-	return planetWithObstacles.Create(color, *size, obstacles.List())
+	return planetWithObstacles.Create(color, *size, *obstacles)
 }
 
 func mapToDomainObstacles(obstacles []ObstacleEntity) (*Obstacles, error) {
 	list := make([]Obstacle, 0, len(obstacles))
 	for _, obstacle := range obstacles {
-		rock, err := CreateObstacle(mapToDomainCoordinates(obstacle.Coordinates)...)
+		coords, err := coordinates.New(mapToDomainCoordinates(obstacle.Coordinates)...)
+		if err != nil {
+			return nil, err
+		}
+		rock, err := CreateObstacle(*coords)
 		if err != nil {
 			return nil, err
 		}
 		list = append(list, rock)
 	}
-	return obstaclesModule.FromList(list), nil
+	return obstaclesModule.FromList(list...), nil
 }
 
 func mapToDomainCoordinates(coordinates []CoordinateEntity) []AbsoluteCoordinate {

@@ -33,6 +33,9 @@ func (this *Map) HasObstacleIn(absoluteCoordinate AbsoluteCoordinate) bool {
 }
 
 func (this *Map) IsOutOfBounds(absoluteCoordinate AbsoluteCoordinate) bool {
-	// Planet size starts at 1, rover movement starts at 0
-	return absoluteCoordinate.X() >= this.size.Width() || absoluteCoordinate.Y() >= this.size.Height() || absoluteCoordinate.X() < 0 || absoluteCoordinate.Y() < 0
+	xTooBig := absoluteCoordinate.X() >= this.size.Width()
+	yTooBig := absoluteCoordinate.Y() >= this.size.Height()
+	xTooSmall := absoluteCoordinate.X() < 0
+	yTooSmall := absoluteCoordinate.Y() < 0
+	return xTooBig || yTooBig || xTooSmall || yTooSmall
 }

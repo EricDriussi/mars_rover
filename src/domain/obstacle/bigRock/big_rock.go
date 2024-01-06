@@ -3,7 +3,6 @@ package bigRock
 import (
 	"errors"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
-	"mars_rover/src/domain/coordinate/coordinates"
 	. "mars_rover/src/domain/coordinate/coordinates"
 	. "mars_rover/src/domain/size"
 )
@@ -18,21 +17,17 @@ type BigRock struct {
 	coordinates Coordinates
 }
 
-func In(occupiedCoordinates ...AbsoluteCoordinate) (*BigRock, error) {
-	coords, err := coordinates.New(occupiedCoordinates...)
-	if err != nil {
-		return nil, err
-	}
-	if len(coords.List()) < MinSize {
+func In(coordinates Coordinates) (*BigRock, error) {
+	if coordinates.Amount() < MinSize {
 		return nil, errors.New("cannot create big rock with less than 2 coordinates")
 	}
-	if len(coords.List()) > MaxSize {
+	if coordinates.Amount() > MaxSize {
 		return nil, errors.New("cannot create big rock with more than 5 coordinates")
 	}
-	if !coords.Contiguous() {
+	if !coordinates.AreContiguous() {
 		return nil, errors.New("cannot create big rock with non-contiguous coordinates")
 	}
-	return &BigRock{*coords}, nil
+	return &BigRock{coordinates}, nil
 }
 
 func (this *BigRock) Occupies(coordinate AbsoluteCoordinate) bool {
@@ -43,6 +38,6 @@ func (this *BigRock) IsBeyond(size Size) bool {
 	return this.coordinates.Overflow(size)
 }
 
-func (this *BigRock) Coordinates() []AbsoluteCoordinate {
-	return this.coordinates.List()
+func (this *BigRock) Coordinates() Coordinates {
+	return this.coordinates
 }

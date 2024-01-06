@@ -3,23 +3,17 @@ package wrappingCollidingRover_test
 import (
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
-	. "mars_rover/src/domain/obstacle"
-	"mars_rover/src/domain/obstacle/smallRock"
-	"mars_rover/src/domain/planet/planetWithObstacles"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/uuid"
 	"mars_rover/src/domain/rover/wrappingCollidingRover"
-	"mars_rover/src/domain/size"
+	. "mars_rover/src/test_helpers"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestMovesForwardOnce(t *testing.T) {
-	planetSize, _ := size.Square(10)
-	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
-
+	testPlanet := SetupEmptyTestPlanetOfSize(t, 10)
 	testCases := []struct {
 		name               string
 		initialDirection   Direction
@@ -50,9 +44,10 @@ func TestMovesForwardOnce(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			coordinate := absoluteCoordinate.Build(5, 5)
-			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
+			testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
+			assert.Nil(t, err)
 
-			err := testRover.MoveForward()
+			err = testRover.MoveForward()
 
 			assert.Equal(t, *testCase.expectedCoordinate, testRover.Coordinate())
 			assert.Nil(t, err)
@@ -61,10 +56,7 @@ func TestMovesForwardOnce(t *testing.T) {
 }
 
 func TestMovesForwardMultipleTimes(t *testing.T) {
-	planetSize, _ := size.Square(10)
-	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
-
+	testPlanet := SetupEmptyTestPlanetOfSize(t, 10)
 	testCases := []struct {
 		name               string
 		initialDirection   Direction
@@ -95,9 +87,10 @@ func TestMovesForwardMultipleTimes(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			coordinate := absoluteCoordinate.Build(5, 5)
-			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
+			testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
+			assert.Nil(t, err)
 
-			err := testRover.MoveForward()
+			err = testRover.MoveForward()
 			assert.Nil(t, err)
 			err = testRover.MoveForward()
 			assert.Nil(t, err)
@@ -108,10 +101,7 @@ func TestMovesForwardMultipleTimes(t *testing.T) {
 }
 
 func TestMovesBackwardOnce(t *testing.T) {
-	planetSize, _ := size.Square(10)
-	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
-
+	testPlanet := SetupEmptyTestPlanetOfSize(t, 10)
 	testCases := []struct {
 		name               string
 		initialDirection   Direction
@@ -142,9 +132,10 @@ func TestMovesBackwardOnce(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			coordinate := absoluteCoordinate.Build(5, 5)
-			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
+			testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
+			assert.Nil(t, err)
 
-			err := testRover.MoveBackward()
+			err = testRover.MoveBackward()
 
 			assert.Equal(t, *testCase.expectedCoordinate, testRover.Coordinate())
 			assert.Nil(t, err)
@@ -153,10 +144,7 @@ func TestMovesBackwardOnce(t *testing.T) {
 }
 
 func TestMovesBackwardMultipleTimes(t *testing.T) {
-	planetSize, _ := size.Square(10)
-	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
-
+	testPlanet := SetupEmptyTestPlanetOfSize(t, 10)
 	testCases := []struct {
 		name               string
 		initialDirection   Direction
@@ -187,9 +175,10 @@ func TestMovesBackwardMultipleTimes(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			coordinate := absoluteCoordinate.Build(5, 5)
-			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
+			testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
+			assert.Nil(t, err)
 
-			err := testRover.MoveBackward()
+			err = testRover.MoveBackward()
 			assert.Nil(t, err)
 			err = testRover.MoveBackward()
 			assert.Nil(t, err)
@@ -200,11 +189,8 @@ func TestMovesBackwardMultipleTimes(t *testing.T) {
 }
 
 func TestTurnsRight(t *testing.T) {
-	planetSize, _ := size.Square(10)
-	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
-	coord := absoluteCoordinate.Build(5, 5)
-
+	coordinate := absoluteCoordinate.Build(5, 5)
+	testPlanet := SetupEmptyTestPlanetOfSize(t, 10)
 	testCases := []struct {
 		name              string
 		initialDirection  Direction
@@ -234,22 +220,20 @@ func TestTurnsRight(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coord, testPlanet)
+			testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
+			assert.Nil(t, err)
 
 			testRover.TurnRight()
 
-			assert.Equal(t, *coord, testRover.Coordinate())
+			assert.Equal(t, *coordinate, testRover.Coordinate())
 			assert.Equal(t, testCase.expectedDirection, testRover.Direction())
 		})
 	}
 }
 
 func TestTurnsLeft(t *testing.T) {
-	planetSize, _ := size.Square(10)
-	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
 	coord := absoluteCoordinate.Build(5, 5)
-
+	testPlanet := SetupEmptyTestPlanetOfSize(t, 10)
 	testCases := []struct {
 		name              string
 		initialDirection  Direction
@@ -279,7 +263,8 @@ func TestTurnsLeft(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coord, testPlanet)
+			testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), testCase.initialDirection, *coord, testPlanet)
+			assert.Nil(t, err)
 
 			testRover.TurnLeft()
 

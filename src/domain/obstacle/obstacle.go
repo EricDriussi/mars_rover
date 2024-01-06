@@ -2,6 +2,7 @@ package obstacle
 
 import (
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
+	. "mars_rover/src/domain/coordinate/coordinates"
 	"mars_rover/src/domain/obstacle/bigRock"
 	"mars_rover/src/domain/obstacle/smallRock"
 	. "mars_rover/src/domain/size"
@@ -10,14 +11,14 @@ import (
 type Obstacle interface {
 	IsBeyond(Size) bool
 	Occupies(AbsoluteCoordinate) bool
-	Coordinates() []AbsoluteCoordinate
+	Coordinates() Coordinates
 }
 
-func CreateObstacle(coordinates ...AbsoluteCoordinate) (Obstacle, error) {
-	if len(coordinates) == 1 {
-		return smallRock.In(coordinates[0]), nil
+func CreateObstacle(coordinates Coordinates) (Obstacle, error) {
+	if coordinates.HasOnlyOne() {
+		return smallRock.In(coordinates.First())
 	}
-	return bigRock.In(coordinates...)
+	return bigRock.In(coordinates)
 }
 
 func MaxAmountOfCoords() int {

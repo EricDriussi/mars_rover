@@ -39,9 +39,9 @@ func TestIsAlwaysOrthogonal(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			coord := testCase.constructor()
-			assert.Equal(t, testCase.x, coord.X())
-			assert.Equal(t, testCase.y, coord.Y())
+			coordinate := testCase.constructor()
+			assert.Equal(t, testCase.x, coordinate.X())
+			assert.Equal(t, testCase.y, coordinate.Y())
 		})
 	}
 }

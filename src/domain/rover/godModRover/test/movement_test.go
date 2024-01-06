@@ -3,24 +3,17 @@ package godModRover_test
 import (
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
-	. "mars_rover/src/domain/obstacle"
-	"mars_rover/src/domain/obstacle/smallRock"
-	"mars_rover/src/domain/planet/planetWithObstacles"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/godModRover"
 	"mars_rover/src/domain/rover/uuid"
-	"mars_rover/src/domain/size"
+	. "mars_rover/src/test_helpers"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-// TODO: review domain tests...
 func TestMovesForward(t *testing.T) {
-	planetSize, _ := size.Square(10)
-	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
-
+	testPlanet := SetupEmptyTestPlanetOfSize(t, 10)
 	testCases := []struct {
 		name               string
 		initialDirection   Direction
@@ -50,8 +43,7 @@ func TestMovesForward(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			coordinate := absoluteCoordinate.Build(5, 5)
-			testRover := godModRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
+			testRover := godModRover.LandFacing(uuid.New(), testCase.initialDirection, *absoluteCoordinate.Build(5, 5), testPlanet)
 
 			err := testRover.MoveForward()
 
@@ -62,11 +54,7 @@ func TestMovesForward(t *testing.T) {
 }
 
 func TestMovesBackward(t *testing.T) {
-	planetSize, _ := size.Square(10)
-	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	// TODO: all these "A, _ := ..." should be using assert.Nil on the error
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
-
+	testPlanet := SetupEmptyTestPlanetOfSize(t, 10)
 	testCases := []struct {
 		name               string
 		initialDirection   Direction
@@ -96,8 +84,7 @@ func TestMovesBackward(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			coordinate := absoluteCoordinate.Build(5, 5)
-			testRover := godModRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
+			testRover := godModRover.LandFacing(uuid.New(), testCase.initialDirection, *absoluteCoordinate.Build(5, 5), testPlanet)
 
 			err := testRover.MoveBackward()
 
@@ -108,11 +95,8 @@ func TestMovesBackward(t *testing.T) {
 }
 
 func TestTurnsRight(t *testing.T) {
-	planetSize, _ := size.Square(10)
-	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
-	coord := absoluteCoordinate.Build(5, 5)
-
+	testPlanet := SetupEmptyTestPlanetOfSize(t, 10)
+	coordinate := absoluteCoordinate.Build(5, 5)
 	testCases := []struct {
 		name              string
 		initialDirection  Direction
@@ -142,22 +126,19 @@ func TestTurnsRight(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover := godModRover.LandFacing(uuid.New(), testCase.initialDirection, *coord, testPlanet)
+			testRover := godModRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
 
 			testRover.TurnRight()
 
-			assert.Equal(t, *coord, testRover.Coordinate())
+			assert.Equal(t, *coordinate, testRover.Coordinate())
 			assert.Equal(t, testCase.expectedDirection, testRover.Direction())
 		})
 	}
 }
 
 func TestTurnsLeft(t *testing.T) {
-	planetSize, _ := size.Square(10)
-	rock := smallRock.In(*absoluteCoordinate.Build(1, 1))
-	testPlanet, _ := planetWithObstacles.Create("testColor", *planetSize, []Obstacle{rock})
-	coord := absoluteCoordinate.Build(5, 5)
-
+	testPlanet := SetupEmptyTestPlanetOfSize(t, 10)
+	coordinate := absoluteCoordinate.Build(5, 5)
 	testCases := []struct {
 		name              string
 		initialDirection  Direction
@@ -187,11 +168,11 @@ func TestTurnsLeft(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover := godModRover.LandFacing(uuid.New(), testCase.initialDirection, *coord, testPlanet)
+			testRover := godModRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
 
 			testRover.TurnLeft()
 
-			assert.Equal(t, *coord, testRover.Coordinate())
+			assert.Equal(t, *coordinate, testRover.Coordinate())
 			assert.Equal(t, testCase.expectedDirection, testRover.Direction())
 		})
 	}

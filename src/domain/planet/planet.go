@@ -17,5 +17,5 @@ func CreatePlanet(color string, size Size, obstacles Obstacles) (Planet, error) 
 	if len(obstacles.List()) == 0 {
 		return emptyPlanet.Create(color, size)
 	}
-	return planetWithObstacles.Create(color, size, obstacles.List())
+	return planetWithObstacles.Create(color, size, obstacles)
 }

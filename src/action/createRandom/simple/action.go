@@ -3,8 +3,8 @@ package simpleRandomCreator
 import (
 	. "mars_rover/src/action/createRandom"
 	. "mars_rover/src/domain"
-	. "mars_rover/src/domain/obstacle"
 	"mars_rover/src/domain/obstacle/obstacles"
+	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
 	"mars_rover/src/domain/size"
@@ -40,7 +40,7 @@ func (this *SimpleRandomCreator) Create() (Rover, *CreationError) {
 func (this *SimpleRandomCreator) loopUntilPlanetCreated() Planet {
 	return LoopUntilNoError(func() (Planet, error) {
 		validSize := *this.loopUntilValidSize()
-		return CreatePlanet(RandomColor(), validSize, *obstacles.FromList(this.randomObstaclesWithin(validSize)))
+		return CreatePlanet(RandomColor(), validSize, this.randomObstaclesWithin(validSize))
 	})
 }
 
@@ -50,11 +50,11 @@ func (this *SimpleRandomCreator) loopUntilValidSize() *Size {
 	})
 }
 
-func (this *SimpleRandomCreator) randomObstaclesWithin(size Size) []Obstacle {
-	var list []Obstacle
+func (this *SimpleRandomCreator) randomObstaclesWithin(size Size) Obstacles {
+	list := obstacles.FromList()
 	amountOfObstacles := rand.Intn(size.Area()) - 1 // leave at least a blank space for the rover
 	for i := 0; i < amountOfObstacles; i++ {
-		list = append(list, LoopUntilValidObstacle(size))
+		list.Add(LoopUntilValidObstacle(size))
 	}
-	return list
+	return *list
 }
