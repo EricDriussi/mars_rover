@@ -26,12 +26,12 @@ func InitFS() *SQLiteRepository {
 	return repo
 }
 
-func (r *SQLiteRepository) connect() {
-	db, err := sql.Open("sqlite3", r.store)
+func (this *SQLiteRepository) connect() {
+	db, err := sql.Open("sqlite3", this.store)
 	if err != nil {
 		log.Fatal(err)
 	}
-	r.db = db
+	this.db = db
 }
 
 func createTables(db *sql.DB) {

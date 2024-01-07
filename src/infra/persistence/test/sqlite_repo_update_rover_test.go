@@ -27,15 +27,18 @@ func TestUpdatesRover(t *testing.T) {
 		t.Run(testCase.name, func(t *testing.T) {
 			db, repo := InitMem()
 			testRover, testPlanet := testCase.setupFunc(t)
+
 			err := saveGame(db, testRover, testPlanet)
 			assert.Nil(t, err)
-
+			directionBeforeMovement := testRover.Direction()
 			testRover.TurnRight()
 			err = repo.UpdateRover(testRover)
 
 			assert.Nil(t, err)
 			foundRover, err := getLastPersistedRover(db, testPlanet)
+			assert.Nil(t, err)
 			assertRoversAreEqual(t, foundRover, testRover)
+			assert.NotEqual(t, directionBeforeMovement.CardinalPoint(), foundRover.Direction().CardinalPoint())
 		})
 	}
 }

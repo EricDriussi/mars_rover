@@ -7,9 +7,9 @@ import (
 )
 
 type Repository interface {
-	UpdateRover(rover Rover) error
-	AddRover(rover Rover, planetId int64) error
-	AddPlanet(planet Planet) (int64, error)
-	GetRover(roverId UUID) (Rover, error)
-	GetPlanet(roverId UUID) (Planet, error)
+	UpdateRover(rover Rover) *RepositoryError
+	AddRover(rover Rover, planetId int) *RepositoryError
+	AddPlanet(planet Planet) (int, *RepositoryError)
+	GetRover(roverId UUID) (Rover, *RepositoryError)
+	GetPlanet(roverId UUID) (Planet, *RepositoryError)
 }

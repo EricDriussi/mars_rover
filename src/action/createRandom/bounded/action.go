@@ -44,13 +44,13 @@ func (this *BoundedRandomCreator) Create() (Rover, *CreationError) {
 	randPlanet := this.loopUntilPlanetCreated()
 	randRover := LoopUntilRoverLanded(randPlanet)
 
-	planetId, err := this.repo.AddPlanet(randPlanet)
-	if err != nil {
-		return nil, GameNotPersistedErr(err)
+	planetId, addPlanetErr := this.repo.AddPlanet(randPlanet)
+	if addPlanetErr != nil {
+		return nil, GameNotPersistedErr(addPlanetErr)
 	}
-	err = this.repo.AddRover(randRover, planetId)
-	if err != nil {
-		return nil, GameNotPersistedErr(err)
+	addRoverErr := this.repo.AddRover(randRover, planetId)
+	if addRoverErr != nil {
+		return nil, GameNotPersistedErr(addPlanetErr)
 	}
 	return randRover, nil
 }

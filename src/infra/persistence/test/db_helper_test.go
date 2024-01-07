@@ -43,7 +43,7 @@ func saveGame(db *sql.DB, rover Rover, planet Planet) error {
 	return err
 }
 
-func savePlanet(db *sql.DB, planet Planet) (int64, error) {
+func savePlanet(db *sql.DB, planet Planet) (int, error) {
 	planetAsBytes, err := json.Marshal(MapToPersistencePlanet(planet))
 	if err != nil {
 		return 0, err
@@ -54,7 +54,11 @@ func savePlanet(db *sql.DB, planet Planet) (int64, error) {
 	if err != nil {
 		return 0, err
 	}
-	return planetInsertResult.LastInsertId()
+	num, err := planetInsertResult.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+	return int(num), nil
 }
 
 func getLastPersistedRover(db *sql.DB, planet Planet) (Rover, error) {
@@ -109,6 +113,24 @@ func getLastPersistedPlanet(db *sql.DB) (Planet, error) {
 		return nil, errors.New("more than one planet found")
 	}
 	return foundPlanets[0], nil
+}
+
+func getNumberOfPlanets(db *sql.DB) (int, error) {
+	var count int
+	err := db.QueryRow("SELECT COUNT(*) FROM " + PlanetsTable).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
+func getNumberOfRovers(db *sql.DB) (int, error) {
+	var count int
+	err := db.QueryRow("SELECT COUNT(*) FROM " + RoversTable).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }
 
 func unmarshalRoverEntities(rows *sql.Rows) ([]RoverEntity, error) {

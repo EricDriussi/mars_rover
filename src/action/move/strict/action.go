@@ -19,15 +19,15 @@ func With(repo Repository) *StrictMover {
 }
 
 func (this *StrictMover) Move(roverId UUID, commands Commands) ([]MovementResult, *MovementError) {
-	rover, err := this.repo.GetRover(roverId)
-	if err != nil {
+	rover, getErr := this.repo.GetRover(roverId)
+	if getErr != nil {
 		return nil, NotFoundErr()
 	}
 
 	movementResults := moveRover(rover, commands)
 
-	err = this.repo.UpdateRover(rover)
-	if err != nil {
+	updateErr := this.repo.UpdateRover(rover)
+	if updateErr != nil {
 		return nil, NotUpdatedErr()
 	}
 

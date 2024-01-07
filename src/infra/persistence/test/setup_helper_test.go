@@ -17,7 +17,10 @@ import (
 	"testing"
 )
 
-// TODO: Do something with these hardcoded values and error handling
+// TODO.LM: These helpers have a lot of hard coded values.
+// It is ok in this case, since as long as the returned objects are valid, the values don't matter.
+// This might indicate that mocking the objects would be a better approach.
+// However, since these are used to test persistence, I think avoiding mocks gives more assurance.
 
 func setupWrappingRoverOnRockyPlanet(t *testing.T) (Rover, Planet) {
 	rovCoord := absoluteCoordinate.Build(0, 0)
@@ -63,6 +66,8 @@ func assertPlanetsAreEqual(t *testing.T, testPlanet Planet, foundPlanet Planet) 
 func assertRoversAreEqual(t *testing.T, foundRover Rover, testRover Rover) {
 	assert.Equal(t, testRover.Id(), foundRover.Id())
 	assert.Equal(t, testRover.Coordinate(), foundRover.Coordinate())
+	// TODO.LM: Normally, this comparison would suggest the need for an Equals method in the Direction interface.
+	// However, that would mean implementing a function in prod code that would only be used in tests.
 	assert.Equal(t, testRover.Direction().CardinalPoint(), foundRover.Direction().CardinalPoint())
 	assert.Equal(t, testRover.Map(), foundRover.Map())
 }

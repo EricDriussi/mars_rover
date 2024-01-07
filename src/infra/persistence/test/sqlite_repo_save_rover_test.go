@@ -3,24 +3,23 @@ package infra_test
 import (
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
-	"mars_rover/src/domain/rover/uuid"
 	. "mars_rover/src/infra/persistence"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLoadsRoverWhenPresent(t *testing.T) {
+func TestAddsRover(t *testing.T) {
 	testCases := []struct {
 		name      string
 		setupFunc func(t *testing.T) (Rover, Planet)
 	}{
 		{
-			name:      "wrapping rover",
+			name:      "wrapping rover on rocky planet",
 			setupFunc: setupWrappingRoverOnRockyPlanet,
 		},
 		{
-			name:      "god mod rover",
+			name:      "god mod rover on rocky planet",
 			setupFunc: setupGodModRoverOnRockyPlanet,
 		},
 	}
@@ -28,28 +27,32 @@ func TestLoadsRoverWhenPresent(t *testing.T) {
 		t.Run(testCase.name, func(t *testing.T) {
 			db, repo := InitMem()
 			testRover, testPlanet := testCase.setupFunc(t)
-			err := saveGame(db, testRover, testPlanet)
+			planetId, err := savePlanet(db, testPlanet)
 			assert.Nil(t, err)
 
-			foundRover, err := repo.GetRover(testRover.Id())
+			err = repo.AddRover(testRover, planetId)
 
 			assert.Nil(t, err)
-			assertRoversAreEqual(t, testRover, foundRover)
+			foundPlanet, err := getLastPersistedPlanet(db)
+			assert.Nil(t, err)
+			foundRover, err := getLastPersistedRover(db, foundPlanet)
+			assert.Nil(t, err)
+			assertRoversAreEqual(t, foundRover, testRover)
 		})
 	}
 }
 
-func TestDoesNotLoadRoverWhenNotPresent(t *testing.T) {
+func TestDoesNotAddRoverWhenAlreadyPresent(t *testing.T) {
 	testCases := []struct {
 		name      string
 		setupFunc func(t *testing.T) (Rover, Planet)
 	}{
 		{
-			name:      "wrapping rover",
+			name:      "wrapping rover on rocky planet",
 			setupFunc: setupWrappingRoverOnRockyPlanet,
 		},
 		{
-			name:      "god mod rover",
+			name:      "god mod rover on rocky planet",
 			setupFunc: setupGodModRoverOnRockyPlanet,
 		},
 	}
@@ -57,12 +60,18 @@ func TestDoesNotLoadRoverWhenNotPresent(t *testing.T) {
 		t.Run(testCase.name, func(t *testing.T) {
 			db, repo := InitMem()
 			testRover, testPlanet := testCase.setupFunc(t)
-			err := saveGame(db, testRover, testPlanet)
+			planetId, err := savePlanet(db, testPlanet)
 			assert.Nil(t, err)
 
-			_, err = repo.GetRover(uuid.New())
+			addErr := repo.AddRover(testRover, planetId)
+			assert.Nil(t, addErr)
+			addErr = repo.AddRover(testRover, planetId)
 
-			assert.Error(t, err)
+			assert.Error(t, addErr)
+			assert.True(t, addErr.IsAlreadyExists())
+			num, err := getNumberOfRovers(db)
+			assert.Nil(t, err)
+			assert.Equal(t, 1, num)
 		})
 	}
 }
