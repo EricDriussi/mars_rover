@@ -2,6 +2,7 @@ package persistence
 
 import (
 	"encoding/json"
+	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/domain/rover/godModRover"
@@ -10,33 +11,40 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func (r *SQLiteRepository) AddPlanet(planet Planet) (int64, error) {
+func (this *SQLiteRepository) AddPlanet(planet Planet) (int, *RepositoryError) {
 	planetAsBytes, err := json.Marshal(MapToPersistencePlanet(planet))
 	if err != nil {
-		return 0, err
+		return -1, CouldNotMap(err)
 	}
 
-	planetInsertResult, err := r.db.Exec("INSERT INTO "+PlanetsTable+" (planet) VALUES (?)",
+	planetInsertResult, err := this.db.Exec("INSERT INTO "+PlanetsTable+" (planet) VALUES (?)",
 		string(planetAsBytes))
 	if err != nil {
-		return 0, err
+		return -1, CouldNotAdd(err)
 	}
-	return planetInsertResult.LastInsertId()
+	num, err := planetInsertResult.LastInsertId()
+	if err != nil {
+		return -1, PersistenceMalfunction(err)
+	}
+	return int(num), nil
 }
 
-func (r *SQLiteRepository) AddRover(rover Rover, planetId int64) error {
+func (this *SQLiteRepository) AddRover(rover Rover, planetId int) *RepositoryError {
 	roverAsBytes, err := json.Marshal(MapToPersistenceRover(rover))
 	if err != nil {
-		return err
+		return CouldNotMap(err)
 	}
 
-	_, err = r.db.Exec("INSERT INTO "+RoversTable+" (id, rover, godMod, planet_id) VALUES (?, ?, ?, ?)",
+	_, err = this.db.Exec("INSERT INTO "+RoversTable+" (id, rover, godMod, planet_id) VALUES (?, ?, ?, ?)",
 		rover.Id().String(),
 		string(roverAsBytes),
 		isGodMod(rover),
 		planetId,
 	)
-	return err
+	if err != nil {
+		return CouldNotAdd(err)
+	}
+	return nil
 }
 
 func isGodMod(rover Rover) bool {

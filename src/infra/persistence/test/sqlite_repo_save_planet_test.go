@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestUpdatesRover(t *testing.T) {
+func TestAddsPlanet(t *testing.T) {
 	testCases := []struct {
 		name      string
 		setupFunc func(t *testing.T) (Rover, Planet)
@@ -26,19 +26,14 @@ func TestUpdatesRover(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			db, repo := InitMem()
-			testRover, testPlanet := testCase.setupFunc(t)
+			_, testPlanet := testCase.setupFunc(t)
 
-			err := saveGame(db, testRover, testPlanet)
-			assert.Nil(t, err)
-			directionBeforeMovement := testRover.Direction()
-			testRover.TurnRight()
-			repoErr := repo.UpdateRover(testRover)
+			_, repoErr := repo.AddPlanet(testPlanet)
 
 			assert.Nil(t, repoErr)
-			foundRover, err := getLastPersistedRover(db, testPlanet)
+			foundPlanet, err := getLastPersistedPlanet(db)
 			assert.Nil(t, err)
-			assertRoversAreEqual(t, foundRover, testRover)
-			assert.NotEqual(t, directionBeforeMovement.CardinalPoint(), foundRover.Direction().CardinalPoint())
+			assertPlanetsAreEqual(t, testPlanet, foundPlanet)
 		})
 	}
 }

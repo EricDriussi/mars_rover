@@ -4,6 +4,7 @@ import (
 	"errors"
 	"mars_rover/src/action/createRandom/bounded"
 	. "mars_rover/src/action/createRandom/bounded"
+	"mars_rover/src/domain"
 	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/rover/planetMap"
 	. "mars_rover/src/test_helpers/mocks"
@@ -14,7 +15,7 @@ import (
 
 func TestBoundedCreationDoesNotErrorIfRepoIsSuccessful(t *testing.T) {
 	repo := new(MockRepo)
-	repo.On("AddPlanet").Return(nil)
+	repo.On("AddPlanet").Return(42, nil)
 	repo.On("AddRover").Return(nil)
 
 	act := boundedRandomCreator.With(repo)
@@ -26,7 +27,8 @@ func TestBoundedCreationDoesNotErrorIfRepoIsSuccessful(t *testing.T) {
 
 func TestBoundedCreationReportsRepoError(t *testing.T) {
 	repo := new(MockRepo)
-	repo.On("AddPlanet").Return(errors.New("repo error"))
+	repoErr := domain.PersistenceMalfunction(errors.New("repo error"))
+	repo.On("AddPlanet").Return(-1, repoErr)
 
 	act := boundedRandomCreator.With(repo)
 	_, err := act.Create()
@@ -36,7 +38,7 @@ func TestBoundedCreationReportsRepoError(t *testing.T) {
 
 func TestBoundedCreationRespectsSensibleLimits(t *testing.T) {
 	repo := new(MockRepo)
-	repo.On("AddPlanet").Return(nil)
+	repo.On("AddPlanet").Return(42, nil)
 	repo.On("AddRover").Return(nil)
 	act := boundedRandomCreator.With(repo)
 

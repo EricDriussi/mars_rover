@@ -5,6 +5,7 @@ import (
 	. "github.com/stretchr/testify/mock"
 	. "mars_rover/src/action/move/command"
 	"mars_rover/src/action/move/resilient"
+	. "mars_rover/src/domain"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	"mars_rover/src/domain/rover/uuid"
 	. "mars_rover/src/test_helpers"
@@ -125,7 +126,7 @@ func TestReportsResultsBasedOnGivenCommandsOrderWhenSomeFail(t *testing.T) {
 
 func TestReportsRepoErrorWhenGettingRover(t *testing.T) {
 	repo := new(MockRepo)
-	repo.On("GetRover", Anything).Return(new(MockRover), errors.New("whatever"))
+	repo.On("GetRover", Anything).Return(new(MockRover), aRepoError())
 	commands := Commands{new(MockCommand)}
 
 	act := resilient_mover.With(repo)
@@ -140,7 +141,7 @@ func TestReportsRepoErrorWhenUpdatingRover(t *testing.T) {
 	testRover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
 	repo := new(MockRepo)
 	repo.On("GetRover", Anything).Return(testRover, nil)
-	repo.On("UpdateRover").Return(errors.New("whatever"))
+	repo.On("UpdateRover").Return(aRepoError())
 	irrelevantCommand := new(MockCommand)
 	irrelevantCommand.On("MapToRoverMovementFunction", testRover).Return(SuccessfulRoverFunc())
 	commands := Commands{irrelevantCommand}
@@ -151,4 +152,8 @@ func TestReportsRepoErrorWhenUpdatingRover(t *testing.T) {
 	assert.Empty(t, movementResults)
 	assert.NotNil(t, err)
 	assert.Contains(t, err.Error(), "failed to update")
+}
+
+func aRepoError() *RepositoryError {
+	return PersistenceMalfunction(errors.New("whatever"))
 }

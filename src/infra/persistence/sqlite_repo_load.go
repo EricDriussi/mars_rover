@@ -2,7 +2,7 @@ package persistence
 
 import (
 	"encoding/json"
-	"errors"
+	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/domain/rover/uuid"
@@ -12,53 +12,53 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func (r *SQLiteRepository) GetRover(roverId UUID) (Rover, error) {
-	optionalRover, err := r.getRover(roverId)
+func (this *SQLiteRepository) GetRover(roverId UUID) (Rover, *RepositoryError) {
+	optionalRover, err := this.getRover(roverId)
 	if err != nil {
-		return nil, err
+		return nil, PersistenceMalfunction(err)
 	}
 	if !optionalRover.Present {
-		return nil, errors.New("rover not found")
+		return nil, NotFound()
 	}
 
-	domainPlanet, err := r.GetPlanet(roverId)
-	if err != nil {
-		return nil, err
+	domainPlanet, getErr := this.GetPlanet(roverId)
+	if getErr != nil {
+		return nil, NotFound()
 	}
 
 	domainRover, err := MapToDomainRover(optionalRover.Value, domainPlanet)
 	if err != nil {
-		return nil, err
+		return nil, CouldNotMap(err)
 	}
 
 	return domainRover, nil
 }
 
-func (r *SQLiteRepository) GetPlanet(roverId UUID) (Planet, error) {
-	optionalRover, err := r.getRover(roverId)
+func (this *SQLiteRepository) GetPlanet(roverId UUID) (Planet, *RepositoryError) {
+	optionalRover, err := this.getRover(roverId)
 	if err != nil {
-		return nil, err
+		return nil, PersistenceMalfunction(err)
 	}
 	if !optionalRover.Present {
-		return nil, errors.New("rover not found")
+		return nil, NotFound()
 	}
 
-	planetEntity, err := r.getPlanet(optionalRover.Value.PlanetId)
+	planetEntity, err := this.getPlanet(optionalRover.Value.PlanetId)
 	if err != nil {
-		return nil, err
+		return nil, NotFound()
 	}
 
 	domainPlanet, err := MapToDomainPlanet(planetEntity)
 	if err != nil {
-		return nil, err
+		return nil, CouldNotMap(err)
 	}
 
 	return domainPlanet, nil
 }
 
 // TODO: why the OptionalRover?
-func (r *SQLiteRepository) getRover(roverId UUID) (OptionalRover, error) {
-	row := r.db.QueryRow("SELECT * FROM "+RoversTable+" WHERE id = ?", roverId.String())
+func (this *SQLiteRepository) getRover(roverId UUID) (OptionalRover, error) {
+	row := this.db.QueryRow("SELECT * FROM "+RoversTable+" WHERE id = ?", roverId.String())
 
 	var id string
 	var rover string
@@ -87,8 +87,8 @@ func (r *SQLiteRepository) getRover(roverId UUID) (OptionalRover, error) {
 	}, nil
 }
 
-func (r *SQLiteRepository) getPlanet(planetId int) (PlanetEntity, error) {
-	row := r.db.QueryRow("SELECT * FROM "+PlanetsTable+" WHERE id = ?", planetId)
+func (this *SQLiteRepository) getPlanet(planetId int) (PlanetEntity, error) {
+	row := this.db.QueryRow("SELECT * FROM "+PlanetsTable+" WHERE id = ?", planetId)
 
 	var id string
 	var planet string
