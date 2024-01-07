@@ -12,7 +12,7 @@ import (
 )
 
 func TestSendsOkResponseWhenCreateRandomActionIsSuccessful(t *testing.T) {
-	mockPlanet := mocks.PlanetWithNoObstaclesOfSize(10)
+	mockPlanet := mocks.PlanetWithNoObstaclesOfSize(t, 10)
 	mockRover := mocks.RoverIn(mockPlanet, *absoluteCoordinate.Build(1, 1))
 	mockAction := new(MockAction)
 	mockAction.On("Create").Return(mockRover, nil)

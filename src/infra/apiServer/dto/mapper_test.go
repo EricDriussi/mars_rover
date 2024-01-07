@@ -87,7 +87,8 @@ func TestBuildsACreateResponseDTOFromARover(t *testing.T) {
 	mockObstacle.On("Occupies", Anything).Return(false)
 	coords, _ := coordinates.New(*absoluteCoordinate.Build(1, 1))
 	mockObstacle.On("Coordinates").Return(*coords)
-	testObstacles := obstacles.FromList(mockObstacle)
+	testObstacles, err := obstacles.FromList(mockObstacle)
+	assert.Nil(t, err)
 	mockPlanet.On("Obstacles").Return(*testObstacles)
 	testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), North{}, *absoluteCoordinate.Build(1, 1), mockPlanet)
 

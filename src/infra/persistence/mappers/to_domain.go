@@ -93,7 +93,7 @@ func mapToDomainObstacles(obstacles []ObstacleEntity) (*Obstacles, error) {
 		}
 		list = append(list, rock)
 	}
-	return obstaclesModule.FromList(list...), nil
+	return obstaclesModule.FromList(list...)
 }
 
 func mapToDomainCoordinates(coordinates []CoordinateEntity) []AbsoluteCoordinate {

@@ -33,7 +33,7 @@ func FailedRoverFunc() func() error {
 func SetupEmptyTestPlanetOfSize(t *testing.T, n int) planet.Planet {
 	planetSize, err := size.Square(n)
 	assert.Nil(t, err)
-	testPlanet, err := planet.CreatePlanet("testColor", *planetSize, *obstacles.FromList())
+	testPlanet, err := planet.CreatePlanet("testColor", *planetSize, *obstacles.Empty())
 	assert.Nil(t, err)
 	return testPlanet
 }
@@ -45,7 +45,9 @@ func SetupPlanetOfSizeWithObstacleIn(t *testing.T, n int, coordinate AbsoluteCoo
 	assert.Nil(t, err)
 	obstacle, err := obs.CreateObstacle(*coord)
 	assert.Nil(t, err)
-	testPlanet, err := planet.CreatePlanet("testColor", *planetSize, *obstacles.FromList(obstacle))
+	obss, err := obstacles.FromList(obstacle)
+	assert.Nil(t, err)
+	testPlanet, err := planet.CreatePlanet("testColor", *planetSize, *obss)
 	assert.Nil(t, err)
 	return testPlanet
 }

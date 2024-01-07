@@ -32,6 +32,15 @@ func (this *Coordinates) Contain(coordinate AbsoluteCoordinate) bool {
 	return contains(this.list, coordinate)
 }
 
+func (this *Coordinates) ContainAnyOf(coordinates Coordinates) bool {
+	for _, coordinate := range coordinates.list {
+		if this.Contain(coordinate) {
+			return true
+		}
+	}
+	return false
+}
+
 func (this *Coordinates) Overflow(size Size) bool {
 	for _, coordinate := range this.list {
 		if coordinate.X() > size.Width() || coordinate.Y() > size.Height() {

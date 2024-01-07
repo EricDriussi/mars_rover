@@ -47,7 +47,8 @@ func setupPlanet(t *testing.T) Planet {
 	assert.Nil(t, err)
 	testBig, err := obstacle.CreateObstacle(*bigCoords)
 	assert.Nil(t, err)
-	obstacles := obs.FromList(testSmall, testBig)
+	obstacles, err := obs.FromList(testSmall, testBig)
+	assert.Nil(t, err)
 	testPlanet, err := planetWithObstacles.Create("testColor", *size, *obstacles)
 	assert.Nil(t, err)
 	return testPlanet

@@ -3,7 +3,6 @@ package boundedRandomCreator
 import (
 	. "mars_rover/src/action/createRandom"
 	. "mars_rover/src/domain"
-	. "mars_rover/src/domain/obstacle"
 	"mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/planet"
@@ -65,27 +64,11 @@ func (this *BoundedRandomCreator) loopUntilValidSize() *Size {
 }
 
 func (this *BoundedRandomCreator) randomObstaclesWithin(size Size) Obstacles {
-	list := obstacles.FromList()
+	list := obstacles.Empty()
 	halfTheArea := size.Area() / 2
 	betweenMinObstaclesAndHalfTheArea := rand.Intn(halfTheArea-this.minObstacles) + this.minObstacles
 	for i := 0; i < betweenMinObstaclesAndHalfTheArea; i++ {
-		obstacle := LoopUntilValidObstacle(size)
-		if coordinatesNotTaken(*list, obstacle) {
-			list.Add(obstacle)
-		}
+		list = LoopUntilAbleToAddObstacle(size, *list)
 	}
 	return *list
-}
-
-// TODO: this should be done by the planet
-func coordinatesNotTaken(list Obstacles, obstacle Obstacle) bool {
-	for _, presentObstacle := range list.List() {
-		coordinates := presentObstacle.Coordinates()
-		for _, coordinate := range coordinates.List() {
-			if obstacle.Occupies(coordinate) {
-				return false
-			}
-		}
-	}
-	return true
 }

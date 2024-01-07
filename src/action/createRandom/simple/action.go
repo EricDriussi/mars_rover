@@ -40,7 +40,7 @@ func (this *SimpleRandomCreator) Create() (Rover, *CreationError) {
 func (this *SimpleRandomCreator) loopUntilPlanetCreated() Planet {
 	return LoopUntilNoError(func() (Planet, error) {
 		validSize := *this.loopUntilValidSize()
-		return CreatePlanet(RandomColor(), validSize, this.randomObstaclesWithin(validSize))
+		return CreatePlanet(RandomColor(), validSize, randomObstaclesWithin(validSize))
 	})
 }
 
@@ -50,11 +50,11 @@ func (this *SimpleRandomCreator) loopUntilValidSize() *Size {
 	})
 }
 
-func (this *SimpleRandomCreator) randomObstaclesWithin(size Size) Obstacles {
-	list := obstacles.FromList()
+func randomObstaclesWithin(size Size) Obstacles {
+	list := obstacles.Empty()
 	amountOfObstacles := rand.Intn(size.Area()) - 1 // leave at least a blank space for the rover
 	for i := 0; i < amountOfObstacles; i++ {
-		list.Add(LoopUntilValidObstacle(size))
+		list = LoopUntilAbleToAddObstacle(size, *list)
 	}
 	return *list
 }

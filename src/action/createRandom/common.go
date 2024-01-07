@@ -7,6 +7,7 @@ import (
 	"mars_rover/src/domain/coordinate/coordinates"
 	"mars_rover/src/domain/obstacle"
 	. "mars_rover/src/domain/obstacle"
+	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/domain/rover/direction"
@@ -54,6 +55,14 @@ func randomCoordinatesWithin(size Size, maxObstacleSize int) []AbsoluteCoordinat
 		coords = append(coords, randomCoordinateWithin(size))
 	}
 	return coords
+}
+
+func LoopUntilAbleToAddObstacle(size Size, list Obstacles) *Obstacles {
+	err := errors.New("not added")
+	for err != nil {
+		err = list.Add(LoopUntilValidObstacle(size))
+	}
+	return &list
 }
 
 func RandomDirection() Direction {

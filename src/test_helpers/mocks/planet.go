@@ -1,8 +1,11 @@
 package mocks
 
 import (
+	"github.com/stretchr/testify/assert"
+	"mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/size"
+	"testing"
 
 	. "github.com/stretchr/testify/mock"
 )
@@ -26,11 +29,12 @@ func (this *MockPlanet) Color() string {
 	return args.String(0)
 }
 
-func PlanetWithNoObstaclesOfSize(size int) *MockPlanet {
+func PlanetWithNoObstaclesOfSize(t *testing.T, size int) *MockPlanet {
 	mockPlanet := new(MockPlanet)
-	testSize, _ := Square(size)
+	testSize, err := Square(size)
+	assert.Nil(t, err)
 	mockPlanet.On("Size").Return(*testSize)
-	testObstacles := FromList()
+	testObstacles := obstacles.Empty()
 	mockPlanet.On("Obstacles").Return(*testObstacles)
 	return mockPlanet
 }

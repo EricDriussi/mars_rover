@@ -1,6 +1,8 @@
 package planetWithObstacles_test
 
 import (
+	"mars_rover/src/domain/coordinate/absoluteCoordinate"
+	"mars_rover/src/domain/coordinate/coordinates"
 	obs "mars_rover/src/domain/obstacle/obstacles"
 	"mars_rover/src/domain/planet/planetWithObstacles"
 	"mars_rover/src/domain/size"
@@ -20,9 +22,14 @@ func init() {
 func TestCanCreateIfNoObstacleIsOutOfBounds(t *testing.T) {
 	mockObstacleOne := new(MockObstacle)
 	mockObstacleTwo := new(MockObstacle)
+	mockCoordinatesOne, err := coordinates.New(*absoluteCoordinate.Build(0, 0))
+	mockObstacleOne.On("Coordinates").Return(*mockCoordinatesOne)
+	mockCoordinatesTwo, err := coordinates.New(*absoluteCoordinate.Build(0, 1))
+	mockObstacleTwo.On("Coordinates").Return(*mockCoordinatesTwo)
 	mockObstacleOne.On("IsBeyond", Anything).Return(false)
 	mockObstacleTwo.On("IsBeyond", Anything).Return(false)
-	obstaclesWithinBounds := obs.FromList(mockObstacleOne, mockObstacleTwo)
+	obstaclesWithinBounds, err := obs.FromList(mockObstacleOne, mockObstacleTwo)
+	assert.Nil(t, err)
 
 	planet, err := planetWithObstacles.Create("testColor", *testSize, *obstaclesWithinBounds)
 
@@ -33,9 +40,14 @@ func TestCanCreateIfNoObstacleIsOutOfBounds(t *testing.T) {
 func TestCannotCreateIfOneObstacleIsOutOfBounds(t *testing.T) {
 	mockObstacleOne := new(MockObstacle)
 	mockObstacleTwo := new(MockObstacle)
+	mockCoordinatesOne, err := coordinates.New(*absoluteCoordinate.Build(0, 0))
+	mockObstacleOne.On("Coordinates").Return(*mockCoordinatesOne)
+	mockCoordinatesTwo, err := coordinates.New(*absoluteCoordinate.Build(0, 1))
+	mockObstacleTwo.On("Coordinates").Return(*mockCoordinatesTwo)
 	mockObstacleOne.On("IsBeyond", Anything).Return(true)
 	mockObstacleTwo.On("IsBeyond", Anything).Return(false)
-	obstaclesOutsideBounds := obs.FromList(mockObstacleOne, mockObstacleTwo)
+	obstaclesOutsideBounds, err := obs.FromList(mockObstacleOne, mockObstacleTwo)
+	assert.Nil(t, err)
 
 	planet, err := planetWithObstacles.Create("testColor", *testSize, *obstaclesOutsideBounds)
 
@@ -45,8 +57,11 @@ func TestCannotCreateIfOneObstacleIsOutOfBounds(t *testing.T) {
 
 func TestCannotCreateIfSizeTooSmall(t *testing.T) {
 	mockObstacle := new(MockObstacle)
+	mockCoordinates, err := coordinates.New(*absoluteCoordinate.Build(0, 0))
+	mockObstacle.On("Coordinates").Return(*mockCoordinates)
 	mockObstacle.On("IsBeyond", Anything).Return(false)
-	obstacleWithinBounds := obs.FromList(mockObstacle)
+	obstacleWithinBounds, err := obs.FromList(mockObstacle)
+	assert.Nil(t, err)
 	testSize, err := size.Square(1)
 	assert.Nil(t, err)
 
@@ -57,7 +72,7 @@ func TestCannotCreateIfSizeTooSmall(t *testing.T) {
 }
 
 func TestCannotCreateIfNoObstacles(t *testing.T) {
-	planet, err := planetWithObstacles.Create("testColor", *testSize, *obs.FromList())
+	planet, err := planetWithObstacles.Create("testColor", *testSize, *obs.Empty())
 
 	assert.Error(t, err)
 	assert.Nil(t, planet)
