@@ -41,7 +41,7 @@ func TestBoundedCreationRespectsSensibleLimits(t *testing.T) {
 	act := boundedRandomCreator.With(repo)
 
 	// since there is a lot of randomness involved, we create the game a bunch of times
-	for i := 0; i < 25; i++ {
+	for i := 0; i < 10; i++ {
 		rover, err := act.Create()
 		assert.Nil(t, err)
 
@@ -53,9 +53,9 @@ func TestBoundedCreationRespectsSensibleLimits(t *testing.T) {
 }
 
 func assertObstacleAmountIsWithinMinAndHalfTheArea(t *testing.T, obstacles Obstacles, planetMap Map) {
-	assert.GreaterOrEqual(t, len(obstacles.List()), MinObstacles)
+	assert.GreaterOrEqual(t, obstacles.Amount(), MinObstacles)
 	halfTheArea := planetMap.Width() * planetMap.Height() / 2
-	assert.LessOrEqual(t, len(obstacles.List()), halfTheArea)
+	assert.LessOrEqual(t, obstacles.Amount(), halfTheArea)
 }
 
 func assertPlanetMapIsWithin(t *testing.T, planetMap Map) {

@@ -5,6 +5,7 @@ import (
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	"mars_rover/src/domain/coordinate/coordinates"
+	. "mars_rover/src/domain/coordinate/coordinates"
 	"mars_rover/src/domain/obstacle"
 	. "mars_rover/src/domain/obstacle"
 	. "mars_rover/src/domain/obstacle/obstacles"
@@ -18,7 +19,6 @@ import (
 	"math/rand"
 )
 
-// TODO: test these functions?
 func RandomColor() string {
 	colors := []string{
 		"red",
@@ -30,21 +30,23 @@ func RandomColor() string {
 
 func LoopUntilRoverLanded(planet Planet) Rover {
 	return LoopUntilNoError(func() (*WrappingCollidingRover, error) {
-		return wrappingCollidingRover.LandFacing(uuid.New(), RandomDirection(), randomCoordinateWithin(planet.Size()), planet)
+		return wrappingCollidingRover.LandFacing(uuid.New(), randomDirection(), RandomCoordinateWithin(planet.Size()), planet)
 	})
 }
 
-func randomCoordinateWithin(size Size) AbsoluteCoordinate {
+func RandomCoordinateWithin(size Size) AbsoluteCoordinate {
 	return *absoluteCoordinate.Build(rand.Intn(size.Width()), rand.Intn(size.Height()))
 }
 
-func LoopUntilValidObstacle(size Size) Obstacle {
+func loopUntilValidObstacle(size Size) Obstacle {
 	return LoopUntilNoError(func() (Obstacle, error) {
-		coords, err := coordinates.New(randomCoordinatesWithin(size, obstacle.MaxAmountOfCoords())...)
-		if err != nil {
-			panic(err) // TODO: find a better way
-		}
-		return obstacle.CreateObstacle(*coords)
+		return CreateObstacle(*loopUntilValidCoordinates(size))
+	})
+}
+
+func loopUntilValidCoordinates(size Size) *Coordinates {
+	return LoopUntilNoError(func() (*Coordinates, error) {
+		return coordinates.New(randomCoordinatesWithin(size, obstacle.MaxAmountOfCoords())...)
 	})
 }
 
@@ -52,20 +54,20 @@ func randomCoordinatesWithin(size Size, maxObstacleSize int) []AbsoluteCoordinat
 	betweenOneAndMaxObstacleSize := rand.Intn(maxObstacleSize-1) + 1
 	var coords []AbsoluteCoordinate
 	for i := 0; i < betweenOneAndMaxObstacleSize; i++ {
-		coords = append(coords, randomCoordinateWithin(size))
+		coords = append(coords, RandomCoordinateWithin(size))
 	}
 	return coords
 }
 
-func LoopUntilAbleToAddObstacle(size Size, list Obstacles) *Obstacles {
+func LoopUntilAbleToAddRandomObstacle(size Size, list Obstacles) *Obstacles {
 	err := errors.New("not added")
 	for err != nil {
-		err = list.Add(LoopUntilValidObstacle(size))
+		err = list.Add(loopUntilValidObstacle(size))
 	}
 	return &list
 }
 
-func RandomDirection() Direction {
+func randomDirection() Direction {
 	directions := []Direction{
 		North{},
 		East{},

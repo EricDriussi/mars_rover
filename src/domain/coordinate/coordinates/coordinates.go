@@ -73,6 +73,14 @@ func (this *Coordinates) AreContiguous() bool {
 	return areAllAdjacent(this.list)
 }
 
+func (this *Coordinates) Add(coordinate AbsoluteCoordinate) error {
+	if this.Contain(coordinate) {
+		return errors.New("cannot add coordinate that is already in list")
+	}
+	this.list = append(this.list, coordinate)
+	return nil
+}
+
 func contains(list []AbsoluteCoordinate, coordinate AbsoluteCoordinate) bool {
 	for _, containedCoordinate := range list {
 		if containedCoordinate.Equals(coordinate) {

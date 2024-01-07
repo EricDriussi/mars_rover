@@ -10,7 +10,7 @@ import (
 // TODO.LM: this should be set by config
 const (
 	MinSize = 2
-	MaxSize = 5
+	MaxSize = 8
 )
 
 type BigRock struct {

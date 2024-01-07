@@ -21,15 +21,15 @@ func FromList(list ...Obstacle) (*Obstacles, error) {
 	return &Obstacles{list}, nil
 }
 
-func haveOverlappingCoordinates(list ...Obstacle) bool {
+func haveOverlappingCoordinates(obstacleList ...Obstacle) bool {
 	coordinates := make(map[AbsoluteCoordinate]bool)
-	for _, obs := range list {
-		c := obs.Coordinates()
-		for _, coord := range c.List() {
-			if coordinates[coord] {
+	for _, obstacle := range obstacleList {
+		obstacleCoordinates := obstacle.Coordinates()
+		for _, singleCoordinate := range obstacleCoordinates.List() {
+			if coordinates[singleCoordinate] {
 				return true
 			}
-			coordinates[coord] = true
+			coordinates[singleCoordinate] = true
 		}
 	}
 	return false

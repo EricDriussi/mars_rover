@@ -14,7 +14,7 @@ func TestSimpleCreationDoesNotErrorIfRepoIsSuccessful(t *testing.T) {
 	repo.On("AddPlanet").Return(nil)
 	repo.On("AddRover").Return(nil)
 
-	act := simpleRandomCreator.With(repo)
+	act := simpleRandomCreator.With(repo, 10)
 	rover, err := act.Create()
 
 	assert.Nil(t, err)
@@ -25,7 +25,7 @@ func TestSimpleCreationReportsRepoError(t *testing.T) {
 	repo := new(MockRepo)
 	repo.On("AddPlanet").Return(errors.New("repo error"))
 
-	act := simpleRandomCreator.With(repo)
+	act := simpleRandomCreator.With(repo, 10)
 	_, err := act.Create()
 
 	assert.Error(t, err)

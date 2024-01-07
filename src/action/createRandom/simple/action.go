@@ -13,12 +13,14 @@ import (
 )
 
 type SimpleRandomCreator struct {
-	repo Repository
+	repo    Repository
+	maxSize int
 }
 
-func With(repo Repository) *SimpleRandomCreator {
+func With(repo Repository, maxSize int) *SimpleRandomCreator {
 	return &SimpleRandomCreator{
-		repo: repo,
+		repo:    repo,
+		maxSize: maxSize,
 	}
 }
 
@@ -46,7 +48,7 @@ func (this *SimpleRandomCreator) loopUntilPlanetCreated() Planet {
 
 func (this *SimpleRandomCreator) loopUntilValidSize() *Size {
 	return LoopUntilNoError(func() (*Size, error) {
-		return size.Square(rand.Intn(420) + 1) // 420 has no meaning: could be left unbound, but tests would take too long ¯\_(ツ)_/¯
+		return size.Square(rand.Intn(this.maxSize))
 	})
 }
 
@@ -54,7 +56,7 @@ func randomObstaclesWithin(size Size) Obstacles {
 	list := obstacles.Empty()
 	amountOfObstacles := rand.Intn(size.Area()) - 1 // leave at least a blank space for the rover
 	for i := 0; i < amountOfObstacles; i++ {
-		list = LoopUntilAbleToAddObstacle(size, *list)
+		list = LoopUntilAbleToAddRandomObstacle(size, *list)
 	}
 	return *list
 }

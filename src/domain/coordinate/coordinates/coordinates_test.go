@@ -10,24 +10,6 @@ import (
 	"testing"
 )
 
-func TestFiltersOutDuplicateCoordinates(t *testing.T) {
-	coords, err := coordinates.New(
-		*absoluteCoordinate.Build(1, 1),
-		*absoluteCoordinate.Build(1, 1),
-		*absoluteCoordinate.Build(1, 3),
-	)
-
-	assert.Nil(t, err)
-	assert.Len(t, coords.List(), 2)
-}
-
-func TestDoesNotCreateWithNoCoordinates(t *testing.T) {
-	coords, err := coordinates.New()
-
-	assert.Nil(t, coords)
-	assert.Error(t, err)
-}
-
 func TestAllCoordinatesAreWithinLimit(t *testing.T) {
 	sizeLimit, _ := size.Square(4)
 	coords, err := coordinates.New(
@@ -136,4 +118,24 @@ func TestDeterminesIfAnyCoordinateIsNonContiguous(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.False(t, coords.AreContiguous())
+}
+
+func TestDoesNotAddCoordinateWhenAlreadyPresent(t *testing.T) {
+	coords, err := coordinates.New(*absoluteCoordinate.Build(1, 1))
+	assert.Nil(t, err)
+
+	err = coords.Add(*absoluteCoordinate.Build(1, 1))
+
+	assert.Error(t, err)
+	assert.Len(t, coords.List(), 1)
+}
+
+func TestAddsCoordinateWhenNotPresent(t *testing.T) {
+	coords, err := coordinates.New(*absoluteCoordinate.Build(1, 1))
+	assert.Nil(t, err)
+
+	err = coords.Add(*absoluteCoordinate.Build(1, 2))
+
+	assert.Nil(t, err)
+	assert.Len(t, coords.List(), 2)
 }

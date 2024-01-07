@@ -64,7 +64,7 @@ func TestBuildsWithWithinTwoAndFiveCoordinates(t *testing.T) {
 	}
 }
 
-func TestDoesNotBuildWithLessThanTwoOrMoreThanFiveCoordinates(t *testing.T) {
+func TestDoesNotBuildWithLessThanTwoOrMoreThanEightCoordinates(t *testing.T) {
 	testCases := []struct {
 		name        string
 		coordinates []AbsoluteCoordinate
@@ -76,7 +76,7 @@ func TestDoesNotBuildWithLessThanTwoOrMoreThanFiveCoordinates(t *testing.T) {
 			},
 		},
 		{
-			name: "six coordinates",
+			name: "nine coordinates",
 			coordinates: []AbsoluteCoordinate{
 				*absoluteCoordinate.Build(1, 1),
 				*absoluteCoordinate.Build(1, 2),
@@ -84,6 +84,9 @@ func TestDoesNotBuildWithLessThanTwoOrMoreThanFiveCoordinates(t *testing.T) {
 				*absoluteCoordinate.Build(1, 4),
 				*absoluteCoordinate.Build(1, 5),
 				*absoluteCoordinate.Build(1, 6),
+				*absoluteCoordinate.Build(1, 7),
+				*absoluteCoordinate.Build(1, 8),
+				*absoluteCoordinate.Build(1, 9),
 			},
 		},
 	}
