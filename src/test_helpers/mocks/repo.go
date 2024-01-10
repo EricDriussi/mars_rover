@@ -58,5 +58,6 @@ func SuccessfulRepoFor(rover Rover) *MockRepo {
 	repo.On("UpdateRover").Return(nil)
 	repo.On("AddRover").Return(nil)
 	repo.On("AddPlanet").Return(0, nil)
+	repo.On("GetGame").Return(&Game{Rover: rover}, nil)
 	return repo
 }
