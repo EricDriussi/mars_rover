@@ -11,5 +11,10 @@ type Repository interface {
 	AddRover(rover Rover, planetId int) *RepositoryError
 	AddPlanet(planet Planet) (int, *RepositoryError)
 	GetRover(roverId UUID) (Rover, *RepositoryError)
-	GetPlanet(roverId UUID) (Planet, *RepositoryError)
+	GetGame(roverId UUID) (*Game, *RepositoryError)
+}
+
+type Game struct {
+	Rover  Rover
+	Planet Planet
 }

@@ -20,12 +20,15 @@ func (this *SQLiteRepository) GetRover(roverId UUID) (Rover, *RepositoryError) {
 	return rover, nil
 }
 
-func (this *SQLiteRepository) GetPlanet(roverId UUID) (Planet, *RepositoryError) {
-	planet, _, err := this.getGame(roverId)
+func (this *SQLiteRepository) GetGame(roverId UUID) (*Game, *RepositoryError) {
+	planet, rover, err := this.getGame(roverId)
 	if err != nil {
 		return nil, err
 	}
-	return planet, nil
+	return &Game{
+		Rover:  rover,
+		Planet: planet,
+	}, nil
 }
 
 // TODO.LM: This is an awful coupling between rover and planet.

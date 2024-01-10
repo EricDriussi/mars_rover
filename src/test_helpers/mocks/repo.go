@@ -44,12 +44,12 @@ func (this MockRepo) GetRover(roverId UUID) (Rover, *RepositoryError) {
 	return args.Get(0).(Rover), args.Get(1).(*RepositoryError)
 }
 
-func (this MockRepo) GetPlanet(roverId UUID) (Planet, *RepositoryError) {
+func (this MockRepo) GetGame(roverId UUID) (*Game, *RepositoryError) {
 	args := this.Called()
 	if args.Get(1) == nil {
-		return args.Get(0).(Planet), nil
+		return args.Get(0).(*Game), nil
 	}
-	return args.Get(0).(Planet), args.Get(1).(*RepositoryError)
+	return args.Get(0).(*Game), args.Get(1).(*RepositoryError)
 }
 
 func SuccessfulRepoFor(rover Rover) *MockRepo {

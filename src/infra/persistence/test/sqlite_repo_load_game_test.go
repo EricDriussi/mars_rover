@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLoadsPlanetWhenPresent(t *testing.T) {
+func TestLoadsGameWhenPresent(t *testing.T) {
 	testCases := []struct {
 		name      string
 		setupFunc func(t *testing.T) (Rover, Planet)
@@ -31,15 +31,16 @@ func TestLoadsPlanetWhenPresent(t *testing.T) {
 			err := saveGame(db, testRover, testPlanet)
 			assert.Nil(t, err)
 
-			planet, repoErr := repo.GetPlanet(testRover.Id())
+			game, repoErr := repo.GetGame(testRover.Id())
 
 			assert.Nil(t, repoErr)
-			assertPlanetsAreEqual(t, testPlanet, planet)
+			assertPlanetsAreEqual(t, testPlanet, game.Planet)
+			assertRoversAreEqual(t, testRover, game.Rover)
 		})
 	}
 }
 
-func TestDoesNotLoadPlanetWhenNotPresent(t *testing.T) {
+func TestDoesNotLoadGameWhenNotPresent(t *testing.T) {
 	testCases := []struct {
 		name      string
 		setupFunc func(t *testing.T) (Rover, Planet)
@@ -60,7 +61,7 @@ func TestDoesNotLoadPlanetWhenNotPresent(t *testing.T) {
 			err := saveGame(db, testRover, testPlanet)
 			assert.Nil(t, err)
 
-			_, repoErr := repo.GetPlanet(uuid.New())
+			_, repoErr := repo.GetGame(uuid.New())
 
 			assert.Error(t, repoErr)
 		})
