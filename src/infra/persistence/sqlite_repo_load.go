@@ -13,51 +13,52 @@ import (
 )
 
 func (this *SQLiteRepository) GetRover(roverId UUID) (Rover, *RepositoryError) {
-	optionalRover, err := this.getRover(roverId)
+	_, rover, err := this.getGame(roverId)
 	if err != nil {
-		return nil, PersistenceMalfunction(err)
+		return nil, err
 	}
-	if !optionalRover.Present {
-		return nil, NotFound()
-	}
-
-	domainPlanet, getErr := this.GetPlanet(roverId)
-	if getErr != nil {
-		return nil, NotFound()
-	}
-
-	domainRover, err := MapToDomainRover(optionalRover.Value, domainPlanet)
-	if err != nil {
-		return nil, CouldNotMap(err)
-	}
-
-	return domainRover, nil
+	return rover, nil
 }
 
 func (this *SQLiteRepository) GetPlanet(roverId UUID) (Planet, *RepositoryError) {
-	optionalRover, err := this.getRover(roverId)
+	planet, _, err := this.getGame(roverId)
 	if err != nil {
-		return nil, PersistenceMalfunction(err)
+		return nil, err
 	}
-	if !optionalRover.Present {
-		return nil, NotFound()
-	}
-
-	planetEntity, err := this.getPlanet(optionalRover.Value.PlanetId)
-	if err != nil {
-		return nil, NotFound()
-	}
-
-	domainPlanet, err := MapToDomainPlanet(planetEntity)
-	if err != nil {
-		return nil, CouldNotMap(err)
-	}
-
-	return domainPlanet, nil
+	return planet, nil
 }
 
-// TODO: why the OptionalRover?
-func (this *SQLiteRepository) getRover(roverId UUID) (OptionalRover, error) {
+// TODO.LM: This is an awful coupling between rover and planet.
+// I designed the domain so that a rover cannot be instantiated without a planet.
+// Since there is no circumstance in which a planet needs to be retrieved without its rover, the planet domain entity
+// has no ID of its own, depending on the rover entity's planetID
+// This seems to make logical sense (to me), but produces this weird scenario in which both need to be retrieved together.
+// Hopefully there is a better way to do this that does not force a planetID into the domain layer.
+func (this *SQLiteRepository) getGame(roverId UUID) (Planet, Rover, *RepositoryError) {
+	roverEntity, repoErr := this.getRover(roverId)
+	if repoErr != nil {
+		return nil, nil, repoErr
+	}
+
+	planetEntity, repoErr := this.getPlanet(roverEntity.PlanetId)
+	if repoErr != nil {
+		return nil, nil, repoErr
+	}
+
+	domainPlanet, err := MapToDomainPlanet(*planetEntity)
+	if err != nil {
+		return nil, nil, CouldNotMap(err)
+	}
+
+	domainRover, err := MapToDomainRover(*roverEntity, domainPlanet)
+	if err != nil {
+		return nil, nil, CouldNotMap(err)
+	}
+
+	return domainPlanet, domainRover, nil
+}
+
+func (this *SQLiteRepository) getRover(roverId UUID) (*RoverEntity, *RepositoryError) {
 	row := this.db.QueryRow("SELECT * FROM "+RoversTable+" WHERE id = ?", roverId.String())
 
 	var id string
@@ -66,40 +67,31 @@ func (this *SQLiteRepository) getRover(roverId UUID) (OptionalRover, error) {
 	var planetId int
 	err := row.Scan(&id, &rover, &godMod, &planetId)
 	if err != nil {
-		return OptionalRover{
-			Value:   RoverEntity{},
-			Present: false,
-		}, nil
+		return nil, NotFound()
 	}
 	var roverEntity RoverEntity
 	err = json.Unmarshal([]byte(rover), &roverEntity)
 	if err != nil {
-		return OptionalRover{
-			Value:   RoverEntity{},
-			Present: false,
-		}, err
+		return nil, CouldNotMap(err)
 	}
 	roverEntity.GodMod = godMod
 	roverEntity.PlanetId = planetId
-	return OptionalRover{
-		Value:   roverEntity,
-		Present: true,
-	}, nil
+	return &roverEntity, nil
 }
 
-func (this *SQLiteRepository) getPlanet(planetId int) (PlanetEntity, error) {
+func (this *SQLiteRepository) getPlanet(planetId int) (*PlanetEntity, *RepositoryError) {
 	row := this.db.QueryRow("SELECT * FROM "+PlanetsTable+" WHERE id = ?", planetId)
 
 	var id string
 	var planet string
 	err := row.Scan(&id, &planet)
 	if err != nil {
-		return PlanetEntity{}, err
+		return nil, NotFound()
 	}
 	var planetEntity PlanetEntity
 	err = json.Unmarshal([]byte(planet), &planetEntity)
 	if err != nil {
-		return PlanetEntity{}, err
+		return nil, CouldNotMap(err)
 	}
-	return planetEntity, nil
+	return &planetEntity, nil
 }
