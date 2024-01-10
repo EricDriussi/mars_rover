@@ -35,10 +35,10 @@ func (this *SQLiteRepository) AddRover(rover Rover, planetId int) *RepositoryErr
 		return CouldNotMap(err)
 	}
 
-	_, err = this.db.Exec("INSERT INTO "+RoversTable+" (id, rover, godMod, planet_id) VALUES (?, ?, ?, ?)",
+	_, err = this.db.Exec("INSERT INTO "+RoversTable+" (id, rover, type, planet_id) VALUES (?, ?, ?, ?)",
 		rover.Id().String(),
 		string(roverAsBytes),
-		isGodMod(rover),
+		typeOf(rover),
 		planetId,
 	)
 	if err != nil {
@@ -47,7 +47,9 @@ func (this *SQLiteRepository) AddRover(rover Rover, planetId int) *RepositoryErr
 	return nil
 }
 
-func isGodMod(rover Rover) bool {
-	_, isGodMod := rover.(*GodModRover)
-	return isGodMod
+func typeOf(rover Rover) string {
+	if _, ok := rover.(*GodModRover); ok {
+		return "godmod"
+	}
+	return "normal"
 }

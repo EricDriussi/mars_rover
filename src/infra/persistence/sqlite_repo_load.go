@@ -63,9 +63,9 @@ func (this *SQLiteRepository) getRover(roverId UUID) (*RoverEntity, *RepositoryE
 
 	var id string
 	var rover string
-	var godMod bool
+	var typeOf string
 	var planetId int
-	err := row.Scan(&id, &rover, &godMod, &planetId)
+	err := row.Scan(&id, &rover, &typeOf, &planetId)
 	if err != nil {
 		return nil, NotFound()
 	}
@@ -74,7 +74,7 @@ func (this *SQLiteRepository) getRover(roverId UUID) (*RoverEntity, *RepositoryE
 	if err != nil {
 		return nil, CouldNotMap(err)
 	}
-	roverEntity.GodMod = godMod
+	roverEntity.Type = typeOf
 	roverEntity.PlanetId = planetId
 	return &roverEntity, nil
 }

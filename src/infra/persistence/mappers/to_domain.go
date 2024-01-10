@@ -26,16 +26,10 @@ func MapToDomainRover(roverEntity RoverEntity, planet Planet) (Rover, error) {
 	}
 	coordinate := absoluteCoordinate.Build(roverEntity.Coordinate.X, roverEntity.Coordinate.Y)
 
-	var rover Rover
-	if roverEntity.GodMod {
-		rover = godModRover.LandFacing(roverEntity.ID, direction, *coordinate, planet)
-	} else {
-		rover, err = wrappingCollidingRover.LandFacing(roverEntity.ID, direction, *coordinate, planet)
-		if err != nil {
-			return nil, err
-		}
+	if roverEntity.Type == "godmod" {
+		return godModRover.LandFacing(roverEntity.ID, direction, *coordinate, planet), nil
 	}
-	return rover, nil
+	return wrappingCollidingRover.LandFacing(roverEntity.ID, direction, *coordinate, planet)
 }
 
 func directionFromString(dirStr string) (Direction, error) {

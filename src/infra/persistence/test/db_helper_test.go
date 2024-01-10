@@ -33,14 +33,20 @@ func saveGame(db *sql.DB, rover Rover, planet Planet) error {
 		return err
 	}
 
-	_, isGodMod := rover.(*GodModRover)
-	_, err = db.Exec("INSERT INTO "+RoversTable+" (id, rover, godMod, planet_id) VALUES (?, ?, ?, ?)",
+	_, err = db.Exec("INSERT INTO "+RoversTable+" (id, rover, type, planet_id) VALUES (?, ?, ?, ?)",
 		rover.Id().String(),
 		string(roverAsBytes),
-		isGodMod,
+		typeOf(rover),
 		planetId,
 	)
 	return err
+}
+
+func typeOf(rover Rover) string {
+	if _, ok := rover.(*GodModRover); ok {
+		return "godmod"
+	}
+	return "normal"
 }
 
 func savePlanet(db *sql.DB, planet Planet) (int, error) {
@@ -115,42 +121,23 @@ func getLastPersistedPlanet(db *sql.DB) (Planet, error) {
 	return foundPlanets[0], nil
 }
 
-func getNumberOfPlanets(db *sql.DB) (int, error) {
-	var count int
-	err := db.QueryRow("SELECT COUNT(*) FROM " + PlanetsTable).Scan(&count)
-	if err != nil {
-		return 0, err
-	}
-	return count, nil
-}
-
-func getNumberOfRovers(db *sql.DB) (int, error) {
-	var count int
-	err := db.QueryRow("SELECT COUNT(*) FROM " + RoversTable).Scan(&count)
-	if err != nil {
-		return 0, err
-	}
-	return count, nil
-}
-
 func unmarshalRoverEntities(rows *sql.Rows) ([]RoverEntity, error) {
 	var listOfRovers []RoverEntity
 	for rows.Next() {
 		var id string
 		var rover string
-		var godMod bool
+		var typeOf string
 		var planetId int
-		err := rows.Scan(&id, &rover, &godMod, &planetId)
+		err := rows.Scan(&id, &rover, &typeOf, &planetId)
 		if err != nil {
 			return nil, err
-
 		}
 		var roverData RoverEntity
 		err = json.Unmarshal([]byte(rover), &roverData)
 		if err != nil {
 			return nil, err
 		}
-		roverData.GodMod = godMod
+		roverData.Type = typeOf
 		roverData.PlanetId = planetId
 		listOfRovers = append(listOfRovers, roverData)
 	}

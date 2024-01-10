@@ -35,12 +35,11 @@ func (this *SQLiteRepository) connect() {
 }
 
 func createTables(db *sql.DB) {
-	// TODO: separate tables for wrapping and godmod rovers
 	_, err := db.Exec(`
 	CREATE TABLE IF NOT EXISTS ` + RoversTable + ` (
 		id TEXT PRIMARY KEY,
 		rover TEXT NOT NULL,
-		godMod BOOLEAN NOT NULL,
+		type TEXT NOT NULL,
 		planet_id INTEGER,
 		FOREIGN KEY(planet_id) REFERENCES ` + PlanetsTable + `(id)
 	);

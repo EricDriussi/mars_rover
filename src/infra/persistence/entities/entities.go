@@ -9,7 +9,7 @@ type RoverEntity struct {
 	PlanetMap  MapEntity        `json:"planetMap"`
 	Coordinate CoordinateEntity `json:"coordinate"`
 	Direction  string           `json:"direction"`
-	GodMod     bool             `json:"godMod"`
+	Type       string           `json:"type"`
 	PlanetId   int              `json:"planetId"`
 }
 
