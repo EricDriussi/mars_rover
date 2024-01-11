@@ -36,6 +36,11 @@ func RunOn(port string, wg *sync.WaitGroup) {
 
 func randomGameHandler(w http.ResponseWriter, r *http.Request) {
 	responseHandler := NewResponseHandler(w)
+	if r.Method == "OPTIONS" {
+		// This is a workaround for cors requests
+		responseHandler.SendOk("")
+		return
+	}
 	if r.Method != "POST" {
 		responseHandler.SendBadRequest("Invalid method")
 		return
@@ -46,6 +51,11 @@ func randomGameHandler(w http.ResponseWriter, r *http.Request) {
 
 func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 	responseHandler := NewResponseHandler(w)
+	if r.Method == "OPTIONS" {
+		// This is a workaround for cors requests
+		responseHandler.SendOk("")
+		return
+	}
 	if r.Method != "POST" {
 		responseHandler.SendBadRequest("Invalid method")
 		return
@@ -63,6 +73,11 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 
 func loadHandler(w http.ResponseWriter, r *http.Request) {
 	responseHandler := NewResponseHandler(w)
+	if r.Method == "OPTIONS" {
+		// This is a workaround for cors requests
+		responseHandler.SendOk("")
+		return
+	}
 	if r.Method != "POST" {
 		responseHandler.SendBadRequest("Invalid method")
 		return
