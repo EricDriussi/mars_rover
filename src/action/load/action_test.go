@@ -30,4 +30,5 @@ func TestLoaderErrorsIfRepoReportsAnError(t *testing.T) {
 	_, err := act.Load(uuid.New())
 
 	assert.Error(t, err)
+	assert.True(t, err.IsNotFound())
 }

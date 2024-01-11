@@ -38,6 +38,10 @@ func (e RepositoryError) Error() string {
 	return "unknown error"
 }
 
+func (e RepositoryError) IsNotFound() bool {
+	return e.errType == notFound
+}
+
 func PersistenceMalfunction(err error) *RepositoryError {
 	return &RepositoryError{
 		errType: persistenceMalfunction,

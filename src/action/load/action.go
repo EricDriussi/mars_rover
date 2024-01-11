@@ -18,6 +18,9 @@ func With(repo Repository) *SimpleGameLoader {
 func (this *SimpleGameLoader) Load(roverId UUID) (*Game, *LoadError) {
 	game, getErr := this.repo.GetGame(roverId)
 	if getErr != nil {
+		if getErr.IsNotFound() {
+			return nil, GameNotFound(getErr)
+		}
 		return nil, GameNotLoaded(getErr)
 	}
 

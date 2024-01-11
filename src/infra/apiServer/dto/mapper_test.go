@@ -5,6 +5,7 @@ import (
 	. "github.com/stretchr/testify/mock"
 	. "mars_rover/src/action/move"
 	. "mars_rover/src/action/move/command"
+	. "mars_rover/src/domain"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	"mars_rover/src/domain/coordinate/coordinates"
 	"mars_rover/src/domain/obstacle/obstacles"
@@ -98,6 +99,29 @@ func TestBuildsACreateResponseDTOFromARover(t *testing.T) {
 	assertCreateDTOContainsPlanetData(t, createResponseDTO, mockPlanet)
 }
 
+func TestBuildsAGameDTOFromAGame(t *testing.T) {
+	testSize, _ := size.Square(10)
+	mockPlanet := new(MockPlanet)
+	mockPlanet.On("Size").Return(*testSize)
+	mockObstacle := new(MockObstacle)
+	mockObstacle.On("Occupies", Anything).Return(false)
+	coords, _ := coordinates.New(*absoluteCoordinate.Build(1, 1))
+	mockObstacle.On("Coordinates").Return(*coords)
+	testObstacles, err := obstacles.FromList(mockObstacle)
+	assert.Nil(t, err)
+	mockPlanet.On("Obstacles").Return(*testObstacles)
+	testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), North{}, *absoluteCoordinate.Build(1, 1), mockPlanet)
+	testGame := &Game{
+		Rover:  testRover,
+		Planet: mockPlanet,
+	}
+
+	loadResponseDTO := dto.FromGame(testGame)
+
+	assertGameDTOContainsRoverData(t, loadResponseDTO, testRover)
+	assertGameDTOContainsPlanetData(t, loadResponseDTO, mockPlanet)
+}
+
 func assertCreateDTOContainsRoverData(t *testing.T, createResponseDTO CreateResponseDTO, testRover *WrappingCollidingRover) {
 	assert.Equal(t, createResponseDTO.Rover.Id, testRover.Id().String())
 	testCoordinate := testRover.Coordinate()
@@ -107,6 +131,17 @@ func assertCreateDTOContainsRoverData(t *testing.T, createResponseDTO CreateResp
 	testMap := testRover.Map()
 	assert.Equal(t, createResponseDTO.Planet.Width, testMap.Width())
 	assert.Equal(t, createResponseDTO.Planet.Height, testMap.Height())
+}
+
+func assertGameDTOContainsRoverData(t *testing.T, gameDTO GameDTO, testRover *WrappingCollidingRover) {
+	assert.Equal(t, gameDTO.Rover.Id, testRover.Id().String())
+	testCoordinate := testRover.Coordinate()
+	assert.Equal(t, gameDTO.Rover.Coordinate.X, testCoordinate.X())
+	assert.Equal(t, gameDTO.Rover.Coordinate.Y, testCoordinate.Y())
+	assert.Equal(t, gameDTO.Rover.Direction, testRover.Direction().CardinalPoint())
+	testMap := testRover.Map()
+	assert.Equal(t, gameDTO.Planet.Width, testMap.Width())
+	assert.Equal(t, gameDTO.Planet.Height, testMap.Height())
 }
 
 func assertCreateDTOContainsPlanetData(t *testing.T, createResponseDTO CreateResponseDTO, planet Planet) {
@@ -120,11 +155,22 @@ func assertCreateDTOContainsPlanetData(t *testing.T, createResponseDTO CreateRes
 	assertSameCoordinates(t, obstaclesDTO, planetObstacles)
 }
 
+func assertGameDTOContainsPlanetData(t *testing.T, gameDTO GameDTO, planet Planet) {
+	planetSize := planet.Size()
+	planetDTO := gameDTO.Planet
+	assert.Equal(t, planetDTO.Width, planetSize.Width())
+	assert.Equal(t, planetDTO.Height, planetSize.Height())
+	planetObstacles := planet.Obstacles()
+	obstaclesDTO := planetDTO.Obstacles
+	assert.Len(t, obstaclesDTO, len(planetObstacles.List()))
+	assertSameCoordinates(t, obstaclesDTO, planetObstacles)
+}
+
 func assertSameCoordinates(t *testing.T, createResponseDTO []ObstacleDTO, obst Obstacles) {
 	for i, obs := range obst.List() {
 		coordinateDTOS := createResponseDTO[i]
-		coordinates := obs.Coordinates()
-		for j, coord := range coordinates.List() {
+		coords := obs.Coordinates()
+		for j, coord := range coords.List() {
 			assert.Equal(t, coordinateDTOS[j].X, coord.X())
 			assert.Equal(t, coordinateDTOS[j].Y, coord.Y())
 		}

@@ -3,9 +3,11 @@ package dto
 import (
 	"fmt"
 	. "mars_rover/src/action/move"
+	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/coordinates"
 	. "mars_rover/src/domain/obstacle/obstacles"
+	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/domain/rover/planetMap"
 )
@@ -50,6 +52,15 @@ func planetDTOFrom(planetMap Map) PlanetDTO {
 	}
 }
 
+func planetDTOFromPlanet(planet Planet) PlanetDTO {
+	size := planet.Size()
+	return PlanetDTO{
+		Width:     size.Width(),
+		Height:    size.Height(),
+		Obstacles: mapDomainToDTOObstacles(planet.Obstacles()),
+	}
+}
+
 func roverDTOFrom(rover Rover) RoverDTO {
 	coordinate := rover.Coordinate()
 	return RoverDTO{
@@ -80,5 +91,12 @@ func coordinateDTOFrom(coordinate AbsoluteCoordinate) CoordinateDTO {
 	return CoordinateDTO{
 		X: coordinate.X(),
 		Y: coordinate.Y(),
+	}
+}
+
+func FromGame(game *Game) GameDTO {
+	return GameDTO{
+		Rover:  roverDTOFrom(game.Rover),
+		Planet: planetDTOFromPlanet(game.Planet),
 	}
 }

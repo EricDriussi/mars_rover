@@ -33,3 +33,7 @@ type SingleMovementDTO struct {
 	Coordinate CoordinateDTO
 	Direction  string
 }
+type GameDTO struct {
+	Rover  RoverDTO
+	Planet PlanetDTO
+}

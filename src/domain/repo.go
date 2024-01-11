@@ -14,6 +14,7 @@ type Repository interface {
 	GetGame(roverId UUID) (*Game, *RepositoryError)
 }
 
+// TODO.LM: This should have a proper constructor and private fields but I'm running out of time!!!!
 type Game struct {
 	Rover  Rover
 	Planet Planet
