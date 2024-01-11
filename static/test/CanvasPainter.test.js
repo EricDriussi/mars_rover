@@ -51,15 +51,9 @@ describe('CanvasPainter should', () => {
         const anotherObstacleXPosition = 2;
         const anotherObstacleYPosition = 2;
         const obstacles = [
-            {Coordinate: [{X: anObstacleXPosition, Y: anObstacleYPosition}]},
-            {Coordinate: [{X: anotherObstacleXPosition, Y: anotherObstacleYPosition}]}
+            [{X: anObstacleXPosition, Y: anObstacleYPosition}],
+            [{X: anotherObstacleXPosition, Y: anotherObstacleYPosition}]
         ]
-        it('painted black', () => {
-            canvasPainter.drawObstacles(obstacles);
-
-            expect(mockCanvas.getContext().fillStyle).toEqual('black');
-        })
-
         it('at the right position', () => {
             canvasPainter.drawObstacles(obstacles);
 

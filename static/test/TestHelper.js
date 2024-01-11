@@ -67,6 +67,7 @@ export function mockLogger() {
         error: jest.fn(),
         warning: jest.fn(),
         resetLogMessages: jest.fn(),
+        populateRoverId: jest.fn(),
     };
 }
 

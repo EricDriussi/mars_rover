@@ -13,6 +13,11 @@ export class Logger {
         this.#render('warn', warnings)
     }
 
+    // TODO.LM: This is kind of a hack, it should not be here
+    populateRoverId(roverId) {
+        this.#dom.getElementById('currentRoverId').value = roverId;
+    }
+
     #render(type, messages) {
         if (!messages || messages.length === 0) {
             return;

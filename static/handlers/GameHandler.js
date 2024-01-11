@@ -31,6 +31,7 @@ export class GameHandler {
 
         const gameData = apiResult.value();
         StorageWrapper.setRoverId(gameData.Rover.Id);
+        this.#logger.populateRoverId(gameData.Rover.Id);
         this.#lastRoverPosition = gameData.Rover.Coordinate;
         this.#paintGame(gameData);
     }
@@ -38,6 +39,7 @@ export class GameHandler {
     #paintGame(gameData) {
         this.#canvasPainter.drawPlanet(gameData.Planet);
         this.#canvasPainter.drawObstacles(gameData.Planet.Obstacles);
+        console.log(gameData.Planet.Obstacles)
         this.#canvasPainter.drawRover(gameData.Rover.Direction, gameData.Rover.Coordinate);
     }
 
