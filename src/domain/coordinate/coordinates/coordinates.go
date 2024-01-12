@@ -58,10 +58,6 @@ func (this *Coordinates) First() AbsoluteCoordinate {
 	return this.list[0]
 }
 
-func (this *Coordinates) HasOnlyOne() bool {
-	return len(this.list) == 1
-}
-
 func (this *Coordinates) Amount() int {
 	return len(this.list)
 }

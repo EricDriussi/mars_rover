@@ -1,6 +1,6 @@
 package relativeCoordinate
 
-const step = 1 // TODO.LM: this should be set by config
+const step = 1 // TODO.LM: this should be set by config, allows to set by how much the rover should move
 
 type RelativeCoordinate struct {
 	x, y int

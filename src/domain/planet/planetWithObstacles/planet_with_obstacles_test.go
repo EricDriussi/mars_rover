@@ -23,8 +23,10 @@ func TestCanCreateIfNoObstacleIsOutOfBounds(t *testing.T) {
 	mockObstacleOne := new(MockObstacle)
 	mockObstacleTwo := new(MockObstacle)
 	mockCoordinatesOne, err := coordinates.New(*absoluteCoordinate.Build(0, 0))
+	assert.Nil(t, err)
 	mockObstacleOne.On("Coordinates").Return(*mockCoordinatesOne)
 	mockCoordinatesTwo, err := coordinates.New(*absoluteCoordinate.Build(0, 1))
+	assert.Nil(t, err)
 	mockObstacleTwo.On("Coordinates").Return(*mockCoordinatesTwo)
 	mockObstacleOne.On("IsBeyond", Anything).Return(false)
 	mockObstacleTwo.On("IsBeyond", Anything).Return(false)
@@ -41,18 +43,19 @@ func TestCannotCreateIfOneObstacleIsOutOfBounds(t *testing.T) {
 	mockObstacleOne := new(MockObstacle)
 	mockObstacleTwo := new(MockObstacle)
 	mockCoordinatesOne, err := coordinates.New(*absoluteCoordinate.Build(0, 0))
+	assert.Nil(t, err)
 	mockObstacleOne.On("Coordinates").Return(*mockCoordinatesOne)
 	mockCoordinatesTwo, err := coordinates.New(*absoluteCoordinate.Build(0, 1))
+	assert.Nil(t, err)
 	mockObstacleTwo.On("Coordinates").Return(*mockCoordinatesTwo)
 	mockObstacleOne.On("IsBeyond", Anything).Return(true)
 	mockObstacleTwo.On("IsBeyond", Anything).Return(false)
 	obstaclesOutsideBounds, err := obs.FromList(mockObstacleOne, mockObstacleTwo)
 	assert.Nil(t, err)
 
-	planet, err := planetWithObstacles.Create("testColor", *testSize, *obstaclesOutsideBounds)
+	_, err = planetWithObstacles.Create("testColor", *testSize, *obstaclesOutsideBounds)
 
 	assert.Error(t, err)
-	assert.Nil(t, planet)
 }
 
 func TestCannotCreateIfSizeTooSmall(t *testing.T) {
@@ -65,15 +68,13 @@ func TestCannotCreateIfSizeTooSmall(t *testing.T) {
 	testSize, err := size.Square(1)
 	assert.Nil(t, err)
 
-	planet, err := planetWithObstacles.Create("testColor", *testSize, *obstacleWithinBounds)
+	_, err = planetWithObstacles.Create("testColor", *testSize, *obstacleWithinBounds)
 
 	assert.Error(t, err)
-	assert.Nil(t, planet)
 }
 
 func TestCannotCreateIfNoObstacles(t *testing.T) {
-	planet, err := planetWithObstacles.Create("testColor", *testSize, *obs.Empty())
+	_, err := planetWithObstacles.Create("testColor", *testSize, *obs.Empty())
 
 	assert.Error(t, err)
-	assert.Nil(t, planet)
 }

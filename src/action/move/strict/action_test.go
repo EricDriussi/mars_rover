@@ -8,7 +8,7 @@ import (
 	"mars_rover/src/action/move/strict"
 	. "mars_rover/src/domain"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
-	"mars_rover/src/domain/rover/uuid"
+	"mars_rover/src/domain/rover/id"
 	. "mars_rover/src/test_helpers"
 	"mars_rover/src/test_helpers/mocks"
 	. "mars_rover/src/test_helpers/mocks"
@@ -23,7 +23,7 @@ func TestMovementResultsContainNoIssueIfRoverReportsNoError(t *testing.T) {
 	commands := Commands{command}
 
 	act := strict_mover.With(repo)
-	movementResults, err := act.Move(uuid.New(), commands)
+	movementResults, err := act.Move(id.New(), commands)
 
 	assert.Nil(t, err)
 	AssertEncounteredNoIssues(t, movementResults)
@@ -37,7 +37,7 @@ func TestMovementResultsContainAnIssueIfRoverReportsAnError(t *testing.T) {
 	commands := Commands{command}
 
 	act := strict_mover.With(repo)
-	movementResults, err := act.Move(uuid.New(), commands)
+	movementResults, err := act.Move(id.New(), commands)
 
 	assert.Nil(t, err)
 	AssertEncounteredAnIssue(t, movementResults)
@@ -54,7 +54,7 @@ func TestOnlyCallsRoverForGivenCommands(t *testing.T) {
 	commands := Commands{firstCommand, secondCommand}
 
 	act := strict_mover.With(repo)
-	_, err := act.Move(uuid.New(), commands)
+	_, err := act.Move(id.New(), commands)
 
 	assert.Nil(t, err)
 	testRover.AssertCalled(t, "MoveBackward")
@@ -74,7 +74,7 @@ func TestReportsResultsBasedOnGivenCommandsOrder(t *testing.T) {
 	commands := Commands{firstCommand, secondCommand}
 
 	act := strict_mover.With(repo)
-	movementResults, err := act.Move(uuid.New(), commands)
+	movementResults, err := act.Move(id.New(), commands)
 
 	assert.Nil(t, err)
 	AssertContainsOrderedCommands(t, movementResults, commands)
@@ -95,7 +95,7 @@ func TestStopsCallingRoverForGivenCommandsOnceOneFails(t *testing.T) {
 	commands := Commands{firstCommand, failedCommand, thirdCommand}
 
 	act := strict_mover.With(repo)
-	_, err := act.Move(uuid.New(), commands)
+	_, err := act.Move(id.New(), commands)
 
 	assert.Nil(t, err)
 	testRover.AssertNumberOfCalls(t, "MoveBackward", 1)
@@ -108,7 +108,7 @@ func TestReportsRepoErrorWhenGettingRover(t *testing.T) {
 	commands := Commands{new(MockCommand)}
 
 	act := strict_mover.With(repo)
-	movementResults, err := act.Move(uuid.New(), commands)
+	movementResults, err := act.Move(id.New(), commands)
 
 	assert.Empty(t, movementResults)
 	assert.NotNil(t, err)
@@ -125,7 +125,7 @@ func TestReportsRepoErrorWhenUpdatingRover(t *testing.T) {
 	commands := Commands{irrelevantCommand}
 
 	act := strict_mover.With(repo)
-	movementResults, err := act.Move(uuid.New(), commands)
+	movementResults, err := act.Move(id.New(), commands)
 
 	assert.Empty(t, movementResults)
 	assert.NotNil(t, err)

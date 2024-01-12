@@ -19,27 +19,27 @@ type RepositoryError struct {
 	errMsg  string
 }
 
-func (e RepositoryError) Error() string {
-	if e.errType == persistenceMalfunction {
-		return fmt.Sprintf("persistence malfunction: %s", e.errMsg)
+func (this RepositoryError) Error() string {
+	if this.errType == persistenceMalfunction {
+		return fmt.Sprintf("persistence malfunction: %s", this.errMsg)
 	}
-	if e.errType == couldNotUpdate {
-		return fmt.Sprintf("could not update resource: %s", e.errMsg)
+	if this.errType == couldNotUpdate {
+		return fmt.Sprintf("could not update resource: %s", this.errMsg)
 	}
-	if e.errType == notFound {
-		return e.errMsg
+	if this.errType == notFound {
+		return this.errMsg
 	}
-	if e.errType == couldNotMap {
-		return fmt.Sprintf("could not map resource: %s", e.errMsg)
+	if this.errType == couldNotMap {
+		return fmt.Sprintf("could not map resource: %s", this.errMsg)
 	}
-	if e.errType == couldNotAdd {
-		return fmt.Sprintf("could not add resource: %s", e.errMsg)
+	if this.errType == couldNotAdd {
+		return fmt.Sprintf("could not add resource: %s", this.errMsg)
 	}
 	return "unknown error"
 }
 
-func (e RepositoryError) IsNotFound() bool {
-	return e.errType == notFound
+func (this RepositoryError) IsNotFound() bool {
+	return this.errType == notFound
 }
 
 func PersistenceMalfunction(err error) *RepositoryError {

@@ -4,7 +4,7 @@ import (
 	. "mars_rover/src/action"
 	. "mars_rover/src/action/move"
 	"mars_rover/src/action/move/command"
-	"mars_rover/src/domain/rover/uuid"
+	"mars_rover/src/domain/rover/id"
 	"mars_rover/src/infra/apiServer/dto"
 	. "mars_rover/src/infra/apiServer/responses"
 )
@@ -15,7 +15,7 @@ type MoveRequest struct {
 }
 
 func MoveRover(action MoveAction, request MoveRequest, responseHandler HTTPResponseHandler) {
-	roverId, err := uuid.Parse(request.Id)
+	roverId, err := id.Parse(request.Id)
 	if err != nil {
 		responseHandler.SendBadRequest("Invalid ID")
 		return

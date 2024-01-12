@@ -8,6 +8,8 @@ import (
 )
 
 type Planet interface {
+	// TODO.LM: Color is not used for much, it's just here to make apparent the decoupling between the planet and the map
+	// The map doesn't know or care about the planet's color and the planet could have more attributes like this
 	Color() string
 	Size() Size
 	Obstacles() Obstacles

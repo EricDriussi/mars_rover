@@ -4,7 +4,7 @@ import (
 	. "github.com/stretchr/testify/mock"
 	. "mars_rover/src/domain"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
-	"mars_rover/src/domain/rover/uuid"
+	"mars_rover/src/domain/rover/id"
 	"mars_rover/src/infra/apiServer/controllers"
 	. "mars_rover/src/infra/apiServer/controllers"
 	"mars_rover/src/test_helpers/mocks"
@@ -31,6 +31,6 @@ func TestSendsOkResponseWhenLoadActionIsSuccessful(t *testing.T) {
 
 func aLoadRequest() LoadRequest {
 	return LoadRequest{
-		Id: uuid.New().String(),
+		Id: id.New().String(),
 	}
 }

@@ -3,7 +3,7 @@ package wrappingCollidingRover_test
 import (
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/rover/direction"
-	"mars_rover/src/domain/rover/uuid"
+	"mars_rover/src/domain/rover/id"
 	"mars_rover/src/domain/rover/wrappingCollidingRover"
 	. "mars_rover/src/test_helpers"
 	"testing"
@@ -12,9 +12,9 @@ import (
 )
 
 func TestAvoidsCollisionMovingForward(t *testing.T) {
-	testPlanet := SetupPlanetOfSizeWithObstacleIn(t, 10, *absoluteCoordinate.Build(5, 6))
+	planet := SetupPlanetOfSizeWithObstacleIn(t, 10, *absoluteCoordinate.Build(5, 6))
 	coordinate := absoluteCoordinate.Build(5, 5)
-	testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), North{}, *coordinate, testPlanet)
+	testRover, err := wrappingCollidingRover.LandFacing(id.New(), North{}, *coordinate, planet)
 	assert.Nil(t, err)
 
 	err = testRover.MoveForward()
@@ -24,9 +24,9 @@ func TestAvoidsCollisionMovingForward(t *testing.T) {
 }
 
 func TestAvoidsCollisionWrappingForward(t *testing.T) {
-	testPlanet := SetupPlanetOfSizeWithObstacleIn(t, 6, *absoluteCoordinate.Build(3, 0))
+	planet := SetupPlanetOfSizeWithObstacleIn(t, 6, *absoluteCoordinate.Build(3, 0))
 	coordinate := absoluteCoordinate.Build(3, 5)
-	testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), North{}, *coordinate, testPlanet)
+	testRover, err := wrappingCollidingRover.LandFacing(id.New(), North{}, *coordinate, planet)
 	assert.Nil(t, err)
 
 	err = testRover.MoveForward()
@@ -36,9 +36,9 @@ func TestAvoidsCollisionWrappingForward(t *testing.T) {
 }
 
 func TestAvoidsCollisionMovingBackwards(t *testing.T) {
-	testPlanet := SetupPlanetOfSizeWithObstacleIn(t, 10, *absoluteCoordinate.Build(5, 4))
+	planet := SetupPlanetOfSizeWithObstacleIn(t, 10, *absoluteCoordinate.Build(5, 4))
 	coordinate := absoluteCoordinate.Build(5, 5)
-	testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), North{}, *coordinate, testPlanet)
+	testRover, err := wrappingCollidingRover.LandFacing(id.New(), North{}, *coordinate, planet)
 	assert.Nil(t, err)
 
 	err = testRover.MoveBackward()
@@ -48,9 +48,9 @@ func TestAvoidsCollisionMovingBackwards(t *testing.T) {
 }
 
 func TestAvoidsCollisionWrappingBackwards(t *testing.T) {
-	testPlanet := SetupPlanetOfSizeWithObstacleIn(t, 6, *absoluteCoordinate.Build(3, 5))
+	planet := SetupPlanetOfSizeWithObstacleIn(t, 6, *absoluteCoordinate.Build(3, 5))
 	coordinate := absoluteCoordinate.Build(3, 0)
-	testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), North{}, *coordinate, testPlanet)
+	testRover, err := wrappingCollidingRover.LandFacing(id.New(), North{}, *coordinate, planet)
 	assert.Nil(t, err)
 
 	err = testRover.MoveBackward()

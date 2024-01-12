@@ -114,7 +114,7 @@ func loopUntilValidBigObstacle(size Size) obstacle.Obstacle {
 
 func loopUntilValidCoordinates(size Size) *coordinates.Coordinates {
 	return LoopUntilNoError(func() (*coordinates.Coordinates, error) {
-		return randomCoordinatesForBigObstacle(size, obstacle.MaxAmountOfCoords())
+		return randomCoordinatesForBigObstacle(size, obstacle.MaxSize())
 	})
 }
 

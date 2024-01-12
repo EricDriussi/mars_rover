@@ -1,12 +1,12 @@
 package entities
 
 import (
-	. "mars_rover/src/domain/rover/uuid"
+	. "mars_rover/src/domain/rover/id"
 )
 
 type RoverEntity struct {
-	ID         UUID             `json:"id"`
-	PlanetMap  MapEntity        `json:"planetMap"`
+	ID        ID        `json:"id"`
+	PlanetMap MapEntity `json:"planetMap"`
 	Coordinate CoordinateEntity `json:"coordinate"`
 	Direction  string           `json:"direction"`
 	Type       string           `json:"type"`

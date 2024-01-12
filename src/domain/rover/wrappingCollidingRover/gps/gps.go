@@ -35,14 +35,10 @@ func (this *GPS) Behind() AbsoluteCoordinate {
 
 func calculate(absolute AbsoluteCoordinate, relative RelativeCoordinate, planetMap Map) AbsoluteCoordinate {
 	futureCoordinate := *coord.SumOf(absolute, relative)
-	if isOutOfBounds(futureCoordinate, planetMap) {
+	if planetMap.IsOutOfBounds(futureCoordinate) {
 		futureCoordinate = wrapAround(futureCoordinate, planetMap)
 	}
 	return futureCoordinate
-}
-
-func isOutOfBounds(coordinate AbsoluteCoordinate, planetMap Map) bool {
-	return planetMap.IsOutOfBounds(coordinate)
 }
 
 func wrapAround(coordinate AbsoluteCoordinate, planetMap Map) AbsoluteCoordinate {

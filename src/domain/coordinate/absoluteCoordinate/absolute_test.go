@@ -22,7 +22,7 @@ func TestNotEqualsBasedOnValues(t *testing.T) {
 		differentCoordinate *AbsoluteCoordinate
 	}{
 		{
-			name:                "both coordinates are different",
+			name:                "both X and Y are different",
 			differentCoordinate: absoluteCoordinate.Build(2, 2),
 		},
 		{

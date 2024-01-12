@@ -10,7 +10,7 @@ import (
 
 const sqrtOfMaxInt = 3037000500
 
-func TestDoesNotAllowNegativeValues(t *testing.T) {
+func TestDoesNotAllowValuesLessThanOne(t *testing.T) {
 	testCases := []struct {
 		name string
 		side int
@@ -27,6 +27,7 @@ func TestDoesNotAllowNegativeValues(t *testing.T) {
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			testSize, err := size.Square(testCase.side)
+
 			assert.Error(t, err)
 			assert.Nil(t, testSize)
 		})
@@ -34,23 +35,28 @@ func TestDoesNotAllowNegativeValues(t *testing.T) {
 }
 
 func TestAllowsRandomPositiveValuesWithinLimits(t *testing.T) {
-	testSize, err := size.Square(rand.Intn(sqrtOfMaxInt))
+	side := rand.Intn(sqrtOfMaxInt)
+
+	testSize, err := size.Square(side)
+
 	assert.Nil(t, err)
-	assert.NotNil(t, testSize)
+	assert.Equal(t, side, testSize.Width())
+	assert.Equal(t, side, testSize.Height())
 }
 
 func TestDefaultsToSqrtOfMaxIntWhenGivenALargerValue(t *testing.T) {
 	testSize, err := size.Square(sqrtOfMaxInt + 1)
-	assert.Nil(t, err)
 
+	assert.Nil(t, err)
 	assert.Equal(t, sqrtOfMaxInt, testSize.Width())
 	assert.Equal(t, sqrtOfMaxInt, testSize.Height())
 }
 
 func TestCalculatesArea(t *testing.T) {
-	dimension := 5
-	testSize, err := size.Square(dimension)
-	assert.Nil(t, err)
+	side := 5
 
-	assert.Equal(t, dimension*dimension, testSize.Area())
+	testSize, err := size.Square(side)
+
+	assert.Nil(t, err)
+	assert.Equal(t, side*side, testSize.Area())
 }

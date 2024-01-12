@@ -5,7 +5,7 @@ import (
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/godModRover"
-	"mars_rover/src/domain/rover/uuid"
+	"mars_rover/src/domain/rover/id"
 	. "mars_rover/src/test_helpers"
 	"testing"
 
@@ -13,7 +13,7 @@ import (
 )
 
 func TestMovesForward(t *testing.T) {
-	testPlanet := SetupEmptyTestPlanetOfSize(t, 10)
+	planet := SetupEmptyTestPlanetOfSize(t, 10)
 	testCases := []struct {
 		name               string
 		initialDirection   Direction
@@ -43,7 +43,7 @@ func TestMovesForward(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover := godModRover.LandFacing(uuid.New(), testCase.initialDirection, *absoluteCoordinate.Build(5, 5), testPlanet)
+			testRover := godModRover.LandFacing(id.New(), testCase.initialDirection, *absoluteCoordinate.Build(5, 5), planet)
 
 			err := testRover.MoveForward()
 
@@ -54,7 +54,7 @@ func TestMovesForward(t *testing.T) {
 }
 
 func TestMovesBackward(t *testing.T) {
-	testPlanet := SetupEmptyTestPlanetOfSize(t, 10)
+	planet := SetupEmptyTestPlanetOfSize(t, 10)
 	testCases := []struct {
 		name               string
 		initialDirection   Direction
@@ -84,7 +84,7 @@ func TestMovesBackward(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover := godModRover.LandFacing(uuid.New(), testCase.initialDirection, *absoluteCoordinate.Build(5, 5), testPlanet)
+			testRover := godModRover.LandFacing(id.New(), testCase.initialDirection, *absoluteCoordinate.Build(5, 5), planet)
 
 			err := testRover.MoveBackward()
 
@@ -95,7 +95,7 @@ func TestMovesBackward(t *testing.T) {
 }
 
 func TestTurnsRight(t *testing.T) {
-	testPlanet := SetupEmptyTestPlanetOfSize(t, 10)
+	planet := SetupEmptyTestPlanetOfSize(t, 10)
 	coordinate := absoluteCoordinate.Build(5, 5)
 	testCases := []struct {
 		name              string
@@ -126,7 +126,7 @@ func TestTurnsRight(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover := godModRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
+			testRover := godModRover.LandFacing(id.New(), testCase.initialDirection, *coordinate, planet)
 
 			testRover.TurnRight()
 
@@ -137,7 +137,7 @@ func TestTurnsRight(t *testing.T) {
 }
 
 func TestTurnsLeft(t *testing.T) {
-	testPlanet := SetupEmptyTestPlanetOfSize(t, 10)
+	planet := SetupEmptyTestPlanetOfSize(t, 10)
 	coordinate := absoluteCoordinate.Build(5, 5)
 	testCases := []struct {
 		name              string
@@ -168,7 +168,7 @@ func TestTurnsLeft(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover := godModRover.LandFacing(uuid.New(), testCase.initialDirection, *coordinate, testPlanet)
+			testRover := godModRover.LandFacing(id.New(), testCase.initialDirection, *coordinate, planet)
 
 			testRover.TurnLeft()
 

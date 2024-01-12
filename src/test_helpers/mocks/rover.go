@@ -6,8 +6,8 @@ import (
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover/direction"
 	. "mars_rover/src/domain/rover/planetMap"
-	"mars_rover/src/domain/rover/uuid"
-	. "mars_rover/src/domain/rover/uuid"
+	"mars_rover/src/domain/rover/id"
+	. "mars_rover/src/domain/rover/id"
 )
 
 type MockRover struct {
@@ -32,9 +32,9 @@ func (this *MockRover) MoveBackward() error {
 	return args.Error(0)
 }
 
-func (this *MockRover) Id() UUID {
+func (this *MockRover) Id() ID {
 	args := this.Called()
-	return args.Get(0).(UUID)
+	return args.Get(0).(ID)
 }
 
 func (this *MockRover) Coordinate() AbsoluteCoordinate {
@@ -60,7 +60,7 @@ func RoverIn(planet Planet, coord AbsoluteCoordinate) *MockRover {
 
 func LandedRover(coord AbsoluteCoordinate) *MockRover {
 	mockRover := new(MockRover)
-	mockRover.On("Id").Return(uuid.New())
+	mockRover.On("Id").Return(id.New())
 	mockRover.On("Direction").Return(North{})
 	mockRover.On("Coordinate").Return(coord)
 	return mockRover

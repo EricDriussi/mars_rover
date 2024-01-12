@@ -12,7 +12,7 @@ import (
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/domain/rover/direction"
-	"mars_rover/src/domain/rover/uuid"
+	"mars_rover/src/domain/rover/id"
 	"mars_rover/src/domain/rover/wrappingCollidingRover"
 	. "mars_rover/src/domain/rover/wrappingCollidingRover"
 	. "mars_rover/src/domain/size"
@@ -30,7 +30,7 @@ func RandomColor() string {
 
 func LoopUntilRoverLanded(planet Planet) Rover {
 	return LoopUntilNoError(func() (*WrappingCollidingRover, error) {
-		return wrappingCollidingRover.LandFacing(uuid.New(), randomDirection(), RandomCoordinateWithin(planet.Size()), planet)
+		return wrappingCollidingRover.LandFacing(id.New(), randomDirection(), RandomCoordinateWithin(planet.Size()), planet)
 	})
 }
 
@@ -46,7 +46,7 @@ func loopUntilValidObstacle(size Size) Obstacle {
 
 func loopUntilValidCoordinates(size Size) *Coordinates {
 	return LoopUntilNoError(func() (*Coordinates, error) {
-		return coordinates.New(randomCoordinatesWithin(size, obstacle.MaxAmountOfCoords())...)
+		return coordinates.New(randomCoordinatesWithin(size, obstacle.MaxSize())...)
 	})
 }
 

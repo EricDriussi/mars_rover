@@ -10,10 +10,9 @@ import (
 )
 
 func TestCannotCreateFromEmptyList(t *testing.T) {
-	testObstacles, err := obstacles.FromList()
+	_, err := obstacles.FromList()
 
 	assert.Error(t, err)
-	assert.Nil(t, testObstacles)
 }
 
 func TestCanCreateWithNoObstacles(t *testing.T) {
@@ -24,42 +23,40 @@ func TestCanCreateWithNoObstacles(t *testing.T) {
 }
 
 func TestCannotCreateFromListWhenMultipleObstaclesShareCoordinates(t *testing.T) {
-	coordOne := absoluteCoordinate.Build(0, 0)
-	coordsOne, err := coordinates.New(*coordOne)
+	coordinateOne := absoluteCoordinate.Build(0, 0)
+	coordinatesOne, err := coordinates.New(*coordinateOne)
 	assert.Nil(t, err)
-	obstacleOne, err := obstacle.CreateObstacle(*coordsOne)
+	obstacleOne, err := obstacle.CreateObstacle(*coordinatesOne)
 	assert.Nil(t, err)
-	coordTwo := absoluteCoordinate.Build(0, 1)
-	coordsTwo, err := coordinates.New(*coordOne, *coordTwo)
+	coordinateTwo := absoluteCoordinate.Build(0, 1)
+	coordinatesTwo, err := coordinates.New(*coordinateOne, *coordinateTwo)
 	assert.Nil(t, err)
-	obstacleTwo, err := obstacle.CreateObstacle(*coordsTwo)
+	obstacleTwo, err := obstacle.CreateObstacle(*coordinatesTwo)
 
-	testObstacles, err := obstacles.FromList(
+	_, err = obstacles.FromList(
 		obstacleOne,
 		obstacleTwo,
 	)
 
 	assert.Error(t, err)
-	assert.Nil(t, testObstacles)
 }
 
 func TestCanCreateFromListWhenNoObstaclesShareCoordinates(t *testing.T) {
-	coordOne := absoluteCoordinate.Build(0, 0)
-	coordsOne, err := coordinates.New(*coordOne)
+	coordinateOne := absoluteCoordinate.Build(0, 0)
+	coordinatesOne, err := coordinates.New(*coordinateOne)
 	assert.Nil(t, err)
-	obstacleOne, err := obstacle.CreateObstacle(*coordsOne)
+	obstacleOne, err := obstacle.CreateObstacle(*coordinatesOne)
 	assert.Nil(t, err)
-	coordTwo := absoluteCoordinate.Build(0, 1)
-	coordsTwo, err := coordinates.New(*coordTwo)
+	coordinateTwo := absoluteCoordinate.Build(0, 1)
+	coordinatesTwo, err := coordinates.New(*coordinateTwo)
 	assert.Nil(t, err)
-	obstacleTwo, err := obstacle.CreateObstacle(*coordsTwo)
+	obstacleTwo, err := obstacle.CreateObstacle(*coordinatesTwo)
 	assert.Nil(t, err)
 
-	testObstacles, err := obstacles.FromList(
+	_, err = obstacles.FromList(
 		obstacleOne,
 		obstacleTwo,
 	)
 
 	assert.Nil(t, err)
-	assert.NotNil(t, testObstacles)
 }

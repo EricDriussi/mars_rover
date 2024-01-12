@@ -5,14 +5,14 @@ import (
 	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
-	. "mars_rover/src/domain/rover/uuid"
+	. "mars_rover/src/domain/rover/id"
 	. "mars_rover/src/infra/persistence/entities"
 	. "mars_rover/src/infra/persistence/mappers"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func (this *SQLiteRepository) GetRover(roverId UUID) (Rover, *RepositoryError) {
+func (this *SQLiteRepository) GetRover(roverId ID) (Rover, *RepositoryError) {
 	_, rover, err := this.getGame(roverId)
 	if err != nil {
 		return nil, err
@@ -20,7 +20,7 @@ func (this *SQLiteRepository) GetRover(roverId UUID) (Rover, *RepositoryError) {
 	return rover, nil
 }
 
-func (this *SQLiteRepository) GetGame(roverId UUID) (*Game, *RepositoryError) {
+func (this *SQLiteRepository) GetGame(roverId ID) (*Game, *RepositoryError) {
 	planet, rover, err := this.getGame(roverId)
 	if err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func (this *SQLiteRepository) GetGame(roverId UUID) (*Game, *RepositoryError) {
 // has no ID of its own, depending on the rover entity's planetID
 // This seems to make logical sense (to me), but produces this weird scenario in which both need to be retrieved together.
 // Hopefully there is a better way to do this that does not force a planetID into the domain layer.
-func (this *SQLiteRepository) getGame(roverId UUID) (Planet, Rover, *RepositoryError) {
+func (this *SQLiteRepository) getGame(roverId ID) (Planet, Rover, *RepositoryError) {
 	roverEntity, repoErr := this.getRover(roverId)
 	if repoErr != nil {
 		return nil, nil, repoErr
@@ -61,7 +61,7 @@ func (this *SQLiteRepository) getGame(roverId UUID) (Planet, Rover, *RepositoryE
 	return domainPlanet, domainRover, nil
 }
 
-func (this *SQLiteRepository) getRover(roverId UUID) (*RoverEntity, *RepositoryError) {
+func (this *SQLiteRepository) getRover(roverId ID) (*RoverEntity, *RepositoryError) {
 	row := this.db.QueryRow("SELECT * FROM "+RoversTable+" WHERE id = ?", roverId.String())
 
 	var id string

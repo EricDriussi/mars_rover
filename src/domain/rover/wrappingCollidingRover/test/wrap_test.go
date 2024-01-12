@@ -4,7 +4,7 @@ import (
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/rover/direction"
-	"mars_rover/src/domain/rover/uuid"
+	"mars_rover/src/domain/rover/id"
 	"mars_rover/src/domain/rover/wrappingCollidingRover"
 	. "mars_rover/src/test_helpers"
 	"testing"
@@ -13,7 +13,7 @@ import (
 )
 
 func TestWrapsMovingForward(t *testing.T) {
-	testPlanet := SetupEmptyTestPlanetOfSize(t, 4)
+	planet := SetupEmptyTestPlanetOfSize(t, 4)
 	testCases := []struct {
 		name               string
 		direction          Direction
@@ -48,7 +48,7 @@ func TestWrapsMovingForward(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), testCase.direction, *testCase.initialCoordinate, testPlanet)
+			testRover, err := wrappingCollidingRover.LandFacing(id.New(), testCase.direction, *testCase.initialCoordinate, planet)
 			assert.Nil(t, err)
 
 			err = testRover.MoveForward()
@@ -60,7 +60,7 @@ func TestWrapsMovingForward(t *testing.T) {
 }
 
 func TestWrapsMovingBackwards(t *testing.T) {
-	testPlanet := SetupEmptyTestPlanetOfSize(t, 4)
+	planet := SetupEmptyTestPlanetOfSize(t, 4)
 	testCases := []struct {
 		name               string
 		direction          Direction
@@ -95,7 +95,7 @@ func TestWrapsMovingBackwards(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), testCase.direction, *testCase.initialCoordinate, testPlanet)
+			testRover, err := wrappingCollidingRover.LandFacing(id.New(), testCase.direction, *testCase.initialCoordinate, planet)
 			assert.Nil(t, err)
 
 			err = testRover.MoveBackward()

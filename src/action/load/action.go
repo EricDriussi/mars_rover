@@ -2,7 +2,7 @@ package load
 
 import (
 	. "mars_rover/src/domain"
-	. "mars_rover/src/domain/rover/uuid"
+	. "mars_rover/src/domain/rover/id"
 )
 
 type SimpleGameLoader struct {
@@ -15,7 +15,7 @@ func With(repo Repository) *SimpleGameLoader {
 	}
 }
 
-func (this *SimpleGameLoader) Load(roverId UUID) (*Game, *LoadError) {
+func (this *SimpleGameLoader) Load(roverId ID) (*Game, *LoadError) {
 	game, getErr := this.repo.GetGame(roverId)
 	if getErr != nil {
 		if getErr.IsNotFound() {

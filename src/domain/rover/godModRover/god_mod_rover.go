@@ -5,19 +5,20 @@ import (
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover/direction"
+	. "mars_rover/src/domain/rover/id"
 	"mars_rover/src/domain/rover/planetMap"
 	. "mars_rover/src/domain/rover/planetMap"
-	. "mars_rover/src/domain/rover/uuid"
 )
 
+// TODO.LM: This Rover doesn't care about collisions or size limits
 type GodModRover struct {
-	id         UUID
+	id         ID
 	planetMap  Map
 	coordinate AbsoluteCoordinate
 	direction  Direction
 }
 
-func LandFacing(id UUID, direction Direction, coordinate AbsoluteCoordinate, planet Planet) *GodModRover {
+func LandFacing(id ID, direction Direction, coordinate AbsoluteCoordinate, planet Planet) *GodModRover {
 	return &GodModRover{
 		id:         id,
 		planetMap:  *planetMap.OfPlanet(planet),
@@ -44,7 +45,7 @@ func (this *GodModRover) TurnRight() {
 	this.direction = this.direction.DirectionOnTheRight()
 }
 
-func (this *GodModRover) Id() UUID {
+func (this *GodModRover) Id() ID {
 	return this.id
 }
 

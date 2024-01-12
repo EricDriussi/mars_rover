@@ -6,7 +6,9 @@ Get latest Golang version for your OS [here](https://go.dev/doc/install).
 
 Get lastest Node.js version for your OS [here](https://nodejs.org/en/download).
 
-`git clone git@github.com:EricDriussi/mars_rover.git && cd mars_rover && npm i`
+```sh
+git clone git@github.com:EricDriussi/mars_rover.git && cd mars_rover && npm i
+```
 
 ## Run
 
@@ -14,19 +16,25 @@ Get lastest Node.js version for your OS [here](https://nodejs.org/en/download).
 
 Run API and web servers (might take a while to init the DB the first time).
 
-`go run .`
+```sh
+go run .
+```
 
-Visit [http://localhost:6969](http://localhost:6969) with your browser or curl the API at [http://localhost:4242/api/](http://localhost:4242/api/)
+Visit [http://localhost:6969](http://localhost:6969) with your browser or curl the API at [http://localhost:4242/api/](http://localhost:4242/api/) (no docs sry).
 
 ### Tests
 
 Run backend tests
 
-`go test ./...`
+```sh
+go test ./...
+```
 
 Run frontend tests
 
-`npm run test`
+```sh
+npm run test
+```
 
 ## UI
 
@@ -68,24 +76,31 @@ The design is (hopefully) easy to follow:
 - The Planet has a Size and a set of Obstacles.
 - A Rover can only exist within a Planet.
 - The Rover creates a Map of the Planet on landing.
-- The WrappingCollidingRover has a GPS module that takes care of movement, collision detection and wrapping around the Planet.
+- The WrappingCollidingRover has a GPS module that takes care of moving (including wrapping) around the Planet.
+- Collision detection is handled by the Rover itself.
 - Direction, Coordinate(s), Obstacles and Size are little more that wrapper objects to enclose related logic and/or data.
 
-You'll find a lot of cases where there are two versions of the same concept: two types of Planet, two types of Rover two types of Obstacles, etc.
+You'll find a lot of places where there are two versions of the same concept: two types of Planet, two types of Rover two types of Obstacles, etc.
 
-This was done in an effort to test my code and see how flexible it was in the event that different functionality had to be implemented.
+This was done in an effort to test how flexible my code was in case different functionality had to be implemented.
 
 Some of this is hidden behind factories while some is just left there as a viable alternative (this is the case with the Creation and Movement Actions).
+
+Since errors are commonly returned as second values in Go, you will find a bunch of `assert.Nil(t, err)` in seemingly unexpected places in tests.
+
+Keep in mind that this is not always intended to work as an assertion in the classical sense, but rather as a way to ensure that tests **fail** instead of **panicking**.
 
 ## Caveats
 
 I ran out of time :(
 
-I thought this was due by end of month, so there are a couple of things that where done in a hurry.
+I thought this was due by end of month, so there are a couple of things that where done in a hurry (I wanted to but didn't add Domain errors, for example).
 
 Go's import/module system kinda sucks.
 
 There are a bunch of instances where I had to deal with namespace collisions (especially while iterating over Obstacles and Coordinates), so naming could be much better.
+
+I'm not good with pointers: I basically let the compiler tell me what to do, they might be used incorrectly here and there.
 
 This was done over a lot of iterations and refactors, so you might encounter oddly named or even unused code left behind from earlier verions.
 

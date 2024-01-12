@@ -7,7 +7,7 @@ import (
 	. "mars_rover/src/action/move/command"
 	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/rover"
-	. "mars_rover/src/domain/rover/uuid"
+	. "mars_rover/src/domain/rover/id"
 )
 
 type CreateRandomAction interface {
@@ -16,7 +16,7 @@ type CreateRandomAction interface {
 }
 
 type MoveAction interface {
-	Move(roverId UUID, commands Commands) ([]MovementResult, *MovementError)
+	Move(roverId ID, commands Commands) ([]MovementResult, *MovementError)
 	// TODO.LM: here I'm returning a result AND an error
 	// I understand this is strange to see, but it is in line with
 	// how error handling usually works in Go
@@ -24,5 +24,5 @@ type MoveAction interface {
 }
 
 type LoadAction interface {
-	Load(roverId UUID) (*Game, *LoadError)
+	Load(roverId ID) (*Game, *LoadError)
 }

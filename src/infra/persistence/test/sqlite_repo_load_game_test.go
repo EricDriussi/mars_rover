@@ -3,7 +3,7 @@ package infra_test
 import (
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
-	"mars_rover/src/domain/rover/uuid"
+	"mars_rover/src/domain/rover/id"
 	. "mars_rover/src/infra/persistence"
 	"testing"
 
@@ -61,7 +61,7 @@ func TestDoesNotLoadGameWhenNotPresent(t *testing.T) {
 			err := saveGame(db, testRover, testPlanet)
 			assert.Nil(t, err)
 
-			_, repoErr := repo.GetGame(uuid.New())
+			_, repoErr := repo.GetGame(id.New())
 
 			assert.Error(t, repoErr)
 		})

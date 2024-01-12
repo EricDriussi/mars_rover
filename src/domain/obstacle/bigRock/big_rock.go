@@ -34,6 +34,7 @@ func (this *BigRock) Occupies(coordinate AbsoluteCoordinate) bool {
 	return this.coordinates.Contain(coordinate)
 }
 
+// TODO.LM: I'm not sure if I should be testing this here
 func (this *BigRock) IsBeyond(size Size) bool {
 	return this.coordinates.Overflow(size)
 }

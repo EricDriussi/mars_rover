@@ -19,8 +19,18 @@ func TestReportsCoordinateAsOutOfBoundsWhenOutsideThePlanet(t *testing.T) {
 	mockPlanet.On("Size").Return(*planetSize)
 	testMap := planetMap.OfPlanet(mockPlanet)
 
-	assert.False(t, testMap.IsOutOfBounds(*absoluteCoordinate.Build(0, 0)))
-	assert.False(t, testMap.IsOutOfBounds(*absoluteCoordinate.Build(4, 4)))
 	assert.True(t, testMap.IsOutOfBounds(*absoluteCoordinate.Build(6, 6)))
 	assert.True(t, testMap.IsOutOfBounds(*absoluteCoordinate.Build(-1, -1)))
+}
+
+func TestReportsCoordinateAsNotOutOfBoundsWhenInsideThePlanet(t *testing.T) {
+	planetSize, err := size.Square(5)
+	assert.Nil(t, err)
+	mockPlanet := new(MockPlanet)
+	mockPlanet.On("Obstacles").Return(*obstacles.Empty())
+	mockPlanet.On("Size").Return(*planetSize)
+	testMap := planetMap.OfPlanet(mockPlanet)
+
+	assert.False(t, testMap.IsOutOfBounds(*absoluteCoordinate.Build(0, 0)))
+	assert.False(t, testMap.IsOutOfBounds(*absoluteCoordinate.Build(4, 4)))
 }

@@ -5,7 +5,7 @@ import (
 	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover"
-	. "mars_rover/src/domain/rover/uuid"
+	. "mars_rover/src/domain/rover/id"
 )
 
 type MockRepo struct {
@@ -36,7 +36,7 @@ func (this MockRepo) AddPlanet(planet Planet) (int, *RepositoryError) {
 	return args.Get(0).(int), args.Get(1).(*RepositoryError)
 }
 
-func (this MockRepo) GetRover(roverId UUID) (Rover, *RepositoryError) {
+func (this MockRepo) GetRover(roverId ID) (Rover, *RepositoryError) {
 	args := this.Called()
 	if args.Get(1) == nil {
 		return args.Get(0).(Rover), nil
@@ -44,7 +44,7 @@ func (this MockRepo) GetRover(roverId UUID) (Rover, *RepositoryError) {
 	return args.Get(0).(Rover), args.Get(1).(*RepositoryError)
 }
 
-func (this MockRepo) GetGame(roverId UUID) (*Game, *RepositoryError) {
+func (this MockRepo) GetGame(roverId ID) (*Game, *RepositoryError) {
 	args := this.Called()
 	if args.Get(1) == nil {
 		return args.Get(0).(*Game), nil

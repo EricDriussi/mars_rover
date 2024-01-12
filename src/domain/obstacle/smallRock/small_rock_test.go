@@ -16,9 +16,10 @@ func TestIsWithinLimit(t *testing.T) {
 
 	for x := 0; x <= sizeLimit.Width(); x++ {
 		for y := 0; y <= sizeLimit.Height(); y++ {
-			rock, err := smallRock.In(*absoluteCoordinate.Build(x, y))
 
+			rock, err := smallRock.In(*absoluteCoordinate.Build(x, y))
 			assert.Nil(t, err)
+		
 			assert.False(t, rock.IsBeyond(*sizeLimit))
 		}
 	}
@@ -54,17 +55,17 @@ func TestIsBeyondLimit(t *testing.T) {
 }
 
 func TestOccupiesItsCoordinate(t *testing.T) {
-	testCoordinate := *absoluteCoordinate.Build(rand.Int(), rand.Int())
-	rock, err := smallRock.In(testCoordinate)
-
+	coordinate := *absoluteCoordinate.Build(rand.Int(), rand.Int())
+	rock, err := smallRock.In(coordinate)
 	assert.Nil(t, err)
-	assert.True(t, rock.Occupies(testCoordinate))
+
+	assert.True(t, rock.Occupies(coordinate))
 }
 
 func TestDoesNotOccupyAnExternalCoordinate(t *testing.T) {
-	testCoordinate := *absoluteCoordinate.Build(1, 1)
-	rock, err := smallRock.In(testCoordinate)
-
+	coordinate := *absoluteCoordinate.Build(1, 1)
+	rock, err := smallRock.In(coordinate)
 	assert.Nil(t, err)
+
 	assert.False(t, rock.Occupies(*absoluteCoordinate.Build(1, 2)))
 }

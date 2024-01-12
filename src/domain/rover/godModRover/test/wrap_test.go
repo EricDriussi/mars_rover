@@ -5,7 +5,7 @@ import (
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/godModRover"
-	"mars_rover/src/domain/rover/uuid"
+	"mars_rover/src/domain/rover/id"
 	. "mars_rover/src/test_helpers"
 	"testing"
 
@@ -13,7 +13,7 @@ import (
 )
 
 func TestDoesNotWrapMovingForward(t *testing.T) {
-	testPlanet := SetupEmptyTestPlanetOfSize(t, 3)
+	planet := SetupEmptyTestPlanetOfSize(t, 3)
 	testCases := []struct {
 		name               string
 		direction          Direction
@@ -48,7 +48,7 @@ func TestDoesNotWrapMovingForward(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover := godModRover.LandFacing(uuid.New(), testCase.direction, *testCase.initialCoordinate, testPlanet)
+			testRover := godModRover.LandFacing(id.New(), testCase.direction, *testCase.initialCoordinate, planet)
 
 			err := testRover.MoveForward()
 
@@ -59,7 +59,7 @@ func TestDoesNotWrapMovingForward(t *testing.T) {
 }
 
 func TestDoesNotWrapMovingBackwards(t *testing.T) {
-	testPlanet := SetupEmptyTestPlanetOfSize(t, 3)
+	planet := SetupEmptyTestPlanetOfSize(t, 3)
 	testCases := []struct {
 		name               string
 		direction          Direction
@@ -94,7 +94,7 @@ func TestDoesNotWrapMovingBackwards(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRover := godModRover.LandFacing(uuid.New(), testCase.direction, *testCase.initialCoordinate, testPlanet)
+			testRover := godModRover.LandFacing(id.New(), testCase.direction, *testCase.initialCoordinate, planet)
 
 			err := testRover.MoveBackward()
 

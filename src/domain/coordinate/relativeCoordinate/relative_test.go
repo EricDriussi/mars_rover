@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestIsAlwaysOrthogonal(t *testing.T) {
+func TestAllConstructorsBuildOrthogonalRelativeCoordinates(t *testing.T) {
 	testCases := []struct {
 		name        string
 		constructor func() *RelativeCoordinate

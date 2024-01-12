@@ -15,13 +15,13 @@ func FromList(list ...Obstacle) (*Obstacles, error) {
 	if len(list) < 1 {
 		return nil, errors.New("cannot create Obstacles with empty obstacle list")
 	}
-	if haveOverlappingCoordinates(list...) {
-		return nil, errors.New("invalid Obstacles: different obstacles share the same coordinate(s)")
+	if containsOverlappingCoordinates(list...) {
+		return nil, errors.New("invalid Obstacles: different obstacles share the same Coordinate(s)")
 	}
 	return &Obstacles{list}, nil
 }
 
-func haveOverlappingCoordinates(obstacleList ...Obstacle) bool {
+func containsOverlappingCoordinates(obstacleList ...Obstacle) bool {
 	coordinates := make(map[AbsoluteCoordinate]bool)
 	for _, obstacle := range obstacleList {
 		obstacleCoordinates := obstacle.Coordinates()

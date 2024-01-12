@@ -12,7 +12,7 @@ import (
 	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover/direction"
-	"mars_rover/src/domain/rover/uuid"
+	"mars_rover/src/domain/rover/id"
 	"mars_rover/src/domain/rover/wrappingCollidingRover"
 	. "mars_rover/src/domain/rover/wrappingCollidingRover"
 	"mars_rover/src/domain/size"
@@ -91,7 +91,7 @@ func TestBuildsACreateResponseDTOFromARover(t *testing.T) {
 	testObstacles, err := obstacles.FromList(mockObstacle)
 	assert.Nil(t, err)
 	mockPlanet.On("Obstacles").Return(*testObstacles)
-	testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), North{}, *absoluteCoordinate.Build(1, 1), mockPlanet)
+	testRover, _ := wrappingCollidingRover.LandFacing(id.New(), North{}, *absoluteCoordinate.Build(1, 1), mockPlanet)
 
 	createResponseDTO := dto.FromDomainRover(testRover)
 
@@ -110,7 +110,7 @@ func TestBuildsAGameDTOFromAGame(t *testing.T) {
 	testObstacles, err := obstacles.FromList(mockObstacle)
 	assert.Nil(t, err)
 	mockPlanet.On("Obstacles").Return(*testObstacles)
-	testRover, _ := wrappingCollidingRover.LandFacing(uuid.New(), North{}, *absoluteCoordinate.Build(1, 1), mockPlanet)
+	testRover, _ := wrappingCollidingRover.LandFacing(id.New(), North{}, *absoluteCoordinate.Build(1, 1), mockPlanet)
 	testGame := &Game{
 		Rover:  testRover,
 		Planet: mockPlanet,

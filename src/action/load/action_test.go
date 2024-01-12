@@ -5,7 +5,7 @@ import (
 	"mars_rover/src/action/load"
 	. "mars_rover/src/domain"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
-	"mars_rover/src/domain/rover/uuid"
+	"mars_rover/src/domain/rover/id"
 	. "mars_rover/src/test_helpers/mocks"
 	"testing"
 )
@@ -15,7 +15,7 @@ func TestLoaderDoesNotErrorIfRepoReportsNoError(t *testing.T) {
 	repo := SuccessfulRepoFor(testRover)
 
 	act := load.With(repo)
-	loadedGame, err := act.Load(uuid.New())
+	loadedGame, err := act.Load(id.New())
 
 	assert.Nil(t, err)
 	assert.NotNil(t, loadedGame)
@@ -27,7 +27,7 @@ func TestLoaderErrorsIfRepoReportsAnError(t *testing.T) {
 	repo.On("GetGame").Return(new(Game), NotFound())
 
 	act := load.With(repo)
-	_, err := act.Load(uuid.New())
+	_, err := act.Load(id.New())
 
 	assert.Error(t, err)
 	assert.True(t, err.IsNotFound())

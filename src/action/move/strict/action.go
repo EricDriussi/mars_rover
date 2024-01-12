@@ -5,7 +5,7 @@ import (
 	. "mars_rover/src/action/move/command"
 	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/rover"
-	. "mars_rover/src/domain/rover/uuid"
+	. "mars_rover/src/domain/rover/id"
 )
 
 type StrictMover struct {
@@ -18,7 +18,7 @@ func With(repo Repository) *StrictMover {
 	}
 }
 
-func (this *StrictMover) Move(roverId UUID, commands Commands) ([]MovementResult, *MovementError) {
+func (this *StrictMover) Move(roverId ID, commands Commands) ([]MovementResult, *MovementError) {
 	rover, getErr := this.repo.GetRover(roverId)
 	if getErr != nil {
 		return nil, NotFoundErr()

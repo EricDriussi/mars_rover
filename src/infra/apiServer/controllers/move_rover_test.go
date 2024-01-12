@@ -3,7 +3,7 @@ package controllers_test
 import (
 	. "github.com/stretchr/testify/mock"
 	. "mars_rover/src/action/move"
-	"mars_rover/src/domain/rover/uuid"
+	"mars_rover/src/domain/rover/id"
 	"mars_rover/src/infra/apiServer/controllers"
 	. "mars_rover/src/infra/apiServer/controllers"
 	. "mars_rover/src/test_helpers/mocks"
@@ -42,7 +42,7 @@ func TestSendsBadRequestResponseWhenNoValidCommandsAreProvided(t *testing.T) {
 		t.Run(testCase.name, func(t *testing.T) {
 			testRequest := MoveRequest{
 				Commands: testCase.invalidCommands,
-				Id:       uuid.New().String(),
+				Id:       id.New().String(),
 			}
 
 			controllers.MoveRover(mockAction, testRequest, mockHandler)
@@ -79,6 +79,6 @@ func TestSendsInternalServerErrorResponseWhenActionCannotUpdateRover(t *testing.
 func aMoveRequest() MoveRequest {
 	return MoveRequest{
 		Commands: "whatever",
-		Id:       uuid.New().String(),
+		Id:       id.New().String(),
 	}
 }

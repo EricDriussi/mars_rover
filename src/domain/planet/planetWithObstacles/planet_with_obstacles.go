@@ -14,7 +14,7 @@ type PlanetWithObstacles struct {
 
 func Create(color string, size Size, obstacles Obstacles) (*PlanetWithObstacles, error) {
 	if obstacles.Amount() < 1 {
-		return nil, errors.New("cannot create rocky planet without obstacles")
+		return nil, errors.New("cannot create without obstacles")
 	}
 	if size.Area() < 2 {
 		return nil, errors.New("size too small") // rover + 1 obstacle would not fit

@@ -56,10 +56,9 @@ func TestBuildsWithWithinTwoAndFiveCoordinates(t *testing.T) {
 			coords, err := coordinates.New(testCase.coordinates...)
 			assert.Nil(t, err)
 
-			rock, err := bigRock.In(*coords)
+			_, err = bigRock.In(*coords)
 
 			assert.Nil(t, err)
-			assert.NotNil(t, rock)
 		})
 	}
 }
@@ -95,16 +94,14 @@ func TestDoesNotBuildWithLessThanTwoOrMoreThanEightCoordinates(t *testing.T) {
 			coords, err := coordinates.New(testCase.coordinates...)
 			assert.Nil(t, err)
 
-			rock, err := bigRock.In(*coords)
+			_, err = bigRock.In(*coords)
 
-			assert.NotNil(t, err)
-			assert.Nil(t, rock)
+			assert.Error(t, err)
 		})
 	}
 }
 
 func TestIsWithinLimit(t *testing.T) {
-	sizeLimit, _ := size.Square(4)
 	coords, err := coordinates.New(
 		*absoluteCoordinate.Build(1, 1),
 		*absoluteCoordinate.Build(1, 2),
@@ -113,12 +110,15 @@ func TestIsWithinLimit(t *testing.T) {
 	assert.Nil(t, err)
 	rock, err := bigRock.In(*coords)
 	assert.Nil(t, err)
+	sizeLimit, err := size.Square(4)
+	assert.Nil(t, err)
 
 	assert.False(t, rock.IsBeyond(*sizeLimit))
 }
 
 func TestIsBeyondLimit(t *testing.T) {
-	sizeLimit, _ := size.Square(3)
+	sizeLimit, err := size.Square(3)
+	assert.Nil(t, err)
 	coordinateWithinLimit := absoluteCoordinate.Build(3, 3)
 	testCases := []struct {
 		name       string

@@ -8,7 +8,7 @@ import (
 	. "mars_rover/src/action/move/command"
 	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/rover"
-	. "mars_rover/src/domain/rover/uuid"
+	. "mars_rover/src/domain/rover/id"
 )
 
 type MockAction struct {
@@ -23,7 +23,7 @@ func (this *MockAction) Create() (Rover, *CreationError) {
 	return args.Get(0).(Rover), args.Get(1).(*CreationError)
 }
 
-func (this *MockAction) Move(roverId UUID, commands Commands) ([]MovementResult, *MovementError) {
+func (this *MockAction) Move(roverId ID, commands Commands) ([]MovementResult, *MovementError) {
 	args := this.Called()
 	if args.Get(1) == nil {
 		return args.Get(0).([]MovementResult), nil
@@ -31,7 +31,7 @@ func (this *MockAction) Move(roverId UUID, commands Commands) ([]MovementResult,
 	return args.Get(0).([]MovementResult), args.Get(1).(*MovementError)
 }
 
-func (this *MockAction) Load(roverId UUID) (*Game, *LoadError) {
+func (this *MockAction) Load(roverId ID) (*Game, *LoadError) {
 	args := this.Called()
 	if args.Get(1) == nil {
 		return args.Get(0).(*Game), nil

@@ -5,22 +5,22 @@ import (
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover/direction"
+	. "mars_rover/src/domain/rover/id"
 	"mars_rover/src/domain/rover/planetMap"
 	. "mars_rover/src/domain/rover/planetMap"
-	. "mars_rover/src/domain/rover/uuid"
 	"mars_rover/src/domain/rover/wrappingCollidingRover/gps"
 	. "mars_rover/src/domain/rover/wrappingCollidingRover/gps"
 )
 
 type WrappingCollidingRover struct {
-	id         UUID
+	id         ID
 	planetMap  Map
 	coordinate AbsoluteCoordinate
 	direction  Direction
 	gps        GPS
 }
 
-func LandFacing(id UUID, direction Direction, coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRover, error) {
+func LandFacing(id ID, direction Direction, coordinate AbsoluteCoordinate, planet Planet) (*WrappingCollidingRover, error) {
 	mapOfPlanet := planetMap.OfPlanet(planet)
 	if mapOfPlanet.HasObstacleIn(coordinate) {
 		return nil, errors.New("cannot land on obstacle")
@@ -28,14 +28,14 @@ func LandFacing(id UUID, direction Direction, coordinate AbsoluteCoordinate, pla
 	if mapOfPlanet.IsOutOfBounds(coordinate) {
 		return nil, errors.New("cannot land out of planet")
 	}
-	newRover := &WrappingCollidingRover{
+	rover := &WrappingCollidingRover{
 		id:         id,
 		planetMap:  *mapOfPlanet,
 		coordinate: coordinate,
 		direction:  direction,
 	}
-	newRover.gps = gps.Bind(newRover)
-	return newRover, nil
+	rover.gps = gps.Bind(rover)
+	return rover, nil
 }
 
 func (this *WrappingCollidingRover) MoveForward() error {
@@ -66,7 +66,7 @@ func (this *WrappingCollidingRover) TurnRight() {
 	this.direction = this.direction.DirectionOnTheRight()
 }
 
-func (this *WrappingCollidingRover) Id() UUID {
+func (this *WrappingCollidingRover) Id() ID {
 	return this.id
 }
 

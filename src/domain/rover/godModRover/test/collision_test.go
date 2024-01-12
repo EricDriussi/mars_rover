@@ -4,7 +4,7 @@ import (
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/godModRover"
-	"mars_rover/src/domain/rover/uuid"
+	"mars_rover/src/domain/rover/id"
 	. "mars_rover/src/test_helpers"
 	"testing"
 
@@ -13,8 +13,8 @@ import (
 
 func TestIgnoresCollisionMovingForward(t *testing.T) {
 	obstacleCoordinate := absoluteCoordinate.Build(5, 6)
-	testPlanet := SetupPlanetOfSizeWithObstacleIn(t, 10, *obstacleCoordinate)
-	testRover := godModRover.LandFacing(uuid.New(), North{}, *absoluteCoordinate.Build(5, 5), testPlanet)
+	planet := SetupPlanetOfSizeWithObstacleIn(t, 10, *obstacleCoordinate)
+	testRover := godModRover.LandFacing(id.New(), North{}, *absoluteCoordinate.Build(5, 5), planet)
 
 	err := testRover.MoveForward()
 
@@ -24,8 +24,8 @@ func TestIgnoresCollisionMovingForward(t *testing.T) {
 
 func TestIgnoresCollisionMovingBackwards(t *testing.T) {
 	obstacleCoordinate := absoluteCoordinate.Build(5, 4)
-	testPlanet := SetupPlanetOfSizeWithObstacleIn(t, 10, *obstacleCoordinate)
-	testRover := godModRover.LandFacing(uuid.New(), North{}, *absoluteCoordinate.Build(5, 5), testPlanet)
+	planet := SetupPlanetOfSizeWithObstacleIn(t, 10, *obstacleCoordinate)
+	testRover := godModRover.LandFacing(id.New(), North{}, *absoluteCoordinate.Build(5, 5), planet)
 
 	err := testRover.MoveBackward()
 

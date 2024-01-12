@@ -11,7 +11,7 @@ import (
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/godModRover"
-	"mars_rover/src/domain/rover/uuid"
+	"mars_rover/src/domain/rover/id"
 	"mars_rover/src/domain/rover/wrappingCollidingRover"
 	s "mars_rover/src/domain/size"
 	"testing"
@@ -26,7 +26,7 @@ func setupWrappingRoverOnRockyPlanet(t *testing.T) (Rover, Planet) {
 	rovCoord := absoluteCoordinate.Build(0, 0)
 	testPlanet := setupPlanet(t)
 	aDirection := North{}
-	testRover, err := wrappingCollidingRover.LandFacing(uuid.New(), aDirection, *rovCoord, testPlanet)
+	testRover, err := wrappingCollidingRover.LandFacing(id.New(), aDirection, *rovCoord, testPlanet)
 	assert.Nil(t, err)
 	return testRover, testPlanet
 }
@@ -35,7 +35,7 @@ func setupGodModRoverOnRockyPlanet(t *testing.T) (Rover, Planet) {
 	rovCoord := absoluteCoordinate.Build(1, 1)
 	testPlanet := setupPlanet(t)
 	aDirection := North{}
-	testRover := godModRover.LandFacing(uuid.New(), aDirection, *rovCoord, testPlanet)
+	testRover := godModRover.LandFacing(id.New(), aDirection, *rovCoord, testPlanet)
 	return testRover, testPlanet
 }
 

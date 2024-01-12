@@ -5,14 +5,14 @@ import (
 	"math"
 )
 
-var sqrtMaxIntAsInt int
+var sqrtOfMaxInt int
 
 // Magic Go function that gets called on import
 // spares redundant calculations at runtime
 func init() {
 	maxIntAsFloat := float64(math.MaxInt)
-	sqrtMaxInt := math.Round(math.Sqrt(maxIntAsFloat))
-	sqrtMaxIntAsInt = int(sqrtMaxInt)
+	sqrtOfMaxIntAsFloat := math.Round(math.Sqrt(maxIntAsFloat))
+	sqrtOfMaxInt = int(sqrtOfMaxIntAsFloat)
 }
 
 type Size struct {
@@ -20,11 +20,11 @@ type Size struct {
 }
 
 func Square(side int) (*Size, error) {
-	if side <= 0 { // size 0 is no size
+	if side < 1 { // size 0 is no size
 		return nil, errors.New("invalid size!")
 	}
-	if side > sqrtMaxIntAsInt { // a bigger side would overflow when calculating the area
-		return &Size{sqrtMaxIntAsInt, sqrtMaxIntAsInt}, nil
+	if side > sqrtOfMaxInt { // a bigger side would overflow when calculating the area
+		return &Size{sqrtOfMaxInt, sqrtOfMaxInt}, nil
 	}
 	return &Size{side, side}, nil
 }

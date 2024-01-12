@@ -15,12 +15,12 @@ type Obstacle interface {
 }
 
 func CreateObstacle(coordinates Coordinates) (Obstacle, error) {
-	if coordinates.HasOnlyOne() {
+	if coordinates.Amount() == 1 {
 		return smallRock.In(coordinates.First())
 	}
 	return bigRock.In(coordinates)
 }
 
-func MaxAmountOfCoords() int {
+func MaxSize() int {
 	return bigRock.MaxSize
 }

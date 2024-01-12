@@ -2,7 +2,7 @@ package move
 
 import (
 	"fmt"
-	. "mars_rover/src/domain/rover/uuid"
+	. "mars_rover/src/domain/rover/id"
 )
 
 type errorType int
@@ -13,7 +13,7 @@ const (
 )
 
 type MovementError struct {
-	ID      UUID
+	ID      ID
 	errType errorType
 }
 

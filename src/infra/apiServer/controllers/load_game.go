@@ -3,7 +3,7 @@ package controllers
 import (
 	. "mars_rover/src/action"
 	. "mars_rover/src/action/load"
-	"mars_rover/src/domain/rover/uuid"
+	"mars_rover/src/domain/rover/id"
 	"mars_rover/src/infra/apiServer/dto"
 	. "mars_rover/src/infra/apiServer/responses"
 )
@@ -13,7 +13,7 @@ type LoadRequest struct {
 }
 
 func LoadGame(action LoadAction, request LoadRequest, responseHandler HTTPResponseHandler) {
-	roverId, err := uuid.Parse(request.Id)
+	roverId, err := id.Parse(request.Id)
 	if err != nil {
 		responseHandler.SendBadRequest("Invalid ID")
 		return
