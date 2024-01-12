@@ -26,8 +26,7 @@ describe('EventListener should', () => {
         expect(mockGameHandler.randomGame).toHaveBeenCalled();
     });
 
-    // TODO: unskip once loadGame endpoint is implemented
-    it.skip('call loadGame on reload if a roverId is found', () => {
+    it('call loadGame on reload if a roverId is found', () => {
         const storedRoverId = 'mockedRoverId';
         StorageWrapper.getRoverId.mockReturnValueOnce(storedRoverId);
 

@@ -50,6 +50,7 @@ export function mockGameHandler() {
     return {
         randomGame: jest.fn(),
         moveRover: jest.fn(),
+        loadGame: jest.fn(),
     };
 }
 

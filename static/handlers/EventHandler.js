@@ -17,9 +17,7 @@ export class EventHandler {
             if (storedRoverId === null) {
                 this.#gameHandler.randomGame();
             } else {
-                this.#gameHandler.randomGame();
-                // TODO: uncomment once loadGame endpoint is implemented
-                // this.#gameHandler.loadGame(storedRoverId);
+                this.#gameHandler.loadGame(storedRoverId);
             }
         }
     }

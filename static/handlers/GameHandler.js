@@ -39,7 +39,6 @@ export class GameHandler {
     #paintGame(gameData) {
         this.#canvasPainter.drawPlanet(gameData.Planet);
         this.#canvasPainter.drawObstacles(gameData.Planet.Obstacles);
-        console.log(gameData.Planet.Obstacles)
         this.#canvasPainter.drawRover(gameData.Rover.Direction, gameData.Rover.Coordinate);
     }
 
