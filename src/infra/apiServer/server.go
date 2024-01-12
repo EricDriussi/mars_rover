@@ -26,9 +26,9 @@ func RunOn(port string, wg *sync.WaitGroup) {
 	loadAction = load.With(InitFS())
 
 	apiServer := http.NewServeMux()
-	apiServer.HandleFunc("/api/randomGame", randomGameHandler)
-	apiServer.HandleFunc("/api/moveSequence", moveSequenceHandler)
-	apiServer.HandleFunc("/api/loadGame", loadHandler)
+	apiServer.HandleFunc("/api/randomGame", corsMiddleWare(randomGameHandler))
+	apiServer.HandleFunc("/api/moveSequence", corsMiddleWare(moveSequenceHandler))
+	apiServer.HandleFunc("/api/loadGame", corsMiddleWare(loadHandler))
 
 	fmt.Println("API up and running on http://localhost" + port + "/api/")
 	log.Fatal(http.ListenAndServe(port, apiServer))
@@ -36,11 +36,6 @@ func RunOn(port string, wg *sync.WaitGroup) {
 
 func randomGameHandler(w http.ResponseWriter, r *http.Request) {
 	responseHandler := NewResponseHandler(w)
-	if r.Method == "OPTIONS" {
-		// This is a workaround for cors requests
-		responseHandler.SendOk("")
-		return
-	}
 	if r.Method != "POST" {
 		responseHandler.SendBadRequest("Invalid method")
 		return
@@ -51,11 +46,6 @@ func randomGameHandler(w http.ResponseWriter, r *http.Request) {
 
 func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 	responseHandler := NewResponseHandler(w)
-	if r.Method == "OPTIONS" {
-		// This is a workaround for cors requests
-		responseHandler.SendOk("")
-		return
-	}
 	if r.Method != "POST" {
 		responseHandler.SendBadRequest("Invalid method")
 		return
@@ -73,11 +63,6 @@ func moveSequenceHandler(w http.ResponseWriter, r *http.Request) {
 
 func loadHandler(w http.ResponseWriter, r *http.Request) {
 	responseHandler := NewResponseHandler(w)
-	if r.Method == "OPTIONS" {
-		// This is a workaround for cors requests
-		responseHandler.SendOk("")
-		return
-	}
 	if r.Method != "POST" {
 		responseHandler.SendBadRequest("Invalid method")
 		return
@@ -91,4 +76,18 @@ func loadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	LoadGame(loadAction, request, responseHandler)
+}
+
+func corsMiddleWare(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:6969")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		// TODO.LM: I don't know why, but some browsers send an OPTIONS request before the actual request to check for cors ¯\_(ツ)_/¯
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+		next.ServeHTTP(w, r)
+	}
 }
