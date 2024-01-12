@@ -11,6 +11,15 @@ body {
     margin: 0.5rem;
 }
 
+.controls button {
+    width: 6rem;
+}
+
+label {
+    margin: 0.2rem;
+    font-size: 16px;
+}
+
 #planet-canvas {
     margin: 1rem;
 }

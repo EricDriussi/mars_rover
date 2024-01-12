@@ -15,7 +15,7 @@ export class Logger {
 
     // TODO.LM: This is kind of a hack, it should not be here
     populateRoverId(roverId) {
-        this.#dom.getElementById('currentRoverId').value = roverId;
+        this.#dom.getElementById('currentRoverId').innerHTML = roverId;
     }
 
     #render(type, messages) {
