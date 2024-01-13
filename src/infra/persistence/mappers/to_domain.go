@@ -19,6 +19,7 @@ import (
 	. "mars_rover/src/infra/persistence/entities"
 )
 
+// TODO: test these mappers
 func MapToDomainRover(roverEntity RoverEntity, planet Planet) (Rover, error) {
 	direction, err := directionFromString(roverEntity.Direction)
 	if err != nil {

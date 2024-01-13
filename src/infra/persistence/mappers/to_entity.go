@@ -10,6 +10,7 @@ import (
 	. "mars_rover/src/infra/persistence/entities"
 )
 
+// TODO: test these mappers
 func MapToPersistenceRover(rover Rover) RoverEntity {
 	coordinate := rover.Coordinate()
 	roverMap := rover.Map()
