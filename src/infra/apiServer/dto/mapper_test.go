@@ -10,6 +10,7 @@ import (
 	"mars_rover/src/domain/coordinate/coordinates"
 	"mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/obstacle/obstacles"
+	"mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover/direction"
 	"mars_rover/src/domain/rover/id"
@@ -18,6 +19,7 @@ import (
 	"mars_rover/src/domain/size"
 	"mars_rover/src/infra/apiServer/dto"
 	. "mars_rover/src/infra/apiServer/dto"
+	"mars_rover/src/test_helpers/mocks"
 	. "mars_rover/src/test_helpers/mocks"
 	"testing"
 )
@@ -30,11 +32,11 @@ func TestBuildsAMovementResponseDTOFromMovementResultWithNoMovementIssues(t *tes
 		Dir:           North{},
 	}
 
-	movementResponseDTO := dto.FromMovementResult([]MovementResult{resultWithIssues})
+	movementResponseDTO := dto.FromMovementResults([]MovementResult{resultWithIssues})
 
 	singleMovementDTO := movementResponseDTO.Results[0]
 	assert.Empty(t, singleMovementDTO.Issue)
-	assertMoveDTOContains(t, singleMovementDTO, resultWithIssues)
+	assertMoveDTOContainsDataFrom(t, singleMovementDTO, resultWithIssues)
 }
 
 func TestBuildsAMovementResponseDTOFromMovementResultWithMovementIssues(t *testing.T) {
@@ -45,14 +47,14 @@ func TestBuildsAMovementResponseDTOFromMovementResultWithMovementIssues(t *testi
 		Dir:           North{},
 	}
 
-	movementResponseDTO := dto.FromMovementResult([]MovementResult{resultWithIssues})
+	movementResponseDTO := dto.FromMovementResults([]MovementResult{resultWithIssues})
 
 	singleMovementDTO := movementResponseDTO.Results[0]
 	assert.Contains(t, singleMovementDTO.Issue, resultWithIssues.Cmd.String())
-	assertMoveDTOContains(t, singleMovementDTO, resultWithIssues)
+	assertMoveDTOContainsDataFrom(t, singleMovementDTO, resultWithIssues)
 }
 
-func assertMoveDTOContains(t *testing.T, singleMovementDTO SingleMovementDTO, resultWithIssues MovementResult) {
+func assertMoveDTOContainsDataFrom(t *testing.T, singleMovementDTO SingleMovementDTO, resultWithIssues MovementResult) {
 	assert.Equal(t, singleMovementDTO.Coordinate.X, resultWithIssues.Coord.X())
 	assert.Equal(t, singleMovementDTO.Coordinate.Y, resultWithIssues.Coord.Y())
 	assert.Equal(t, singleMovementDTO.Direction, resultWithIssues.Dir.CardinalPoint())
@@ -72,7 +74,7 @@ func TestBuildsAMovementResponseDTOFromMultipleMovementResults(t *testing.T) {
 		Dir:           North{},
 	}
 
-	movementResponseDTO := dto.FromMovementResult([]MovementResult{resultWithNoIssues, resultWithIssues})
+	movementResponseDTO := dto.FromMovementResults([]MovementResult{resultWithNoIssues, resultWithIssues})
 
 	noIssuesMovementDTO := movementResponseDTO.Results[0]
 	assert.Empty(t, noIssuesMovementDTO.Issue)
@@ -81,17 +83,9 @@ func TestBuildsAMovementResponseDTOFromMultipleMovementResults(t *testing.T) {
 }
 
 func TestBuildsACreateResponseDTOFromARover(t *testing.T) {
-	testSize, _ := size.Square(10)
-	mockPlanet := new(MockPlanet)
-	mockPlanet.On("Size").Return(*testSize)
-	mockObstacle := new(MockObstacle)
-	mockObstacle.On("Occupies", Anything).Return(false)
-	coords, _ := coordinates.New(*absoluteCoordinate.Build(1, 1))
-	mockObstacle.On("Coordinates").Return(*coords)
-	testObstacles, err := obstacles.FromList(mockObstacle)
+	mockPlanet := mocks.PlanetWithNoObstaclesOfSize(t, 10)
+	testRover, err := wrappingCollidingRover.LandFacing(id.New(), North{}, *absoluteCoordinate.Build(1, 1), mockPlanet)
 	assert.Nil(t, err)
-	mockPlanet.On("Obstacles").Return(*testObstacles)
-	testRover, _ := wrappingCollidingRover.LandFacing(id.New(), North{}, *absoluteCoordinate.Build(1, 1), mockPlanet)
 
 	createResponseDTO := dto.FromDomainRover(testRover)
 
@@ -100,26 +94,29 @@ func TestBuildsACreateResponseDTOFromARover(t *testing.T) {
 }
 
 func TestBuildsAGameDTOFromAGame(t *testing.T) {
-	testSize, _ := size.Square(10)
-	mockPlanet := new(MockPlanet)
-	mockPlanet.On("Size").Return(*testSize)
+	sizeLimit, err := size.Square(10)
+	assert.Nil(t, err)
 	mockObstacle := new(MockObstacle)
 	mockObstacle.On("Occupies", Anything).Return(false)
-	coords, _ := coordinates.New(*absoluteCoordinate.Build(1, 1))
-	mockObstacle.On("Coordinates").Return(*coords)
-	testObstacles, err := obstacles.FromList(mockObstacle)
+	mockObstacle.On("IsBeyond", Anything).Return(false)
+	coords, err := coordinates.New(*absoluteCoordinate.Build(1, 1))
 	assert.Nil(t, err)
-	mockPlanet.On("Obstacles").Return(*testObstacles)
-	testRover, _ := wrappingCollidingRover.LandFacing(id.New(), North{}, *absoluteCoordinate.Build(1, 1), mockPlanet)
+	mockObstacle.On("Coordinates").Return(*coords)
+	obs, err := obstacles.FromList(mockObstacle)
+	assert.Nil(t, err)
+	testPlanet, err := planet.CreatePlanet("testColor", *sizeLimit, *obs)
+	assert.Nil(t, err)
+	testRover, err := wrappingCollidingRover.LandFacing(id.New(), North{}, *absoluteCoordinate.Build(1, 1), testPlanet)
+	assert.Nil(t, err)
 	testGame := &Game{
 		Rover:  testRover,
-		Planet: mockPlanet,
+		Planet: testPlanet,
 	}
 
 	loadResponseDTO := dto.FromGame(testGame)
 
 	assertGameDTOContainsRoverData(t, loadResponseDTO, testRover)
-	assertGameDTOContainsPlanetData(t, loadResponseDTO, mockPlanet)
+	assertGameDTOContainsPlanetData(t, loadResponseDTO, testPlanet)
 }
 
 func assertCreateDTOContainsRoverData(t *testing.T, createResponseDTO CreateResponseDTO, testRover *WrappingCollidingRover) {

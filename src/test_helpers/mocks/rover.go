@@ -5,9 +5,9 @@ import (
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/planet"
 	. "mars_rover/src/domain/rover/direction"
-	. "mars_rover/src/domain/rover/planetMap"
 	"mars_rover/src/domain/rover/id"
 	. "mars_rover/src/domain/rover/id"
+	. "mars_rover/src/domain/rover/planetMap"
 )
 
 type MockRover struct {

@@ -40,12 +40,12 @@ func TestSendsBadRequestResponseWhenNoValidCommandsAreProvided(t *testing.T) {
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			testRequest := MoveRequest{
+			request := MoveRequest{
 				Commands: testCase.invalidCommands,
 				Id:       id.New().String(),
 			}
 
-			controllers.MoveRover(mockAction, testRequest, mockHandler)
+			controllers.MoveRover(mockAction, request, mockHandler)
 
 			mockHandler.AssertCalled(t, "SendBadRequest", Anything)
 		})

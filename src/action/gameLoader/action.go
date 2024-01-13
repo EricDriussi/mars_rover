@@ -1,4 +1,4 @@
-package load
+package gameLoader
 
 import (
 	. "mars_rover/src/domain"

@@ -1,4 +1,4 @@
-package resilient_mover
+package resilientMover
 
 import (
 	. "mars_rover/src/action/move"

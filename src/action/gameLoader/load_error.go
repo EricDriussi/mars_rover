@@ -1,4 +1,4 @@
-package load
+package gameLoader
 
 import (
 	"fmt"

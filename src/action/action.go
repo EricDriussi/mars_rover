@@ -2,7 +2,7 @@ package action
 
 import (
 	. "mars_rover/src/action/createRandom"
-	. "mars_rover/src/action/load"
+	. "mars_rover/src/action/gameLoader"
 	. "mars_rover/src/action/move"
 	. "mars_rover/src/action/move/command"
 	. "mars_rover/src/domain"

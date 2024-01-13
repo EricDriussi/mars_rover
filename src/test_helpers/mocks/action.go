@@ -3,7 +3,7 @@ package mocks
 import (
 	. "github.com/stretchr/testify/mock"
 	. "mars_rover/src/action/createRandom"
-	. "mars_rover/src/action/load"
+	. "mars_rover/src/action/gameLoader"
 	. "mars_rover/src/action/move"
 	. "mars_rover/src/action/move/command"
 	. "mars_rover/src/domain"
@@ -23,7 +23,7 @@ func (this *MockAction) Create() (Rover, *CreationError) {
 	return args.Get(0).(Rover), args.Get(1).(*CreationError)
 }
 
-func (this *MockAction) Move(roverId ID, commands Commands) ([]MovementResult, *MovementError) {
+func (this *MockAction) Move(ID, Commands) ([]MovementResult, *MovementError) {
 	args := this.Called()
 	if args.Get(1) == nil {
 		return args.Get(0).([]MovementResult), nil
@@ -31,7 +31,7 @@ func (this *MockAction) Move(roverId ID, commands Commands) ([]MovementResult, *
 	return args.Get(0).([]MovementResult), args.Get(1).(*MovementError)
 }
 
-func (this *MockAction) Load(roverId ID) (*Game, *LoadError) {
+func (this *MockAction) Load(ID) (*Game, *LoadError) {
 	args := this.Called()
 	if args.Get(1) == nil {
 		return args.Get(0).(*Game), nil

@@ -53,10 +53,20 @@ func (this *SimpleRandomCreator) loopUntilValidSize() *Size {
 }
 
 func randomObstaclesWithin(size Size) Obstacles {
-	list := obstacles.Empty()
-	amountOfObstacles := rand.Intn(size.Area()) - 1 // leave at least a blank space for the rover
-	for i := 0; i < amountOfObstacles; i++ {
-		list = LoopUntilAbleToAddRandomObstacle(size, *list)
+	allObstacles := obstacles.Empty()
+	for i := 0; i < rand.Intn(size.Width()); i++ {
+		allObstacles = LoopUntilAbleToAddRandomObstacle(size, *allObstacles)
 	}
-	return *list
+
+	// This ensures the Rover always has a place to land
+	// There is definitely a better way to do it
+	allObstaclesMinusOne := obstacles.Empty()
+	for i := 0; i < allObstacles.Amount()-1; i++ {
+		err := allObstaclesMinusOne.Add(allObstacles.List()[i])
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	return *allObstaclesMinusOne
 }

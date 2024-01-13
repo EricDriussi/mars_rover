@@ -1,10 +1,10 @@
-package resilient_mover_test
+package resilientMover_test
 
 import (
 	"errors"
 	. "github.com/stretchr/testify/mock"
 	. "mars_rover/src/action/move/command"
-	"mars_rover/src/action/move/resilient"
+	resilientMover "mars_rover/src/action/move/resilient"
 	. "mars_rover/src/domain"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	"mars_rover/src/domain/rover/id"
@@ -23,7 +23,7 @@ func TestMovementResultsContainNoIssueIfRoverReportsNoError(t *testing.T) {
 	command.On("MapToRoverMovementFunction", testRover).Return(SuccessfulRoverFunc())
 	commands := Commands{command}
 
-	act := resilient_mover.With(repo)
+	act := resilientMover.With(repo)
 	movementResults, err := act.Move(id.New(), commands)
 
 	assert.Nil(t, err)
@@ -37,7 +37,7 @@ func TestMovementResultsContainAnIssueIfRoverReportsAnError(t *testing.T) {
 	command.On("MapToRoverMovementFunction", testRover).Return(FailedRoverFunc())
 	commands := Commands{command}
 
-	act := resilient_mover.With(repo)
+	act := resilientMover.With(repo)
 	movementResults, err := act.Move(id.New(), commands)
 
 	assert.Nil(t, err)
@@ -54,7 +54,7 @@ func TestOnlyCallsRoverForGivenCommands(t *testing.T) {
 	secondCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveForward))
 	commands := Commands{firstCommand, secondCommand}
 
-	act := resilient_mover.With(repo)
+	act := resilientMover.With(repo)
 	_, err := act.Move(id.New(), commands)
 
 	assert.Nil(t, err)
@@ -74,7 +74,7 @@ func TestReportsResultsBasedOnGivenCommandsOrder(t *testing.T) {
 	secondCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveForward))
 	commands := Commands{firstCommand, secondCommand}
 
-	act := resilient_mover.With(repo)
+	act := resilientMover.With(repo)
 	movementResults, err := act.Move(id.New(), commands)
 
 	assert.Nil(t, err)
@@ -95,7 +95,7 @@ func TestKeepsCallingRoverForGivenCommandsEvenWhenSomeFail(t *testing.T) {
 	thirdCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveBackward))
 	commands := Commands{firstCommand, failedCommand, thirdCommand}
 
-	act := resilient_mover.With(repo)
+	act := resilientMover.With(repo)
 	_, err := act.Move(id.New(), commands)
 
 	assert.Nil(t, err)
@@ -116,7 +116,7 @@ func TestReportsResultsBasedOnGivenCommandsOrderWhenSomeFail(t *testing.T) {
 	thirdCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveBackward))
 	commands := Commands{firstCommand, failedCommand, thirdCommand}
 
-	act := resilient_mover.With(repo)
+	act := resilientMover.With(repo)
 	movementResults, err := act.Move(id.New(), commands)
 
 	assert.Nil(t, err)
@@ -129,7 +129,7 @@ func TestReportsRepoErrorWhenGettingRover(t *testing.T) {
 	repo.On("GetRover", Anything).Return(new(MockRover), aRepoError())
 	commands := Commands{new(MockCommand)}
 
-	act := resilient_mover.With(repo)
+	act := resilientMover.With(repo)
 	movementResults, err := act.Move(id.New(), commands)
 
 	assert.Empty(t, movementResults)
@@ -146,7 +146,7 @@ func TestReportsRepoErrorWhenUpdatingRover(t *testing.T) {
 	irrelevantCommand.On("MapToRoverMovementFunction", testRover).Return(SuccessfulRoverFunc())
 	commands := Commands{irrelevantCommand}
 
-	act := resilient_mover.With(repo)
+	act := resilientMover.With(repo)
 	movementResults, err := act.Move(id.New(), commands)
 
 	assert.Empty(t, movementResults)

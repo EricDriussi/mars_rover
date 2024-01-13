@@ -15,12 +15,12 @@ import (
 func TestSendsOkResponseWhenLoadActionIsSuccessful(t *testing.T) {
 	mockPlanet := mocks.PlanetWithNoObstaclesOfSize(t, 10)
 	mockRover := mocks.RoverIn(mockPlanet, *absoluteCoordinate.Build(1, 1))
-	game := Game{
+	gameDTO := Game{
 		Rover:  mockRover,
 		Planet: mockPlanet,
 	}
 	mockAction := new(MockAction)
-	mockAction.On("Load").Return(&game, nil)
+	mockAction.On("Load").Return(&gameDTO, nil)
 	mockHandler := new(MockHTTPResponseHandler)
 	mockHandler.On("SendOk", Anything).Return()
 

@@ -1,4 +1,4 @@
-package boundedRandomCreator
+package boundedRandomGameCreator
 
 import (
 	"errors"

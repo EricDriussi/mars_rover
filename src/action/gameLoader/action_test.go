@@ -1,8 +1,8 @@
-package load_test
+package gameLoader_test
 
 import (
 	"github.com/stretchr/testify/assert"
-	"mars_rover/src/action/load"
+	"mars_rover/src/action/gameLoader"
 	. "mars_rover/src/domain"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	"mars_rover/src/domain/rover/id"
@@ -14,7 +14,7 @@ func TestLoaderDoesNotErrorIfRepoReportsNoError(t *testing.T) {
 	testRover := LandedRover(*absoluteCoordinate.Build(1, 1))
 	repo := SuccessfulRepoFor(testRover)
 
-	act := load.With(repo)
+	act := gameLoader.With(repo)
 	loadedGame, err := act.Load(id.New())
 
 	assert.Nil(t, err)
@@ -26,7 +26,7 @@ func TestLoaderErrorsIfRepoReportsAnError(t *testing.T) {
 	repo := new(MockRepo)
 	repo.On("GetGame").Return(new(Game), NotFound())
 
-	act := load.With(repo)
+	act := gameLoader.With(repo)
 	_, err := act.Load(id.New())
 
 	assert.Error(t, err)

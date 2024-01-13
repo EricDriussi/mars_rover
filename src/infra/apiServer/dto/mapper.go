@@ -12,11 +12,11 @@ import (
 	. "mars_rover/src/domain/rover/planetMap"
 )
 
-func FromMovementResult(movementResult []MovementResult) MovementResponseDTO {
+func FromMovementResults(movementResults []MovementResult) MovementResponseDTO {
 	var responseDTO MovementResponseDTO
-	for _, result := range movementResult {
-		issue := issueFrom(result)
-		responseDTO.Results = append(responseDTO.Results, singleMovementDTOFrom(issue, result))
+	for _, movementResult := range movementResults {
+		issue := issueFrom(movementResult)
+		responseDTO.Results = append(responseDTO.Results, movementDTOFrom(issue, movementResult))
 	}
 	return responseDTO
 }
@@ -28,7 +28,7 @@ func issueFrom(result MovementResult) string {
 	return ""
 }
 
-func singleMovementDTOFrom(issue string, result MovementResult) SingleMovementDTO {
+func movementDTOFrom(issue string, result MovementResult) SingleMovementDTO {
 	return SingleMovementDTO{
 		Issue:      issue,
 		Coordinate: coordinateDTOFrom(result.Coord),

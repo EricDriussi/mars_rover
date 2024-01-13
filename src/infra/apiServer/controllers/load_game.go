@@ -2,7 +2,7 @@ package controllers
 
 import (
 	. "mars_rover/src/action"
-	. "mars_rover/src/action/load"
+	. "mars_rover/src/action/gameLoader"
 	"mars_rover/src/domain/rover/id"
 	"mars_rover/src/infra/apiServer/dto"
 	. "mars_rover/src/infra/apiServer/responses"

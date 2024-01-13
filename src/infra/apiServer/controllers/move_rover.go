@@ -28,14 +28,14 @@ func MoveRover(action MoveAction, request MoveRequest, responseHandler HTTPRespo
 
 	movementResults, actionErr := action.Move(roverId, applicationCommands)
 	if actionErr != nil {
-		sendMovementErrorBasedOnType(actionErr, responseHandler)
+		sendErrorResponseBasedOnType(actionErr, responseHandler)
 		return
 	}
 
-	responseHandler.SendOk(dto.FromMovementResult(movementResults))
+	responseHandler.SendOk(dto.FromMovementResults(movementResults))
 }
 
-func sendMovementErrorBasedOnType(actionErr *MovementError, responseHandler HTTPResponseHandler) {
+func sendErrorResponseBasedOnType(actionErr *MovementError, responseHandler HTTPResponseHandler) {
 	if actionErr.IsNotFound() {
 		responseHandler.SendBadRequest(actionErr.Error())
 	} else {
