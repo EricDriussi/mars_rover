@@ -2,7 +2,7 @@ package mocks
 
 import (
 	. "github.com/stretchr/testify/mock"
-	"mars_rover/src/action/move/command"
+	"mars_rover/src/action/mover/command"
 	. "mars_rover/src/domain/rover"
 )
 

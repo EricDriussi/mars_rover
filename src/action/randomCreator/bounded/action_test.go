@@ -2,8 +2,8 @@ package boundedRandomGameCreator_test
 
 import (
 	"errors"
-	"mars_rover/src/action/createRandom/bounded"
-	. "mars_rover/src/action/createRandom/bounded"
+	"mars_rover/src/action/randomCreator/bounded"
+	. "mars_rover/src/action/randomCreator/bounded"
 	"mars_rover/src/domain"
 	. "mars_rover/src/domain/obstacle/obstacles"
 	. "mars_rover/src/domain/rover/planetMap"

@@ -2,7 +2,7 @@ package command_test
 
 import (
 	"github.com/stretchr/testify/assert"
-	. "mars_rover/src/action/move/command"
+	. "mars_rover/src/action/mover/command"
 	"mars_rover/src/test_helpers/mocks"
 	. "mars_rover/src/test_helpers/mocks"
 	"testing"

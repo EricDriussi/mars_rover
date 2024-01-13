@@ -2,7 +2,7 @@ package dto
 
 import (
 	"fmt"
-	. "mars_rover/src/action/move"
+	. "mars_rover/src/action/mover"
 	. "mars_rover/src/domain"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/coordinate/coordinates"

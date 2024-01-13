@@ -2,7 +2,7 @@ package randomCreator_test
 
 import (
 	"github.com/stretchr/testify/assert"
-	. "mars_rover/src/action/createRandom"
+	. "mars_rover/src/action/randomCreator"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	"mars_rover/src/domain/obstacle/obstacles"
 	"mars_rover/src/domain/size"

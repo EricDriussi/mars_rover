@@ -2,7 +2,7 @@ package controllers_test
 
 import (
 	. "github.com/stretchr/testify/mock"
-	. "mars_rover/src/action/move"
+	. "mars_rover/src/action/mover"
 	"mars_rover/src/domain/rover/id"
 	"mars_rover/src/infra/apiServer/controllers"
 	. "mars_rover/src/infra/apiServer/controllers"

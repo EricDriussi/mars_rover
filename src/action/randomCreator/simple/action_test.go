@@ -2,7 +2,7 @@ package simpleRandomCreator_test
 
 import (
 	"errors"
-	"mars_rover/src/action/createRandom/simple"
+	"mars_rover/src/action/randomCreator/simple"
 	. "mars_rover/src/domain"
 	. "mars_rover/src/test_helpers/mocks"
 	"testing"

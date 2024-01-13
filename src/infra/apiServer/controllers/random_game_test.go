@@ -3,7 +3,7 @@ package controllers_test
 import (
 	"errors"
 	. "github.com/stretchr/testify/mock"
-	. "mars_rover/src/action/createRandom"
+	. "mars_rover/src/action/randomCreator"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	"mars_rover/src/infra/apiServer/controllers"
 	"mars_rover/src/test_helpers/mocks"

@@ -2,8 +2,8 @@ package controllers
 
 import (
 	. "mars_rover/src/action"
-	. "mars_rover/src/action/move"
-	"mars_rover/src/action/move/command"
+	. "mars_rover/src/action/mover"
+	"mars_rover/src/action/mover/command"
 	"mars_rover/src/domain/rover/id"
 	"mars_rover/src/infra/apiServer/dto"
 	. "mars_rover/src/infra/apiServer/responses"

@@ -3,8 +3,8 @@ package dto_test
 import (
 	"github.com/stretchr/testify/assert"
 	. "github.com/stretchr/testify/mock"
-	. "mars_rover/src/action/move"
-	. "mars_rover/src/action/move/command"
+	. "mars_rover/src/action/mover"
+	. "mars_rover/src/action/mover/command"
 	. "mars_rover/src/domain"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	"mars_rover/src/domain/coordinate/coordinates"

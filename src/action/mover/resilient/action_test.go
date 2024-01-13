@@ -3,8 +3,8 @@ package resilientMover_test
 import (
 	"errors"
 	. "github.com/stretchr/testify/mock"
-	. "mars_rover/src/action/move/command"
-	resilientMover "mars_rover/src/action/move/resilient"
+	. "mars_rover/src/action/mover/command"
+	resilientMover "mars_rover/src/action/mover/resilient"
 	. "mars_rover/src/domain"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	"mars_rover/src/domain/rover/id"

@@ -1,7 +1,7 @@
-package move
+package mover
 
 import (
-	. "mars_rover/src/action/move/command"
+	. "mars_rover/src/action/mover/command"
 	. "mars_rover/src/domain/coordinate/absoluteCoordinate"
 	. "mars_rover/src/domain/rover"
 	. "mars_rover/src/domain/rover/direction"

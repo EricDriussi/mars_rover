@@ -2,8 +2,8 @@ package test_helpers
 
 import (
 	"github.com/stretchr/testify/assert"
-	. "mars_rover/src/action/move"
-	. "mars_rover/src/action/move/command"
+	. "mars_rover/src/action/mover"
+	. "mars_rover/src/action/mover/command"
 	"testing"
 )
 

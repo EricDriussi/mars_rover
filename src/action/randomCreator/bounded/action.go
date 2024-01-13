@@ -2,7 +2,7 @@ package boundedRandomGameCreator
 
 import (
 	"errors"
-	. "mars_rover/src/action/createRandom"
+	. "mars_rover/src/action/randomCreator"
 	. "mars_rover/src/domain"
 	"mars_rover/src/domain/coordinate/coordinates"
 	"mars_rover/src/domain/obstacle"
