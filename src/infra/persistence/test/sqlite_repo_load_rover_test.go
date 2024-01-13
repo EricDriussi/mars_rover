@@ -11,22 +11,22 @@ import (
 )
 
 func TestLoadsRoverWhenPresent(t *testing.T) {
+	db, repo := InitMem()
 	testCases := []struct {
 		name      string
 		setupFunc func(t *testing.T) (Rover, Planet)
 	}{
 		{
 			name:      "wrapping rover",
-			setupFunc: setupWrappingRoverOnRockyPlanet,
+			setupFunc: setupWrappingRover,
 		},
 		{
 			name:      "god mod rover",
-			setupFunc: setupGodModRoverOnRockyPlanet,
+			setupFunc: setupGodModRover,
 		},
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			db, repo := InitMem()
 			testRover, testPlanet := testCase.setupFunc(t)
 			err := saveGame(db, testRover, testPlanet)
 			assert.Nil(t, err)
@@ -40,24 +40,24 @@ func TestLoadsRoverWhenPresent(t *testing.T) {
 }
 
 func TestDoesNotLoadRoverWhenNotPresent(t *testing.T) {
+	db, repo := InitMem()
 	testCases := []struct {
 		name      string
 		setupFunc func(t *testing.T) (Rover, Planet)
 	}{
 		{
 			name:      "wrapping rover",
-			setupFunc: setupWrappingRoverOnRockyPlanet,
+			setupFunc: setupWrappingRover,
 		},
 		{
 			name:      "god mod rover",
-			setupFunc: setupGodModRoverOnRockyPlanet,
+			setupFunc: setupGodModRover,
 		},
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			db, repo := InitMem()
-			testRover, testPlanet := testCase.setupFunc(t)
-			err := saveGame(db, testRover, testPlanet)
+			rover, planet := testCase.setupFunc(t)
+			err := saveGame(db, rover, planet)
 			assert.Nil(t, err)
 
 			_, repoErr := repo.GetRover(id.New())

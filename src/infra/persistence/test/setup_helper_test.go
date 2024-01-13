@@ -22,7 +22,7 @@ import (
 // This might indicate that mocking the objects would be a better approach.
 // However, since these are used to test persistence, I think avoiding mocks gives more assurance.
 
-func setupWrappingRoverOnRockyPlanet(t *testing.T) (Rover, Planet) {
+func setupWrappingRover(t *testing.T) (Rover, Planet) {
 	rovCoord := absoluteCoordinate.Build(0, 0)
 	testPlanet := setupPlanet(t)
 	aDirection := North{}
@@ -31,7 +31,7 @@ func setupWrappingRoverOnRockyPlanet(t *testing.T) (Rover, Planet) {
 	return testRover, testPlanet
 }
 
-func setupGodModRoverOnRockyPlanet(t *testing.T) (Rover, Planet) {
+func setupGodModRover(t *testing.T) (Rover, Planet) {
 	rovCoord := absoluteCoordinate.Build(1, 1)
 	testPlanet := setupPlanet(t)
 	aDirection := North{}

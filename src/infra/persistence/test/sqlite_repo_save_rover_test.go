@@ -10,34 +10,34 @@ import (
 )
 
 func TestAddsRover(t *testing.T) {
+	db, repo := InitMem()
 	testCases := []struct {
 		name      string
 		setupFunc func(t *testing.T) (Rover, Planet)
 	}{
 		{
-			name:      "wrapping rover on rocky planet",
-			setupFunc: setupWrappingRoverOnRockyPlanet,
+			name:      "wrapping rover",
+			setupFunc: setupWrappingRover,
 		},
 		{
-			name:      "god mod rover on rocky planet",
-			setupFunc: setupGodModRoverOnRockyPlanet,
+			name:      "god mod rover",
+			setupFunc: setupGodModRover,
 		},
 	}
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			db, repo := InitMem()
-			testRover, testPlanet := testCase.setupFunc(t)
-			planetId, err := savePlanet(db, testPlanet)
+			rover, planet := testCase.setupFunc(t)
+			planetId, err := savePlanet(db, planet)
 			assert.Nil(t, err)
 
-			repoErr := repo.AddRover(testRover, planetId)
+			repoErr := repo.AddRover(rover, planetId)
 
 			assert.Nil(t, repoErr)
 			foundPlanet, err := getLastPersistedPlanet(db)
 			assert.Nil(t, err)
 			foundRover, err := getLastPersistedRover(db, foundPlanet)
 			assert.Nil(t, err)
-			assertRoversAreEqual(t, foundRover, testRover)
+			assertRoversAreEqual(t, foundRover, rover)
 		})
 	}
 }
