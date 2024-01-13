@@ -4,7 +4,7 @@ import (
 	"errors"
 	. "github.com/stretchr/testify/mock"
 	. "mars_rover/src/action/mover/command"
-	resilientMover "mars_rover/src/action/mover/resilient"
+	"mars_rover/src/action/mover/resilient"
 	. "mars_rover/src/domain"
 	"mars_rover/src/domain/coordinate/absoluteCoordinate"
 	"mars_rover/src/domain/rover/id"
@@ -17,65 +17,65 @@ import (
 )
 
 func TestMovementResultsContainNoIssueIfRoverReportsNoError(t *testing.T) {
-	testRover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
-	repo := mocks.SuccessfulRepoFor(testRover)
+	rover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
+	repo := mocks.SuccessfulRepoFor(rover)
 	command := new(MockCommand)
-	command.On("MapToRoverMovementFunction", testRover).Return(SuccessfulRoverFunc())
+	command.On("MapToRoverMovementFunction", rover).Return(SuccessfulRoverFunc())
 	commands := Commands{command}
+	moveAction := resilientMover.With(repo)
 
-	act := resilientMover.With(repo)
-	movementResults, err := act.Move(id.New(), commands)
+	movementResults, err := moveAction.Move(id.New(), commands)
 
 	assert.Nil(t, err)
 	AssertEncounteredNoIssues(t, movementResults)
 }
 
 func TestMovementResultsContainAnIssueIfRoverReportsAnError(t *testing.T) {
-	testRover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
-	repo := mocks.SuccessfulRepoFor(testRover)
+	rover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
+	repo := mocks.SuccessfulRepoFor(rover)
 	command := new(MockCommand)
-	command.On("MapToRoverMovementFunction", testRover).Return(FailedRoverFunc())
+	command.On("MapToRoverMovementFunction", rover).Return(FailedRoverFunc())
 	commands := Commands{command}
+	moveAction := resilientMover.With(repo)
 
-	act := resilientMover.With(repo)
-	movementResults, err := act.Move(id.New(), commands)
+	movementResults, err := moveAction.Move(id.New(), commands)
 
 	assert.Nil(t, err)
 	AssertEncounteredAnIssue(t, movementResults)
 }
 
 func TestOnlyCallsRoverForGivenCommands(t *testing.T) {
-	testRover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
-	mocks.MakeAlwaysSuccessful(testRover)
-	repo := mocks.SuccessfulRepoFor(testRover)
+	rover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
+	mocks.MakeAlwaysSuccessful(rover)
+	repo := mocks.SuccessfulRepoFor(rover)
 	firstCommand := new(MockCommand)
-	firstCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveBackward))
+	firstCommand.On("MapToRoverMovementFunction", rover).Return(RoverFunc(rover.MoveBackward))
 	secondCommand := new(MockCommand)
-	secondCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveForward))
+	secondCommand.On("MapToRoverMovementFunction", rover).Return(RoverFunc(rover.MoveForward))
 	commands := Commands{firstCommand, secondCommand}
+	moveAction := resilientMover.With(repo)
 
-	act := resilientMover.With(repo)
-	_, err := act.Move(id.New(), commands)
+	_, err := moveAction.Move(id.New(), commands)
 
 	assert.Nil(t, err)
-	testRover.AssertCalled(t, "MoveBackward")
-	testRover.AssertCalled(t, "MoveForward")
-	testRover.AssertNotCalled(t, "TurnLeft")
-	testRover.AssertNotCalled(t, "TurnRight")
+	rover.AssertCalled(t, "MoveBackward")
+	rover.AssertCalled(t, "MoveForward")
+	rover.AssertNotCalled(t, "TurnLeft")
+	rover.AssertNotCalled(t, "TurnRight")
 }
 
 func TestReportsResultsBasedOnGivenCommandsOrder(t *testing.T) {
-	testRover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
-	mocks.MakeAlwaysSuccessful(testRover)
-	repo := mocks.SuccessfulRepoFor(testRover)
+	rover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
+	mocks.MakeAlwaysSuccessful(rover)
+	repo := mocks.SuccessfulRepoFor(rover)
 	firstCommand := new(MockCommand)
-	firstCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveBackward))
+	firstCommand.On("MapToRoverMovementFunction", rover).Return(RoverFunc(rover.MoveBackward))
 	secondCommand := new(MockCommand)
-	secondCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveForward))
+	secondCommand.On("MapToRoverMovementFunction", rover).Return(RoverFunc(rover.MoveForward))
 	commands := Commands{firstCommand, secondCommand}
+	moveAction := resilientMover.With(repo)
 
-	act := resilientMover.With(repo)
-	movementResults, err := act.Move(id.New(), commands)
+	movementResults, err := moveAction.Move(id.New(), commands)
 
 	assert.Nil(t, err)
 	AssertContainsOrderedCommands(t, movementResults, commands)
@@ -83,41 +83,41 @@ func TestReportsResultsBasedOnGivenCommandsOrder(t *testing.T) {
 }
 
 func TestKeepsCallingRoverForGivenCommandsEvenWhenSomeFail(t *testing.T) {
-	testRover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
-	testRover.On("MoveBackward").Return(nil)
-	testRover.On("MoveForward").Return(errors.New("movement blocked"))
-	repo := mocks.SuccessfulRepoFor(testRover)
+	rover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
+	rover.On("MoveBackward").Return(nil)
+	rover.On("MoveForward").Return(errors.New("movement blocked"))
+	repo := mocks.SuccessfulRepoFor(rover)
 	firstCommand := new(MockCommand)
-	firstCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveBackward))
+	firstCommand.On("MapToRoverMovementFunction", rover).Return(RoverFunc(rover.MoveBackward))
 	failedCommand := new(MockCommand)
-	failedCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveForward))
+	failedCommand.On("MapToRoverMovementFunction", rover).Return(RoverFunc(rover.MoveForward))
 	thirdCommand := new(MockCommand)
-	thirdCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveBackward))
+	thirdCommand.On("MapToRoverMovementFunction", rover).Return(RoverFunc(rover.MoveBackward))
 	commands := Commands{firstCommand, failedCommand, thirdCommand}
+	moveAction := resilientMover.With(repo)
 
-	act := resilientMover.With(repo)
-	_, err := act.Move(id.New(), commands)
+	_, err := moveAction.Move(id.New(), commands)
 
 	assert.Nil(t, err)
-	testRover.AssertNumberOfCalls(t, "MoveBackward", 2)
-	testRover.AssertCalled(t, "MoveForward")
+	rover.AssertNumberOfCalls(t, "MoveBackward", 2)
+	rover.AssertCalled(t, "MoveForward")
 }
 
 func TestReportsResultsBasedOnGivenCommandsOrderWhenSomeFail(t *testing.T) {
-	testRover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
-	testRover.On("MoveBackward").Return(nil)
-	testRover.On("MoveForward").Return(errors.New("movement blocked"))
-	repo := mocks.SuccessfulRepoFor(testRover)
+	rover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
+	rover.On("MoveBackward").Return(nil)
+	rover.On("MoveForward").Return(errors.New("movement blocked"))
+	repo := mocks.SuccessfulRepoFor(rover)
 	firstCommand := new(MockCommand)
-	firstCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveBackward))
+	firstCommand.On("MapToRoverMovementFunction", rover).Return(RoverFunc(rover.MoveBackward))
 	failedCommand := new(MockCommand)
-	failedCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveForward))
+	failedCommand.On("MapToRoverMovementFunction", rover).Return(RoverFunc(rover.MoveForward))
 	thirdCommand := new(MockCommand)
-	thirdCommand.On("MapToRoverMovementFunction", testRover).Return(RoverFunc(testRover.MoveBackward))
+	thirdCommand.On("MapToRoverMovementFunction", rover).Return(RoverFunc(rover.MoveBackward))
 	commands := Commands{firstCommand, failedCommand, thirdCommand}
+	moveAction := resilientMover.With(repo)
 
-	act := resilientMover.With(repo)
-	movementResults, err := act.Move(id.New(), commands)
+	movementResults, err := moveAction.Move(id.New(), commands)
 
 	assert.Nil(t, err)
 	AssertContainsOrderedCommands(t, movementResults, commands)
@@ -128,29 +128,29 @@ func TestReportsRepoErrorWhenGettingRover(t *testing.T) {
 	repo := new(MockRepo)
 	repo.On("GetRover", Anything).Return(new(MockRover), aRepoError())
 	commands := Commands{new(MockCommand)}
+	moveAction := resilientMover.With(repo)
 
-	act := resilientMover.With(repo)
-	movementResults, err := act.Move(id.New(), commands)
+	movementResults, err := moveAction.Move(id.New(), commands)
 
 	assert.Empty(t, movementResults)
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "not found")
 }
 
 func TestReportsRepoErrorWhenUpdatingRover(t *testing.T) {
-	testRover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
+	rover := mocks.LandedRover(*absoluteCoordinate.Build(1, 1))
 	repo := new(MockRepo)
-	repo.On("GetRover", Anything).Return(testRover, nil)
+	repo.On("GetRover", Anything).Return(rover, nil)
 	repo.On("UpdateRover").Return(aRepoError())
 	irrelevantCommand := new(MockCommand)
-	irrelevantCommand.On("MapToRoverMovementFunction", testRover).Return(SuccessfulRoverFunc())
+	irrelevantCommand.On("MapToRoverMovementFunction", rover).Return(SuccessfulRoverFunc())
 	commands := Commands{irrelevantCommand}
+	moveAction := resilientMover.With(repo)
 
-	act := resilientMover.With(repo)
-	movementResults, err := act.Move(id.New(), commands)
+	movementResults, err := moveAction.Move(id.New(), commands)
 
 	assert.Empty(t, movementResults)
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "failed to update")
 }
 

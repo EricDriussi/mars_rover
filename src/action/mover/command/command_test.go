@@ -74,8 +74,8 @@ func TestCommandsArePrintedAsStrings(t *testing.T) {
 }
 
 func TestCommandsAreMappedToRoverMovementFunction(t *testing.T) {
-	testRover := new(MockRover)
-	mocks.MakeAlwaysSuccessful(testRover)
+	rover := new(MockRover)
+	mocks.MakeAlwaysSuccessful(rover)
 	testCases := []struct {
 		name                  string
 		roverFunction         RoverMovementFunc
@@ -83,22 +83,22 @@ func TestCommandsAreMappedToRoverMovementFunction(t *testing.T) {
 	}{
 		{
 			name:                  "forward",
-			roverFunction:         Forward.MapToRoverMovementFunction(testRover),
+			roverFunction:         Forward.MapToRoverMovementFunction(rover),
 			expectedRoverFunction: "MoveForward",
 		},
 		{
 			name:                  "backward",
-			roverFunction:         Backward.MapToRoverMovementFunction(testRover),
+			roverFunction:         Backward.MapToRoverMovementFunction(rover),
 			expectedRoverFunction: "MoveBackward",
 		},
 		{
 			name:                  "left",
-			roverFunction:         Left.MapToRoverMovementFunction(testRover),
+			roverFunction:         Left.MapToRoverMovementFunction(rover),
 			expectedRoverFunction: "TurnLeft",
 		},
 		{
 			name:                  "right",
-			roverFunction:         Right.MapToRoverMovementFunction(testRover),
+			roverFunction:         Right.MapToRoverMovementFunction(rover),
 			expectedRoverFunction: "TurnRight",
 		},
 	}
@@ -108,7 +108,7 @@ func TestCommandsAreMappedToRoverMovementFunction(t *testing.T) {
 			err := testCase.roverFunction()
 			assert.Nil(t, err)
 
-			testRover.AssertCalled(t, testCase.expectedRoverFunction)
+			rover.AssertCalled(t, testCase.expectedRoverFunction)
 		})
 	}
 }

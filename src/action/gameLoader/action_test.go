@@ -11,23 +11,23 @@ import (
 )
 
 func TestLoaderDoesNotErrorIfRepoReportsNoError(t *testing.T) {
-	testRover := LandedRover(*absoluteCoordinate.Build(1, 1))
-	repo := SuccessfulRepoFor(testRover)
+	rover := LandedRover(*absoluteCoordinate.Build(1, 1))
+	repo := SuccessfulRepoFor(rover)
+	loadAction := gameLoader.With(repo)
 
-	act := gameLoader.With(repo)
-	loadedGame, err := act.Load(id.New())
+	loadedGame, err := loadAction.Load(id.New())
 
 	assert.Nil(t, err)
 	assert.NotNil(t, loadedGame)
-	assert.Equal(t, testRover, loadedGame.Rover)
+	assert.Equal(t, rover, loadedGame.Rover)
 }
 
 func TestLoaderErrorsIfRepoReportsAnError(t *testing.T) {
 	repo := new(MockRepo)
 	repo.On("GetGame").Return(new(Game), NotFound())
+	loadAction := gameLoader.With(repo)
 
-	act := gameLoader.With(repo)
-	_, err := act.Load(id.New())
+	_, err := loadAction.Load(id.New())
 
 	assert.Error(t, err)
 	assert.True(t, err.IsNotFound())

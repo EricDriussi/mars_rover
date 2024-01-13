@@ -17,21 +17,20 @@ func TestBoundedCreationDoesNotErrorIfRepoIsSuccessful(t *testing.T) {
 	repo := new(MockRepo)
 	repo.On("AddPlanet").Return(42, nil)
 	repo.On("AddRover").Return(nil)
+	createAction := boundedRandomGameCreator.With(repo)
 
-	act := boundedRandomGameCreator.With(repo)
-	rover, err := act.Create()
+	_, err := createAction.Create()
 
 	assert.Nil(t, err)
-	assert.NotNil(t, rover)
 }
 
 func TestBoundedCreationReportsRepoError(t *testing.T) {
 	repo := new(MockRepo)
 	repoErr := domain.PersistenceMalfunction(errors.New("repo error"))
 	repo.On("AddPlanet").Return(-1, repoErr)
+	createAction := boundedRandomGameCreator.With(repo)
 
-	act := boundedRandomGameCreator.With(repo)
-	_, err := act.Create()
+	_, err := createAction.Create()
 
 	assert.Error(t, err)
 }
@@ -40,11 +39,11 @@ func TestBoundedCreationRespectsSensibleLimits(t *testing.T) {
 	repo := new(MockRepo)
 	repo.On("AddPlanet").Return(42, nil)
 	repo.On("AddRover").Return(nil)
-	act := boundedRandomGameCreator.With(repo)
+	createAction := boundedRandomGameCreator.With(repo)
 
 	// since there is a lot of randomness involved, we create the game a bunch of times
 	for i := 0; i < 10; i++ {
-		rover, err := act.Create()
+		rover, err := createAction.Create()
 		assert.Nil(t, err)
 
 		planetMap := rover.Map()

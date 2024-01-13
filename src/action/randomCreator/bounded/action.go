@@ -15,6 +15,7 @@ import (
 	"math/rand"
 )
 
+// TODO.LM: this should be set by config
 const (
 	MinSize         = 8
 	MaxSize         = 16
